@@ -8,17 +8,19 @@ Kotlin/JS wrappers for the free [Vaadin Web Components](https://github.com/vaadi
 **[API reference](https://shijianjs.github.io/ktjs-vaadin/api/)**
 
 All free `@vaadin/*` packages release in lockstep and share one upstream version, so they are
-grouped into a single `ktjs-vaadin-web-components` module: 55 npm packages and 85 custom elements.
+grouped into a single `ktjs-vaadin-web-components` module: 65 npm packages and 92 custom elements.
+Every npm package keeps its own Kotlin package, and upstream mixins are modelled as
+`external interface` declarations so a component can be used through the capability it provides.
 Tree shaking removes unused declarations from the final application bundle, and publishing one
 module keeps Maven Central deployments and version noise low. Commercial Vaadin components (Board,
-Charts, CRUD, Dashboard, Grid Pro, Map, Rich Text Editor and the React Pro components) are not
-included.
+Charts, CRUD, Dashboard, Grid Pro, Map, Rich Text Editor), the React bindings and the `vaadin` /
+`vaadin-core` meta packages are not included.
 
 ## Modules
 
 | Module | npm packages | Wrapper version | Maven Central |
 | --- | --- | --- | --- |
-| [ktjs-vaadin-web-components](ktjs-vaadin-web-components/README.md) | 55 free `@vaadin/*` packages | `25.3.4-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.shijianjs/ktjs-vaadin-web-components?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.shijianjs/ktjs-vaadin-web-components) |
+| [ktjs-vaadin-web-components](ktjs-vaadin-web-components/README.md) | 65 free `@vaadin/*` packages | `25.3.4-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.shijianjs/ktjs-vaadin-web-components?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.shijianjs/ktjs-vaadin-web-components) |
 
 ## Versioning
 

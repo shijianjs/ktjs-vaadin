@@ -1,19 +1,21 @@
 package demo
 
 import kotlin.js.js
-import vaadin.Notification
-import vaadin.createButton
-import vaadin.createCheckbox
-import vaadin.createComboBox
-import vaadin.createEmailField
-import vaadin.createGrid
-import vaadin.createGridColumn
-import vaadin.createRadioButton
-import vaadin.createRadioGroup
-import vaadin.createTextField
-import vaadin.registerNotification
+import vaadin.button.createButton
+import vaadin.checkbox.createCheckbox
+import vaadin.combobox.createComboBox
+import vaadin.emailfield.createEmailField
+import vaadin.grid.createGrid
+import vaadin.grid.createGridColumn
+import vaadin.notification.Notification
+import vaadin.notification.registerNotification
+import vaadin.radiogroup.createRadioButton
+import vaadin.radiogroup.createRadioGroup
+import vaadin.textfield.createTextField
 import web.cssom.ClassName
+import web.dom.clickEvent
 import web.dom.document
+import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -107,7 +109,7 @@ private fun buildFormCard(): HTMLElement {
     result.textContent = "Fill in the form and press the button."
 
     val submit = createButton { textContent = "Say hello" }
-    submit.on("click") {
+    submit.clickEvent.addHandler {
         val name = nameField.value?.trim().orEmpty().ifEmpty { "world" }
         val message = "Hello, $name!"
         result.textContent = message
@@ -151,9 +153,4 @@ private fun column(className: String): HTMLElement {
     val element = document.createElement(HtmlTagName.div)
     element.className = ClassName(className)
     return element
-}
-
-private fun <T : HTMLElement> T.on(event: String, handler: () -> Unit): T {
-    js("(element, type, handler) => element.addEventListener(type, handler)")(this, event, handler)
-    return this
 }

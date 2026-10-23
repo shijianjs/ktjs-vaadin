@@ -8,16 +8,17 @@
 **[API 文档](https://shijianjs.github.io/ktjs-vaadin/api/)**
 
 所有免费的 `@vaadin/*` 包同步发版、共享同一个上游版本，因此合并为单个
-`ktjs-vaadin-web-components` 模块：55 个 npm 包、85 个自定义元素。终端应用打包时本来就会摇树，
+`ktjs-vaadin-web-components` 模块：65 个 npm 包、92 个自定义元素。每个 npm 包保留独立的 Kotlin 包，
+上游 mixin 建模为 `external interface`，组件可以按它真正具备的能力使用。终端应用打包时本来就会摇树，
 未使用的声明不会进入最终产物；只发布一个模块也能减少 Maven Central 的 deployment 次数与版本噪音。
-收费组件（Board、Charts、CRUD、Dashboard、Grid Pro、Map、Rich Text Editor 与 React Pro 组件）
-不在范围内。
+收费组件（Board、Charts、CRUD、Dashboard、Grid Pro、Map、Rich Text Editor）、React 绑定以及
+`vaadin` / `vaadin-core` 元包不在范围内。
 
 ## 模块
 
 | 模块 | npm 包 | wrapper 版本 | Maven Central |
 | --- | --- | --- | --- |
-| [ktjs-vaadin-web-components](ktjs-vaadin-web-components/README.zh-CN.md) | 55 个免费 `@vaadin/*` 包 | `25.3.4-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.shijianjs/ktjs-vaadin-web-components?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.shijianjs/ktjs-vaadin-web-components) |
+| [ktjs-vaadin-web-components](ktjs-vaadin-web-components/README.zh-CN.md) | 65 个免费 `@vaadin/*` 包 | `25.3.4-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.shijianjs/ktjs-vaadin-web-components?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.shijianjs/ktjs-vaadin-web-components) |
 
 ## 版本约定
 

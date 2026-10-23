@@ -8,6 +8,33 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import web.dom.document
 import web.html.HTMLElement
+import vaadin.a11ybase.DisabledMixin
+import vaadin.aura.Aura
+import vaadin.button.createButton
+import vaadin.checkbox.createCheckbox
+import vaadin.datepicker.createDatePicker
+import vaadin.dialog.createDialog
+import vaadin.fieldbase.InputFieldMixin
+import vaadin.fieldhighlighter.FieldHighlighter
+import vaadin.fieldhighlighter.createAiFieldMarker
+import vaadin.fieldhighlighter.fieldHighlighterUser
+import vaadin.grid.Grid
+import vaadin.grid.createGrid
+import vaadin.grid.createGridColumn
+import vaadin.lumostyles.LumoThemes
+import vaadin.notification.Notification
+import vaadin.numberfield.createNumberField
+import vaadin.overlay.OverlayMixin
+import vaadin.overlay.createOverlay
+import vaadin.popover.Popover
+import vaadin.progressbar.createProgressBar
+import vaadin.select.createSelect
+import vaadin.tabs.createTabs
+import vaadin.textfield.TextFieldMixin
+import vaadin.textfield.createTextField
+import vaadin.themablemixin.registerStyles
+import vaadin.themablemixin.unsafeCSS
+import vaadin.tooltip.Tooltip
 
 /**
  * Exercises the wrapper API against real component behavior: property round-trips, event
@@ -158,5 +185,71 @@ class VaadinBehaviorTest {
         Grid.setDefaultMultiSortPriority("append")
         Popover.setDefaultHideDelay(250.0)
         Tooltip.setDefaultHoverDelay(250.0)
+    }
+
+    @Test
+    fun elementInterfacesExposeMixinTyping() {
+        val field = createTextField { label = "Name" }
+
+        val disabled: DisabledMixin = field
+        disabled.disabled = true
+        assertTrue(field.disabled)
+
+        val text: TextFieldMixin = field
+        text.maxlength = 20.0
+        assertEquals(20.0, field.maxlength)
+    }
+
+    @Test
+    fun mixinMembersWithDomNameClashesMapToTheSameJsProperty() {
+        val field = createTextField()
+        val input: InputFieldMixin = field
+        input.autocapitalizeProperty = "characters"
+        assertEquals("characters", js("(element) => element.autocapitalize")(field) as String)
+
+        val overlay = attach(createOverlay())
+        val overlayMixin: OverlayMixin = overlay
+        overlayMixin.hiddenProperty = true
+        assertTrue(js("(element) => element.hidden")(overlay) as Boolean)
+    }
+
+    @Test
+    fun fieldHighlighterTracksUsersOnAField() {
+        val field = attach(createTextField())
+        val ada = fieldHighlighterUser(1.0, "Ada", 2.0)
+        val grace = fieldHighlighterUser(2.0, "Grace", 1.0)
+
+        val controller = FieldHighlighter.init(field)
+        controller.addUser(ada)
+        controller.addUser(grace)
+
+        assertEquals(2, controller.users.size)
+        assertEquals("Grace", controller.user?.name)
+
+        FieldHighlighter.removeUser(field, grace)
+
+        assertEquals(1, controller.users.size)
+        assertEquals("Ada", controller.user?.name)
+    }
+
+    @Test
+    fun aiFieldMarkerRoundTripsItsState() {
+        val marker = attach(createAiFieldMarker())
+        marker.working = true
+        marker.confidence = "high"
+
+        assertTrue(marker.working)
+        assertEquals("high", marker.confidence)
+    }
+
+    @Test
+    fun themesExposeStyleEntryPoints() {
+        assertEquals("@vaadin/vaadin-lumo-styles/lumo.css", LumoThemes.CSS)
+        assertEquals("@vaadin/aura/aura.css", Aura.CSS)
+
+        val styles = unsafeCSS(":host { color: red; }")
+        assertTrue(styles.cssText.contains("color: red"))
+
+        registerStyles("vaadin-button", styles)
     }
 }

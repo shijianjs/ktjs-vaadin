@@ -1,13 +1,15 @@
 # ktjs-vaadin-web-components
 
 Kotlin/JS wrappers for the free [Vaadin Web Components](https://github.com/vaadin/web-components):
-55 npm packages from the `@vaadin/*` scope, exposing 85 custom elements through typed
+65 npm packages from the `@vaadin/*` scope, exposing 92 custom elements through typed
 `external class` declarations.
 
 The module is generated from the `custom-elements.json` manifest of every package, so element
-properties, methods and static entry points match the upstream API. Commercial Vaadin components
-(Board, Charts, CRUD, Dashboard, Grid Pro, Map, Rich Text Editor and the React Pro components) are
-not included.
+properties, methods, mixins and static entry points match the upstream API. The six packages
+without a manifest (`aura`, `field-highlighter`, `icons`, `lit-renderer`, `vaadin-lumo-styles`,
+`vaadin-themable-mixin`) are wrapped by hand. Commercial Vaadin components (Board, Charts, CRUD,
+Dashboard, Grid Pro, Map, Rich Text Editor), the React bindings and the `vaadin` / `vaadin-core`
+meta packages are not included.
 
 ## Installation
 
@@ -19,21 +21,36 @@ dependencies {
 }
 ```
 
-All 55 packages are declared as `npm(...)` dependencies of the module and pinned to the same
+All 65 packages are declared as `npm(...)` dependencies of the module and pinned to the same
 upstream version. Kotlin/JS links the ones your application actually imports; unused components are
 tree-shaken away. Vaadin packages are ESM-only, so the consuming project must use
 `useEsModules()` in its `js` target.
 
+## Layout
+
+Every npm package maps to one Kotlin package, so imports stay close to the upstream structure:
+
+| npm package | Kotlin package |
+| --- | --- |
+| `@vaadin/button` | `vaadin.button` |
+| `@vaadin/combo-box` | `vaadin.combobox` |
+| `@vaadin/field-base` | `vaadin.fieldbase` |
+| `@vaadin/vaadin-lumo-styles` | `vaadin.lumostyles` |
+| `@vaadin/vaadin-themable-mixin` | `vaadin.themablemixin` |
+
+Each element package provides an element type (`ButtonElement`), a typed tag name
+(`ButtonTagName.button`), a registration function (`registerButton()`), a factory
+(`createButton {}`), attribute names (`ButtonAttributes`) and, when the upstream manifest declares
+events, typed event names (`NotificationEvents.closed`).
+
 ## Usage
 
-Each custom element has a Kotlin element type (`ButtonElement`), a typed tag name
-(`VaadinTagName.button`), a registration function (`registerButton()`) and a factory
-(`createButton {}`). Factories register the element on first use:
+Factories register the element on first use:
 
 ```kotlin
-import vaadin.Notification
-import vaadin.createButton
-import vaadin.createTextField
+import vaadin.button.createButton
+import vaadin.notification.Notification
+import vaadin.textfield.createTextField
 import web.dom.document
 
 fun main() {
@@ -49,21 +66,28 @@ fun main() {
 }
 ```
 
-Components are plain DOM elements, so listeners and other interactions use the standard
-`web.events` API from `kotlin-browser`. The [demo](https://shijianjs.github.io/ktjs-vaadin/) wires a
-button click to `Notification.show()` and renders a grid.
-
 Creating the element through the factory is the usual path. If you create elements yourself (for
 example from a server-rendered page), call the matching `registerXxx()` function first so the custom
 element is defined:
 
 ```kotlin
-import vaadin.VaadinTagName
-import vaadin.registerDialog
+import vaadin.dialog.DialogTagName
+import vaadin.dialog.registerDialog
+import web.dom.document
 
 registerDialog()
-val dialog = document.createElement(VaadinTagName.dialog)
+val dialog = document.createElement(DialogTagName.dialog)
 dialog.headerTitle = "Details"
+```
+
+Components are plain DOM elements, so listeners and other interactions use the standard
+`web.events` API from `kotlin-browser`:
+
+```kotlin
+import web.dom.clickEvent
+import web.events.addHandler
+
+button.clickEvent.addHandler { Notification.show("Clicked") }
 ```
 
 Static class members are exposed through an object named after the upstream class:
@@ -71,10 +95,85 @@ Static class members are exposed through an object named after the upstream clas
 `Popover.setDefaultHoverDelay(...)`, `Tooltip.setDefaultFocusDelay(...)`,
 `AppLayout.dispatchCloseOverlayDrawerEvent()` and `Iconset.getIconset(...)`.
 
+## Mixins
+
+Upstream mixins are `external interface` declarations, and element classes implement every mixin
+they apply. A component instance can therefore be used through the capability it actually
+provides, the same way a Kotlin class implements several interfaces:
+
+```kotlin
+import vaadin.fieldbase.DisabledMixin
+import vaadin.fieldbase.InputFieldMixin
+import vaadin.textfield.createTextField
+
+val field = createTextField { label = "Name" }
+
+val disabled: DisabledMixin = field
+disabled.disabled = true
+
+val input: InputFieldMixin = field
+input.maxlength = 20.0
+```
+
+Mixins form the same hierarchy as upstream (`TextFieldMixin : InputFieldMixin`), so assigning a
+field to a parent mixin type works as well.
+
+A few upstream properties have the same JavaScript name as an `HTMLElement` member with a different
+type, for example `hidden` (upstream `boolean`, DOM `Hidden`) or `autocapitalize` (upstream
+`string`, DOM `AutoCapitalize`). Those are exposed with a `Property` suffix and map back to the
+original name, so the upstream value is reachable without casting:
+
+```kotlin
+overlayMixin.hiddenProperty = true        // sets element.hidden
+input.autocapitalizeProperty = "words"    // sets element.autocapitalize
+```
+
+## Themes
+
+Lumo and Aura are CSS-first design systems; the supported path is importing their stylesheet in the
+application stylesheet pipeline:
+
+```kotlin
+import vaadin.aura.Aura
+import vaadin.lumostyles.LumoThemes
+
+// Pass these paths to your bundler / stylesheet @import:
+val aura = Aura.CSS                                   // @vaadin/aura/aura.css
+val lumo = LumoThemes.CSS                             // @vaadin/vaadin-lumo-styles/lumo.css
+val compact = LumoThemes.COMPACT_CSS                  // @vaadin/vaadin-lumo-styles/presets/compact.css
+```
+
+Registering the Lumo icon set and the legacy Lumo style mixins is available for components that need
+them:
+
+```kotlin
+import vaadin.lumostyles.LumoStyles
+import vaadin.lumostyles.registerLumoIcons
+import vaadin.lumostyles.registerLumoStyles
+
+registerLumoIcons()
+registerLumoStyles()
+val overlayStyles = LumoStyles.overlay
+```
+
+Custom styles are registered with `registerStyles`; `unsafeCSS` wraps a CSS string in a Lit
+`CSSResult`:
+
+```kotlin
+import vaadin.themablemixin.registerStyles
+import vaadin.themablemixin.unsafeCSS
+
+registerStyles(
+    "vaadin-button",
+    unsafeCSS(":host { font-weight: 600; }"),
+)
+```
+
 The `@vaadin/icons` package only registers the icon set; load it before using `vaadin:` icon names:
 
 ```kotlin
-import vaadin.registerVaadinIcons
+import vaadin.icon.createIcon
+import vaadin.icons.registerVaadinIcons
 
 registerVaadinIcons()
 val icon = createIcon { this.icon = "vaadin:home" }
@@ -82,14 +181,29 @@ val icon = createIcon { this.icon = "vaadin:home" }
 
 ## Packages
 
-`accordion`, `app-layout`, `avatar`, `avatar-group`, `badge`, `breadcrumbs`, `button`, `card`,
-`checkbox`, `checkbox-group`, `combo-box`, `confirm-dialog`, `context-menu`, `custom-field`,
-`date-picker`, `date-time-picker`, `details`, `dialog`, `email-field`, `form-layout`, `grid`,
-`horizontal-layout`, `icon`, `icons`, `integer-field`, `item`, `list-box`, `login`, `markdown`,
-`master-detail-layout`, `menu-bar`, `message-input`, `message-list`, `multi-select-combo-box`,
-`notification`, `number-field`, `password-field`, `popover`, `progress-bar`, `radio-group`,
-`scroller`, `select`, `side-nav`, `slider`, `split-layout`, `switch`, `tabs`, `tabsheet`,
-`text-area`, `text-field`, `time-picker`, `tooltip`, `upload`, `vertical-layout`, `virtual-list`.
+`a11y-base`, `accordion`, `app-layout`, `aura`, `avatar`, `avatar-group`, `badge`, `breadcrumbs`,
+`button`, `card`, `checkbox`, `checkbox-group`, `combo-box`, `component-base`, `confirm-dialog`,
+`context-menu`, `custom-field`, `date-picker`, `date-time-picker`, `details`, `dialog`,
+`email-field`, `field-base`, `field-highlighter`, `form-layout`, `grid`, `horizontal-layout`,
+`icon`, `icons`, `input-container`, `integer-field`, `item`, `list-box`, `lit-renderer`, `login`,
+`lumo-styles`, `markdown`, `master-detail-layout`, `menu-bar`, `message-input`, `message-list`,
+`multi-select-combo-box`, `notification`, `number-field`, `overlay`, `password-field`, `popover`,
+`progress-bar`, `radio-group`, `scroller`, `select`, `side-nav`, `slider`, `split-layout`, `switch`,
+`tabs`, `tabsheet`, `text-area`, `text-field`, `themable-mixin`, `time-picker`, `tooltip`, `upload`,
+`vertical-layout`, `virtual-list`.
+
+## Regenerating
+
+Sources are generated by [`scripts/generate-wrappers.mjs`](../scripts/generate-wrappers.mjs) from
+the manifests in the installed npm packages. After adding or upgrading a dependency:
+
+```bash
+./gradlew kotlinNpmInstall
+node scripts/generate-wrappers.mjs
+```
+
+Generated files start with a marker comment and are overwritten; hand-written wrappers are listed in
+the script and left untouched.
 
 ## Build and test
 
@@ -98,8 +212,9 @@ val icon = createIcon { this.icon = "vaadin:home" }
 ```
 
 The browser suite registers and creates every element, checks that every documented member exists
-on the instance or class, and exercises representative behavior such as value round-trips, grid
-items, dialog state and `Notification.show()`.
+on the instance or class, verifies mixin typing and the DOM name mappings, and exercises
+representative behavior such as value round-trips, grid items, dialog state and
+`Notification.show()`.
 
 After adding or upgrading an npm dependency, refresh the shared lock file:
 
