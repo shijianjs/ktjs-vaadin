@@ -59,10 +59,30 @@ try {
 
     await page.goto(base, { waitUntil: 'networkidle' })
 
-    check('page title names the project', (await page.title()).includes('__PROJECT__'))
-    check('heading is rendered', (await page.locator('h1').textContent()) === '__PROJECT__ demo')
+    check('page title names the project', (await page.title()).includes('ktjs-vaadin'))
+    check('heading is rendered', (await page.locator('h1').textContent()) === 'ktjs-vaadin demo')
     check('stylesheet is applied', await page.locator('.page').evaluate(element =>
         getComputedStyle(element).display !== 'contents'))
+    check('text field is upgraded', await page.locator('vaadin-text-field').evaluate(element =>
+        element.shadowRoot !== null))
+
+    await page.waitForFunction(() => {
+        const grid = document.querySelector('vaadin-grid')
+        return grid?.shadowRoot?.querySelectorAll('tr').length >= 4
+    })
+    check('grid renders all items', await page.locator('vaadin-grid').evaluate(grid =>
+        grid.shadowRoot.querySelectorAll('tr').length) >= 4)
+
+    await page.locator('vaadin-text-field input').fill('Ada')
+    await page.locator('vaadin-button').click()
+
+    await page.waitForFunction(() => document.querySelector('.result')?.textContent === 'Hello, Ada!')
+    check('button updates the result', (await page.locator('.result').textContent()) === 'Hello, Ada!')
+
+    await page.waitForFunction(() =>
+        document.querySelector('vaadin-notification-card')?.textContent?.includes('Hello, Ada!') === true)
+    check('notification shows the message', true)
+
     check('no console errors', consoleErrors.length === 0, consoleErrors.join(' | '))
     check('no failed requests', failedRequests.length === 0, failedRequests.join(' | '))
 } finally {

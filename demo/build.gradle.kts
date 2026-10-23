@@ -14,7 +14,8 @@ kotlin {
     sourceSets {
         jsMain.dependencies {
             implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.10.1")
-            // scripts/init-wrapper-project.py appends the wrapper modules this demo uses below.
+            // Wrapper modules used by the demo.
+            implementation(project(":ktjs-vaadin-web-components"))
         }
     }
 }
@@ -24,7 +25,7 @@ kotlin {
 tasks.register<Exec>("e2eTest") {
     group = "verification"
     description = "Runs the Playwright checks against the bundled demo page."
-    dependsOn("jsBrowserDistribution", ":__PREFIX__-__MODULE__:kotlinInstallPlaywrightBrowsers")
+    dependsOn("jsBrowserDistribution", ":ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers")
 
     val dist = layout.buildDirectory.dir("dist/js/productionExecutable")
     inputs.dir(dist)

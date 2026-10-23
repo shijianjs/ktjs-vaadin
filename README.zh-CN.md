@@ -1,20 +1,23 @@
-# __PROJECT__
+# ktjs-vaadin
 
-[`__NPM_PACKAGE__`](https://www.npmjs.com/package/__NPM_PACKAGE__) 生态的 Kotlin/JS wrapper。
+免费版 [Vaadin Web Components](https://github.com/vaadin/web-components) 的 Kotlin/JS wrapper。
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-**[在线演示](https://__OWNER__.github.io/__REPO__/)** ·
-**[API 文档](https://__OWNER__.github.io/__REPO__/api/)**
+**[在线演示](https://shijianjs.github.io/ktjs-vaadin/)** ·
+**[API 文档](https://shijianjs.github.io/ktjs-vaadin/api/)**
 
-仓库按 npm 包（或一组共享上游版本与发版节奏的包）划分 `__PREFIX__-*` Gradle 模块。终端应用打包时
-本来就会摇树，把相关包合并到一个模块，比每个包各建一个模块更省发布额度和版本噪音。
+所有免费的 `@vaadin/*` 包同步发版、共享同一个上游版本，因此合并为单个
+`ktjs-vaadin-web-components` 模块：55 个 npm 包、85 个自定义元素。终端应用打包时本来就会摇树，
+未使用的声明不会进入最终产物；只发布一个模块也能减少 Maven Central 的 deployment 次数与版本噪音。
+收费组件（Board、Charts、CRUD、Dashboard、Grid Pro、Map、Rich Text Editor 与 React Pro 组件）
+不在范围内。
 
 ## 模块
 
 | 模块 | npm 包 | wrapper 版本 | Maven Central |
 | --- | --- | --- | --- |
-| [__PREFIX__-__MODULE__](__PREFIX__-__MODULE__/README.zh-CN.md) | `__NPM_PACKAGE__` | `__NPM_VERSION__-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.__OWNER__/__PREFIX__-__MODULE__?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.__OWNER__/__PREFIX__-__MODULE__) |
+| [ktjs-vaadin-web-components](ktjs-vaadin-web-components/README.zh-CN.md) | 55 个免费 `@vaadin/*` 包 | `25.3.4-kt.1` | [![Maven Central](https://img.shields.io/maven-central/v/io.github.shijianjs/ktjs-vaadin-web-components?label=Maven%20Central&logo=apachemaven&logoColor=white)](https://central.sonatype.com/artifact/io.github.shijianjs/ktjs-vaadin-web-components) |
 
 ## 版本约定
 
@@ -40,7 +43,7 @@ Gradle 从这两份文件推导基础版本和 `npm(...)` 依赖：
 ./gradlew build
 
 # 单个模块的测试
-./gradlew :__PREFIX__-__MODULE__:jsBrowserTest
+./gradlew :ktjs-vaadin-web-components:jsBrowserTest
 
 # demo 打包页面的端到端检查（Playwright，需要 PATH 上有 node）
 ./gradlew :demo:e2eTest
@@ -57,12 +60,12 @@ Gradle 从这两份文件推导基础版本和 `npm(...)` 依赖：
 
 ## 安装
 
-发布到 Maven Central，group 为 `io.github.__OWNER__`。把版本换成需要的那一个
+发布到 Maven Central，group 为 `io.github.shijianjs`。把版本换成需要的那一个
 （`{上游版本}-kt.{修订号}`）：
 
 ```kotlin
 dependencies {
-    implementation("io.github.__OWNER__:__PREFIX__-__MODULE__:__NPM_VERSION__-kt.1")
+    implementation("io.github.shijianjs:ktjs-vaadin-web-components:25.3.4-kt.1")
 }
 ```
 

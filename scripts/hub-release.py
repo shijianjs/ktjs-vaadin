@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Package published coordinates into hub archives and build their registrations.
 
-The Maven Central hub (`__OWNER__/maven-central-publishing`) publishes nothing itself: a release
+The Maven Central hub (`shijianjs/maven-central-publishing`) publishes nothing itself: a release
 here hands it one archive per Maven coordinate plus a registration that names it. This script turns
 the file repository produced by `publishAllPublicationsToHubStagingRepository` into exactly that,
 and it checks the same rules the hub applies so a mistake is caught here rather than in someone
@@ -27,7 +27,7 @@ import urllib.parse
 from dataclasses import dataclass, field
 from pathlib import Path
 
-GROUP_PATH = "io/github/__OWNER__"
+GROUP_PATH = "io/github/shijianjs"
 # Gradle writes these next to every artifact. Maven Central does not need them and the hub drops
 # them because they only consume the monthly File Count quota.
 CHECKSUM_SUFFIXES = (".md5", ".sha1", ".sha256", ".sha512")
@@ -51,7 +51,7 @@ class Coordinate:
 
     @property
     def coordinate(self) -> str:
-        return f"io.github.__OWNER__:{self.artifact}:{self.version}"
+        return f"io.github.shijianjs:{self.artifact}:{self.version}"
 
     @property
     def archive_name(self) -> str:

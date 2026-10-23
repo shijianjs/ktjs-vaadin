@@ -1,0 +1,162 @@
+package vaadin
+
+import kotlin.js.js
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import web.dom.document
+import web.html.HTMLElement
+
+/**
+ * Exercises the wrapper API against real component behavior: property round-trips, event
+ * listeners, DOM composition and the static entry points.
+ */
+class VaadinBehaviorTest {
+    private val attached = mutableListOf<HTMLElement>()
+
+    private fun <T : HTMLElement> attach(element: T): T {
+        document.body!!.appendChild(element)
+        attached += element
+        return element
+    }
+
+    @AfterTest
+    fun detachAll() {
+        attached.forEach { it.remove() }
+        attached.clear()
+    }
+
+    @Test
+    fun textFieldRoundTripsProperties() {
+        val field = createTextField {
+            label = "Name"
+            placeholder = "Type here"
+            required = true
+            value = "Ada"
+        }
+        attach(field)
+
+        assertEquals("Name", field.label)
+        assertEquals("Type here", field.placeholder)
+        assertTrue(field.required)
+        assertEquals("Ada", field.value)
+        assertTrue(field.checkValidity())
+
+        field.value = ""
+        assertFalse(field.checkValidity())
+
+        field.value = "Ada"
+        field.clear()
+        assertEquals("", field.value)
+    }
+
+    @Test
+    fun checkboxRoundTripsChecked() {
+        val checkbox = createCheckbox {
+            label = "Remember me"
+            checked = true
+        }
+        attach(checkbox)
+
+        assertTrue(checkbox.checked)
+        assertEquals("on", checkbox.value)
+
+        checkbox.checked = false
+        assertFalse(checkbox.checked)
+    }
+
+    @Test
+    fun buttonDispatchesClick() {
+        val button = attach(createButton { disabled = false })
+        var clicks = 0
+        js("(button, handler) => button.addEventListener('click', handler)")(button, { clicks++ })
+
+        button.click()
+
+        assertEquals(1, clicks)
+    }
+
+    @Test
+    fun composedElementsKeepTheirChildren() {
+        val grid = attach(createGrid())
+        val column = createGridColumn()
+        grid.appendChild(column)
+
+        assertEquals(1, grid.childElementCount)
+        assertTrue(grid.firstElementChild === column)
+    }
+
+    @Test
+    fun gridAcceptsItems() {
+        val grid = attach(createGrid())
+        grid.items = js("([{ name: 'a' }, { name: 'b' }])")
+
+        assertEquals(2, js("(grid) => grid.items.length")(grid) as Int)
+    }
+
+    @Test
+    fun dialogTogglesOpened() {
+        val dialog = attach(createDialog())
+        dialog.opened = true
+
+        assertTrue(dialog.opened)
+
+        dialog.opened = false
+        assertFalse(dialog.opened)
+    }
+
+    @Test
+    fun notificationShowCreatesAnOpenElement() {
+        val notification = Notification.show("Saved")
+
+        assertTrue(notification.opened)
+        assertTrue(document.body!!.contains(notification))
+
+        notification.opened = false
+        notification.remove()
+    }
+
+    @Test
+    fun tabsRoundTripsSelectedIndex() {
+        val tabs = attach(createTabs())
+        tabs.selected = 1.0
+
+        assertEquals(1.0, tabs.selected)
+    }
+
+    @Test
+    fun selectRoundTripsValue() {
+        val select = attach(createSelect())
+        select.value = "b"
+
+        assertEquals("b", select.value)
+    }
+
+    @Test
+    fun dateAndNumberFieldsRoundTripValues() {
+        val datePicker = attach(createDatePicker())
+        datePicker.value = "2026-10-24"
+        assertEquals("2026-10-24", datePicker.value)
+
+        val numberField = attach(createNumberField())
+        numberField.value = "42"
+        assertEquals("42", numberField.value)
+    }
+
+    @Test
+    fun progressBarRoundTripsValue() {
+        val progressBar = attach(createProgressBar())
+        progressBar.value = 0.75
+
+        assertEquals(0.75, progressBar.value)
+    }
+
+    @Test
+    fun staticConfigurationSettersAcceptValues() {
+        Grid.setDefaultMultiSortPriority("append")
+        Popover.setDefaultHideDelay(250.0)
+        Tooltip.setDefaultHoverDelay(250.0)
+    }
+}

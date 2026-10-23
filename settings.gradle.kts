@@ -22,10 +22,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "__PROJECT__"
+rootProject.name = "ktjs-vaadin"
 
 // The demo is the GitHub Pages site, not a published module.
 include(":demo")
 
-// scripts/init-wrapper-project.py appends one include per wrapper module below. The template ships
-// none on purpose: replace the placeholders and run the script before the first build.
+// One Gradle project per published wrapper module.
+include(":ktjs-vaadin-web-components")
