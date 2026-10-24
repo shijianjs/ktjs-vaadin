@@ -48,90 +48,6 @@ class BasicTest {
         attached.clear()
     }
 
-    // region upstream helpers.js counterparts
-
-    private fun flushGrid(grid: GridElement) {
-        js(
-            """(grid) => {
-                 grid.performUpdate && grid.performUpdate();
-                 grid._observer.flush();
-                 [grid.__clearCacheDebouncer, grid.__updateColumnTreeDebouncer, grid._debounceScrolling,
-                  grid._debouncerHiddenChanged, grid._debouncerApplyCachedData,
-                  grid.__debounceUpdateFrozenColumn, grid.__renderHeaderFooterDebouncer]
-                   .forEach((debouncer) => debouncer && debouncer.flush());
-                 grid.__virtualizer.flush();
-               }""",
-        )(grid)
-    }
-
-    private fun physicalItems(grid: GridElement): Array<HTMLElement> = js(
-        """(grid) => Array.from(grid.shadowRoot.querySelector('tbody#items').children)
-             .filter((item) => !item.hidden)
-             .sort((a, b) => a.index - b.index)""",
-    )(grid).unsafeCast<Array<HTMLElement>>()
-
-    private fun physicalAverage(grid: GridElement): Double = js(
-        """(grid) => {
-             const items = Array.from(grid.shadowRoot.querySelector('tbody#items').children)
-               .filter((item) => !item.hidden);
-             return items.map((el) => el.offsetHeight).reduce((sum, value) => sum + value, 0) / items.length;
-           }""",
-    )(grid) as Double
-
-    private fun visibleItemIndexes(grid: GridElement): Array<Double> = js(
-        """(grid) => {
-             const table = grid.shadowRoot.querySelector('table');
-             const tableRect = table.getBoundingClientRect();
-             const headerHeight = grid.shadowRoot.querySelector('thead').offsetHeight;
-             const footerHeight = grid.shadowRoot.querySelector('tfoot').offsetHeight;
-             const items = Array.from(grid.shadowRoot.querySelector('tbody#items').children)
-               .filter((item) => !item.hidden)
-               .sort((a, b) => a.index - b.index);
-             return items
-               .filter((item) => {
-                 const rect = item.getBoundingClientRect();
-                 const offset = parseInt(getComputedStyle(item.firstElementChild).borderTopWidth);
-                 return (
-                   rect.top + rect.height - offset > tableRect.top + headerHeight &&
-                   rect.top + offset < tableRect.top + tableRect.height - footerHeight
-                 );
-               })
-               .map((item) => item.index);
-           }""",
-    )(grid).unsafeCast<Array<Double>>()
-
-    private fun firstVisibleIndex(grid: GridElement): Double = visibleItemIndexes(grid).firstOrNull() ?: -1.0
-
-    private fun bodyCellContent(grid: GridElement, row: Double, col: Double): HTMLElement? = js(
-        """(grid, row, col) => {
-             const rows = Array.from(grid.${'$'}.items.querySelectorAll('[part~="row"]'));
-             const cells = Array.from(rows[row].querySelectorAll('[part~="cell"]'));
-             const slot = cells[col].querySelector('slot');
-             return slot ? slot.assignedNodes()[0] : null;
-           }""",
-    )(grid, row, col) as HTMLElement?
-
-    private fun tableScrollTop(grid: GridElement): Double =
-        js("(grid) => grid.shadowRoot.querySelector('table').scrollTop")(grid) as Double
-
-    private fun scrollGrid(grid: GridElement, top: Double) {
-        js("(grid, top) => grid.shadowRoot.querySelector('table').scroll(0, top)")(grid, top)
-    }
-
-    private fun infiniteDataProvider(): GridDataProvider = { params, callback ->
-        // The items are pushed instead of returned from a mapper: the Kotlin/JS compiler re-prints the
-        // js() body and a returned object literal ends up as a block, i.e. `undefined`.
-        js(
-            """(params, callback) => {
-                 const items = [];
-                 for (let i = 0; i < params.pageSize; i++) {
-                   items.push({ value: 'foo' + (params.page * params.pageSize + i) });
-                 }
-                 callback(items);
-               }""",
-        )(params, callback)
-    }
-
     private fun newGrid(height: String = "300px"): GridElement {
         val grid = attach(createGrid())
         grid.style.setProperty("width", "200px")
@@ -161,8 +77,6 @@ class BasicTest {
         var calls = 0
         var firstCellCalls = 0
     }
-
-    // endregion
 
     // region basic features
 

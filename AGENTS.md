@@ -179,9 +179,13 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
 - **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、
   `XxxAttributes` / `XxxEvents` 常量、静态入口对象、mixin 类型归属、`...Property` 改名映射、
   `JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
-- **明确放弃的功能**：视觉/截图测试（`test/visual/*`）、shadow DOM 结构快照（`test/dom/*`）、依赖私有
-  成员（`_observer`、`$`、`__*`）的内部测试、Lit 指令入口（`lit.js`，见上一节），以及需要真实键鼠序列
-  （`sendKeys`、指针拖拽）或真实文件上传的用例。放弃项写在这里，不要在用例里绕道 `js()` 访问私有状态。
+- **`js(...)` 的边界**：能用 Kotlin 类型安全表达的写法一律用类型安全写法；确实没有类型包装的（私有成员
+  `_observer` / `$` / `__*`、内部的 debouncer / virtualizer、需要绕过组件内部流程的等待）该用 `js(...)`
+  就用，不要为了「不碰私有状态」把用例整组丢掉——覆盖率的优先级高于形式洁癖。这类代码集中放在包内的
+  support 文件里（如 `grid/GridSupport.kt` 对应上游 `test/helpers.js`），不要在用例里到处重写。
+- **确实放弃的功能**：视觉/截图测试（`test/visual/*`）、shadow DOM 结构快照（`test/dom/*`）、Lit 指令入口
+  （`lit.js`，见上一节），以及需要真实键鼠序列（`sendKeys`、指针拖拽）或真实文件上传的用例。放弃项写在
+  用例文件的 KDoc 里并注明原因。
 - **测试发现 bug 时修 wrapper，不改断言**：能定位到生成器的问题就修生成器并重新生成，提交信息里说明。
 
 ## UI 编程约定
