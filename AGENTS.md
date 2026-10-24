@@ -368,8 +368,16 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   为准，不要照搬过时或错误的理解。
 - 每个模块维护 `README.md` 与 `README.zh-CN.md`；根 README 的模块表、版本与 Maven 徽章随发布更新。
 
-## 模板来源与升级
+## 模板同步与升级
 
-本仓库由 [`shijianjs/ktjs-wrapper-template`](https://github.com/shijianjs/ktjs-wrapper-template) 生成。
-模板只提供构建、发布与文档骨架；领域约定写在本文件，不要回灌模板。升级模板时从模板仓库 `git diff`
-取变更后人工 cherry-pick，不要用项目仓库反向覆盖模板。
+本文件同时是 [`shijianjs/ktjs-wrapper-template`](https://github.com/shijianjs/ktjs-wrapper-template) 的
+`AGENTS.md` 模板，只写适用于所有 wrapper 项目的通用约定：不出现具体项目名、npm 包名、模块名、版本号或
+仓库地址；与具体领域相关的清单和规则写在派生项目自己的 `AGENTS.md`。
+
+- 在派生项目里总结出对所有 wrapper 项目都成立的约定（构建、测试、发布、DOM/UI 约定、上游 API 建模等）
+  时，主动把它同步到模板仓库：先读模板现状，已有等价内容就跳过，缺失或过时就用通用措辞补上或修正；
+  完成后自动提交并推送模板仓库，不需要逐次征求同意。
+- 只回灌通用部分。项目专属的包清单、目录名、演示内容、版本号留在派生项目。
+- 优先就地修改或扩展现有小节，不要为同一主题新开重复小节。
+- 从模板升级派生项目时仍从模板仓库 `git diff` 取变更后人工 cherry-pick，不要用派生项目的其他文件
+  反向覆盖模板。
