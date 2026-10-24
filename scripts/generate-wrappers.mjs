@@ -680,12 +680,18 @@ function directSuperTypes(declaration) {
   return result.filter(Boolean);
 }
 
+// A mixin is redundant only when another mixin in the same list already extends it: implementing
+// the child brings in every member of the parent. Dropping a mixin because its own parents appear
+// in the list would remove the members it declares — upstream `InputControlMixin` lists both
+// `ClearButtonMixin` and `KeyboardMixin` (a parent of `ClearButtonMixin`), and `clearButtonVisible`
+// would silently disappear from every text field.
 function removeRedundantMixins(mixins) {
-  const fqns = new Set(mixins.map((mixin) => mixin.fqn));
   return mixins.filter((mixin) => {
     if (!mixin.declaration) return true;
-    const parents = allMixins(mixin.declaration).map((parent) => parent.fqn);
-    return !parents.some((parent) => fqns.has(parent));
+    return !mixins.some((other) => {
+      if (other === mixin || !other.declaration) return false;
+      return allMixins(other.declaration).some((parent) => parent.fqn === mixin.fqn);
+    });
   });
 }
 

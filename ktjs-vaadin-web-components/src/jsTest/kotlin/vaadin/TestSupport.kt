@@ -72,6 +72,27 @@ internal fun text(element: HTMLElement, value: String) {
     js("(element, value) => { element.textContent = value; }")(element, value)
 }
 
+/**
+ * Writes [text] into the `<input>` / `<textarea>` of [element] and dispatches an `input` event,
+ * mirroring the `setInputValue` / `type` helpers of the upstream suites.
+ */
+internal fun typeInto(element: HTMLElement, text: String) {
+    js(
+        "(element, text) => {" +
+            " const field = element.querySelector('input, textarea');" +
+            " field.value = text;" +
+            " field.dispatchEvent(new Event('input', { bubbles: true, composed: true }));" +
+            "}",
+    )(element, text)
+}
+
+/** Dispatches a `change` event from the `<input>` / `<textarea>` of [element]. */
+internal fun commitInput(element: HTMLElement) {
+    js("(element) => element.querySelector('input, textarea').dispatchEvent(new Event('change', { bubbles: true }))")(
+        element,
+    )
+}
+
 /** Clicks [element], mirroring `click()` from `@vaadin/testing-helpers`. */
 internal fun click(element: HTMLElement) {
     js("(element) => element.click()")(element)

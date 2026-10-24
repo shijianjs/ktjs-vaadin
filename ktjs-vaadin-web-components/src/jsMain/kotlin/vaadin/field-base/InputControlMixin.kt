@@ -4,7 +4,7 @@ package vaadin.fieldbase
 /**
  * A mixin to provide shared logic for the editable form input controls.
  */
-external interface InputControlMixin : vaadin.componentbase.SlotStylesMixin, vaadin.a11ybase.DelegateFocusMixin, vaadin.fieldbase.InputConstraintsMixin, vaadin.fieldbase.FieldMixin, vaadin.a11ybase.KeyboardMixin {
+external interface InputControlMixin : vaadin.componentbase.SlotStylesMixin, vaadin.a11ybase.DelegateFocusMixin, vaadin.fieldbase.InputConstraintsMixin, vaadin.fieldbase.FieldMixin, vaadin.fieldbase.ClearButtonMixin {
     /**
      * A pattern matched against individual characters the user inputs.
      *
