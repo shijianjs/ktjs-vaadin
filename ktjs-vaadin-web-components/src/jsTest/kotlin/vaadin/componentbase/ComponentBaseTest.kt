@@ -161,7 +161,7 @@ class ComponentBaseTest {
         val button: ButtonElement = attach(createButton())
 
         return nextRender(button).then {
-            assertNotNull(js("(button) => button.shadowRoot")(button).unsafeCast<HTMLElement?>())
+            assertNotNull(button.shadowRoot)
         }
     }
 }

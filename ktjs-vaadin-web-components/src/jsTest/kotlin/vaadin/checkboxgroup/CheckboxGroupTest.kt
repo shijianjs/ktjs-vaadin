@@ -1,5 +1,6 @@
 package vaadin.checkboxgroup
 
+import vaadin.queryAll
 import kotlin.js.JsAny
 import kotlin.js.Promise
 import kotlin.js.js
@@ -48,7 +49,7 @@ class CheckboxGroupTest {
     private fun newGroup(): CheckboxGroupElement = attach(createCheckboxGroup())
 
     private fun checkboxes(group: CheckboxGroupElement): Array<HTMLElement> =
-        js("(group) => Array.from(group.querySelectorAll('vaadin-checkbox'))")(group) as Array<HTMLElement>
+        queryAll(group, "vaadin-checkbox")
 
     private fun values(vararg value: String): Array<JsAny?> = js("(value) => value")(value.toList().toTypedArray())
 

@@ -1,5 +1,7 @@
 package vaadin.textfield
 
+import vaadin.query
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -68,7 +70,7 @@ class TextFieldTest {
         val field = newTextField()
 
         return nextRender(field).then {
-            assertNotNull(js("(field) => field.querySelector('input')")(field) as HTMLElement?)
+            assertNotNull(query(field, "input"))
         }
     }
 
@@ -158,7 +160,7 @@ class TextFieldTest {
                 assertEquals("Name", field.label)
                 assertEquals("Your name", field.placeholder)
                 // The label is slotted into the `label` part instead of being reflected.
-                val label = js("(field) => field.querySelector('[slot=label]').textContent")(field) as String
+                val label = query(field, "[slot=label]")!!.textContent ?: ""
                 assertEquals(true, label.contains("Name"), "expected the label slot to render the label")
             }
     }
@@ -177,7 +179,7 @@ class TextFieldTest {
         val field = attach(createTextField { value = "Hello"; clearButtonVisible = true })
 
         return nextRender(field).then {
-            val button = js("(field) => field.shadowRoot.querySelector('[part~=clear-button]')")(field) as HTMLElement?
+            val button = shadowQuery(field, "[part~=clear-button]")
             assertNotNull(button)
         }
     }
@@ -244,7 +246,7 @@ class TextFieldTest {
         return nextRender(field).then {
             // `tooShort` / `tooLong` only apply to user-typed values, so the wrapper guarantees the
             // constraints reach the slotted `<input>`; the browser enforces them on real typing.
-            val input = js("(field) => field.querySelector('input')")(field) as HTMLElement
+            val input = query(field, "input") as HTMLElement
             assertEquals("3", input.getAttribute("minlength"))
             assertEquals("8", input.getAttribute("maxlength"))
         }

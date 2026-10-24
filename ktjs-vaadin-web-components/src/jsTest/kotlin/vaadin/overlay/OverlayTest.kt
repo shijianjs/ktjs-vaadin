@@ -1,5 +1,6 @@
 package vaadin.overlay
 
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -96,7 +97,7 @@ class OverlayTest {
                 overlay.opened = true
                 nextUpdate(overlay)
             }
-            .then { assertNotNull(js("(overlay) => overlay.shadowRoot.querySelector('[part=content]')")(overlay)) }
+            .then { assertNotNull(shadowQuery(overlay, "[part=content]")) }
     }
 
     @Test

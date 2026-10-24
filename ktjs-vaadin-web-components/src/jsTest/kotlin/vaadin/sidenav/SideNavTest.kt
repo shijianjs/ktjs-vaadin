@@ -1,5 +1,7 @@
 package vaadin.sidenav
 
+import vaadin.shadowQuery
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -47,7 +49,7 @@ class SideNavTest {
     private fun newSideNav(): SideNavElement = attach(createSideNav())
 
     private fun toggleButton(host: SideNavElement): HTMLElement =
-        assertNotNull(js("(host) => host.shadowRoot.querySelector('[part~=toggle-button]')")(host) as HTMLElement?)
+        assertNotNull(shadowQuery(host, "[part~=toggle-button]"))
 
     private fun navFixture(): SideNavElement = attach(
         fixture(
@@ -150,7 +152,7 @@ class SideNavTest {
         val host = navFixture()
 
         return nextRender(host).then {
-            val items = js("(host) => Array.from(host.querySelectorAll('vaadin-side-nav-item'))")(host) as Array<HTMLElement>
+            val items = queryAll(host, "vaadin-side-nav-item")
             assertEquals(3, items.size)
         }
     }

@@ -1,5 +1,7 @@
 package vaadin.applayout
 
+import vaadin.query
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -47,10 +49,10 @@ class AppLayoutTest {
     private fun newAppLayout(): AppLayoutElement = attach(createAppLayout())
 
     private fun drawer(host: AppLayoutElement): HTMLElement =
-        assertNotNull(js("(host) => host.shadowRoot.querySelector('[part=drawer]')")(host) as HTMLElement?)
+        assertNotNull(shadowQuery(host, "[part=drawer]"))
 
     private fun toggle(host: AppLayoutElement): HTMLElement =
-        assertNotNull(js("(host) => host.querySelector('[slot=drawer-toggle]')")(host) as HTMLElement?)
+        assertNotNull(query(host, "[slot=drawer-toggle]"))
 
     private fun layoutFixture(): AppLayoutElement = attach(
         fixture(

@@ -1,5 +1,6 @@
 package vaadin.card
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -38,7 +39,7 @@ class CardTest {
     private fun newCard(): CardElement = attach(createCard())
 
     private fun stringTitleElement(card: CardElement): HTMLElement? =
-        js("(card) => card.querySelector('[slot=\"title\"][role=\"heading\"]')")(card) as HTMLElement?
+        query(card, "[slot=\"title\"][role=\"heading\"]")
 
     private fun customTitleElement(card: CardElement): HTMLElement? =
         js("(card) => Array.from(card.querySelectorAll('[slot=\"title\"]')).find((el) => el.getAttribute('role') !== 'heading') || null")(

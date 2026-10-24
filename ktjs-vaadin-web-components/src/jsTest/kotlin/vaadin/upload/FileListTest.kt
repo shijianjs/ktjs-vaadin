@@ -108,13 +108,13 @@ class FileListTest {
 
         return nextRender(upload)
             .then {
-                js("(u) => { u.style.width = '180px'; }")(upload)
+                upload.style.width = "180px"
                 upload.files = createFiles(1)
                 nextRender(upload)
             }
             .then {
                 val item = fileListItems(upload)[0]
-                assertEquals(0.0, js("(el) => el.scrollWidth - el.offsetWidth")(item) as Double)
+                assertEquals(0, item.scrollWidth - item.offsetWidth)
             }
     }
 }

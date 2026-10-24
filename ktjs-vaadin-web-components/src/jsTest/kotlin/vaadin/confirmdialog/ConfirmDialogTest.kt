@@ -1,5 +1,6 @@
 package vaadin.confirmdialog
 
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -107,7 +108,7 @@ class ConfirmDialogTest {
                 assertEquals("Delete?", dialog.header)
                 assertEquals("This cannot be undone", dialog.message)
                 // The header is slotted into the dialog as the `header` slot.
-                assertNotNull(js("(dialog) => dialog.shadowRoot.querySelector('slot[name=header]')")(dialog))
+                assertNotNull(shadowQuery(dialog, "slot[name=header]"))
             }
     }
 

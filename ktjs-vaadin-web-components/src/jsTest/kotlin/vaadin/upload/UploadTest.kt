@@ -16,6 +16,7 @@ import vaadin.detachAll
 import vaadin.nextRender
 import vaadin.nextUpdate
 import vaadin.on
+import vaadin.shadowQuery
 import web.dom.document
 import web.html.HTMLElement
 
@@ -99,7 +100,7 @@ class UploadTest {
         val upload = newUpload()
 
         return nextRender(upload).then {
-            assertNotNull(js("(upload) => upload.shadowRoot.querySelector('[part~=drop-label]')")(upload))
+            assertNotNull(shadowQuery(upload, "[part~=drop-label]"))
         }
     }
 
@@ -108,7 +109,7 @@ class UploadTest {
         val upload = newUpload()
 
         return nextRender(upload).then {
-            assertNotNull(js("(upload) => upload.shadowRoot.querySelector('[part~=file-list]') || upload.shadowRoot.querySelector('slot[name=file-list]')")(upload))
+            assertNotNull(shadowQuery(upload, "[part~=file-list]") ?: shadowQuery(upload, "slot[name=file-list]"))
         }
     }
 

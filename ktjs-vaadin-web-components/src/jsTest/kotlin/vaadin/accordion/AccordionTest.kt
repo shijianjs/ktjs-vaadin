@@ -1,5 +1,6 @@
 package vaadin.accordion
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -294,7 +295,7 @@ class AccordionTest {
         panel.summary = "Summary"
 
         return nextRender(panel).then {
-            val summary = js("(panel) => panel.querySelector('[slot=summary]')")(panel) as HTMLElement?
+            val summary = query(panel, "[slot=summary]")
             assertNotNull(summary)
             assertEquals("vaadin-accordion-heading", summary.tagName.lowercase())
         }

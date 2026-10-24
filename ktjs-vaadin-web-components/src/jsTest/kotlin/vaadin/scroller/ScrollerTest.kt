@@ -1,5 +1,6 @@
 package vaadin.scroller
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -209,7 +210,7 @@ class ScrollerTest {
                     "<vaadin-scroller style=\"height: 200px;\"><div>Content</div></vaadin-scroller></div>",
             ),
         )
-        val scroller = js("(container) => container.querySelector('vaadin-scroller')")(container) as HTMLElement
+        val scroller = query(container, "vaadin-scroller") as HTMLElement
 
         return nextRender(scroller).then {
             assertEquals(200, js("(element) => element.offsetHeight")(scroller) as Int)
@@ -225,7 +226,7 @@ class ScrollerTest {
                     "<div style=\"height: 100%;\">Content</div></vaadin-scroller></div>",
             ),
         )
-        val scroller = js("(container) => container.querySelector('vaadin-scroller')")(container) as HTMLElement
+        val scroller = query(container, "vaadin-scroller") as HTMLElement
 
         return nextRender(scroller).then {
             val fits = js(

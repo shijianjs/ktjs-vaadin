@@ -1,5 +1,6 @@
 package vaadin.messagelist
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -44,7 +45,7 @@ class MessageListTest {
     private fun newList(): MessageListElement = attach(createMessageList())
 
     private fun messages(host: MessageListElement): Array<HTMLElement> =
-        js("(host) => Array.from(host.querySelectorAll('vaadin-message'))")(host) as Array<HTMLElement>
+        queryAll(host, "vaadin-message")
 
     private fun listFixture(): MessageListElement = attach(
         fixture(

@@ -1,5 +1,6 @@
 package vaadin.radiogroup
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -47,7 +48,7 @@ class RadioGroupTest {
     private fun newGroup(): RadioGroupElement = attach(createRadioGroup())
 
     private fun buttons(group: RadioGroupElement): Array<HTMLElement> =
-        js("(group) => Array.from(group.querySelectorAll('vaadin-radio-button'))")(group) as Array<HTMLElement>
+        queryAll(group, "vaadin-radio-button")
 
     private fun groupFixture(): RadioGroupElement = attach(
         fixture(

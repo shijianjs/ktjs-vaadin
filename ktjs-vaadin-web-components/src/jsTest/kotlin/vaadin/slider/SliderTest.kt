@@ -1,5 +1,6 @@
 package vaadin.slider
 
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -143,7 +144,7 @@ class SliderTest {
         val slider = newSlider()
 
         return nextRender(slider).then {
-            assertNotNull(js("(slider) => slider.shadowRoot.querySelector('[part~=track]')")(slider))
+            assertNotNull(shadowQuery(slider, "[part~=track]"))
         }
     }
 

@@ -1,5 +1,8 @@
 package vaadin.tabsheet
 
+import vaadin.query
+import vaadin.shadowQuery
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -55,13 +58,13 @@ class TabSheetTest {
         attach(fixture(html).unsafeCast<TabSheetElement>())
 
     private fun tabsOf(host: TabSheetElement): HTMLElement =
-        assertNotNull(js("(host) => host.querySelector('vaadin-tabs')")(host) as HTMLElement?)
+        assertNotNull(query(host, "vaadin-tabs"))
 
     private fun tabItems(host: TabSheetElement): Array<HTMLElement> =
         js("(host) => Array.from(host.querySelector('vaadin-tabs').children)")(host) as Array<HTMLElement>
 
     private fun panels(host: TabSheetElement): Array<HTMLElement> =
-        js("(host) => Array.from(host.querySelectorAll('[tab]'))")(host) as Array<HTMLElement>
+        queryAll(host, "[tab]")
 
     private fun isHidden(element: HTMLElement): Boolean = js("(element) => element.hidden")(element) as Boolean
 
@@ -834,7 +837,7 @@ class TabSheetTest {
         return nextFrame()
             .then {
                 // Keep a reference: after moving the tab out, a query would find another tab.
-                val tab = js("(host) => host.querySelector('vaadin-tab')")(host) as HTMLElement
+                val tab = query(host, "vaadin-tab") as HTMLElement
                 js("(host, tab) => { host.parentElement.appendChild(tab); }")(host, tab)
                 nextFrame().then { tab }
             }

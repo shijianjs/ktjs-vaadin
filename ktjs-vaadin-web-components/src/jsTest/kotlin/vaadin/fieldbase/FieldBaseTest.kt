@@ -1,5 +1,6 @@
 package vaadin.fieldbase
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -118,7 +119,7 @@ class FieldBaseTest {
         val field = attach(createTextField { label = "Name" })
 
         return nextRender(field).then {
-            val slot = js("(field) => field.querySelector('[slot=label]')")(field) as HTMLElement?
+            val slot = query(field, "[slot=label]")
             assertEquals(true, slot != null)
         }
     }
@@ -189,7 +190,7 @@ class FieldBaseTest {
         )
 
         return nextRender(field).then {
-            val input = js("(field) => field.querySelector('input')")(field) as HTMLElement
+            val input = query(field, "input") as HTMLElement
             assertEquals("[a-z]+", input.getAttribute("pattern"))
             assertEquals("2", input.getAttribute("minlength"))
             assertEquals("10", input.getAttribute("maxlength"))

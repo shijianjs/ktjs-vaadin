@@ -10,6 +10,7 @@ import kotlin.test.assertEquals
 import vaadin.attach
 import vaadin.detachAll
 import vaadin.nextRender
+import vaadin.shadowQuery
 import vaadin.timeout
 import web.dom.document
 import web.html.HTMLElement
@@ -37,8 +38,7 @@ class A11yTest {
         attached.clear()
     }
 
-    private fun shadowPart(element: HTMLElement, part: String): HTMLElement =
-        js("(el, part) => el.shadowRoot.querySelector('[part=' + part + ']')")(element, part) as HTMLElement
+    private fun shadowPart(element: HTMLElement, part: String): HTMLElement = shadowQuery(element, "[part=$part]")!!
 
     // <vaadin-upload-file>
 
@@ -52,10 +52,10 @@ class A11yTest {
     @Test
     fun startButtonHasAriaDescribedby(): Promise<Unit> {
         val file = newFileElement()
-        val nameId = js("(el) => el.shadowRoot.querySelector('[part=name]').id")(file) as String
+        val nameId = shadowQuery(file, "[part=name]")?.getAttribute("id")
 
         return nextRender(file).then {
-            assertEquals(nameId, shadowPart(file, "start-button").getAttribute("aria-describedby"))
+            assertEquals(nameId, shadowPart(file, "start-button").getAttribute("aria-describedby") as String?)
         }
     }
 
@@ -71,10 +71,10 @@ class A11yTest {
     @Test
     fun retryButtonHasAriaDescribedby(): Promise<Unit> {
         val file = newFileElement()
-        val nameId = js("(el) => el.shadowRoot.querySelector('[part=name]').id")(file) as String
+        val nameId = shadowQuery(file, "[part=name]")?.getAttribute("id")
 
         return nextRender(file).then {
-            assertEquals(nameId, shadowPart(file, "retry-button").getAttribute("aria-describedby"))
+            assertEquals(nameId, shadowPart(file, "retry-button").getAttribute("aria-describedby") as String?)
         }
     }
 
@@ -90,10 +90,10 @@ class A11yTest {
     @Test
     fun removeButtonHasAriaDescribedby(): Promise<Unit> {
         val file = newFileElement()
-        val nameId = js("(el) => el.shadowRoot.querySelector('[part=name]').id")(file) as String
+        val nameId = shadowQuery(file, "[part=name]")?.getAttribute("id")
 
         return nextRender(file).then {
-            assertEquals(nameId, shadowPart(file, "remove-button").getAttribute("aria-describedby"))
+            assertEquals(nameId, shadowPart(file, "remove-button").getAttribute("aria-describedby") as String?)
         }
     }
 
@@ -113,14 +113,18 @@ class A11yTest {
      * `mode: 'alert'` removes the `aria-live` attribute and switches the region to `role="alert"`,
      * so the region is located by either marker.
      */
-    private fun announceRegion(): HTMLElement =
-        js(
-            "() => Array.from(document.body.children).find((el) => el.hasAttribute('aria-live') || el.getAttribute('role') === 'alert')",
-        )() as HTMLElement
+    private fun announceRegion(): HTMLElement {
+        val children = document.body!!.children
+        for (index in 0 until children.length) {
+            val element = children.item(index) as HTMLElement
+            if (element.hasAttribute("aria-live") || element.getAttribute("role") == "alert") return element
+        }
+        error("The announce region has not been created yet")
+    }
 
-    private fun announceText(): String = js("(el) => el.textContent")(announceRegion()) as String
+    private fun announceText(): String = announceRegion().textContent ?: ""
 
-    private fun announceRole(): String = js("(el) => el.getAttribute('role')")(announceRegion()) as String
+    private fun announceRole(): String = announceRegion().getAttribute("role") ?: ""
 
     /** Dispatches a custom event carrying a JS [detail] on [upload]. */
     private fun fireDetail(upload: HTMLElement, type: String, detail: JsAny) {

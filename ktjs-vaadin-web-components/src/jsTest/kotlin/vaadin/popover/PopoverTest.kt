@@ -121,7 +121,7 @@ class PopoverTest {
             }
             .then {
                 // The content is moved into the overlay while the popover is open.
-                assertNotNull(js("(popover) => popover.shadowRoot")(popover))
+                assertNotNull(popover.shadowRoot)
             }
     }
 

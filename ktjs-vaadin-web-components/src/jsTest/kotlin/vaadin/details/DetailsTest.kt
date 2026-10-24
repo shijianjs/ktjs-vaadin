@@ -1,5 +1,6 @@
 package vaadin.details
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.unsafeCast
 import kotlin.js.js
@@ -25,9 +26,9 @@ import web.html.HTMLElement
  * Translated from `packages/details/test/details.test.js`.
  *
  * The keyboard cases (`sendKeys`) are covered through the public `opened` API instead, because the
- * Kotlin test DSL cannot send real key sequences. Everything else — default state, reflection,
+ * Kotlin test DSL cannot send real key sequences. Everything else 鈥?default state, reflection,
  * visibility, `aria-hidden` of the slotted content and the click behaviour of the three summary
- * variants — is translated directly.
+ * variants 鈥?is translated directly.
  */
 class DetailsTest {
     private val attached = mutableListOf<HTMLElement>()
@@ -108,7 +109,7 @@ class DetailsTest {
     @Test
     fun setsAriaHiddenOnTheSlottedElement(): Promise<Unit> {
         val details = attach(vaadin.fixture("<vaadin-details><div>Content</div></vaadin-details>").unsafeCast<DetailsElement>())
-        val content = js("(details) => details.querySelector('div')")(details) as HTMLElement
+        val content = query(details, "div") as HTMLElement
 
         return nextRender(details)
             .then {
@@ -122,7 +123,7 @@ class DetailsTest {
     @Test
     fun doesNotCloseWhenTheContentIsClicked(): Promise<Unit> {
         val details = attach(vaadin.fixture("<vaadin-details><div>Content</div></vaadin-details>").unsafeCast<DetailsElement>())
-        val content = js("(details) => details.querySelector('div')")(details) as HTMLElement
+        val content = query(details, "div") as HTMLElement
 
         return nextRender(details)
             .then {
@@ -151,7 +152,7 @@ class DetailsTest {
     }
 
     private fun summaryOf(details: DetailsElement): HTMLElement =
-        js("(details) => details.querySelector('[slot=\"summary\"]')")(details) as HTMLElement
+        query(details, "[slot=\"summary\"]") as HTMLElement
 
     @Test
     fun togglesOpenedOnDefaultSummaryClick(): Promise<Unit> {

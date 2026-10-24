@@ -1,5 +1,6 @@
 package vaadin.listbox
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -45,7 +46,7 @@ class ListBoxTest {
     private fun newListBox(): ListBoxElement = attach(createListBox())
 
     private fun items(host: ListBoxElement): Array<HTMLElement> =
-        js("(host) => Array.from(host.querySelectorAll('vaadin-item'))")(host) as Array<HTMLElement>
+        queryAll(host, "vaadin-item")
 
     private fun listBoxFixture(): ListBoxElement = attach(
         fixture(

@@ -1,5 +1,6 @@
 package vaadin.emailfield
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -55,7 +56,7 @@ class EmailFieldTest {
         val field = newField()
 
         return nextRender(field).then {
-            val input = assertNotNull(js("(field) => field.querySelector('input')")(field) as HTMLElement?)
+            val input = assertNotNull(query(field, "input"))
             assertEquals("email", input.getAttribute("type"))
         }
     }

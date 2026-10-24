@@ -13,6 +13,8 @@ import vaadin.attach
 import vaadin.detachAll
 import vaadin.nextRender
 import vaadin.nextUpdate
+import vaadin.query
+import web.dom.document
 import web.html.HTMLElement
 
 /**
@@ -43,11 +45,14 @@ class SlotsTest {
 
     private fun newUpload(): UploadElement = attach(createUpload())
 
-    private fun slotText(upload: UploadElement, selector: String): String =
-        js("(u, s) => u.querySelector(s).textContent")(upload, selector) as String
+    private fun slotText(upload: UploadElement, selector: String): String = query(upload, selector)!!.textContent ?: ""
 
+    /**
+     * Reads the disabled state of the slot element. The default add button is a `vaadin-button`,
+     * not a native `<button>`, and `DisabledMixin` reflects the property to the attribute.
+     */
     private fun slotDisabled(upload: UploadElement, selector: String): Boolean =
-        js("(u, s) => u.querySelector(s).disabled")(upload, selector) as Boolean
+        query(upload, selector)!!.hasAttribute("disabled")
 
     // add button
 
@@ -94,7 +99,10 @@ class SlotsTest {
 
         return nextRender(upload)
             .then {
-                js("(u) => { const b = document.createElement('button'); b.setAttribute('slot', 'add-button'); b.textContent = 'Add'; u.appendChild(b); }")(upload)
+                val button = document.createElement("button")
+                button.setAttribute("slot", "add-button")
+                button.textContent = "Add"
+                upload.appendChild(button)
                 nextRender(upload)
             }
             .then {
@@ -143,7 +151,10 @@ class SlotsTest {
 
         return nextRender(upload)
             .then {
-                js("(u) => { const l = document.createElement('strong'); l.setAttribute('slot', 'drop-label'); l.textContent = 'Drop image here'; u.appendChild(l); }")(upload)
+                val label = document.createElement("strong")
+                label.setAttribute("slot", "drop-label")
+                label.textContent = "Drop image here"
+                upload.appendChild(label)
                 nextRender(upload)
             }
             .then {

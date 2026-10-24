@@ -54,7 +54,7 @@ class MasterDetailLayoutTest {
         val layout = newLayout()
 
         return nextRender(layout).then {
-            assertNotNull(js("(layout) => layout.shadowRoot")(layout))
+            assertNotNull(layout.shadowRoot)
         }
     }
 

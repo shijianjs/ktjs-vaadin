@@ -1,5 +1,6 @@
 package vaadin.dialog
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -197,7 +198,7 @@ class DialogTest {
             }
             .then {
                 // The slotted content stays in the light DOM of the dialog.
-                assertNotNull(js("(dialog) => dialog.querySelector('div')")(dialog))
+                assertNotNull(query(dialog, "div"))
             }
     }
 

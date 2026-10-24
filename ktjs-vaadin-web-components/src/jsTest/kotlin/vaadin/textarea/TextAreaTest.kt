@@ -1,5 +1,6 @@
 package vaadin.textarea
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -43,7 +44,7 @@ class TextAreaTest {
     private fun newTextArea(): TextAreaElement = attach(createTextArea())
 
     private fun textareaOf(element: HTMLElement): HTMLElement =
-        assertNotNull(js("(element) => element.querySelector('textarea')")(element) as HTMLElement?)
+        assertNotNull(query(element, "textarea"))
 
     @Test
     fun isDefinedInTheCustomElementRegistry() {
@@ -120,12 +121,12 @@ class TextAreaTest {
                 nextUpdate(area)
             }
             .then {
-                assertTrue((js("(element) => element.querySelector('textarea').scrollTop")(area) as Int) >= 0)
+                assertTrue(query(area, "textarea")!!.scrollTop >= 0)
                 area.scrollToStart()
                 nextUpdate(area)
             }
             .then {
-                assertEquals(0, js("(element) => element.querySelector('textarea').scrollTop")(area) as Int)
+                assertEquals(0.0, query(area, "textarea")!!.scrollTop)
             }
     }
 

@@ -39,15 +39,11 @@ internal fun fixture(html: String): HTMLElement {
 }
 
 /** Returns the shadow root of [element] as an element, or `null` when it has none. */
-internal fun shadowRootOf(element: HTMLElement): HTMLElement? =
-    js("(element) => element.shadowRoot || null")(element) as HTMLElement?
+internal fun shadowRootOf(element: HTMLElement): HTMLElement? = element.shadowRoot as HTMLElement?
 
 /** Returns the first element matching [selector] inside the shadow root of [element]. */
 internal fun shadowQuery(element: HTMLElement, selector: String): HTMLElement? =
-    js("(element, selector) => element.shadowRoot ? element.shadowRoot.querySelector(selector) : null")(
-        element,
-        selector,
-    ) as HTMLElement?
+    element.shadowRoot?.querySelector(selector) as HTMLElement?
 
 /**
  * Returns the first node matching [selector] inside the shadow root of [element] as a plain
@@ -55,17 +51,19 @@ internal fun shadowQuery(element: HTMLElement, selector: String): HTMLElement? =
  * `<vaadin-avatar>`.
  */
 internal fun shadowQueryNode(element: HTMLElement, selector: String): web.dom.Element? =
-    js("(element, selector) => element.shadowRoot ? element.shadowRoot.querySelector(selector) : null")(
-        element,
-        selector,
-    ) as web.dom.Element?
+    element.shadowRoot?.querySelector(selector)
 
 /** Returns every element matching [selector] inside the shadow root of [element]. */
 internal fun shadowQueryAll(element: HTMLElement, selector: String): Array<HTMLElement> =
-    js("(element, selector) => element.shadowRoot ? Array.from(element.shadowRoot.querySelectorAll(selector)) : []")(
-        element,
-        selector,
-    ) as Array<HTMLElement>
+    element.shadowRoot?.let { queryAll(it, selector) } ?: emptyArray()
+
+/** Returns every element matching [selector] in the light DOM subtree of [root]. */
+internal fun queryAll(root: web.dom.ParentNode, selector: String): Array<HTMLElement> =
+    root.querySelectorAll(selector).let { nodes -> Array(nodes.length) { nodes.item(it) as HTMLElement } }
+
+/** Returns the first element matching [selector] in the light DOM subtree of [root]. */
+internal fun query(root: web.dom.ParentNode, selector: String): HTMLElement? =
+    root.querySelector(selector) as HTMLElement?
 
 /** Sets the `textContent` of [element], mirroring `element.textContent = ...`. */
 internal fun text(element: HTMLElement, value: String) {

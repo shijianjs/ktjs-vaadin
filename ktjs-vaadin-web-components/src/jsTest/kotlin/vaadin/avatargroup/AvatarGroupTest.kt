@@ -1,5 +1,6 @@
 package vaadin.avatargroup
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -55,7 +56,7 @@ class AvatarGroupTest {
     ).unsafeCast<Array<AvatarGroupItem>>()
 
     private fun avatars(group: AvatarGroupElement): Array<HTMLElement> =
-        js("(group) => Array.from(group.querySelectorAll('vaadin-avatar'))")(group) as Array<HTMLElement>
+        queryAll(group, "vaadin-avatar")
 
     @Test
     fun isDefinedInTheCustomElementRegistry() {

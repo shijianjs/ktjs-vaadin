@@ -1,5 +1,6 @@
 package vaadin.breadcrumbs
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -46,7 +47,7 @@ class BreadcrumbsTest {
     private fun newBreadcrumbs(): BreadcrumbsElement = attach(createBreadcrumbs())
 
     private fun items(host: BreadcrumbsElement): Array<HTMLElement> =
-        js("(host) => Array.from(host.querySelectorAll('vaadin-breadcrumbs-item'))")(host) as Array<HTMLElement>
+        queryAll(host, "vaadin-breadcrumbs-item")
 
     private fun breadcrumbsFixture(): BreadcrumbsElement = attach(
         fixture(

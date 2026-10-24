@@ -3,6 +3,9 @@ package vaadin.upload
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
+import vaadin.click
+import vaadin.queryAll
+import vaadin.shadowQuery
 import web.html.HTMLElement
 
 /**
@@ -68,29 +71,22 @@ internal fun addFilesViaInput(upload: HTMLElement, files: Array<UploadFile>) {
 
 /** Translates `removeFile(upload, idx)`: clicks the remove button of the file item at [index]. */
 internal fun removeFile(upload: HTMLElement, index: Int = 0) {
-    js(
-        "(upload, index) => {" +
-            " const files = upload.querySelectorAll('vaadin-upload-file');" +
-            " files[index].shadowRoot.querySelector('[part=\"remove-button\"]').click();" +
-            "}",
-    )(upload, index)
+    val item = queryAll(upload, "vaadin-upload-file")[index]
+    click(shadowQuery(item, "[part=remove-button]")!!)
 }
 
 /** Returns the `vaadin-upload-file` items rendered by [upload]. */
-internal fun fileListItems(upload: HTMLElement): Array<HTMLElement> =
-    js("(upload) => Array.from(upload.querySelectorAll('vaadin-upload-file'))")(upload) as Array<HTMLElement>
+internal fun fileListItems(upload: HTMLElement): Array<HTMLElement> = queryAll(upload, "vaadin-upload-file")
 
 /** Returns the `name` of the file rendered by the item [element]. */
-internal fun itemFileName(element: HTMLElement): String = js("(element) => element.file && element.file.name")(element) as String
+internal fun itemFileName(element: HTMLElement): String =
+    js("(element) => element.file && element.file.name")(element) as String
 
 /** Returns the hidden file input of [upload]. */
-internal fun fileInput(upload: HTMLElement): HTMLElement =
-    js("(upload) => upload.shadowRoot.querySelector('#fileInput')")(upload) as HTMLElement
+internal fun fileInput(upload: HTMLElement): HTMLElement = shadowQuery(upload, "#fileInput")!!
 
 /** Reads the `multiple` attribute of the file input of [upload]. */
-internal fun fileInputMultiple(upload: HTMLElement): String? =
-    js("(upload) => upload.shadowRoot.querySelector('#fileInput').getAttribute('multiple')")(upload) as String?
+internal fun fileInputMultiple(upload: HTMLElement): String? = shadowQuery(upload, "#fileInput")?.getAttribute("multiple")
 
 /** Reads the `capture` attribute of the file input of [upload]. */
-internal fun fileInputCapture(upload: HTMLElement): String? =
-    js("(upload) => upload.shadowRoot.querySelector('#fileInput').getAttribute('capture')")(upload) as String?
+internal fun fileInputCapture(upload: HTMLElement): String? = shadowQuery(upload, "#fileInput")?.getAttribute("capture")

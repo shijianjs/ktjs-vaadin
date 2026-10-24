@@ -1,5 +1,6 @@
 package vaadin.passwordfield
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -55,7 +56,7 @@ class PasswordFieldTest {
         val field = newField()
 
         return nextRender(field).then {
-            val input = assertNotNull(js("(field) => field.querySelector('input')")(field) as HTMLElement?)
+            val input = assertNotNull(query(field, "input"))
             assertEquals("password", input.getAttribute("type"))
         }
     }
@@ -69,13 +70,13 @@ class PasswordFieldTest {
                 // The clickable node is the `vaadin-password-field-button` slotted into the
                 // `reveal` slot; the shadow part is only its wrapper.
                 val button = assertNotNull(
-                    js("(field) => field.querySelector('vaadin-password-field-button')")(field) as HTMLElement?,
+                    query(field, "vaadin-password-field-button"),
                 )
                 js("(button) => button.click()")(button)
                 nextUpdate(field)
             }
             .then {
-                val input = assertNotNull(js("(field) => field.querySelector('input')")(field) as HTMLElement?)
+                val input = assertNotNull(query(field, "input"))
                 assertTrue(field.passwordVisible)
                 assertEquals("text", input.getAttribute("type"))
             }
@@ -88,20 +89,20 @@ class PasswordFieldTest {
         return nextRender(field)
             .then {
                 val button = assertNotNull(
-                    js("(field) => field.querySelector('vaadin-password-field-button')")(field) as HTMLElement?,
+                    query(field, "vaadin-password-field-button"),
                 )
                 js("(button) => button.click()")(button)
                 nextUpdate(field)
             }
             .then {
                 val button = assertNotNull(
-                    js("(field) => field.querySelector('vaadin-password-field-button')")(field) as HTMLElement?,
+                    query(field, "vaadin-password-field-button"),
                 )
                 js("(button) => button.click()")(button)
                 nextUpdate(field)
             }
             .then {
-                val input = assertNotNull(js("(field) => field.querySelector('input')")(field) as HTMLElement?)
+                val input = assertNotNull(query(field, "input"))
                 assertFalse(field.passwordVisible)
                 assertEquals("password", input.getAttribute("type"))
             }
@@ -133,7 +134,7 @@ class PasswordFieldTest {
         return nextRender(field)
             .then {
                 val button = assertNotNull(
-                    js("(field) => field.querySelector('vaadin-password-field-button')")(field) as HTMLElement?,
+                    query(field, "vaadin-password-field-button"),
                 )
                 js("(button) => button.click()")(button)
                 nextUpdate(field)

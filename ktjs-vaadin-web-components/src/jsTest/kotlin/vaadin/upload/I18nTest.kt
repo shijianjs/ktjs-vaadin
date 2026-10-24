@@ -12,6 +12,8 @@ import vaadin.detachAll
 import vaadin.nextFrame
 import vaadin.nextRender
 import vaadin.nextUpdate
+import vaadin.query
+import vaadin.shadowQuery
 import web.html.HTMLElement
 
 /**
@@ -39,8 +41,7 @@ class I18nTest {
         attached.clear()
     }
 
-    private fun slotText(upload: UploadElement, selector: String): String =
-        js("(u, s) => u.querySelector(s).textContent")(upload, selector) as String
+    private fun slotText(upload: UploadElement, selector: String): String = query(upload, selector)!!.textContent ?: ""
 
     private fun assertTranslations(
         i18n: JsAny?,
@@ -118,9 +119,9 @@ class I18nTest {
             }
             .then {
                 val item = fileListItems(upload)[0]
-                val startButton = js("(el) => el.shadowRoot.querySelector('[part=start-button]')")(item) as HTMLElement
+                val startButton = shadowQuery(item, "[part=start-button]")!!
                 assertEquals("Start", startButton.getAttribute("aria-label"))
-                val removeButton = js("(el) => el.shadowRoot.querySelector('[part=remove-button]')")(item) as HTMLElement
+                val removeButton = shadowQuery(item, "[part=remove-button]")!!
                 assertEquals("Remove", removeButton.getAttribute("aria-label"))
             }
     }

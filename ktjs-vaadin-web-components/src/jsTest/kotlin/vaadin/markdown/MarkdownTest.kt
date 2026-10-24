@@ -1,5 +1,7 @@
 package vaadin.markdown
 
+import vaadin.queryAll
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -78,7 +80,7 @@ class MarkdownTest {
                 nextUpdate(element)
             }
             .then {
-                val heading = js("(element) => element.querySelector('h1')")(element) as HTMLElement?
+                val heading = query(element, "h1")
                 assertNotNull(heading)
                 assertEquals("Heading", js("(element) => element.textContent")(heading) as String)
             }
@@ -98,7 +100,7 @@ class MarkdownTest {
                 nextUpdate(element)
             }
             .then {
-                val heading = js("(element) => element.querySelector('h1')")(element) as HTMLElement?
+                val heading = query(element, "h1")
                 assertEquals("Updated heading", js("(element) => element.textContent")(heading) as String)
             }
     }
@@ -161,8 +163,8 @@ class MarkdownTest {
                 nextUpdate(element)
             }
             .then {
-                assertEquals(2, js("(element) => element.querySelectorAll('li').length")(element) as Int)
-                assertNotNull(js("(element) => element.querySelector('strong')")(element) as HTMLElement?)
+                assertEquals(2, queryAll(element, "li").size)
+                assertNotNull(query(element, "strong"))
             }
     }
 
@@ -177,8 +179,8 @@ class MarkdownTest {
             }
             .then {
                 // Without `lineBreaks` a single newline stays a space inside one paragraph.
-                assertEquals(1, js("(element) => element.querySelectorAll('p').length")(element) as Int)
-                assertNull(js("(element) => element.querySelector('br')")(element) as HTMLElement?)
+                assertEquals(1, queryAll(element, "p").size)
+                assertNull(query(element, "br"))
             }
     }
 
@@ -192,7 +194,7 @@ class MarkdownTest {
                 element.content = "first\nsecond"
                 nextUpdate(element)
             }
-            .then { assertNotNull(js("(element) => element.querySelector('br')")(element) as HTMLElement?) }
+            .then { assertNotNull(query(element, "br")) }
     }
 
     // Kotlin-only coverage

@@ -1,5 +1,7 @@
 package vaadin.select
 
+import vaadin.queryAll
+
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -107,7 +109,7 @@ class SelectTest {
 
         return nextRender(select).then {
             // The items are rendered into the overlay list box.
-            val rendered = js("(select) => select.querySelectorAll('vaadin-select-item').length")(select) as Int
+            val rendered = queryAll(select, "vaadin-select-item").size
             assertEquals(true, rendered >= 0)
             assertEquals(3, select.items.size)
         }

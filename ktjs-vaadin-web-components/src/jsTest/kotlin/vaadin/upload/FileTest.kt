@@ -11,6 +11,7 @@ import kotlin.test.assertTrue
 import vaadin.attach
 import vaadin.detachAll
 import vaadin.nextUpdate
+import vaadin.shadowQueryAll
 import web.dom.document
 import web.html.HTMLElement
 
@@ -250,8 +251,8 @@ class FileTest {
         val file = newFileElement()
 
         return vaadin.nextRender(file).then {
-            val buttons = js("(el) => Array.from(el.shadowRoot.querySelectorAll('[part$=\"-button\"]'))")(file) as Array<HTMLElement>
-            buttons.forEach { assertFalse(js("(b) => b.disabled")(it) as Boolean) }
+            val buttons = shadowQueryAll(file, "[part$=\"-button\"]")
+            buttons.forEach { assertFalse((it as web.html.HTMLButtonElement).disabled) }
         }
     }
 
@@ -265,8 +266,8 @@ class FileTest {
                 nextUpdate(file)
             }
             .then {
-                val buttons = js("(el) => Array.from(el.shadowRoot.querySelectorAll('[part$=\"-button\"]'))")(file) as Array<HTMLElement>
-                buttons.forEach { assertTrue(js("(b) => b.disabled")(it) as Boolean) }
+                val buttons = shadowQueryAll(file, "[part$=\"-button\"]")
+                buttons.forEach { assertTrue((it as web.html.HTMLButtonElement).disabled) }
             }
     }
 

@@ -1,5 +1,6 @@
 package vaadin.messageinput
 
+import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -28,8 +29,8 @@ import web.html.HTMLElement
  *
  * The `click` cases of the upstream suite drive a real mouse through
  * `@vaadin/test-runner-commands` (`sendMouse`), which needs a browser input pipeline that the Kotlin
- * test DSL does not provide; they are skipped. Everything else — submit, i18n, disabled, focus and
- * the content slots — is translated.
+ * test DSL does not provide; they are skipped. Everything else 鈥?submit, i18n, disabled, focus and
+ * the content slots 鈥?is translated.
  */
 class MessageInputTest {
     private val attached = mutableListOf<HTMLElement>()
@@ -51,7 +52,7 @@ class MessageInputTest {
     private fun newInput(): MessageInputElement = attach(createMessageInput())
 
     private fun textArea(input: MessageInputElement): HTMLElement =
-        assertNotNull(js("(input) => input.querySelector('vaadin-text-area')")(input) as HTMLElement?)
+        assertNotNull(query(input, "vaadin-text-area"))
 
     private fun inputElement(input: MessageInputElement): HTMLElement =
         assertNotNull(
@@ -59,7 +60,7 @@ class MessageInputTest {
         )
 
     private fun button(input: MessageInputElement): HTMLElement =
-        assertNotNull(js("(input) => input.querySelector('vaadin-message-input-button')")(input) as HTMLElement?)
+        assertNotNull(query(input, "vaadin-message-input-button"))
 
     private fun setTextAreaValue(input: MessageInputElement, value: String) {
         js("(input, value) => { input.querySelector('vaadin-text-area').value = value; }")(input, value)
@@ -225,10 +226,10 @@ class MessageInputTest {
 
         return nextRender(input)
             .then {
-                input.i18n = js("({ send: 'Lähetä' })")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextUpdate(input)
             }
-            .then { assertEquals("Lähetä", js("(button) => button.innerText")(button(input)) as String) }
+            .then { assertEquals("L盲het盲", js("(button) => button.innerText")(button(input)) as String) }
     }
 
     @Test
@@ -273,11 +274,11 @@ class MessageInputTest {
 
         return nextRender(input)
             .then {
-                input.i18n = js("({ send: 'Lähetä' })")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextUpdate(input)
             }
             .then {
-                assertEquals("Lähetä", js("(button) => button.innerText")(button(input)) as String)
+                assertEquals("L盲het盲", js("(button) => button.innerText")(button(input)) as String)
                 assertEquals(
                     "Message",
                     js("(input) => input.querySelector('vaadin-text-area').placeholder")(input) as String,
@@ -291,11 +292,11 @@ class MessageInputTest {
 
         return nextRender(input)
             .then {
-                val custom = replaceWithCustomButton(input, "<span aria-hidden=\"true\">↑</span>")
-                input.i18n = js("({ send: 'Lähetä' })")
+                val custom = replaceWithCustomButton(input, "<span aria-hidden=\"true\">鈫?/span>")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextFrame().then { custom }
             }
-            .then { custom -> assertEquals("Lähetä", custom.getAttribute("aria-label")) }
+            .then { custom -> assertEquals("L盲het盲", custom.getAttribute("aria-label")) }
     }
 
     @Test
@@ -308,10 +309,10 @@ class MessageInputTest {
                     input,
                     "<!-- lit marker --><svg aria-hidden=\"true\"><path d=\"M0 0h1v1H0z\"></path></svg>",
                 )
-                input.i18n = js("({ send: 'Lähetä' })")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextFrame().then { custom }
             }
-            .then { custom -> assertEquals("Lähetä", custom.getAttribute("aria-label")) }
+            .then { custom -> assertEquals("L盲het盲", custom.getAttribute("aria-label")) }
     }
 
     @Test
@@ -321,10 +322,10 @@ class MessageInputTest {
         return nextRender(input)
             .then {
                 val custom = replaceWithCustomButton(input, "<span slot=\"tooltip\">Send prompt</span>")
-                input.i18n = js("({ send: 'Lähetä' })")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextFrame().then { custom }
             }
-            .then { custom -> assertEquals("Lähetä", custom.getAttribute("aria-label")) }
+            .then { custom -> assertEquals("L盲het盲", custom.getAttribute("aria-label")) }
     }
 
     @Test
@@ -385,7 +386,7 @@ class MessageInputTest {
                 nextFrame().then { custom }
             }
             .then { custom ->
-                input.i18n = js("({ send: 'Lähetä' })")
+                input.i18n = js("({ send: 'L盲het盲' })")
                 nextFrame().then { custom }
             }
             .then { custom -> assertEquals("Send", custom.getAttribute("aria-label")) }

@@ -1,5 +1,6 @@
 package vaadin.grid
 
+import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -48,7 +49,7 @@ class GridTest {
     private fun items(): Array<Any> = js("[{ name: 'Jane' }, { name: 'John' }]").unsafeCast<Array<Any>>()
 
     private fun columns(grid: GridElement): Array<HTMLElement> =
-        js("(grid) => Array.from(grid.querySelectorAll('vaadin-grid-column'))")(grid) as Array<HTMLElement>
+        queryAll(grid, "vaadin-grid-column")
 
     @Test
     fun isDefinedInTheCustomElementRegistry() {

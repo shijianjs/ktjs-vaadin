@@ -1,5 +1,8 @@
 package vaadin.login
 
+import vaadin.queryAll
+import vaadin.query
+import vaadin.shadowQuery
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -45,7 +48,7 @@ class LoginFormTest {
     private fun newForm(): LoginFormElement = attach(createLoginForm())
 
     private fun wrapper(form: HTMLElement): HTMLElement =
-        js("(form) => form.shadowRoot.querySelector('[part=form]')")(form) as HTMLElement
+        shadowQuery(form, "[part=form]") as HTMLElement
 
     private fun wrapperPart(form: HTMLElement, name: String): HTMLElement? =
         js("(form, name) => form.shadowRoot.querySelector('[part=form]').shadowRoot.querySelector('[part~=\"' + name + '\"]')")(
@@ -79,8 +82,8 @@ class LoginFormTest {
             .then { nextFrame() }
             .then {
                 // The fields are rendered into the slotted `<form>`, which stays in the light DOM.
-                assertEquals(1, js("(form) => form.querySelectorAll('vaadin-text-field').length")(form) as Int)
-                assertEquals(1, js("(form) => form.querySelectorAll('vaadin-password-field').length")(form) as Int)
+                assertEquals(1, queryAll(form, "vaadin-text-field").size)
+                assertEquals(1, queryAll(form, "vaadin-password-field").size)
             }
     }
 
@@ -93,7 +96,7 @@ class LoginFormTest {
             .then {
                 assertEquals(
                     1,
-                    js("(form) => form.querySelectorAll('vaadin-button[theme~=submit]').length")(form) as Int,
+                    queryAll(form, "vaadin-button[theme~=submit]").size,
                 )
             }
     }
@@ -110,7 +113,7 @@ class LoginFormTest {
             .then {
                 assertTrue(form.error)
                 // The banner is exported from the wrapper's shadow root through `exportparts`.
-                assertNotNull(js("(form) => form.shadowRoot.querySelector('[part=form]')")(form) as HTMLElement?)
+                assertNotNull(shadowQuery(form, "[part=form]"))
             }
     }
 
@@ -125,9 +128,7 @@ class LoginFormTest {
             }
             .then {
                 // The button stays in the DOM and is hidden through the `hidden` attribute.
-                val hidden = js("(form) => form.querySelector('vaadin-button[slot=forgot-password]').hasAttribute('hidden')")(
-                    form,
-                ) as Boolean
+                val hidden = query(form, "vaadin-button[slot=forgot-password]")!!.hasAttribute("hidden")
                 assertEquals(true, hidden)
             }
     }
@@ -188,8 +189,8 @@ class LoginFormTest {
 
     /** Fills both fields so that `submit()` passes the constraint validation of the form. */
     private fun fillCredentials(form: LoginFormElement) {
-        val username = js("(form) => form.querySelector('vaadin-text-field')")(form) as HTMLElement
-        val password = js("(form) => form.querySelector('vaadin-password-field')")(form) as HTMLElement
+        val username = query(form, "vaadin-text-field") as HTMLElement
+        val password = query(form, "vaadin-password-field") as HTMLElement
         js("(field) => { field.value = 'user'; }")(username)
         js("(field) => { field.value = 'secret'; }")(password)
     }

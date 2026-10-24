@@ -13,6 +13,7 @@ import vaadin.attach
 import vaadin.detachAll
 import vaadin.nextRender
 import vaadin.nextUpdate
+import vaadin.shadowQueryNode
 import kotlin.js.unsafeCast
 import web.dom.document
 import web.html.HTMLElement
@@ -96,7 +97,7 @@ class IconTest {
         val icon = attach(createIcon { icon = "vaadin:home" })
 
         return nextRender(icon).then {
-            val svg = js("(icon) => icon.shadowRoot.querySelector('svg')")(icon)
+            val svg = shadowQueryNode(icon, "svg")
             assertNotNull(svg, "expected the icon to render an <svg>")
         }
     }
@@ -113,7 +114,7 @@ class IconTest {
             .then {
                 // `size` drives the CSS custom property of the icon rather than an SVG attribute.
                 assertEquals(32.0, icon.size)
-                assertNotNull(js("(icon) => icon.shadowRoot.querySelector('svg')")(icon))
+                assertNotNull(shadowQueryNode(icon, "svg"))
             }
     }
 
