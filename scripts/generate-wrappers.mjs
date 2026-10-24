@@ -174,6 +174,14 @@ const TYPE_ALIASES = new Map([
 const MEMBER_TYPES = new Map([
   ['@vaadin/notification|Notification|show', 'vaadin.notification.NotificationElement'],
   ['@vaadin/combo-box|ComboBoxItemMixin|renderer', 'vaadin.combobox.ComboBoxRenderer'],
+  // The manifest records both item generators as `object`, while the upstream `.d.ts` declares
+  // `(item: TItem) => string`.
+  ['@vaadin/combo-box|ComboBoxItemsMixin|itemLabelGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/combo-box|ComboBoxMixin|itemLabelGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/combo-box|ComboBoxMixin|itemClassNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/combo-box|ComboBox|itemLabelGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/combo-box|ComboBox|itemClassNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|itemClassNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   [
     '@vaadin/multi-select-combo-box|MultiSelectComboBoxMixin|renderer',
     '(web.html.HTMLElement, vaadin.multiselectcombobox.MultiSelectComboBoxElement, vaadin.combobox.ComboBoxItemModel) -> Unit',

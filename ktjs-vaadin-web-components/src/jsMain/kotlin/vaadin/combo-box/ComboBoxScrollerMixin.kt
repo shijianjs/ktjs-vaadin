@@ -17,7 +17,7 @@ external interface ComboBoxScrollerMixin {
      * generated class name as a string, or multiple class names
      * separated by whitespace characters.
      */
-    var itemClassNameGenerator: kotlin.js.JsAny
+    var itemClassNameGenerator: ((kotlin.js.JsAny?) -> String)?
     /**
      * A full set of items to filter the visible options from.
      * Set to an empty array when combo-box is not opened.

@@ -19,7 +19,7 @@ external interface ComboBoxMixin : vaadin.fieldbase.ValidateMixin, vaadin.combob
      * generated class name as a string, or multiple class names
      * separated by whitespace characters.
      */
-    var itemClassNameGenerator: kotlin.js.JsAny
+    var itemClassNameGenerator: ((kotlin.js.JsAny?) -> String)?
     /**
      * When set to `true`, "loading" attribute is added to host and the overlay element.
      */
