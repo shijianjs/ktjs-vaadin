@@ -443,18 +443,50 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 
 - `demo` 只消费公共 API，不发布、也不进入 Dokka。根 `build.gradle.kts` 的发布与 Dokka 配置按
   `ktjs-vaadin-` 前缀过滤子模块，新增非发布模块时沿用该约定。
-- 端到端测试是 `demo/e2e/demo-page.test.mjs`：Playwright 驱动打包后的
-  `demo/build/dist/js/productionExecutable`，脚本自带静态服务器。运行 `./gradlew :demo:e2eTest`；
-  它不在 `check` 里，CI 在 `pagesSite` 之后单独执行。Playwright 与 Chromium 复用 Kotlin/JS npm
-  workspace（`build/js`）和第一个 wrapper 模块的 `kotlinInstallPlaywrightBrowsers`，脚本用 PATH 上的
-  `node` 启动。
+- 演示页是一个组件展示应用（单页、hash 路由），代码在 `demo/src/jsMain/kotlin/demo/`：
+  - `Catalog.kt`：路由 id → 分组 / 页面元信息（标题、官方文档 URL、源码路径）。每个组件一个
+    `CatalogEntry`，条目定义写在对应页面文件里（如 `pages/Buttons.kt` 的 `buttonEntries`），
+    `catalog` 按分组顺序聚合。新增组件页 = 新增页面文件里的条目，侧边栏与索引页自动收录。
+  - `AppShell.kt`：侧边栏 + 顶栏 + 内容区，只构建一次；导航只替换 `.content__host` 的单个子节点，
+    已经构建过的页面按路由缓存，因此来回切换不会丢组件状态。
+  - `Router.kt`：`#/<route>` hash 路由，`hashchange` 驱动前进 / 后退。
+  - `Theme.kt`：Lumo 亮 / 暗切换，`theme="dark"` 设在 `<html>` 上（`color-scheme.css` 用
+    `[theme~='dark']` 切换整套令牌），选择存 `localStorage`，`index.html` 里有一小段内联脚本在首帧前
+    应用，避免闪白。
+  - `ui/`：DOM 构建辅助（`div` / `paragraph` / `anchor` …）、页面骨架（`page` / `section` /
+    `example`）、`Readout`（就地更新的读值）与 `EventLog`（滚动事件流）。
+- 每个页面必须提供两条链接：Vaadin 官方文档（`https://vaadin.com/docs/latest/zh/components/<slug>`，
+  没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）与 GitHub 上的 Kotlin 源码
+  （`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）。`demo/e2e` 的用例会逐页校验这两条链接。
+- 侧边栏**不要**给 `vaadin-side-nav-item` 设 `path`：组件用 `document.location.pathname` 判断
+  `current`，而 hash 路由的 pathname 从不变化，设了 `path` 会让所有条目都变成「当前页」。改为由
+  `AppShell` 处理点击（并补 Enter / 空格），只给当前条目加 `nav__current` 与 `aria-current`。
+- Lumo 样式表不能靠 webpack 打包（Kotlin/JS 的 webpack 配置没有 css loader）：
+  `demo/build.gradle.kts` 的 `copyLumoStyles` 把 `@vaadin/vaadin-lumo-styles/dist/lumo.css`
+  （自包含、无 `@import`）复制到 demo 资源里，`index.html` 用普通 `<link>` 引入 ——
+  `LumoInjectionMixin` 需要从 `document.styleSheets` 读取 `@media lumo_*` 规则再注入各组件的
+  Shadow DOM。
+- 端到端测试是 `demo/e2e` 下的独立 npm/TypeScript 项目（`@playwright/test`）：
+  `tests/showcase.spec.ts` 覆盖外壳 / 全路由遍历 / 历史前进后退 / 主题切换 / 窄屏抽屉，
+  `fields.spec.ts`、`overlays.spec.ts`、`data.spec.ts` 覆盖真实交互。运行
+  `./gradlew :demo:e2eTest`（它先跑 `:demo:e2eInstall` 与 `jsBrowserDistribution`，再依赖
+  `:ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers`）；不在 `check` 里，CI 在
+  `pagesSite` 之后单独执行。`tools/serve.mjs` 是套件自带的静态服务器，由
+  `playwright.config.ts` 的 `webServer` 启动。
+  `@playwright/test` 的版本要与 Kotlin Gradle 插件安装的 `playwright` 一致（当前都是 1.61.0），
+  这样两端共用 `%LOCALAPPDATA%/ms-playwright` 里同一份 Chromium；升级 KGP 后若浏览器版本不匹配，
+  需要在 `demo/e2e` 里补 `npx playwright install chromium`。
+- 写用例时的注意点：`vaadin-*` 的文案在 Shadow DOM 里，`toContainText` 只看 `<slot>` 外的文本，
+  所以断言浮层 / 徽标 / 侧边栏文案要用 `getByText` / `getByRole`（从 document 根开始，不要在
+  overlay 元素上再链式查找，Playwright 不会从它继续深入 shadow root），或用 `[part="number"]`
+  之类的内部 part；勾选类控件要点内部 `input`（宿主的可点区域很大，点中心常常落空）。
 - `./gradlew pagesSite` 把 demo 与 `build/dokka/html` 组装到 `build/pages`：演示页在根目录，API 文档在
   `api/`。演示页内部链接使用相对路径。
 - Dokka 2.2.0 同时应用到根项目和所有 wrapper 子模块；聚合入口是根项目的 `dependencies { dokka(...) }`，
   任务为 `dokkaGeneratePublicationHtml`（2.x 已移除旧的 `dokkaHtmlMultiModule`）。
 - `.github/workflows/pages.yml` 只有 `workflow_dispatch`：站点更新在内容值得上线后手动执行
   `gh workflow run pages.yml`（或 Actions 页面点 Run workflow）。它每次都重新跑 `pagesSite`，所以线上
-  内容始终对应触发时 `master` 的提交。仓库 Settings → Pages 的 Source 必须选 **GitHub Actions**。
+  内容始终对应触发时默认分支（`main`）的提交。仓库 Settings → Pages 的 Source 必须选 **GitHub Actions**。
 - 本地预览：执行 `./gradlew pagesSite` 后给 `build/pages` 起任意静态服务器。直接开 `file://` 会因相对
   路径与 CORS 导致资源加载异常。
 

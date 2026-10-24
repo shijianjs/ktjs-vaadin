@@ -1,14 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Demo page for ktjs-vaadin, Kotlin/JS wrappers for the free Vaadin Web Components.">
-    <title>ktjs-vaadin demo</title>
+    <meta name="description" content="ktjs-vaadin 组件展示：免费版 Vaadin Web Components 的 Kotlin/JS 封装。">
+    <title>ktjs-vaadin · 组件展示</title>
+    <!-- Lumo is a regular stylesheet: LumoInjectionMixin reads the `@media lumo_*` blocks from the
+         document style sheets and copies them into each component's Shadow DOM. -->
+    <link rel="stylesheet" href="lumo.css">
     <link rel="stylesheet" href="demo.css">
     <script src="demo.js" defer></script>
+    <script>
+        // Applied before first paint so a stored dark preference does not flash the light theme.
+        // `theme="dark"` on <html> is the Lumo mechanism: color-scheme.css keys the dark token set
+        // off `[theme~='dark']`.
+        (() => {
+            try {
+                if (localStorage.getItem('ktjs-vaadin-theme') === 'dark') {
+                    document.documentElement.setAttribute('theme', 'dark')
+                }
+            } catch (ignored) {
+                // Private mode with storage disabled: stay with the light default.
+            }
+        })();
+    </script>
 </head>
 <body>
-<noscript>This demo is written in Kotlin/JS and needs JavaScript enabled.</noscript>
+<noscript>这个演示页面由 Kotlin/JS 构建，需要启用 JavaScript。</noscript>
 </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "ktjs-vaadin-demo-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Playwright suite for the ktjs-vaadin component showcase.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.0"
+  }
+}

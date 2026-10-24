@@ -1,23 +1,8 @@
-:root {
-    color-scheme: light dark;
-    --page-fg: #1f2933;
-    --page-bg: #f5f7fa;
-    --page-muted: #52606d;
-    --card-bg: #ffffff;
-    --card-border: #d9e2ec;
-    --card-shadow: 0 1px 2px rgb(15 23 42 / 8%);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --page-fg: #e4e7eb;
-        --page-bg: #111827;
-        --page-muted: #9aa5b1;
-        --card-bg: #1f2933;
-        --card-border: #323f4b;
-        --card-shadow: 0 1px 2px rgb(0 0 0 / 40%);
-    }
-}
+/*
+ * Styles of the demo shell only. Every component inside is themed by Lumo through `lumo.css`;
+ * this file never re-colours a component, it only lays the showcase out with Lumo tokens so the
+ * light and dark variants both work without a second stylesheet.
+ */
 
 *,
 *::before,
@@ -27,72 +12,355 @@
 
 body {
     margin: 0;
-    color: var(--page-fg);
-    background: var(--page-bg);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    line-height: 1.6;
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-m);
+    line-height: 1.5;
+    color: var(--lumo-body-text-color);
+    background: var(--lumo-base-color);
+}
+
+/* ------------------------------------------------------------------ shell */
+
+.shell {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.shell__nav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: var(--lumo-space-m);
+    overflow-y: auto;
+    border-inline-end: 1px solid var(--lumo-contrast-10pct);
+    background: var(--lumo-base-color);
+}
+
+.shell__main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav__brand {
+    display: flex;
+    align-items: baseline;
+    gap: var(--lumo-space-xs);
+    padding: var(--lumo-space-xs) var(--lumo-space-s) var(--lumo-space-m);
+}
+
+.nav__brand-name {
+    font-size: var(--lumo-font-size-l);
+    font-weight: 600;
+    color: var(--lumo-header-text-color);
+}
+
+.nav__brand-version {
+    font-size: var(--lumo-font-size-xs);
+    color: var(--lumo-tertiary-text-color);
+}
+
+.nav__group-title {
+    margin: var(--lumo-space-m) var(--lumo-space-s) var(--lumo-space-xs);
+    font-size: var(--lumo-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lumo-tertiary-text-color);
+}
+
+/* Lumo gives every side-nav item a subtle background; the sidebar reads better with flat items and
+   only the active route tinted. */
+.shell__nav vaadin-side-nav-item {
+    --vaadin-side-nav-item-background: transparent;
+    --vaadin-side-nav-item-border-radius: var(--lumo-border-radius-m);
+}
+
+/* Highlight of the current route. `vaadin-side-nav-item` computes `current` from
+   `document.location.pathname`, which does not change for hash routes, so the router marks the
+   item itself and this rule reuses the component's own custom properties. */
+.shell__nav vaadin-side-nav-item.nav__current {
+    --vaadin-side-nav-item-background: var(--lumo-primary-color-10pct);
+    --vaadin-side-nav-item-text-color: var(--lumo-primary-text-color);
+    --vaadin-side-nav-item-font-weight: 600;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--lumo-space-s);
+    padding: var(--lumo-space-s) var(--lumo-space-l);
+    border-block-end: 1px solid var(--lumo-contrast-10pct);
+    background: var(--lumo-base-color);
+}
+
+.topbar__breadcrumb {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-secondary-text-color);
+}
+
+.topbar__menu {
+    display: none;
+}
+
+.theme-switch {
+    display: inline-flex;
+    gap: var(--lumo-space-xs);
+}
+
+/* ------------------------------------------------------------------ content */
+
+.content {
+    padding: var(--lumo-space-l) var(--lumo-space-l) var(--lumo-space-xl);
 }
 
 .page {
-    max-width: 72rem;
+    max-width: 62rem;
     margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
 }
 
-h1 {
-    margin: 0 0 0.5rem;
-    font-size: 2rem;
+.page__title {
+    margin: 0 0 var(--lumo-space-xs);
+    font-size: var(--lumo-font-size-xxl);
+    font-weight: 600;
+    color: var(--lumo-header-text-color);
 }
 
-h2 {
-    margin: 0 0 1rem;
-    font-size: 1.125rem;
+.page__summary {
+    margin: 0 0 var(--lumo-space-m);
+    color: var(--lumo-secondary-text-color);
 }
 
-.hint {
-    margin: 0 0 2rem;
-    color: var(--page-muted);
+.page__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lumo-space-s);
+    margin-bottom: var(--lumo-space-l);
+    padding-bottom: var(--lumo-space-m);
+    border-block-end: 1px solid var(--lumo-contrast-10pct);
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-    gap: 1.5rem;
-    align-items: start;
+.page__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lumo-space-xs);
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border: 1px solid var(--lumo-contrast-20pct);
+    border-radius: var(--lumo-border-radius-m);
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-primary-text-color);
+    text-decoration: none;
 }
 
-.card {
-    padding: 1.5rem;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 0.75rem;
-    box-shadow: var(--card-shadow);
+.page__link:hover {
+    background: var(--lumo-primary-color-10pct);
 }
 
-.form {
+.page__link-note {
+    font-size: var(--lumo-font-size-xs);
+    color: var(--lumo-tertiary-text-color);
+}
+
+.section {
+    margin-bottom: var(--lumo-space-xl);
+}
+
+.section__title {
+    margin: 0 0 var(--lumo-space-xs);
+    font-size: var(--lumo-font-size-l);
+    font-weight: 600;
+    color: var(--lumo-header-text-color);
+}
+
+.section__desc {
+    margin: 0 0 var(--lumo-space-m);
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-secondary-text-color);
+}
+
+.example {
+    padding: var(--lumo-space-m);
+    border: 1px solid var(--lumo-contrast-10pct);
+    border-radius: var(--lumo-border-radius-l);
+    background: var(--lumo-contrast-5pct);
+}
+
+.example + .example {
+    margin-top: var(--lumo-space-s);
+}
+
+.example__caption {
+    margin: 0 0 var(--lumo-space-s);
+    font-size: var(--lumo-font-size-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lumo-tertiary-text-color);
+}
+
+/* ------------------------------------------------------------------ layout helpers */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lumo-space-s);
+}
+
+.row--start {
+    align-items: flex-start;
+}
+
+.col {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--lumo-space-s);
 }
 
-.form > vaadin-text-field,
-.form > vaadin-email-field,
-.form > vaadin-combo-box,
-.form > vaadin-radio-group {
-    width: 100%;
-}
-
-.form > vaadin-button {
+/* Fields are meant to fill the column, but a stretched button looks broken. */
+.col > vaadin-button {
     align-self: flex-start;
 }
 
-.result {
-    margin: 0;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--card-border);
-    color: var(--page-muted);
+.grid {
+    display: grid;
+    gap: var(--lumo-space-m);
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
 }
 
-vaadin-grid {
-    height: 20rem;
+.grid--two {
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+}
+
+.muted {
+    color: var(--lumo-secondary-text-color);
+}
+
+.small {
+    font-size: var(--lumo-font-size-s);
+}
+
+.field-width {
+    width: min(22rem, 100%);
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* ------------------------------------------------------------------ read-outs */
+
+.readout {
+    margin: 0;
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-secondary-text-color);
+}
+
+.readout strong {
+    color: var(--lumo-body-text-color);
+    font-weight: 600;
+}
+
+.event-log {
+    margin: 0;
+    padding: var(--lumo-space-s);
+    max-height: 11rem;
+    overflow-y: auto;
+    border: 1px solid var(--lumo-contrast-10pct);
+    border-radius: var(--lumo-border-radius-m);
+    background: var(--lumo-base-color);
+    font-family: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+    font-size: var(--lumo-font-size-xs);
+    line-height: 1.6;
+    list-style: none;
+}
+
+.event-log li {
+    display: flex;
+    gap: var(--lumo-space-s);
+}
+
+.event-log__time {
+    color: var(--lumo-tertiary-text-color);
+}
+
+.event-log__empty {
+    color: var(--lumo-tertiary-text-color);
+}
+
+/* Generic table used by pages that list props instead of using a grid. */
+.prop-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--lumo-font-size-s);
+}
+
+.prop-table th,
+.prop-table td {
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border-block-end: 1px solid var(--lumo-contrast-10pct);
+    text-align: start;
+    vertical-align: top;
+}
+
+.prop-table th {
+    color: var(--lumo-secondary-text-color);
+    font-weight: 600;
+}
+
+.code {
+    padding: 0.1em 0.35em;
+    border-radius: var(--lumo-border-radius-s);
+    background: var(--lumo-contrast-10pct);
+    font-family: ui-monospace, SFMono-Regular, "Cascadia Mono", Consolas, monospace;
+    font-size: 0.9em;
+}
+
+.card-grid {
+    display: grid;
+    gap: var(--lumo-space-m);
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+/* ------------------------------------------------------------------ responsive */
+
+@media (max-width: 60rem) {
+    .shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .shell__nav {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 20;
+        width: min(20rem, 85vw);
+        transform: translateX(-100%);
+        transition: transform 0.15s ease-in-out;
+        box-shadow: var(--lumo-box-shadow-l);
+    }
+
+    .shell__nav.shell__nav--open {
+        transform: translateX(0);
+    }
+
+    .topbar__menu {
+        display: inline-flex;
+    }
+
+    .content {
+        padding: var(--lumo-space-m);
+    }
+
+    .page__title {
+        font-size: var(--lumo-font-size-xl);
+    }
 }
