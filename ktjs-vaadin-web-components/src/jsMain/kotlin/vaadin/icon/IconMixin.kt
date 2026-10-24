@@ -51,7 +51,7 @@ external interface IconMixin : vaadin.icon.IconFontSizeMixin {
     /**
      * The SVG icon wrapped in a Lit template literal.
      */
-    var svg: kotlin.js.JsAny
+    var svg: vaadin.icon.IconSvgLiteral
     /**
      * The symbol identifier that references an ID of an element contained in the SVG element assigned to the
      * `src` property

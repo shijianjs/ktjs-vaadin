@@ -22,7 +22,7 @@ private external interface IconsetElementStaticMembers {
      * Returns SVGTemplateResult for the `icon` ID matching `name` of the
      * iconset, or `nothing` literal if there is no matching icon found.
      */
-    fun getIconSvg(icon: String, name: String?)
+    fun getIconSvg(icon: String, name: String?): vaadin.icon.IconSvgInfo
     /**
      * Register an iconset without adding to the DOM.
      */
@@ -52,8 +52,8 @@ object Iconset {
      * Returns SVGTemplateResult for the `icon` ID matching `name` of the
      * iconset, or `nothing` literal if there is no matching icon found.
      */
-    fun getIconSvg(icon: String, name: String?) {
-        IconsetElementModule.Iconset.getIconSvg(icon, name)
+    fun getIconSvg(icon: String, name: String?): vaadin.icon.IconSvgInfo {
+        return IconsetElementModule.Iconset.getIconSvg(icon, name)
     }
 
     /**

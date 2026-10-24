@@ -115,6 +115,48 @@ overlayMixin.hiddenProperty = true        // 写入 element.hidden
 input.autocapitalizeProperty = "words"    // 写入 element.autocapitalize
 ```
 
+## Renderer 与 Lit
+
+需要自定义内容的组件都提供 `renderer` 属性。它是一个普通回调，参数是要填充的容器元素，因此内容用 DOM
+API 构建，节点在多次调用之间复用：
+
+```kotlin
+import vaadin.grid.createGrid
+import vaadin.grid.createGridColumn
+import web.dom.document
+
+val grid = createGrid()
+val nameColumn = createGridColumn { path = "name" }
+nameColumn.renderer = { root, _, _ ->
+    val label = root.firstElementChild ?: document.createElement("span").also(root::append)
+    label.textContent = "Cell content"
+}
+grid.appendChild(nameColumn)
+grid.requestContentUpdate() // 数据变化后重新执行 renderer
+```
+
+上游还为这些包额外发布 Lit 入口（`@vaadin/combo-box/lit.js`、`@vaadin/grid/lit.js` 等），内容是
+`comboBoxRenderer()`、`columnBodyRenderer()` 这类 Lit 指令。指令只能在 Lit 模板里使用：它做的事就是
+给同一个 `renderer` 属性赋值，并按依赖变化重新执行。Kotlin/JS 直接构建 DOM，因此本模块不包装这些入口；
+生成出来的 `renderer` 属性本身就有精确类型，依赖检查改由显式调用 `requestContentUpdate()` 表达。
+
+公开 API 里唯一剩下的 Lit 值，是 `<vaadin-icon>` 接受 SVG literal。它建模为不透明的 `IconSvgLiteral`，
+`unsafeSvgLiteral()` 可以把 SVG 标记转成这种值：
+
+```kotlin
+import vaadin.icon.Iconset
+import vaadin.icon.createIcon
+import vaadin.icon.unsafeSvgLiteral
+
+val icon = createIcon()
+icon.svg = unsafeSvgLiteral("""<path d="M12 2 2 22h20z"></path>""")
+
+// 从已注册的图标集解析出来的图标是同一类型；
+// 第二个参数是图标集名称，传 null 表示从 "vaadin:" 前缀推导。
+val check = Iconset.getIconSvg("vaadin:check", null)
+icon.svg = check.svg
+```
+
 ## 主题
 
 Lumo 与 Aura 都是 CSS 优先的设计系统，推荐在应用样式管线里引入对应样式表：

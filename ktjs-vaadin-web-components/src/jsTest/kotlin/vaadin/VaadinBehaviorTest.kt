@@ -1,12 +1,14 @@
 package vaadin
 
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import web.dom.document
+import web.components.HTMLTemplateElement
 import web.html.HTMLElement
 import vaadin.a11ybase.DisabledMixin
 import vaadin.aura.Aura
@@ -21,6 +23,12 @@ import vaadin.fieldhighlighter.fieldHighlighterUser
 import vaadin.grid.Grid
 import vaadin.grid.createGrid
 import vaadin.grid.createGridColumn
+import vaadin.icon.Iconset
+import vaadin.icon.createIcon
+import vaadin.icon.ensureSvgLiteral
+import vaadin.icon.isValidSvg
+import vaadin.icon.registerIconset
+import vaadin.icon.unsafeSvgLiteral
 import vaadin.lumostyles.LumoThemes
 import vaadin.notification.Notification
 import vaadin.numberfield.createNumberField
@@ -240,6 +248,34 @@ class VaadinBehaviorTest {
 
         assertTrue(marker.working)
         assertEquals("high", marker.confidence)
+    }
+
+    @Test
+    fun iconSvgLiteralsAreTypedAndValidated() {
+        val literal = unsafeSvgLiteral("""<path d="M12 2 2 22h20z"></path>""")
+        assertTrue(isValidSvg(literal))
+        assertFalse(isValidSvg("plain text"))
+        assertTrue(isValidSvg(ensureSvgLiteral(literal)))
+
+        val icon = createIcon()
+        icon.svg = literal
+    }
+
+    @Test
+    fun iconsetResolvesAnIconAsAnSvgLiteral() {
+        registerIconset()
+        val template = document.createElement("template").unsafeCast<HTMLTemplateElement>()
+        val svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        svg.setAttribute("id", "ktjs:triangle")
+        svg.setAttribute("viewBox", "0 0 24 24")
+        template.content.appendChild(svg)
+
+        Iconset.register("ktjs", 24.0, template)
+
+        val icon = Iconset.getIconSvg("ktjs:triangle", null)
+        assertTrue(isValidSvg(icon.svg))
+        assertEquals(24.0, icon.size)
+        assertEquals("0 0 24 24", icon.viewBox)
     }
 
     @Test

@@ -14,7 +14,7 @@ external interface IconsetMixin {
      * Returns SVGTemplateResult for the `icon` ID matching `name` of the
      * iconset, or `nothing` literal if there is no matching icon found.
      */
-    fun getIconSvg(icon: String, name: String?)
+    fun getIconSvg(icon: String, name: String?): vaadin.icon.IconSvgInfo
     /**
      * The name of the iconset. Every iconset is required to have its own unique name.
      * All the SVG icons in the iconset must have IDs conforming to its name.

@@ -186,6 +186,12 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
   ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
+  // The Lit SVG literal has no structural information in the manifest (`object`), so it is named
+  // explicitly. See `vaadin/icon/IconTypes.kt`.
+  ['@vaadin/icon|Icon|svg', 'vaadin.icon.IconSvgLiteral'],
+  ['@vaadin/icon|IconMixin|svg', 'vaadin.icon.IconSvgLiteral'],
+  ['@vaadin/icon|Iconset|getIconSvg', 'vaadin.icon.IconSvgInfo'],
+  ['@vaadin/icon|IconsetMixin|getIconSvg', 'vaadin.icon.IconSvgInfo'],
 ]);
 
 // Module-level functions whose manifest signature is too vague (a bare `Function`), typed after
@@ -200,6 +206,12 @@ const MODULE_SIGNATURES = new Map([
     '(row: web.html.HTMLTableRowElement, callback: (web.html.HTMLTableCellElement) -> Unit)',
   ],
   ['@vaadin/overlay|observeMove', '(element: web.html.HTMLElement, callback: () -> Unit): () -> Unit'],
+  // The manifest records no return type for these functions, and the upstream `.d.ts` returns a Lit
+  // SVG literal (`SVGTemplateResult | nothing`) or a type predicate the manifest cannot express.
+  ['@vaadin/icon|cloneSvgNode', '(source: web.dom.Element): vaadin.icon.IconSvgLiteral'],
+  ['@vaadin/icon|ensureSvgLiteral', '(source: kotlin.js.JsAny?): vaadin.icon.IconSvgLiteral'],
+  ['@vaadin/icon|isValidSvg', '(source: kotlin.js.JsAny?): Boolean'],
+  ['@vaadin/icon|unsafeSvgLiteral', '(source: String): vaadin.icon.IconSvgLiteral'],
 ]);
 
 // Same as MEMBER_TYPES, for individual parameters.

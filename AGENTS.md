@@ -67,6 +67,21 @@ Kotlin/JS wrapper。
 `kotlin.js.JsAny` 需要 `kotlin.js.ExperimentalWasmJsInterop` opt-in；根构建脚本已对全部 KMP 子模块统一
 添加，新增模块无需单独配置。
 
+### Lit 入口点与 SVG literal
+
+- 10 个包（`combo-box`、`context-menu`、`dialog`、`grid`、`grid-pro`、`multi-select-combo-box`、
+  `notification`、`popover`、`select`、`virtual-list`）额外发布 `lit.js` / `lit.d.ts` /
+  `web-types.lit.json`，内容只有 `ComboBoxRendererDirective`、`comboBoxRenderer()` 这类 Lit 指令：
+  `addRenderer()` 给同一个 `renderer` 属性赋值，按 `dependencies` 重新执行，`removeRenderer()` 置回
+  `null`。指令只能在 Lit 模板里使用，这些入口也不在 `custom-elements.json` 里，所以生成器看不到，本项目
+  也不包装。Kotlin 侧直接用已生成类型的 `renderer` lambda 构建 DOM，重绘靠 `requestContentUpdate()`；
+  不要为了「类型完整」再包一层 directive。
+- 公开 API 里真正的 Lit 类型只有 `@vaadin/icon` 的 SVG literal（上游 `SVGTemplateResult | nothing`）。
+  manifest 不记录这些函数的返回值，因此 `vaadin/icon/IconTypes.kt` 手写 `IconSvgLiteral`（=
+  `kotlin.js.JsAny`）与 `IconSvgInfo`，再在 `MODULE_SIGNATURES`（`cloneSvgNode`、`ensureSvgLiteral`、
+  `isValidSvg`、`unsafeSvgLiteral`）与 `MEMBER_TYPES`（`svg`、`Iconset.getIconSvg`）里接上。遇到类似的
+  「manifest 缺失的 Lit 返回值」沿用这个做法：手写具名类型并登记到生成器，不要让它退回 `Unit`。
+
 ### 新增模块
 
 1. 复制 `scaffold/module` 为 `ktjs-vaadin-<name>`，替换文件里的所有占位符（包名、npm 包名、项目名）。

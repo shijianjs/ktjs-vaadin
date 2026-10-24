@@ -128,6 +128,51 @@ overlayMixin.hiddenProperty = true        // sets element.hidden
 input.autocapitalizeProperty = "words"    // sets element.autocapitalize
 ```
 
+## Renderers and Lit
+
+Components that accept rich content expose a `renderer` property. It is a plain callback that
+receives the container element to fill, so content is built with DOM APIs and the nodes are reused
+across calls:
+
+```kotlin
+import vaadin.grid.createGrid
+import vaadin.grid.createGridColumn
+import web.dom.document
+
+val grid = createGrid()
+val nameColumn = createGridColumn { path = "name" }
+nameColumn.renderer = { root, _, _ ->
+    val label = root.firstElementChild ?: document.createElement("span").also(root::append)
+    label.textContent = "Cell content"
+}
+grid.appendChild(nameColumn)
+grid.requestContentUpdate() // re-runs the renderer after the data changed
+```
+
+Vaadin also publishes a Lit entry point for these packages (`@vaadin/combo-box/lit.js`,
+`@vaadin/grid/lit.js`, ...) with directives such as `comboBoxRenderer()` and
+`columnBodyRenderer()`. A directive only works inside a Lit template: it assigns the same
+`renderer` property and re-runs it when its dependencies change. Kotlin/JS builds the DOM directly,
+so this module does not wrap them; the generated `renderer` properties are already typed, and the
+dependency check is replaced by an explicit `requestContentUpdate()` call.
+
+The only Lit value left in the public API is the SVG literal accepted by `<vaadin-icon>`. It is
+modelled as the opaque `IconSvgLiteral`, and `unsafeSvgLiteral()` turns SVG markup into one:
+
+```kotlin
+import vaadin.icon.Iconset
+import vaadin.icon.createIcon
+import vaadin.icon.unsafeSvgLiteral
+
+val icon = createIcon()
+icon.svg = unsafeSvgLiteral("""<path d="M12 2 2 22h20z"></path>""")
+
+// Icons resolved from a registered iconset have the same type.
+// The second argument is the iconset name; null derives it from the "vaadin:" prefix.
+val check = Iconset.getIconSvg("vaadin:check", null)
+icon.svg = check.svg
+```
+
 ## Themes
 
 Lumo and Aura are CSS-first design systems; the supported path is importing their stylesheet in the
