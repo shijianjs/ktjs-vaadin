@@ -140,15 +140,20 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
 - **先翻译上游测试**：Kotlin 测试目录与子模块、包名对齐（`src/jsTest/kotlin/vaadin/<包>/`），文件名与
   上游 `test/*.test.js` 对应（`tabs.test.js` → `TabsTest.kt`），测试函数名对应上游 `it(...)`，KDoc 注明
   上游文件路径。上游用 `@vaadin/testing-helpers` 的地方用 `vaadin.TestSupport` 的等价辅助函数
-  （`attach`、`nextFrame`、`nextUpdate`、`timeout`、`keyDown` 等），不要在用例里重复造。
+  （`attach`、`fixture`、`nextRender`、`nextFrame`、`nextUpdate`、`nextResize`、`timeout`、`keyDown`、
+  `on`、`typeInto`、`click`、`shadowQuery`、`computedStyle` 等），不要在用例里重复造。
+- **按 `node_modules` 的版本写断言**：上游源码树可能比 `package.json` 锁定的 npm 版本新（例如源码树是
+  `25.4.0-alpha4`、锁的是 `25.3.4`），属性名和默认值会不一样（`headingLevel` vs `titleHeadingLevel`、
+  哪些属性反射到 attribute、哪些属性默认是 `undefined`）。写用例前先用 `custom-elements.json` 或
+  `scripts/dump-api.py` 核对锁定的版本，KDoc 里注明差异。
 - **异步用例**：Kotlin/JS 的 `@Test` 函数直接返回 `Promise<Unit>`（`return nextUpdate(element).then { ... }`），
   不要 sleep，也不要引入协程测试库。
 - **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、
   `XxxAttributes` / `XxxEvents` 常量、静态入口对象、mixin 类型归属、`...Property` 改名映射、
   `JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
 - **明确放弃的功能**：视觉/截图测试（`test/visual/*`）、shadow DOM 结构快照（`test/dom/*`）、依赖私有
-  成员（`_observer`、`$`、`__*`）的内部测试、Lit 指令入口（`lit.js`，见上一节）。放弃项写在这里，
-  不要在用例里绕道 `js()` 访问私有状态。
+  成员（`_observer`、`$`、`__*`）的内部测试、Lit 指令入口（`lit.js`，见上一节），以及需要真实键鼠序列
+  （`sendKeys`、指针拖拽）或真实文件上传的用例。放弃项写在这里，不要在用例里绕道 `js()` 访问私有状态。
 - **测试发现 bug 时修 wrapper，不改断言**：能定位到生成器的问题就修生成器并重新生成，提交信息里说明。
 
 ## UI 编程约定
