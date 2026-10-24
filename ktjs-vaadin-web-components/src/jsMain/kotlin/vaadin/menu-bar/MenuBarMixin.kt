@@ -5,7 +5,7 @@ external interface MenuBarMixin : vaadin.componentbase.I18nMixin, vaadin.a11ybas
     /**
      * Closes the current submenu.
      */
-    fun close(): dynamic
+    fun close()
     /**
      * Defines a hierarchical structure, where root level items represent menu bar buttons,
      * and `children` property configures a submenu with items to be opened below
@@ -68,7 +68,7 @@ external interface MenuBarMixin : vaadin.componentbase.I18nMixin, vaadin.a11ybas
      * </vaadin-menu-bar>
      * ```
      */
-    var items: Array<dynamic>
+    var items: Array<vaadin.menubar.MenuBarItem>
     /**
      * If true, the submenu will open on hover (mouseover) instead of click.
      */

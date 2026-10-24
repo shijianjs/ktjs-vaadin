@@ -77,13 +77,13 @@ external fun dateEquals(date1: kotlin.js.Date, date2: kotlin.js.Date, normalizer
  * to the expected format.
  */
 
-external fun extractDateParts(date: kotlin.js.Date): dynamic
+external fun extractDateParts(date: kotlin.js.Date): kotlin.js.JsAny
 
 /**
  * Check if the given date is in the range of allowed dates.
  */
 
-external fun dateAllowed(date: kotlin.js.Date, min: kotlin.js.Date, max: kotlin.js.Date, isDateDisabled: (dynamic) -> Boolean): Boolean
+external fun dateAllowed(date: kotlin.js.Date, min: kotlin.js.Date, max: kotlin.js.Date, isDateDisabled: (vaadin.datepicker.DatePickerDate) -> Boolean): Boolean
 
 /**
  * Check if the given date can be selected: allowed by `dateAllowed` and not reported as disabled
@@ -91,7 +91,7 @@ external fun dateAllowed(date: kotlin.js.Date, min: kotlin.js.Date, max: kotlin.
  * focused: a disabled date is still focusable, it just cannot be selected.
  */
 
-external fun dateSelectable(date: kotlin.js.Date, min: kotlin.js.Date?, max: kotlin.js.Date?, isDateDisabled: (dynamic) -> Boolean, controller: vaadin.datepicker.DateMetadataController? = definedExternally): Boolean
+external fun dateSelectable(date: kotlin.js.Date, min: kotlin.js.Date?, max: kotlin.js.Date?, isDateDisabled: (vaadin.datepicker.DatePickerDate) -> Boolean, controller: vaadin.datepicker.DateMetadataController? = definedExternally): Boolean
 
 /**
  * Get closest date from array of dates.

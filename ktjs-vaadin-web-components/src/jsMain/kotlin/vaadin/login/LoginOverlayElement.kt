@@ -57,24 +57,18 @@ abstract external class LoginOverlayElement : web.html.HTMLElement, vaadin.login
 
 }
 
-/** The `<vaadin-login-overlay>` custom element. */
-object LoginOverlayTagName {
-    inline val loginOverlay: web.dom.TagName<LoginOverlayElement>
-        get() = web.dom.TagName("vaadin-login-overlay")
-}
-
 @JsModule("@vaadin/login/src/vaadin-login-overlay.js")
 private external object LoginOverlayElementModule {
-    val LoginOverlay: dynamic
+    val LoginOverlay: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/login/src/vaadin-login-overlay.js`, registering `<vaadin-login-overlay>`, and returns the element class. */
-fun registerLoginOverlay(): dynamic = LoginOverlayElementModule.LoginOverlay
+fun registerLoginOverlay(): kotlin.js.JsAny = LoginOverlayElementModule.LoginOverlay
 
 /** Creates a `<vaadin-login-overlay>` element. The custom element is registered on first use. */
 fun createLoginOverlay(configure: LoginOverlayElement.() -> Unit = {}): LoginOverlayElement {
     registerLoginOverlay()
-    return web.dom.document.createElement(LoginOverlayTagName.loginOverlay).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.loginOverlay).apply(configure)
 }
 
 /** Attribute names of `<vaadin-login-overlay>`, for use with `setAttribute`. */

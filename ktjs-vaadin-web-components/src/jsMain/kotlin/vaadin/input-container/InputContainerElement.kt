@@ -17,24 +17,18 @@ abstract external class InputContainerElement : web.html.HTMLElement, vaadin.the
     var readonly: Boolean
 }
 
-/** The `<vaadin-input-container>` custom element. */
-object InputContainerTagName {
-    inline val inputContainer: web.dom.TagName<InputContainerElement>
-        get() = web.dom.TagName("vaadin-input-container")
-}
-
 @JsModule("@vaadin/input-container/src/vaadin-input-container.js")
 private external object InputContainerElementModule {
-    val InputContainer: dynamic
+    val InputContainer: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/input-container/src/vaadin-input-container.js`, registering `<vaadin-input-container>`, and returns the element class. */
-fun registerInputContainer(): dynamic = InputContainerElementModule.InputContainer
+fun registerInputContainer(): kotlin.js.JsAny = InputContainerElementModule.InputContainer
 
 /** Creates a `<vaadin-input-container>` element. The custom element is registered on first use. */
 fun createInputContainer(configure: InputContainerElement.() -> Unit = {}): InputContainerElement {
     registerInputContainer()
-    return web.dom.document.createElement(InputContainerTagName.inputContainer).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.inputContainer).apply(configure)
 }
 
 /** Attribute names of `<vaadin-input-container>`, for use with `setAttribute`. */

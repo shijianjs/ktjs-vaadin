@@ -7,22 +7,22 @@ package vaadin.icon
  * Clone given node and return its content as SVG literal.
  */
 
-external fun cloneSvgNode(source: web.dom.Element): dynamic
+external fun cloneSvgNode(source: web.dom.Element)
 
 /**
  * Test if the given argument is a valid SVG literal.
  */
 
-external fun isValidSvg(source: dynamic): dynamic
+external fun isValidSvg(source: kotlin.js.JsAny)
 
 /**
  * Create a valid SVG literal based on the argument.
  */
 
-external fun ensureSvgLiteral(source: dynamic): dynamic
+external fun ensureSvgLiteral(source: kotlin.js.JsAny)
 
 /**
  * Create an SVG literal from source string.
  */
 
-external fun unsafeSvgLiteral(source: String): dynamic
+external fun unsafeSvgLiteral(source: String)

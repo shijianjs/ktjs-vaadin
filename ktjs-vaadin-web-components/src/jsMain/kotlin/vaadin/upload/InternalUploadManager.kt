@@ -14,13 +14,13 @@ abstract external class InternalUploadManager : vaadin.upload.UploadManager {
      * which case it is uploaded again from scratch. A file that is already
      * uploading or queued is ignored.
      */
-    fun startUpload(`file`: vaadin.upload.UploadFileElement): dynamic
+    fun startUpload(`file`: vaadin.upload.UploadFile)
 }
 
 @JsModule("@vaadin/upload/src/vaadin-upload-internal-manager.js")
 private external object InternalUploadManagerModule {
-    val InternalUploadManager: dynamic
+    val InternalUploadManager: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/upload/src/vaadin-upload-internal-manager.js`. */
-fun internaluploadmanagerClass(): dynamic = InternalUploadManagerModule.InternalUploadManager
+fun internaluploadmanagerClass(): kotlin.js.JsAny = InternalUploadManagerModule.InternalUploadManager

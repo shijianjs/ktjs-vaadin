@@ -54,24 +54,18 @@ abstract external class AvatarGroupElement : web.html.HTMLElement, vaadin.avatar
 
 }
 
-/** The `<vaadin-avatar-group>` custom element. */
-object AvatarGroupTagName {
-    inline val avatarGroup: web.dom.TagName<AvatarGroupElement>
-        get() = web.dom.TagName("vaadin-avatar-group")
-}
-
 @JsModule("@vaadin/avatar-group/src/vaadin-avatar-group.js")
 private external object AvatarGroupElementModule {
-    val AvatarGroup: dynamic
+    val AvatarGroup: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/avatar-group/src/vaadin-avatar-group.js`, registering `<vaadin-avatar-group>`, and returns the element class. */
-fun registerAvatarGroup(): dynamic = AvatarGroupElementModule.AvatarGroup
+fun registerAvatarGroup(): kotlin.js.JsAny = AvatarGroupElementModule.AvatarGroup
 
 /** Creates a `<vaadin-avatar-group>` element. The custom element is registered on first use. */
 fun createAvatarGroup(configure: AvatarGroupElement.() -> Unit = {}): AvatarGroupElement {
     registerAvatarGroup()
-    return web.dom.document.createElement(AvatarGroupTagName.avatarGroup).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.avatarGroup).apply(configure)
 }
 
 /** Attribute names of `<vaadin-avatar-group>`, for use with `setAttribute`. */

@@ -115,27 +115,21 @@ abstract external class RangeSliderElement : web.html.HTMLElement, vaadin.fieldb
     /**
      * The value of the slider.
      */
-    var value: Array<dynamic>
-}
-
-/** The `<vaadin-range-slider>` custom element. */
-object RangeSliderTagName {
-    inline val rangeSlider: web.dom.TagName<RangeSliderElement>
-        get() = web.dom.TagName("vaadin-range-slider")
+    var value: Array<kotlin.js.JsAny?>
 }
 
 @JsModule("@vaadin/slider/src/vaadin-range-slider.js")
 private external object RangeSliderElementModule {
-    val RangeSlider: dynamic
+    val RangeSlider: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/slider/src/vaadin-range-slider.js`, registering `<vaadin-range-slider>`, and returns the element class. */
-fun registerRangeSlider(): dynamic = RangeSliderElementModule.RangeSlider
+fun registerRangeSlider(): kotlin.js.JsAny = RangeSliderElementModule.RangeSlider
 
 /** Creates a `<vaadin-range-slider>` element. The custom element is registered on first use. */
 fun createRangeSlider(configure: RangeSliderElement.() -> Unit = {}): RangeSliderElement {
     registerRangeSlider()
-    return web.dom.document.createElement(RangeSliderTagName.rangeSlider).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.rangeSlider).apply(configure)
 }
 
 /** Attribute names of `<vaadin-range-slider>`, for use with `setAttribute`. */

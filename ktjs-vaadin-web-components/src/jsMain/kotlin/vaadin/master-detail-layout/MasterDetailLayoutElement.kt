@@ -143,27 +143,21 @@ abstract external class MasterDetailLayoutElement : web.html.HTMLElement, vaadin
      * NOTE: This method can be expensive in large layouts as it triggers consecutive
      * synchronous DOM reads and writes.
      */
-    fun recalculateLayout(): dynamic
-}
-
-/** The `<vaadin-master-detail-layout>` custom element. */
-object MasterDetailLayoutTagName {
-    inline val masterDetailLayout: web.dom.TagName<MasterDetailLayoutElement>
-        get() = web.dom.TagName("vaadin-master-detail-layout")
+    fun recalculateLayout()
 }
 
 @JsModule("@vaadin/master-detail-layout/src/vaadin-master-detail-layout.js")
 private external object MasterDetailLayoutElementModule {
-    val MasterDetailLayout: dynamic
+    val MasterDetailLayout: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/master-detail-layout/src/vaadin-master-detail-layout.js`, registering `<vaadin-master-detail-layout>`, and returns the element class. */
-fun registerMasterDetailLayout(): dynamic = MasterDetailLayoutElementModule.MasterDetailLayout
+fun registerMasterDetailLayout(): kotlin.js.JsAny = MasterDetailLayoutElementModule.MasterDetailLayout
 
 /** Creates a `<vaadin-master-detail-layout>` element. The custom element is registered on first use. */
 fun createMasterDetailLayout(configure: MasterDetailLayoutElement.() -> Unit = {}): MasterDetailLayoutElement {
     registerMasterDetailLayout()
-    return web.dom.document.createElement(MasterDetailLayoutTagName.masterDetailLayout).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.masterDetailLayout).apply(configure)
 }
 
 /** Attribute names of `<vaadin-master-detail-layout>`, for use with `setAttribute`. */

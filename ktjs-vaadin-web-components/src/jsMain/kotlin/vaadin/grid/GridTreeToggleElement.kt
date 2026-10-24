@@ -53,24 +53,18 @@ abstract external class GridTreeToggleElement : web.html.HTMLElement, vaadin.gri
 
 }
 
-/** The `<vaadin-grid-tree-toggle>` custom element. */
-object GridTreeToggleTagName {
-    inline val gridTreeToggle: web.dom.TagName<GridTreeToggleElement>
-        get() = web.dom.TagName("vaadin-grid-tree-toggle")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-tree-toggle.js")
 private external object GridTreeToggleElementModule {
-    val GridTreeToggle: dynamic
+    val GridTreeToggle: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-tree-toggle.js`, registering `<vaadin-grid-tree-toggle>`, and returns the element class. */
-fun registerGridTreeToggle(): dynamic = GridTreeToggleElementModule.GridTreeToggle
+fun registerGridTreeToggle(): kotlin.js.JsAny = GridTreeToggleElementModule.GridTreeToggle
 
 /** Creates a `<vaadin-grid-tree-toggle>` element. The custom element is registered on first use. */
 fun createGridTreeToggle(configure: GridTreeToggleElement.() -> Unit = {}): GridTreeToggleElement {
     registerGridTreeToggle()
-    return web.dom.document.createElement(GridTreeToggleTagName.gridTreeToggle).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridTreeToggle).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-tree-toggle>`, for use with `setAttribute`. */

@@ -51,24 +51,18 @@ abstract external class DrawerToggleElement : web.html.HTMLElement, vaadin.butto
     var ariaLabelProperty: String
 }
 
-/** The `<vaadin-drawer-toggle>` custom element. */
-object DrawerToggleTagName {
-    inline val drawerToggle: web.dom.TagName<DrawerToggleElement>
-        get() = web.dom.TagName("vaadin-drawer-toggle")
-}
-
 @JsModule("@vaadin/app-layout/src/vaadin-drawer-toggle.js")
 private external object DrawerToggleElementModule {
-    val DrawerToggle: dynamic
+    val DrawerToggle: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/app-layout/src/vaadin-drawer-toggle.js`, registering `<vaadin-drawer-toggle>`, and returns the element class. */
-fun registerDrawerToggle(): dynamic = DrawerToggleElementModule.DrawerToggle
+fun registerDrawerToggle(): kotlin.js.JsAny = DrawerToggleElementModule.DrawerToggle
 
 /** Creates a `<vaadin-drawer-toggle>` element. The custom element is registered on first use. */
 fun createDrawerToggle(configure: DrawerToggleElement.() -> Unit = {}): DrawerToggleElement {
     registerDrawerToggle()
-    return web.dom.document.createElement(DrawerToggleTagName.drawerToggle).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.drawerToggle).apply(configure)
 }
 
 /** Attribute names of `<vaadin-drawer-toggle>`, for use with `setAttribute`. */

@@ -59,24 +59,18 @@ abstract external class BadgeElement : web.html.HTMLElement, vaadin.componentbas
     var number: Double
 }
 
-/** The `<vaadin-badge>` custom element. */
-object BadgeTagName {
-    inline val badge: web.dom.TagName<BadgeElement>
-        get() = web.dom.TagName("vaadin-badge")
-}
-
 @JsModule("@vaadin/badge/src/vaadin-badge.js")
 private external object BadgeElementModule {
-    val Badge: dynamic
+    val Badge: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/badge/src/vaadin-badge.js`, registering `<vaadin-badge>`, and returns the element class. */
-fun registerBadge(): dynamic = BadgeElementModule.Badge
+fun registerBadge(): kotlin.js.JsAny = BadgeElementModule.Badge
 
 /** Creates a `<vaadin-badge>` element. The custom element is registered on first use. */
 fun createBadge(configure: BadgeElement.() -> Unit = {}): BadgeElement {
     registerBadge()
-    return web.dom.document.createElement(BadgeTagName.badge).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.badge).apply(configure)
 }
 
 /** Attribute names of `<vaadin-badge>`, for use with `setAttribute`. */

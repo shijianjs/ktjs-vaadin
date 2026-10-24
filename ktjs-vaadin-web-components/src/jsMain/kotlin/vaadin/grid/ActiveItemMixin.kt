@@ -6,5 +6,5 @@ external interface ActiveItemMixin {
      * The item user has last interacted with. Turns to `null` after user deactivates
      * the item by re-interacting with the currently active item.
      */
-    var activeItem: dynamic
+    var activeItem: kotlin.js.JsAny
 }

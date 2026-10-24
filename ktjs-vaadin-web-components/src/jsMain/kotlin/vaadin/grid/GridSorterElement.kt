@@ -42,24 +42,18 @@ abstract external class GridSorterElement : web.html.HTMLElement, vaadin.grid.Gr
 
 }
 
-/** The `<vaadin-grid-sorter>` custom element. */
-object GridSorterTagName {
-    inline val gridSorter: web.dom.TagName<GridSorterElement>
-        get() = web.dom.TagName("vaadin-grid-sorter")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-sorter.js")
 private external object GridSorterElementModule {
-    val GridSorter: dynamic
+    val GridSorter: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-sorter.js`, registering `<vaadin-grid-sorter>`, and returns the element class. */
-fun registerGridSorter(): dynamic = GridSorterElementModule.GridSorter
+fun registerGridSorter(): kotlin.js.JsAny = GridSorterElementModule.GridSorter
 
 /** Creates a `<vaadin-grid-sorter>` element. The custom element is registered on first use. */
 fun createGridSorter(configure: GridSorterElement.() -> Unit = {}): GridSorterElement {
     registerGridSorter()
-    return web.dom.document.createElement(GridSorterTagName.gridSorter).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridSorter).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-sorter>`, for use with `setAttribute`. */

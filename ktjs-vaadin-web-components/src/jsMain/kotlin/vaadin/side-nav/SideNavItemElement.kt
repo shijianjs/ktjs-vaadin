@@ -124,24 +124,18 @@ abstract external class SideNavItemElement : web.html.HTMLElement, vaadin.sidena
     var target: String
 }
 
-/** The `<vaadin-side-nav-item>` custom element. */
-object SideNavItemTagName {
-    inline val sideNavItem: web.dom.TagName<SideNavItemElement>
-        get() = web.dom.TagName("vaadin-side-nav-item")
-}
-
 @JsModule("@vaadin/side-nav/src/vaadin-side-nav-item.js")
 private external object SideNavItemElementModule {
-    val SideNavItem: dynamic
+    val SideNavItem: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/side-nav/src/vaadin-side-nav-item.js`, registering `<vaadin-side-nav-item>`, and returns the element class. */
-fun registerSideNavItem(): dynamic = SideNavItemElementModule.SideNavItem
+fun registerSideNavItem(): kotlin.js.JsAny = SideNavItemElementModule.SideNavItem
 
 /** Creates a `<vaadin-side-nav-item>` element. The custom element is registered on first use. */
 fun createSideNavItem(configure: SideNavItemElement.() -> Unit = {}): SideNavItemElement {
     registerSideNavItem()
-    return web.dom.document.createElement(SideNavItemTagName.sideNavItem).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.sideNavItem).apply(configure)
 }
 
 /** Attribute names of `<vaadin-side-nav-item>`, for use with `setAttribute`. */

@@ -29,24 +29,18 @@ abstract external class AccordionPanelElement : web.html.HTMLElement, vaadin.acc
 
 }
 
-/** The `<vaadin-accordion-panel>` custom element. */
-object AccordionPanelTagName {
-    inline val accordionPanel: web.dom.TagName<AccordionPanelElement>
-        get() = web.dom.TagName("vaadin-accordion-panel")
-}
-
 @JsModule("@vaadin/accordion/src/vaadin-accordion-panel.js")
 private external object AccordionPanelElementModule {
-    val AccordionPanel: dynamic
+    val AccordionPanel: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/accordion/src/vaadin-accordion-panel.js`, registering `<vaadin-accordion-panel>`, and returns the element class. */
-fun registerAccordionPanel(): dynamic = AccordionPanelElementModule.AccordionPanel
+fun registerAccordionPanel(): kotlin.js.JsAny = AccordionPanelElementModule.AccordionPanel
 
 /** Creates a `<vaadin-accordion-panel>` element. The custom element is registered on first use. */
 fun createAccordionPanel(configure: AccordionPanelElement.() -> Unit = {}): AccordionPanelElement {
     registerAccordionPanel()
-    return web.dom.document.createElement(AccordionPanelTagName.accordionPanel).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.accordionPanel).apply(configure)
 }
 
 /** Attribute names of `<vaadin-accordion-panel>`, for use with `setAttribute`. */

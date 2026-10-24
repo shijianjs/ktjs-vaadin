@@ -64,24 +64,18 @@ abstract external class RadioGroupElement : web.html.HTMLElement, vaadin.radiogr
 
 }
 
-/** The `<vaadin-radio-group>` custom element. */
-object RadioGroupTagName {
-    inline val radioGroup: web.dom.TagName<RadioGroupElement>
-        get() = web.dom.TagName("vaadin-radio-group")
-}
-
 @JsModule("@vaadin/radio-group/src/vaadin-radio-group.js")
 private external object RadioGroupElementModule {
-    val RadioGroup: dynamic
+    val RadioGroup: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/radio-group/src/vaadin-radio-group.js`, registering `<vaadin-radio-group>`, and returns the element class. */
-fun registerRadioGroup(): dynamic = RadioGroupElementModule.RadioGroup
+fun registerRadioGroup(): kotlin.js.JsAny = RadioGroupElementModule.RadioGroup
 
 /** Creates a `<vaadin-radio-group>` element. The custom element is registered on first use. */
 fun createRadioGroup(configure: RadioGroupElement.() -> Unit = {}): RadioGroupElement {
     registerRadioGroup()
-    return web.dom.document.createElement(RadioGroupTagName.radioGroup).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.radioGroup).apply(configure)
 }
 
 /** Attribute names of `<vaadin-radio-group>`, for use with `setAttribute`. */

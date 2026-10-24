@@ -52,24 +52,18 @@ abstract external class VirtualListElement : web.html.HTMLElement, vaadin.virtua
 
 }
 
-/** The `<vaadin-virtual-list>` custom element. */
-object VirtualListTagName {
-    inline val virtualList: web.dom.TagName<VirtualListElement>
-        get() = web.dom.TagName("vaadin-virtual-list")
-}
-
 @JsModule("@vaadin/virtual-list/src/vaadin-virtual-list.js")
 private external object VirtualListElementModule {
-    val VirtualList: dynamic
+    val VirtualList: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/virtual-list/src/vaadin-virtual-list.js`, registering `<vaadin-virtual-list>`, and returns the element class. */
-fun registerVirtualList(): dynamic = VirtualListElementModule.VirtualList
+fun registerVirtualList(): kotlin.js.JsAny = VirtualListElementModule.VirtualList
 
 /** Creates a `<vaadin-virtual-list>` element. The custom element is registered on first use. */
 fun createVirtualList(configure: VirtualListElement.() -> Unit = {}): VirtualListElement {
     registerVirtualList()
-    return web.dom.document.createElement(VirtualListTagName.virtualList).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.virtualList).apply(configure)
 }
 
 /** Attribute names of `<vaadin-virtual-list>`, for use with `setAttribute`. */

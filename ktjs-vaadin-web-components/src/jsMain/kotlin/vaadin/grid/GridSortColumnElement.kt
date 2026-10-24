@@ -19,24 +19,18 @@ abstract external class GridSortColumnElement : vaadin.grid.GridColumnElement, v
 
 }
 
-/** The `<vaadin-grid-sort-column>` custom element. */
-object GridSortColumnTagName {
-    inline val gridSortColumn: web.dom.TagName<GridSortColumnElement>
-        get() = web.dom.TagName("vaadin-grid-sort-column")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-sort-column.js")
 private external object GridSortColumnElementModule {
-    val GridSortColumn: dynamic
+    val GridSortColumn: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-sort-column.js`, registering `<vaadin-grid-sort-column>`, and returns the element class. */
-fun registerGridSortColumn(): dynamic = GridSortColumnElementModule.GridSortColumn
+fun registerGridSortColumn(): kotlin.js.JsAny = GridSortColumnElementModule.GridSortColumn
 
 /** Creates a `<vaadin-grid-sort-column>` element. The custom element is registered on first use. */
 fun createGridSortColumn(configure: GridSortColumnElement.() -> Unit = {}): GridSortColumnElement {
     registerGridSortColumn()
-    return web.dom.document.createElement(GridSortColumnTagName.gridSortColumn).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridSortColumn).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-sort-column>`, for use with `setAttribute`. */

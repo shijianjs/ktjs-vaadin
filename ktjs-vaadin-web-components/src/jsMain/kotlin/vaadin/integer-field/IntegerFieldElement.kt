@@ -105,24 +105,18 @@ abstract external class IntegerFieldElement : vaadin.numberfield.NumberFieldElem
 
 }
 
-/** The `<vaadin-integer-field>` custom element. */
-object IntegerFieldTagName {
-    inline val integerField: web.dom.TagName<IntegerFieldElement>
-        get() = web.dom.TagName("vaadin-integer-field")
-}
-
 @JsModule("@vaadin/integer-field/src/vaadin-integer-field.js")
 private external object IntegerFieldElementModule {
-    val IntegerField: dynamic
+    val IntegerField: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/integer-field/src/vaadin-integer-field.js`, registering `<vaadin-integer-field>`, and returns the element class. */
-fun registerIntegerField(): dynamic = IntegerFieldElementModule.IntegerField
+fun registerIntegerField(): kotlin.js.JsAny = IntegerFieldElementModule.IntegerField
 
 /** Creates a `<vaadin-integer-field>` element. The custom element is registered on first use. */
 fun createIntegerField(configure: IntegerFieldElement.() -> Unit = {}): IntegerFieldElement {
     registerIntegerField()
-    return web.dom.document.createElement(IntegerFieldTagName.integerField).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.integerField).apply(configure)
 }
 
 /** Attribute names of `<vaadin-integer-field>`, for use with `setAttribute`. */

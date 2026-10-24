@@ -13,13 +13,13 @@ abstract external class DialogOverflowController {
      * The overlay element that hosts the controller.
      */
     var host: web.html.HTMLElement
-    fun hostConnected(): dynamic
+    fun hostConnected()
 }
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog-overflow-controller.js")
 private external object DialogOverflowControllerModule {
-    val DialogOverflowController: dynamic
+    val DialogOverflowController: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/dialog/src/vaadin-dialog-overflow-controller.js`. */
-fun dialogoverflowcontrollerClass(): dynamic = DialogOverflowControllerModule.DialogOverflowController
+fun dialogoverflowcontrollerClass(): kotlin.js.JsAny = DialogOverflowControllerModule.DialogOverflowController

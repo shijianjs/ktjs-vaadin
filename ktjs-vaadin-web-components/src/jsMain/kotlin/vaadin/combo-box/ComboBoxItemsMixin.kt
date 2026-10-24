@@ -24,7 +24,7 @@ external interface ComboBoxItemsMixin : vaadin.combobox.ComboBoxBaseMixin {
      * items based on the item. Receives one argument:
      * - `item` The item to generate the label for.
      */
-    var itemLabelGenerator: dynamic
+    var itemLabelGenerator: kotlin.js.JsAny
     /**
      * Path for label of the item. If `items` is an array of objects, the
      * `itemLabelPath` is used to fetch the displayed string label for each
@@ -77,5 +77,5 @@ external interface ComboBoxItemsMixin : vaadin.combobox.ComboBoxBaseMixin {
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
 }

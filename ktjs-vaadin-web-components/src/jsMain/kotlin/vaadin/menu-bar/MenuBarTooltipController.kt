@@ -13,8 +13,8 @@ abstract external class MenuBarTooltipController : vaadin.contextmenu.ContextMen
 
 @JsModule("@vaadin/menu-bar/src/vaadin-menu-bar-tooltip-controller.js")
 private external object MenuBarTooltipControllerModule {
-    val MenuBarTooltipController: dynamic
+    val MenuBarTooltipController: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/menu-bar/src/vaadin-menu-bar-tooltip-controller.js`. */
-fun menubartooltipcontrollerClass(): dynamic = MenuBarTooltipControllerModule.MenuBarTooltipController
+fun menubartooltipcontrollerClass(): kotlin.js.JsAny = MenuBarTooltipControllerModule.MenuBarTooltipController

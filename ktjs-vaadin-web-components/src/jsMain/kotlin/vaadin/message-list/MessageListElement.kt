@@ -55,24 +55,18 @@ abstract external class MessageListElement : web.html.HTMLElement, vaadin.compon
 
 }
 
-/** The `<vaadin-message-list>` custom element. */
-object MessageListTagName {
-    inline val messageList: web.dom.TagName<MessageListElement>
-        get() = web.dom.TagName("vaadin-message-list")
-}
-
 @JsModule("@vaadin/message-list/src/vaadin-message-list.js")
 private external object MessageListElementModule {
-    val MessageList: dynamic
+    val MessageList: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/message-list/src/vaadin-message-list.js`, registering `<vaadin-message-list>`, and returns the element class. */
-fun registerMessageList(): dynamic = MessageListElementModule.MessageList
+fun registerMessageList(): kotlin.js.JsAny = MessageListElementModule.MessageList
 
 /** Creates a `<vaadin-message-list>` element. The custom element is registered on first use. */
 fun createMessageList(configure: MessageListElement.() -> Unit = {}): MessageListElement {
     registerMessageList()
-    return web.dom.document.createElement(MessageListTagName.messageList).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.messageList).apply(configure)
 }
 
 /** Attribute names of `<vaadin-message-list>`, for use with `setAttribute`. */

@@ -19,24 +19,18 @@ abstract external class GridFilterColumnElement : vaadin.grid.GridColumnElement,
 
 }
 
-/** The `<vaadin-grid-filter-column>` custom element. */
-object GridFilterColumnTagName {
-    inline val gridFilterColumn: web.dom.TagName<GridFilterColumnElement>
-        get() = web.dom.TagName("vaadin-grid-filter-column")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-filter-column.js")
 private external object GridFilterColumnElementModule {
-    val GridFilterColumn: dynamic
+    val GridFilterColumn: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-filter-column.js`, registering `<vaadin-grid-filter-column>`, and returns the element class. */
-fun registerGridFilterColumn(): dynamic = GridFilterColumnElementModule.GridFilterColumn
+fun registerGridFilterColumn(): kotlin.js.JsAny = GridFilterColumnElementModule.GridFilterColumn
 
 /** Creates a `<vaadin-grid-filter-column>` element. The custom element is registered on first use. */
 fun createGridFilterColumn(configure: GridFilterColumnElement.() -> Unit = {}): GridFilterColumnElement {
     registerGridFilterColumn()
-    return web.dom.document.createElement(GridFilterColumnTagName.gridFilterColumn).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridFilterColumn).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-filter-column>`, for use with `setAttribute`. */

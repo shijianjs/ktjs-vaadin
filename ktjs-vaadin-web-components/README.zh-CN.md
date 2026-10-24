@@ -33,9 +33,9 @@ dependencies {
 | `@vaadin/vaadin-lumo-styles` | `vaadin.lumostyles` |
 | `@vaadin/vaadin-themable-mixin` | `vaadin.themablemixin` |
 
-每个元素包都提供元素类型（`ButtonElement`）、带类型的标签名（`ButtonTagName.button`）、注册函数
-（`registerButton()`）、工厂函数（`createButton {}`）、属性名常量（`ButtonAttributes`），以及上游
-manifest 声明了事件时的带类型事件名（`NotificationEvents.closed`）。
+每个元素包都提供元素类型（`ButtonElement`）、注册函数（`registerButton()`）、工厂函数
+（`createButton {}`）、属性名常量（`ButtonAttributes`），以及上游 manifest 声明了事件时的带类型事件名
+（`NotificationEvents.closed`）。所有标签名集中在 `vaadin.VaadinTagName` 一个对象里。
 
 ## 用法
 
@@ -63,12 +63,12 @@ fun main() {
 通过工厂创建是常规路径。如果自己创建元素（例如页面由服务端渲染），先调用对应的 `registerXxx()` 注册：
 
 ```kotlin
-import vaadin.dialog.DialogTagName
+import vaadin.VaadinTagName
 import vaadin.dialog.registerDialog
 import web.dom.document
 
 registerDialog()
-val dialog = document.createElement(DialogTagName.dialog)
+val dialog = document.createElement(VaadinTagName.dialog)
 dialog.headerTitle = "Details"
 ```
 

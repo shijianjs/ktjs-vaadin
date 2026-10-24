@@ -70,24 +70,18 @@ abstract external class UploadFileListElement : web.html.HTMLElement, vaadin.upl
 
 }
 
-/** The `<vaadin-upload-file-list>` custom element. */
-object UploadFileListTagName {
-    inline val uploadFileList: web.dom.TagName<UploadFileListElement>
-        get() = web.dom.TagName("vaadin-upload-file-list")
-}
-
 @JsModule("@vaadin/upload/src/vaadin-upload-file-list.js")
 private external object UploadFileListElementModule {
-    val UploadFileList: dynamic
+    val UploadFileList: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/upload/src/vaadin-upload-file-list.js`, registering `<vaadin-upload-file-list>`, and returns the element class. */
-fun registerUploadFileList(): dynamic = UploadFileListElementModule.UploadFileList
+fun registerUploadFileList(): kotlin.js.JsAny = UploadFileListElementModule.UploadFileList
 
 /** Creates a `<vaadin-upload-file-list>` element. The custom element is registered on first use. */
 fun createUploadFileList(configure: UploadFileListElement.() -> Unit = {}): UploadFileListElement {
     registerUploadFileList()
-    return web.dom.document.createElement(UploadFileListTagName.uploadFileList).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.uploadFileList).apply(configure)
 }
 
 /** Attribute names of `<vaadin-upload-file-list>`, for use with `setAttribute`. */

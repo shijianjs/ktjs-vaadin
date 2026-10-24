@@ -122,24 +122,18 @@ abstract external class MultiSelectComboBoxElement : web.html.HTMLElement, vaadi
 
 }
 
-/** The `<vaadin-multi-select-combo-box>` custom element. */
-object MultiSelectComboBoxTagName {
-    inline val multiSelectComboBox: web.dom.TagName<MultiSelectComboBoxElement>
-        get() = web.dom.TagName("vaadin-multi-select-combo-box")
-}
-
 @JsModule("@vaadin/multi-select-combo-box/src/vaadin-multi-select-combo-box.js")
 private external object MultiSelectComboBoxElementModule {
-    val MultiSelectComboBox: dynamic
+    val MultiSelectComboBox: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/multi-select-combo-box/src/vaadin-multi-select-combo-box.js`, registering `<vaadin-multi-select-combo-box>`, and returns the element class. */
-fun registerMultiSelectComboBox(): dynamic = MultiSelectComboBoxElementModule.MultiSelectComboBox
+fun registerMultiSelectComboBox(): kotlin.js.JsAny = MultiSelectComboBoxElementModule.MultiSelectComboBox
 
 /** Creates a `<vaadin-multi-select-combo-box>` element. The custom element is registered on first use. */
 fun createMultiSelectComboBox(configure: MultiSelectComboBoxElement.() -> Unit = {}): MultiSelectComboBoxElement {
     registerMultiSelectComboBox()
-    return web.dom.document.createElement(MultiSelectComboBoxTagName.multiSelectComboBox).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.multiSelectComboBox).apply(configure)
 }
 
 /** Attribute names of `<vaadin-multi-select-combo-box>`, for use with `setAttribute`. */

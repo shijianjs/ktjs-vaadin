@@ -49,24 +49,18 @@ abstract external class HorizontalLayoutElement : web.html.HTMLElement, vaadin.h
 
 }
 
-/** The `<vaadin-horizontal-layout>` custom element. */
-object HorizontalLayoutTagName {
-    inline val horizontalLayout: web.dom.TagName<HorizontalLayoutElement>
-        get() = web.dom.TagName("vaadin-horizontal-layout")
-}
-
 @JsModule("@vaadin/horizontal-layout/src/vaadin-horizontal-layout.js")
 private external object HorizontalLayoutElementModule {
-    val HorizontalLayout: dynamic
+    val HorizontalLayout: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/horizontal-layout/src/vaadin-horizontal-layout.js`, registering `<vaadin-horizontal-layout>`, and returns the element class. */
-fun registerHorizontalLayout(): dynamic = HorizontalLayoutElementModule.HorizontalLayout
+fun registerHorizontalLayout(): kotlin.js.JsAny = HorizontalLayoutElementModule.HorizontalLayout
 
 /** Creates a `<vaadin-horizontal-layout>` element. The custom element is registered on first use. */
 fun createHorizontalLayout(configure: HorizontalLayoutElement.() -> Unit = {}): HorizontalLayoutElement {
     registerHorizontalLayout()
-    return web.dom.document.createElement(HorizontalLayoutTagName.horizontalLayout).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.horizontalLayout).apply(configure)
 }
 
 /** Attribute names of `<vaadin-horizontal-layout>`, for use with `setAttribute`. */

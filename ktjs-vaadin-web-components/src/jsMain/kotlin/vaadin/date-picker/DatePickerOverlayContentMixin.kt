@@ -2,69 +2,69 @@
 package vaadin.datepicker
 
 external interface DatePickerOverlayContentMixin {
-    var calendars: Array<dynamic>
+    var calendars: Array<kotlin.js.JsAny?>
     /**
      * Drops a date metadata load that navigating has scheduled but that has not run yet.
      */
-    fun cancelLoadVisibleDateMetadata(): dynamic
-    var enteredDate: dynamic
-    val focusableDateElement: dynamic
+    fun cancelLoadVisibleDateMetadata()
+    var enteredDate: kotlin.js.Date
+    val focusableDateElement: kotlin.js.JsAny?
     /**
      * Focuses the cancel button
      */
-    fun focusCancel(): dynamic
-    fun focusDate(date: dynamic, keepMonth: dynamic): dynamic
-    fun focusDateElement(reveal: dynamic = definedExternally): dynamic
+    fun focusCancel()
+    fun focusDate(date: kotlin.js.JsAny?, keepMonth: kotlin.js.JsAny?)
+    fun focusDateElement(reveal: kotlin.js.JsAny? = definedExternally)
     /**
      * Date value which is focused using keyboard.
      */
-    var focusedDate: dynamic
-    var i18n: dynamic
+    var focusedDate: kotlin.js.JsAny
+    var i18n: kotlin.js.JsAny
     /**
      * Date which should be visible when there is no value selected.
      */
-    var initialPosition: dynamic
+    var initialPosition: kotlin.js.JsAny
     /**
      * A function to be used to determine whether the user can select a given date.
      * Receives a `DatePickerDate` object of the date to be selected and should return a
      * boolean.
      */
-    var isDateDisabled: (dynamic) -> Boolean?
+    var isDateDisabled: (vaadin.datepicker.DatePickerDate) -> Boolean?
     /**
      * Input label
      */
-    var label: dynamic
+    var label: kotlin.js.JsAny?
     /**
      * Requests the date metadata for the months currently rendered. Months already loaded or in flight
      * are skipped.
      */
-    fun loadVisibleDateMetadata(): dynamic
+    fun loadVisibleDateMetadata()
     /**
      * The latest date that can be selected. All later dates will be disabled.
      */
-    var maxDate: dynamic
+    var maxDate: kotlin.js.JsAny
     /**
      * The earliest date that can be selected. All earlier dates will be disabled.
      */
-    var minDate: dynamic
-    fun reset(): dynamic
+    var minDate: kotlin.js.JsAny
+    fun reset()
     /**
      * Scrolls the month and year scrollers enough to reveal the given date.
      */
-    fun revealDate(date: dynamic, animate: dynamic = definedExternally): dynamic
+    fun revealDate(date: kotlin.js.JsAny?, animate: kotlin.js.JsAny? = definedExternally)
     var scrollDuration: Double
     /**
      * Scrolls the list to the given Date.
      */
-    fun scrollToDate(date: dynamic, animate: dynamic): dynamic
+    fun scrollToDate(date: kotlin.js.JsAny?, animate: kotlin.js.JsAny?)
     /**
      * The value for this element.
      */
-    var selectedDate: dynamic
+    var selectedDate: kotlin.js.JsAny
     var showWeekNumbers: Boolean
     /**
      * Applies the today button's label and whether today can be selected.
      */
-    fun updateTodayButton(): dynamic
-    var years: Array<dynamic>
+    fun updateTodayButton()
+    var years: Array<kotlin.js.JsAny?>
 }

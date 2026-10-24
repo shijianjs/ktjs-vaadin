@@ -85,7 +85,7 @@ private external interface NotificationElementStaticMembers {
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: dynamic, options: dynamic = definedExternally): dynamic
+    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = definedExternally): vaadin.notification.NotificationElement
 }
 
 @JsModule("@vaadin/notification/src/vaadin-notification.js")
@@ -114,24 +114,18 @@ object Notification {
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: dynamic, options: dynamic = js("undefined")): dynamic {
+    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = js("undefined")): vaadin.notification.NotificationElement {
         return NotificationElementModule.Notification.show(contents, options)
     }
 }
 
-/** The `<vaadin-notification>` custom element. */
-object NotificationTagName {
-    inline val notification: web.dom.TagName<NotificationElement>
-        get() = web.dom.TagName("vaadin-notification")
-}
-
 /** Imports `@vaadin/notification/src/vaadin-notification.js`, registering `<vaadin-notification>`, and returns the element class. */
-fun registerNotification(): dynamic = NotificationElementModule.Notification
+fun registerNotification(): kotlin.js.JsAny = NotificationElementModule.Notification
 
 /** Creates a `<vaadin-notification>` element. The custom element is registered on first use. */
 fun createNotification(configure: NotificationElement.() -> Unit = {}): NotificationElement {
     registerNotification()
-    return web.dom.document.createElement(NotificationTagName.notification).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.notification).apply(configure)
 }
 
 /** Attribute names of `<vaadin-notification>`, for use with `setAttribute`. */

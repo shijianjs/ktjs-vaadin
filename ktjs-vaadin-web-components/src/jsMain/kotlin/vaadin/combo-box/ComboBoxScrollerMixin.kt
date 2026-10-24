@@ -10,19 +10,19 @@ external interface ComboBoxScrollerMixin {
     /**
      * Function used to set a label for every combo-box item.
      */
-    var getItemLabel: dynamic
+    var getItemLabel: kotlin.js.JsAny
     /**
      * A function used to generate CSS class names for dropdown
      * items based on the item. The return value should be the
      * generated class name as a string, or multiple class names
      * separated by whitespace characters.
      */
-    var itemClassNameGenerator: dynamic
+    var itemClassNameGenerator: kotlin.js.JsAny
     /**
      * A full set of items to filter the visible options from.
      * Set to an empty array when combo-box is not opened.
      */
-    var items: Array<dynamic>
+    var items: Array<kotlin.js.JsAny?>
     /**
      * Set to true while combo-box fetches new page from the data provider.
      */
@@ -35,15 +35,15 @@ external interface ComboBoxScrollerMixin {
     /**
      * Reference to the owner (combo-box owner), used by the item elements.
      */
-    var owner: dynamic
+    var owner: kotlin.js.JsAny
     /**
      * Function used to render the content of every combo-box item.
      */
-    var renderer: dynamic
+    var renderer: kotlin.js.JsAny
     /**
      * Updates the virtualizer's size and items.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * Scrolls an item at given index into view. By default the item is made
      * fully visible at the bottom of the viewport (the behavior wanted on
@@ -51,11 +51,11 @@ external interface ComboBoxScrollerMixin {
      * in the middle of the viewport instead, as close to center as the list
      * allows near its start and end.
      */
-    fun scrollIntoView(index: Double, alignToCenter: Boolean = definedExternally): dynamic
+    fun scrollIntoView(index: Double, alignToCenter: Boolean = definedExternally)
     /**
      * The selected item from the `items` array.
      */
-    var selectedItem: dynamic
+    var selectedItem: kotlin.js.JsAny
     /**
      * Used to propagate the `theme` attribute from the host element.
      */

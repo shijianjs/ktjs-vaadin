@@ -15,7 +15,7 @@ external interface DragAndDropMixin {
      *   - `model.level` Level of the tree represented with a horizontal offset of the toggle button.
      *   - `model.selected` Selected state.
      */
-    var dragFilter: dynamic
+    var dragFilter: vaadin.grid.GridDragAndDropFilter?
     /**
      * A function that filters dropping on specific grid rows. The return value should be false
      * if dropping on the row should be disabled.
@@ -29,7 +29,7 @@ external interface DragAndDropMixin {
      *   - `model.level` Level of the tree represented with a horizontal offset of the toggle button.
      *   - `model.selected` Selected state.
      */
-    var dropFilter: dynamic
+    var dropFilter: vaadin.grid.GridDragAndDropFilter?
     /**
      * Defines the locations within the Grid row where an element can be dropped.
      *
@@ -46,7 +46,7 @@ external interface DragAndDropMixin {
      * call this function manually in order to update the draggability when
      * the conditions change.
      */
-    fun filterDragAndDrop(): dynamic
+    fun filterDragAndDrop()
     /**
      * Marks the grid's rows to be available for dragging.
      */

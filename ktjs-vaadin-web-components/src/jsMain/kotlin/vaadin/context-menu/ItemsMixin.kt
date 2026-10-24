@@ -2,7 +2,7 @@
 package vaadin.contextmenu
 
 external interface ItemsMixin {
-    fun close(): dynamic
+    fun close()
     /**
      * Defines a (hierarchical) menu structure for the component.
      * If a menu item has a non-empty `children` set, a sub-menu with the child items is opened
@@ -43,5 +43,5 @@ external interface ItemsMixin {
      * </vaadin-context-menu>
      * ```
      */
-    var items: Array<dynamic>?
+    var items: Array<vaadin.contextmenu.ContextMenuItemData>?
 }

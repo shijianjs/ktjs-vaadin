@@ -42,24 +42,18 @@ abstract external class TabElement : web.html.HTMLElement, vaadin.item.ItemMixin
 
 }
 
-/** The `<vaadin-tab>` custom element. */
-object TabTagName {
-    inline val tab: web.dom.TagName<TabElement>
-        get() = web.dom.TagName("vaadin-tab")
-}
-
 @JsModule("@vaadin/tabs/src/vaadin-tab.js")
 private external object TabElementModule {
-    val Tab: dynamic
+    val Tab: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/tabs/src/vaadin-tab.js`, registering `<vaadin-tab>`, and returns the element class. */
-fun registerTab(): dynamic = TabElementModule.Tab
+fun registerTab(): kotlin.js.JsAny = TabElementModule.Tab
 
 /** Creates a `<vaadin-tab>` element. The custom element is registered on first use. */
 fun createTab(configure: TabElement.() -> Unit = {}): TabElement {
     registerTab()
-    return web.dom.document.createElement(TabTagName.tab).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.tab).apply(configure)
 }
 
 /** Attribute names of `<vaadin-tab>`, for use with `setAttribute`. */

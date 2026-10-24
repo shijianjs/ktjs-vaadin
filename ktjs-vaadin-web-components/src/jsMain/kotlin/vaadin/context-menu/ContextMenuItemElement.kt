@@ -41,24 +41,18 @@ abstract external class ContextMenuItemElement : web.html.HTMLElement, vaadin.it
 
 }
 
-/** The `<vaadin-context-menu-item>` custom element. */
-object ContextMenuItemTagName {
-    inline val contextMenuItem: web.dom.TagName<ContextMenuItemElement>
-        get() = web.dom.TagName("vaadin-context-menu-item")
-}
-
 @JsModule("@vaadin/context-menu/src/vaadin-context-menu-item.js")
 private external object ContextMenuItemElementModule {
-    val ContextMenuItem: dynamic
+    val ContextMenuItem: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/context-menu/src/vaadin-context-menu-item.js`, registering `<vaadin-context-menu-item>`, and returns the element class. */
-fun registerContextMenuItem(): dynamic = ContextMenuItemElementModule.ContextMenuItem
+fun registerContextMenuItem(): kotlin.js.JsAny = ContextMenuItemElementModule.ContextMenuItem
 
 /** Creates a `<vaadin-context-menu-item>` element. The custom element is registered on first use. */
 fun createContextMenuItem(configure: ContextMenuItemElement.() -> Unit = {}): ContextMenuItemElement {
     registerContextMenuItem()
-    return web.dom.document.createElement(ContextMenuItemTagName.contextMenuItem).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.contextMenuItem).apply(configure)
 }
 
 /** Attribute names of `<vaadin-context-menu-item>`, for use with `setAttribute`. */

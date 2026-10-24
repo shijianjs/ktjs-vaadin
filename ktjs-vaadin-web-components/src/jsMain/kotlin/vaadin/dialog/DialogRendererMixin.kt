@@ -11,7 +11,7 @@ external interface DialogRendererMixin {
      *
      * When `footerRenderer` is set, the attribute `has-footer` is set on the dialog.
      */
-    var footerRenderer: dynamic
+    var footerRenderer: vaadin.dialog.DialogRenderer?
     /**
      * Custom function for rendering the dialog header.
      * Receives two arguments:
@@ -25,7 +25,7 @@ external interface DialogRendererMixin {
      *
      * When `headerRenderer` is set, the attribute `has-header` is set on the dialog.
      */
-    var headerRenderer: dynamic
+    var headerRenderer: vaadin.dialog.DialogRenderer?
     /**
      * String used for rendering a dialog title.
      *
@@ -43,7 +43,7 @@ external interface DialogRendererMixin {
      * - `root` The root container DOM element. Append your content to it.
      * - `dialog` The reference to the `<vaadin-dialog>` element.
      */
-    var renderer: dynamic
+    var renderer: vaadin.dialog.DialogRenderer?
     /**
      * Requests an update for the content of the dialog.
      * While performing the update, it invokes the renderer passed in the `renderer` property,
@@ -51,5 +51,5 @@ external interface DialogRendererMixin {
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
 }

@@ -6,13 +6,13 @@ package vaadin.grid
  */
 
 abstract external class ColumnObserver {
-    fun disconnect(): dynamic
-    fun flush(): dynamic
-    fun getColumns(host: dynamic): dynamic
+    fun disconnect()
+    fun flush()
+    fun getColumns(host: kotlin.js.JsAny?)
 }
 
 private external interface ColumnObserverStaticMembers {
-    fun getColumns(host: dynamic): dynamic
+    fun getColumns(host: kotlin.js.JsAny?)
 }
 
 @JsModule("@vaadin/grid/src/vaadin-grid-helpers.js")
@@ -21,7 +21,7 @@ private external object ColumnObserverModule {
 }
 
 object ColumnObserverStatics {
-    fun getColumns(host: dynamic): dynamic {
-        return ColumnObserverModule.ColumnObserver.getColumns(host)
+    fun getColumns(host: kotlin.js.JsAny?) {
+        ColumnObserverModule.ColumnObserver.getColumns(host)
     }
 }

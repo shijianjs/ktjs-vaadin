@@ -69,7 +69,18 @@ plugins.withType<NodeJsRootPlugin> {
 // The public API must use kotlin-browser's web.* types. Kotlin/JS's own org.w3c.dom.* and
 // kotlinx.browser.* compile and run against the same objects, but the compiler treats them as
 // unrelated types, which breaks callers that use kotlin-browser. detekt.yml forbids the imports.
+// `kotlin.js.JsAny` is the typed stand-in for JS values that have no Kotlin equivalent. The
+// compiler still marks it as part of the experimental JS interop surface, so opt in everywhere
+// the wrappers and their consumers are compiled.
 subprojects {
+    plugins.withId("org.jetbrains.kotlin.multiplatform") {
+        extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
+            compilerOptions {
+                optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+            }
+        }
+    }
+
     apply(plugin = "dev.detekt")
 
     extensions.configure<DetektExtension> {

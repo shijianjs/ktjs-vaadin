@@ -29,24 +29,18 @@ abstract external class GridFilterElement : web.html.HTMLElement, vaadin.grid.Gr
 
 }
 
-/** The `<vaadin-grid-filter>` custom element. */
-object GridFilterTagName {
-    inline val gridFilter: web.dom.TagName<GridFilterElement>
-        get() = web.dom.TagName("vaadin-grid-filter")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-filter.js")
 private external object GridFilterElementModule {
-    val GridFilter: dynamic
+    val GridFilter: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-filter.js`, registering `<vaadin-grid-filter>`, and returns the element class. */
-fun registerGridFilter(): dynamic = GridFilterElementModule.GridFilter
+fun registerGridFilter(): kotlin.js.JsAny = GridFilterElementModule.GridFilter
 
 /** Creates a `<vaadin-grid-filter>` element. The custom element is registered on first use. */
 fun createGridFilter(configure: GridFilterElement.() -> Unit = {}): GridFilterElement {
     registerGridFilter()
-    return web.dom.document.createElement(GridFilterTagName.gridFilter).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridFilter).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-filter>`, for use with `setAttribute`. */

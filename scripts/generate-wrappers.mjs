@@ -38,22 +38,25 @@ const KEYWORDS = new Set(
   ).split(' '),
 );
 
+// TypeScript types without Kotlin equivalent. `JsAny` is the opaque JS value type; `Function` and
+// `function` stay `dynamic` because a bare function signature carries no parameter information and
+// Kotlin function types cannot be expressed as `JsAny`.
 const SIMPLE_TYPES = new Map([
   ['string', 'String'],
   ['number', 'Double'],
   ['boolean', 'Boolean'],
   ['void', 'Unit'],
   ['undefined', 'Unit'],
-  ['null', 'dynamic'],
+  ['null', 'kotlin.js.JsAny?'],
   ['never', 'Unit'],
-  ['any', 'dynamic'],
-  ['unknown', 'dynamic'],
-  ['object', 'dynamic'],
-  ['Object', 'dynamic'],
+  ['any', 'kotlin.js.JsAny'],
+  ['unknown', 'kotlin.js.JsAny'],
+  ['object', 'kotlin.js.JsAny'],
+  ['Object', 'kotlin.js.JsAny'],
   ['Function', 'dynamic'],
   ['function', 'dynamic'],
-  ['array', 'Array<dynamic>'],
-  ['date', 'dynamic'],
+  ['array', 'Array<kotlin.js.JsAny?>'],
+  ['date', 'kotlin.js.Date'],
 ]);
 
 const WEB_TYPES = new Map([
@@ -105,6 +108,92 @@ const DOM_TYPES = new Map([
   ['inputMode', 'InputMode'],
   ['role', 'String?'],
   ['title', 'String'],
+]);
+
+// Custom elements whose wrappers are hand-written, so they do not appear in any manifest.
+const MANUAL_TAGS = new Map([
+  ['vaadin-field-highlighter', 'vaadin.fieldhighlighter.FieldHighlighterElement'],
+  ['vaadin-field-outline', 'vaadin.fieldhighlighter.FieldOutlineElement'],
+  ['vaadin-user-tag', 'vaadin.fieldhighlighter.UserTagElement'],
+  ['vaadin-user-tags', 'vaadin.fieldhighlighter.UserTagsElement'],
+  ['vaadin-ai-field-marker', 'vaadin.fieldhighlighter.AiFieldMarkerElement'],
+]);
+
+// Type aliases and interfaces that the manifests reference by name but do not declare as classes.
+// The Kotlin declarations live in hand-written `<Package>Types.kt` files next to the package.
+const TYPE_ALIASES = new Map([
+  ['ReactiveElement', 'web.html.HTMLElement'],
+  ['AvatarGroupItem', 'vaadin.avatargroup.AvatarGroupItem'],
+  // The upstream defaults for these type parameters are `any` / `unknown`.
+  ['ComboBoxItem', 'kotlin.js.JsAny'],
+  ['ComboBoxItemModel', 'vaadin.combobox.ComboBoxItemModel'],
+  ['ComboBoxDataProviderParams', 'vaadin.combobox.ComboBoxDataProviderParams'],
+  ['ComboBoxDataProviderCallback', 'vaadin.combobox.ComboBoxDataProviderCallback'],
+  ['ComboBoxDataProvider', 'vaadin.combobox.ComboBoxDataProvider'],
+  ['ComboBoxRenderer', 'vaadin.combobox.ComboBoxRenderer'],
+  ['ContextMenuRendererContext', 'vaadin.contextmenu.ContextMenuRendererContext'],
+  ['ContextMenuRenderer', 'vaadin.contextmenu.ContextMenuRenderer'],
+  ['ContextMenuItemData', 'vaadin.contextmenu.ContextMenuItemData'],
+  ['CustomFieldParseValueFn', 'vaadin.customfield.CustomFieldParseValueFn'],
+  ['CustomFieldFormatValueFn', 'vaadin.customfield.CustomFieldFormatValueFn'],
+  ['DatePickerDate', 'vaadin.datepicker.DatePickerDate'],
+  ['DatePickerDateRange', 'vaadin.datepicker.DatePickerDateRange'],
+  ['DatePickerDateMetadata', 'vaadin.datepicker.DatePickerDateMetadata'],
+  ['DatePickerDateMetadataProvider', 'vaadin.datepicker.DatePickerDateMetadataProvider'],
+  ['DialogRenderer', 'vaadin.dialog.DialogRenderer'],
+  ['DialogOverlayBounds', 'vaadin.dialog.DialogOverlayBounds'],
+  ['FormLayoutResponsiveStep', 'vaadin.formlayout.FormLayoutResponsiveStep'],
+  ['GridItem', 'kotlin.js.JsAny'],
+  ['GridItemModel', 'vaadin.grid.GridItemModel'],
+  ['GridFilterDefinition', 'vaadin.grid.GridFilterDefinition'],
+  ['GridSorterDefinition', 'vaadin.grid.GridSorterDefinition'],
+  ['GridDataProviderParams', 'vaadin.grid.GridDataProviderParams'],
+  ['GridDataProviderCallback', 'vaadin.grid.GridDataProviderCallback'],
+  ['GridDataProvider', 'vaadin.grid.GridDataProvider'],
+  ['GridBodyRenderer', 'vaadin.grid.GridBodyRenderer'],
+  ['GridHeaderFooterRenderer', 'vaadin.grid.GridHeaderFooterRenderer'],
+  ['GridRowDetailsRenderer', 'vaadin.grid.GridRowDetailsRenderer'],
+  ['GridCellPartNameGenerator', 'vaadin.grid.GridCellPartNameGenerator'],
+  ['GridDragAndDropFilter', 'vaadin.grid.GridDragAndDropFilter'],
+  ['GridEventContext', 'vaadin.grid.GridEventContext'],
+  ['MenuBarItem', 'vaadin.menubar.MenuBarItem'],
+  ['NotificationRenderer', 'vaadin.notification.NotificationRenderer'],
+  ['OverlayRenderer', 'vaadin.overlay.OverlayRenderer'],
+  ['OverlayBounds', 'vaadin.overlay.OverlayBounds'],
+  ['OverlayBoundsParam', 'vaadin.overlay.OverlayBoundsParam'],
+  ['SelectItemData', 'vaadin.select.SelectItemData'],
+  ['SelectRenderer', 'vaadin.select.SelectRenderer'],
+  ['UploadFile', 'vaadin.upload.UploadFile'],
+  ['VirtualListItem', 'kotlin.js.JsAny'],
+  ['VirtualListItemModel', 'vaadin.virtuallist.VirtualListItemModel'],
+  ['VirtualListRenderer', 'vaadin.virtuallist.VirtualListRenderer'],
+]);
+
+// Members whose manifest type is too vague to map (usually a bare `Function` or `object`), but
+// whose upstream `.d.ts` declares a usable type. Key format: `package|declaration|member`.
+const MEMBER_TYPES = new Map([
+  ['@vaadin/notification|Notification|show', 'vaadin.notification.NotificationElement'],
+  ['@vaadin/combo-box|ComboBoxItemMixin|renderer', 'vaadin.combobox.ComboBoxRenderer'],
+  [
+    '@vaadin/multi-select-combo-box|MultiSelectComboBoxMixin|renderer',
+    '(web.html.HTMLElement, vaadin.multiselectcombobox.MultiSelectComboBoxElement, vaadin.combobox.ComboBoxItemModel) -> Unit',
+  ],
+  [
+    '@vaadin/multi-select-combo-box|MultiSelectComboBox|renderer',
+    '(web.html.HTMLElement, vaadin.multiselectcombobox.MultiSelectComboBoxElement, vaadin.combobox.ComboBoxItemModel) -> Unit',
+  ],
+  ['@vaadin/virtual-list|VirtualListMixin|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
+  ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
+  ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
+]);
+
+// Same as MEMBER_TYPES, for individual parameters.
+const PARAMETER_TYPES = new Map([
+  [
+    '@vaadin/date-picker|DateMetadataController|setProvider|provider',
+    'vaadin.datepicker.DatePickerDateMetadataProvider?',
+  ],
 ]);
 
 const warnings = [];
@@ -211,14 +300,13 @@ function stripMarkers(text) {
 }
 
 function mapType(text, pkg) {
-  if (!text) return 'dynamic';
-  const { value, nullable: markerNullable } = stripMarkers(text);
-  if (!value) return 'dynamic';
+  const { value, nullable: markerNullable } = stripMarkers(text || '');
+  if (!value) return 'kotlin.js.JsAny?';
 
   const union = splitTop(value, '|').map((part) => part.trim()).filter(Boolean);
   const nonNull = union.filter((part) => part !== 'null' && part !== 'undefined');
   const nullable = markerNullable || nonNull.length !== union.length;
-  if (nonNull.length === 0) return 'dynamic';
+  if (nonNull.length === 0) return 'kotlin.js.JsAny?';
 
   const mapped = [...new Set(nonNull.map((part) => mapSingle(part, pkg)))];
   let base;
@@ -228,7 +316,14 @@ function mapType(text, pkg) {
     base = 'String';
   } else if (mapped.every((type) => type === 'Double' || type === 'Int')) {
     base = 'Double';
+  } else if (mapped.every((type) => type === 'kotlin.js.JsAny')) {
+    base = 'kotlin.js.JsAny';
+  } else if (mapped.every((type) => type.endsWith('Event'))) {
+    // Event unions such as `MouseEvent | TouchEvent` share `Event` as their DOM base type.
+    base = 'web.events.Event';
   } else {
+    // Mixed unions such as `string | number | null` or `HTMLElement | string` have no Kotlin
+    // equivalent; `dynamic` is the only type that accepts every member.
     base = 'dynamic';
   }
 
@@ -236,10 +331,19 @@ function mapType(text, pkg) {
   return base;
 }
 
+// Converts a mapped Kotlin type into a type argument that satisfies a `JsAny` bound.
+function jsTypeArg(type) {
+  if (type === 'String') return 'kotlin.js.JsString';
+  if (type === 'Double' || type === 'Int') return 'kotlin.js.JsNumber';
+  if (type === 'Boolean') return 'kotlin.js.JsBoolean';
+  if (!type || type === 'dynamic') return 'kotlin.js.JsAny?';
+  return type;
+}
+
 function mapSingle(text, pkg) {
   const { value: raw } = stripMarkers(text);
   const value = raw.trim();
-  if (!value) return 'dynamic';
+  if (!value) return 'kotlin.js.JsAny';
 
   if (value.endsWith('[]')) {
     return `Array<${mapType(value.slice(0, -2), pkg)}>`;
@@ -248,6 +352,15 @@ function mapSingle(text, pkg) {
   const array = /^(?:Readonly)?Array\s*<(.+)>$/.exec(value);
   if (array) return `Array<${mapType(array[1], pkg)}>`;
 
+  const set = /^(?:Readonly)?Set\s*<(.+)>$/.exec(value);
+  if (set) return `js.collections.JsSet<${jsTypeArg(mapType(set[1], pkg))}>`;
+
+  const record = /^Record\s*<(.+)>$/.exec(value);
+  if (record) {
+    const [key, mappedValue] = splitTop(record[1], ',').map((part) => part.trim());
+    return `js.objects.Record<${jsTypeArg(mapType(key, pkg))}, ${jsTypeArg(mapType(mappedValue, pkg))}>`;
+  }
+
   const promise = /^Promise\s*<(.+)>$/.exec(value);
   if (promise) return `kotlin.js.Promise<${mapType(promise[1], pkg)}>`;
 
@@ -255,16 +368,16 @@ function mapSingle(text, pkg) {
   if (arrow) return functionType(arrow[1], arrow[2], pkg);
 
   const singleArrow = /^([A-Za-z_$][\w$]*)\s*=>\s*(.+)$/.exec(value);
-  if (singleArrow) return `(dynamic) -> ${mapType(singleArrow[2], pkg)}`;
+  if (singleArrow) return `(kotlin.js.JsAny) -> ${mapType(singleArrow[2], pkg)}`;
 
   const closureFunction = /^function\s*\((.*)\)\s*:\s*(.+)$/.exec(value);
   if (closureFunction) return functionType(closureFunction[1], closureFunction[2], pkg);
 
-  if (value.startsWith('{')) return 'dynamic';
+  if (value.startsWith('{')) return 'kotlin.js.JsAny';
   if (value.includes('&')) {
     const parts = splitTop(value, '&').map((part) => part.trim());
     if (parts.some((part) => /HTMLElement$/.test(part))) return 'web.html.HTMLElement';
-    return 'dynamic';
+    return 'kotlin.js.JsAny';
   }
 
   if (SIMPLE_TYPES.has(value)) return SIMPLE_TYPES.get(value);
@@ -272,9 +385,12 @@ function mapSingle(text, pkg) {
   if (value === 'Date') return 'kotlin.js.Date';
   if (/^'.*'$/.test(value) || /^".*"$/.test(value)) return 'String';
 
+  if (TYPE_ALIASES.has(value)) return TYPE_ALIASES.get(value);
+
   const declaration = findDeclaration(value, pkg);
   if (declaration) return declaration.kotlinFqn;
-  return 'dynamic';
+  warn(`unresolved type ${value} referenced from ${pkg}`);
+  return 'kotlin.js.JsAny?';
 }
 
 function functionType(parameters, returns, pkg) {
@@ -287,7 +403,7 @@ function functionType(parameters, returns, pkg) {
           const colon = text.lastIndexOf(':');
           const type = colon >= 0 ? text.slice(colon + 1) : text;
           const mapped = mapType(type, pkg);
-          return mapped === 'Unit' ? 'dynamic' : mapped;
+          return mapped === 'Unit' ? 'kotlin.js.JsAny?' : mapped;
         })
         .filter(Boolean)
         .join(', ')
@@ -521,7 +637,9 @@ function ownMembers(declaration) {
 
 function memberType(member, pkg) {
   if (member.kind === 'field') return mapType(member.type && member.type.text, pkg);
-  return mapType(member.return && member.return.type && member.return.type.text, pkg);
+  const returned = member.return && member.return.type && member.return.type.text;
+  // A method without a declared return type is void.
+  return returned ? mapType(returned, pkg) : 'Unit';
 }
 
 function resolveName(name, type, inherited) {
@@ -542,7 +660,7 @@ function memberDisposition(name, type) {
   return domType === type ? 'skip' : 'rename';
 }
 
-function renderParameters(parameters, pkg, external = true, optionalDefault = 'definedExternally') {
+function renderParameters(parameters, pkg, external = true, optionalDefault = 'definedExternally', context = null) {
   return (parameters || [])
     .map((parameter) => {
       const name = id(parameter.name || 'arg');
@@ -550,8 +668,9 @@ function renderParameters(parameters, pkg, external = true, optionalDefault = 'd
       if (text.trim().startsWith('...')) {
         return `vararg ${name}: ${mapType(text.trim().slice(3), pkg).replace(/\?$/, '')}`;
       }
-      let type = mapType(text, pkg);
-      if (type === 'Unit') type = 'dynamic';
+      const key = context ? `${context.declaration.pkg}|${context.declaration.name}|${context.member.name}|${parameter.name}` : null;
+      let type = (key && PARAMETER_TYPES.get(key)) || mapType(text, pkg);
+      if (type === 'Unit') type = 'kotlin.js.JsAny?';
       const optional =
         parameter.optional ||
         parameter.default !== undefined ||
@@ -562,8 +681,9 @@ function renderParameters(parameters, pkg, external = true, optionalDefault = 'd
     .join(', ');
 }
 
-function renderMember(member, pkg, spaces, inherited) {
-  const type = memberType(member, pkg);
+function renderMember(member, pkg, spaces, inherited, declaration = null) {
+  const overrideType = declaration && MEMBER_TYPES.get(`${declaration.pkg}|${declaration.name}|${member.name}`);
+  const type = overrideType || memberType(member, pkg);
   const disposition = memberDisposition(member.name, type);
   if (disposition === 'skip') return null;
   const renamed = disposition === 'rename';
@@ -579,13 +699,16 @@ function renderMember(member, pkg, spaces, inherited) {
     const keyword = member.readonly ? 'val' : 'var';
     return `${doc}${annotation}${override}${keyword} ${id(name)}: ${type}`;
   }
-  const parameters = renderParameters(member.parameters, pkg);
+  const parameters = renderParameters(member.parameters, pkg, true, 'definedExternally', {
+    declaration,
+    member,
+  });
   return `${doc}${annotation}${override}fun ${id(name)}(${parameters})${type === 'Unit' ? '' : `: ${type}`}`;
 }
 
 function renderMembers(declaration, spaces, inherited) {
   return ownMembers(declaration)
-    .map((member) => renderMember(member, declaration.pkg, spaces, inherited))
+    .map((member) => renderMember(member, declaration.pkg, spaces, inherited, declaration))
     .filter(Boolean)
     .join('\n');
 }
@@ -609,12 +732,19 @@ function collectStatics(declaration, packageName) {
   return [...result.values()];
 }
 
-function renderStaticMember(member, pkg, spaces) {
+function memberKotlinType(member, declaration) {
+  return (
+    MEMBER_TYPES.get(`${declaration.pkg}|${declaration.name}|${member.name}`) ||
+    memberType(member, declaration.pkg)
+  );
+}
+
+function renderStaticMember(member, declaration, spaces) {
   const doc = kdoc(member.description, spaces);
   const pad = ' '.repeat(spaces);
-  if (member.kind === 'field') return `${doc}${pad}val ${id(member.name)}: ${memberType(member, pkg)}`;
-  const parameters = renderParameters(member.parameters, pkg);
-  const returns = memberType(member, pkg);
+  const returns = memberKotlinType(member, declaration);
+  if (member.kind === 'field') return `${doc}${pad}val ${id(member.name)}: ${returns}`;
+  const parameters = renderParameters(member.parameters, declaration.pkg);
   return `${doc}${pad}fun ${id(member.name)}(${parameters})${returns === 'Unit' ? '' : `: ${returns}`}`;
 }
 
@@ -701,7 +831,7 @@ function emitClass(declaration) {
     lines.push(
       '',
       `private external interface ${staticInterface} {`,
-      statics.map((member) => renderStaticMember(member, declaration.pkg, 4)).join('\n'),
+      statics.map((member) => renderStaticMember(member, declaration, 4)).join('\n'),
       '}',
     );
     lines.push(
@@ -716,10 +846,10 @@ function emitClass(declaration) {
         .map((member) => {
           const call = `${moduleName}.${id(declaration.name)}.${id(member.name)}`;
           if (member.kind === 'field') {
-            return `${kdoc(member.description, 4)}    val ${id(member.name)}: ${memberType(member, declaration.pkg)}\n        get() = ${call}`;
+            return `${kdoc(member.description, 4)}    val ${id(member.name)}: ${memberKotlinType(member, declaration)}\n        get() = ${call}`;
           }
           const parameters = renderParameters(member.parameters, declaration.pkg, false, 'js("undefined")');
-          const returns = memberType(member, declaration.pkg);
+          const returns = memberKotlinType(member, declaration);
           const args = (member.parameters || []).map((parameter) => id(parameter.name || 'arg')).join(', ');
           const prefix = returns === 'Unit' ? '' : 'return ';
           return `${kdoc(member.description, 4)}    fun ${id(member.name)}(${parameters})${returns === 'Unit' ? '' : `: ${returns}`} {\n        ${prefix}${call}(${args})\n    }`;
@@ -732,43 +862,35 @@ function emitClass(declaration) {
       '',
       `@JsModule("${declaration.pkg}/${declaration.module}")`,
       `private external object ${moduleName} {`,
-      `    val ${id(declaration.name)}: dynamic`,
+      `    val ${id(declaration.name)}: kotlin.js.JsAny`,
       '}',
       '',
       `/** The class registered by \`${declaration.pkg}/${declaration.module}\`. */`,
-      `fun ${camel(declaration.name)}Class(): dynamic = ${moduleName}.${id(declaration.name)}`,
+      `fun ${camel(declaration.name)}Class(): kotlin.js.JsAny = ${moduleName}.${id(declaration.name)}`,
     );
   }
 
   if (isElement) {
     const tagProperty = camel(declaration.tagName.replace(/^vaadin-/, ''));
     const baseName = declaration.name;
-    lines.push(
-      '',
-      `/** The \`<${declaration.tagName}>\` custom element. */`,
-      `object ${declaration.facadeName}TagName {`,
-      `    inline val ${id(tagProperty)}: web.dom.TagName<${declaration.kotlinName}>`,
-      `        get() = web.dom.TagName("${declaration.tagName}")`,
-      '}',
-    );
     if (statics.length === 0) {
       lines.push(
         '',
         `@JsModule("${declaration.pkg}/${declaration.module}")`,
         `private external object ${moduleName} {`,
-        `    val ${id(declaration.name)}: dynamic`,
+        `    val ${id(declaration.name)}: kotlin.js.JsAny`,
         '}',
       );
     }
     lines.push(
       '',
       `/** Imports \`${declaration.pkg}/${declaration.module}\`, registering \`<${declaration.tagName}>\`, and returns the element class. */`,
-      `fun register${baseName}(): dynamic = ${moduleName}.${id(declaration.name)}`,
+      `fun register${baseName}(): kotlin.js.JsAny = ${moduleName}.${id(declaration.name)}`,
       '',
       `/** Creates a \`<${declaration.tagName}>\` element. The custom element is registered on first use. */`,
       `fun create${baseName}(configure: ${declaration.kotlinName}.() -> Unit = {}): ${declaration.kotlinName} {`,
       `    register${baseName}()`,
-      `    return web.dom.document.createElement(${declaration.facadeName}TagName.${id(tagProperty)}).apply(configure)`,
+      `    return web.dom.document.createElement(vaadin.VaadinTagName.${id(tagProperty)}).apply(configure)`,
       '}',
     );
 
@@ -823,7 +945,8 @@ function emitModuleDeclarations(pkg, modulePath, items) {
   const variables = items.filter((item) => item.kind === 'variable');
 
   for (const declaration of functions) {
-    const returns = mapType(declaration.return && declaration.return.type && declaration.return.type.text, declaration.pkg);
+    const returned = declaration.return && declaration.return.type && declaration.return.type.text;
+    const returns = returned ? mapType(returned, declaration.pkg) : 'Unit';
     exportsLines.push(
       kdoc(declaration.description),
       `external fun ${id(declaration.name)}(${renderParameters(declaration.parameters, declaration.pkg)})${returns === 'Unit' ? '' : `: ${returns}`}`,
@@ -834,7 +957,9 @@ function emitModuleDeclarations(pkg, modulePath, items) {
   const moduleName = `${base}ExportsModule`;
   if (variables.length > 0) {
     exportsLines.push(`internal external object ${moduleName} {`);
-    for (const variable of variables) exportsLines.push(`    val ${id(variable.name)}: dynamic`);
+    for (const variable of variables) {
+      exportsLines.push(`    val ${id(variable.name)}: ${mapType(variable.type && variable.type.text, pkg)}`);
+    }
     exportsLines.push('}', '');
   }
 
@@ -859,11 +984,63 @@ function emitModuleDeclarations(pkg, modulePath, items) {
   }
 }
 
+function emitVaadinTagName() {
+  const tags = new Map(MANUAL_TAGS);
+  for (const declaration of declarations) {
+    if (!declaration.isExported || declaration.kind !== 'class' || !declaration.tagName) continue;
+    const existing = tags.get(declaration.tagName);
+    if (existing && existing !== declaration.kotlinFqn) {
+      throw new Error(`tag ${declaration.tagName} is declared by both ${existing} and ${declaration.kotlinFqn}`);
+    }
+    tags.set(declaration.tagName, declaration.kotlinFqn);
+  }
+
+  const entries = [...tags].map(([tag, kotlinFqn]) => ({
+    tag,
+    kotlinFqn,
+    property: camel(tag.replace(/^vaadin-/, '')),
+  }));
+  const seen = new Map();
+  for (const entry of entries) {
+    const existing = seen.get(entry.property);
+    if (existing) throw new Error(`tag names ${existing} and ${entry.tag} map to VaadinTagName.${entry.property}`);
+    seen.set(entry.property, entry.tag);
+  }
+  entries.sort((a, b) => a.property.localeCompare(b.property));
+
+  const lines = [
+    'package vaadin',
+    '',
+    '/**',
+    ' * Tag names of the wrapped Vaadin custom elements.',
+    ' *',
+    ' * Use these instead of string literals so the created element keeps its Kotlin type:',
+    ' *',
+    ' * ```kotlin',
+    ' * val button = document.createElement(VaadinTagName.button)',
+    ' * ```',
+    ' */',
+    'object VaadinTagName {',
+  ];
+  for (const entry of entries) {
+    lines.push(
+      `    /** \`<${entry.tag}>\` */`,
+      `    inline val ${id(entry.property)}: web.dom.TagName<${entry.kotlinFqn}>`,
+      `        get() = web.dom.TagName("${entry.tag}")`,
+      '',
+    );
+  }
+  lines.push('}');
+  writeFile(path.join(MAIN_OUT, 'VaadinTagName.kt'), lines.join('\n'));
+}
+
 for (const declaration of declarations) {
   if (!declaration.isExported) continue;
   if (declaration.kind === 'mixin') emitMixin(declaration);
   else if (declaration.kind === 'class') emitClass(declaration);
 }
+
+emitVaadinTagName();
 
 const moduleGroups = new Map();
 for (const declaration of declarations) {

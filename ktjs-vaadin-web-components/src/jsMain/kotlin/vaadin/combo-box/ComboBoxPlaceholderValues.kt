@@ -3,6 +3,6 @@ package vaadin.combobox
 
 /** The values exported by `@vaadin/combo-box/src/vaadin-combo-box-placeholder.js`. */
 object ComboBoxPlaceholderExports {
-    val ComboBoxPlaceholder: dynamic
+    val ComboBoxPlaceholder: kotlin.js.JsAny?
         get() = ComboBoxPlaceholderExportsModule.ComboBoxPlaceholder
 }

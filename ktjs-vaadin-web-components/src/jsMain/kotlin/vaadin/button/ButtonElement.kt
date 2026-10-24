@@ -69,24 +69,18 @@ abstract external class ButtonElement : web.html.HTMLElement, vaadin.button.Butt
     override var disabled: Boolean
 }
 
-/** The `<vaadin-button>` custom element. */
-object ButtonTagName {
-    inline val button: web.dom.TagName<ButtonElement>
-        get() = web.dom.TagName("vaadin-button")
-}
-
 @JsModule("@vaadin/button/src/vaadin-button.js")
 private external object ButtonElementModule {
-    val Button: dynamic
+    val Button: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/button/src/vaadin-button.js`, registering `<vaadin-button>`, and returns the element class. */
-fun registerButton(): dynamic = ButtonElementModule.Button
+fun registerButton(): kotlin.js.JsAny = ButtonElementModule.Button
 
 /** Creates a `<vaadin-button>` element. The custom element is registered on first use. */
 fun createButton(configure: ButtonElement.() -> Unit = {}): ButtonElement {
     registerButton()
-    return web.dom.document.createElement(ButtonTagName.button).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.button).apply(configure)
 }
 
 /** Attribute names of `<vaadin-button>`, for use with `setAttribute`. */

@@ -12,7 +12,7 @@ external interface DateTimePickerMixin : vaadin.componentbase.I18nMixin, vaadin.
     /**
      * Clears the `dateMetadataProvider` cache and reloads the date metadata.
      */
-    fun clearCache(): dynamic
+    fun clearCache()
     /**
      * A function that provides metadata for the dates the calendar is about to render: whether they
      * are disabled, and CSS `part` names for styling from outside using the `::part()` selector.
@@ -51,7 +51,7 @@ external interface DateTimePickerMixin : vaadin.componentbase.I18nMixin, vaadin.
      * Keep a stable reference to the function: assigning a new one clears the cache and re-fetches
      * visible range. Call `clearCache()` to re-fetch when the data behind the same function changed.
      */
-    var dateMetadataProvider: dynamic
+    var dateMetadataProvider: vaadin.datepicker.DatePickerDateMetadataProvider?
     /**
      * A placeholder string for the date field.
      */

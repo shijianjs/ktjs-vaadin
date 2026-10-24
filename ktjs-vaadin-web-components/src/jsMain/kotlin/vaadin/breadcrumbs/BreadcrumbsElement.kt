@@ -51,24 +51,18 @@ abstract external class BreadcrumbsElement : web.html.HTMLElement, vaadin.a11yba
 
 }
 
-/** The `<vaadin-breadcrumbs>` custom element. */
-object BreadcrumbsTagName {
-    inline val breadcrumbs: web.dom.TagName<BreadcrumbsElement>
-        get() = web.dom.TagName("vaadin-breadcrumbs")
-}
-
 @JsModule("@vaadin/breadcrumbs/src/vaadin-breadcrumbs.js")
 private external object BreadcrumbsElementModule {
-    val Breadcrumbs: dynamic
+    val Breadcrumbs: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/breadcrumbs/src/vaadin-breadcrumbs.js`, registering `<vaadin-breadcrumbs>`, and returns the element class. */
-fun registerBreadcrumbs(): dynamic = BreadcrumbsElementModule.Breadcrumbs
+fun registerBreadcrumbs(): kotlin.js.JsAny = BreadcrumbsElementModule.Breadcrumbs
 
 /** Creates a `<vaadin-breadcrumbs>` element. The custom element is registered on first use. */
 fun createBreadcrumbs(configure: BreadcrumbsElement.() -> Unit = {}): BreadcrumbsElement {
     registerBreadcrumbs()
-    return web.dom.document.createElement(BreadcrumbsTagName.breadcrumbs).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.breadcrumbs).apply(configure)
 }
 
 /** Attribute names of `<vaadin-breadcrumbs>`, for use with `setAttribute`. */

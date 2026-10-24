@@ -123,14 +123,14 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
      * - `root` The root container DOM element. Append your content to it.
      * - `popover` The reference to the `vaadin-popover` element.
      */
-    var renderer: dynamic
+    var renderer: kotlin.js.JsAny
     /**
      * Requests an update for the content of the popover.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * The `role` attribute value to be set on the popover.
      * When not specified, defaults to 'dialog'.
@@ -143,17 +143,17 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
      * Sets the default focus delay to be used by all popover instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic
+    fun setDefaultFocusDelay(focusDelay: Double)
     /**
      * Sets the default hide delay to be used by all popover instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic
+    fun setDefaultHideDelay(hideDelay: Double)
     /**
      * Sets the default hover delay to be used by all popover instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic
+    fun setDefaultHoverDelay(hoverDelay: Double)
     /**
      * Popover trigger mode, used to configure how the popover is opened or closed.
      * Could be set to multiple by providing an array, e.g. `trigger = ['hover', 'focus']`.
@@ -173,7 +173,7 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
      * can be only opened programmatically by changing `opened` property. Note, closing
      * on Escape press or outside click is still allowed unless explicitly disabled.
      */
-    var trigger: Array<dynamic>
+    var trigger: Array<kotlin.js.JsAny?>
     /**
      * Set the width of the popover.
      * If a unitless number is provided, pixels are assumed.
@@ -191,17 +191,17 @@ private external interface PopoverElementStaticMembers {
      * Sets the default focus delay to be used by all popover instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic
+    fun setDefaultFocusDelay(focusDelay: Double)
     /**
      * Sets the default hide delay to be used by all popover instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic
+    fun setDefaultHideDelay(hideDelay: Double)
     /**
      * Sets the default hover delay to be used by all popover instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic
+    fun setDefaultHoverDelay(hoverDelay: Double)
 }
 
 @JsModule("@vaadin/popover/src/vaadin-popover.js")
@@ -214,40 +214,34 @@ object Popover {
      * Sets the default focus delay to be used by all popover instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic {
-        return PopoverElementModule.Popover.setDefaultFocusDelay(focusDelay)
+    fun setDefaultFocusDelay(focusDelay: Double) {
+        PopoverElementModule.Popover.setDefaultFocusDelay(focusDelay)
     }
 
     /**
      * Sets the default hide delay to be used by all popover instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic {
-        return PopoverElementModule.Popover.setDefaultHideDelay(hideDelay)
+    fun setDefaultHideDelay(hideDelay: Double) {
+        PopoverElementModule.Popover.setDefaultHideDelay(hideDelay)
     }
 
     /**
      * Sets the default hover delay to be used by all popover instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic {
-        return PopoverElementModule.Popover.setDefaultHoverDelay(hoverDelay)
+    fun setDefaultHoverDelay(hoverDelay: Double) {
+        PopoverElementModule.Popover.setDefaultHoverDelay(hoverDelay)
     }
 }
 
-/** The `<vaadin-popover>` custom element. */
-object PopoverTagName {
-    inline val popover: web.dom.TagName<PopoverElement>
-        get() = web.dom.TagName("vaadin-popover")
-}
-
 /** Imports `@vaadin/popover/src/vaadin-popover.js`, registering `<vaadin-popover>`, and returns the element class. */
-fun registerPopover(): dynamic = PopoverElementModule.Popover
+fun registerPopover(): kotlin.js.JsAny = PopoverElementModule.Popover
 
 /** Creates a `<vaadin-popover>` element. The custom element is registered on first use. */
 fun createPopover(configure: PopoverElement.() -> Unit = {}): PopoverElement {
     registerPopover()
-    return web.dom.document.createElement(PopoverTagName.popover).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.popover).apply(configure)
 }
 
 /** Attribute names of `<vaadin-popover>`, for use with `setAttribute`. */

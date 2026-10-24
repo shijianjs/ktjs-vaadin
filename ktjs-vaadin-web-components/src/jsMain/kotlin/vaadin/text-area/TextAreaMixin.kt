@@ -33,9 +33,9 @@ external interface TextAreaMixin : vaadin.componentbase.ResizeMixin, vaadin.fiel
     /**
      * Scrolls the textarea to the end if it has a vertical scrollbar.
      */
-    fun scrollToEnd(): dynamic
+    fun scrollToEnd()
     /**
      * Scrolls the textarea to the start if it has a vertical scrollbar.
      */
-    fun scrollToStart(): dynamic
+    fun scrollToStart()
 }

@@ -41,6 +41,26 @@ Kotlin/JS wrapper。
 - 修改生成器后执行 `node scripts/generate-wrappers.mjs`，然后编译并跑 `jsBrowserTest`；升级上游版本时
   先 `./gradlew kotlinNpmInstall` 让 manifest 更新到 `build/js/node_modules`。
 
+### 类型映射与 `dynamic`
+
+上游 TypeScript 声明了类型的成员必须映射成 Kotlin 类型，`dynamic` 只保留给 Kotlin 无法表达语义的少数
+情况。生成器的映射策略（`SIMPLE_TYPES` / `TYPE_ALIASES` / `mapType`）：
+
+- `any`、`unknown`、`object`、`Object`、manifest 里缺类型的成员：`kotlin.js.JsAny`，可能为 `null` 时用
+  `kotlin.js.JsAny?`。用 `JsAny` 而不是 `dynamic`，方法调用、参数传递才会被编译器检查。
+- `array` → `Array<kotlin.js.JsAny?>`，`Set<T>` → `js.collections.JsSet<...>`，
+  `Record<K,V>` → `js.objects.Record<...>`，`Date` → `kotlin.js.Date`，`Promise<T>` → `kotlin.js.Promise<T>`。
+- 回调类型按 TS 签名展开成 Kotlin 函数类型，例如 `(host: HTMLElement, item: Item) => void` →
+  `(web.html.HTMLElement, Item) -> Unit`。
+- 只在 manifest 里出现名字、没有结构化信息的具名类型，在对应包内手写 `<Package>Types.kt`
+  （`external interface` / `typealias`），再在生成器的 `TYPE_ALIASES` 里登记 FQN。手写文件不带生成标记，
+  重新生成不会删除。
+- 仍然允许 `dynamic` 的情形：原始类型与 JS 类型混合的联合（`string | number`、`HTMLElement | string`）、
+  没有签名的裸 `Function`。不要用 `dynamic` 表示「懒得写类型」。
+
+`kotlin.js.JsAny` 需要 `kotlin.js.ExperimentalWasmJsInterop` opt-in；根构建脚本已对全部 KMP 子模块统一
+添加，新增模块无需单独配置。
+
 ### 新增模块
 
 1. 复制 `scaffold/module` 为 `ktjs-vaadin-<name>`，替换文件里的所有占位符（包名、npm 包名、项目名）。
@@ -59,9 +79,10 @@ Kotlin/JS wrapper。
 
 - DOM 元素：`web.html.HTMLElement`
 - 全局 document：`web.dom.document`
-- 创建元素：`document.createElement(HtmlTagName.xxx)`，无需 `unsafeCast`
-- 自定义元素标签名参照 `web.html.HtmlTagName`，为每个 Web Component 提供
-  `object XxxTagName { inline val xxx: TagName<XxxElement> }`，把标签名集中在一处
+- 创建元素：`document.createElement(VaadinTagName.xxx)`，无需 `unsafeCast`
+- 所有自定义元素标签名集中在根包 `vaadin.VaadinTagName`：每个元素一个
+  `inline val xxx: TagName<XxxElement>`，由生成器统一写出。不要在组件包里另建 `XxxTagName` 之类的对象，
+  同一标签名只能有一处声明。
 
 两套类型运行时指向同一个对象，但编译器不视为同一类型；wrapper 的公开 API 一旦用 `org.w3c.dom.*`，
 kotlin-browser 项目就无法直接使用。

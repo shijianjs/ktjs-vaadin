@@ -29,7 +29,7 @@ external interface MultiSelectComboBoxMixin : vaadin.componentbase.I18nMixin, va
      * value should be the generated class name as a string, or
      * multiple class names separated by whitespace characters.
      */
-    var itemClassNameGenerator: dynamic
+    var itemClassNameGenerator: kotlin.js.JsAny
     /**
      * When true, filter string isn't cleared after selecting an item.
      */
@@ -49,12 +49,12 @@ external interface MultiSelectComboBoxMixin : vaadin.componentbase.I18nMixin, va
      *   - `model.index` The index of the rendered item.
      *   - `model.item` The item.
      */
-    var renderer: dynamic
+    var renderer: (web.html.HTMLElement, vaadin.multiselectcombobox.MultiSelectComboBoxElement, vaadin.combobox.ComboBoxItemModel) -> Unit
     /**
      * The list of selected items.
      * Note: modifying the selected items creates a new array each time.
      */
-    var selectedItems: Array<dynamic>
+    var selectedItems: Array<kotlin.js.JsAny?>
     /**
      * Set to true to group selected items at the top of the overlay.
      */

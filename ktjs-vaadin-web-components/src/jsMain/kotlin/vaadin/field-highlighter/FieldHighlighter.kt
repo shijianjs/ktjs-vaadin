@@ -1,6 +1,7 @@
 package vaadin.fieldhighlighter
 
 import kotlin.js.js
+import vaadin.VaadinTagName
 
 /**
  * A user shown by the field highlighter, typically provided by a collaboration backend.
@@ -89,19 +90,13 @@ object FieldHighlighter {
 
 external class FieldHighlighterElement : web.html.HTMLElement
 
-/** The `<vaadin-field-highlighter>` custom element. */
-object FieldHighlighterTagName {
-    inline val fieldHighlighter: web.dom.TagName<FieldHighlighterElement>
-        get() = web.dom.TagName("vaadin-field-highlighter")
-}
-
-fun registerFieldHighlighter(): dynamic = FieldHighlighterModule.FieldHighlighter
+fun registerFieldHighlighter(): kotlin.js.JsAny = FieldHighlighterModule.FieldHighlighter
 
 fun createFieldHighlighter(
     configure: FieldHighlighterElement.() -> Unit = {},
 ): FieldHighlighterElement {
     registerFieldHighlighter()
-    return web.dom.document.createElement(FieldHighlighterTagName.fieldHighlighter).apply(configure)
+    return web.dom.document.createElement(VaadinTagName.fieldHighlighter).apply(configure)
 }
 
 /**
@@ -117,17 +112,11 @@ external class FieldOutlineElement :
     var user: FieldHighlighterUser?
 }
 
-/** The `<vaadin-field-outline>` custom element. */
-object FieldOutlineTagName {
-    inline val fieldOutline: web.dom.TagName<FieldOutlineElement>
-        get() = web.dom.TagName("vaadin-field-outline")
-}
-
-fun registerFieldOutline(): dynamic = FieldOutlineModule.FieldOutline
+fun registerFieldOutline(): kotlin.js.JsAny = FieldOutlineModule.FieldOutline
 
 fun createFieldOutline(configure: FieldOutlineElement.() -> Unit = {}): FieldOutlineElement {
     registerFieldOutline()
-    return web.dom.document.createElement(FieldOutlineTagName.fieldOutline).apply(configure)
+    return web.dom.document.createElement(VaadinTagName.fieldOutline).apply(configure)
 }
 
 /**
@@ -149,17 +138,20 @@ external class UserTagElement :
     var colorIndex: Double
 }
 
-/** The `<vaadin-user-tag>` custom element. */
-object UserTagTagName {
-    inline val userTag: web.dom.TagName<UserTagElement>
-        get() = web.dom.TagName("vaadin-user-tag")
-}
-
-fun registerUserTag(): dynamic = UserTagModule.UserTag
+fun registerUserTag(): kotlin.js.JsAny = UserTagModule.UserTag
 
 fun createUserTag(configure: UserTagElement.() -> Unit = {}): UserTagElement {
     registerUserTag()
-    return web.dom.document.createElement(UserTagTagName.userTag).apply(configure)
+    return web.dom.document.createElement(VaadinTagName.userTag).apply(configure)
+}
+
+/** The user tags added and removed by one update. */
+external interface ChangedUserTags {
+    /** Tags of added users. */
+    var added: Array<UserTagElement?>
+
+    /** Tags of removed users. */
+    var removed: Array<UserTagElement?>
 }
 
 /**
@@ -176,7 +168,7 @@ external class UserTagsElement : web.html.HTMLElement, vaadin.componentbase.Poly
     var flashing: Boolean
 
     /** The element the overlay is positioned to. */
-    var target: dynamic
+    var target: web.html.HTMLElement?
 
     var users: Array<FieldHighlighterUser>
 
@@ -190,11 +182,14 @@ external class UserTagsElement : web.html.HTMLElement, vaadin.componentbase.Poly
 
     fun getTagForUser(user: FieldHighlighterUser): UserTagElement?
 
-    fun getChangedTags(addedUsers: Array<FieldHighlighterUser>, removedUsers: Array<FieldHighlighterUser>): dynamic
+    fun getChangedTags(
+        addedUsers: Array<FieldHighlighterUser>,
+        removedUsers: Array<FieldHighlighterUser>,
+    ): ChangedUserTags
 
-    fun applyTagsStart(changed: dynamic)
+    fun applyTagsStart(changed: ChangedUserTags)
 
-    fun applyTagsEnd(changed: dynamic)
+    fun applyTagsEnd(changed: ChangedUserTags)
 
     fun setUsers(users: Array<FieldHighlighterUser>)
 
@@ -202,9 +197,9 @@ external class UserTagsElement : web.html.HTMLElement, vaadin.componentbase.Poly
 
     fun stopFlash()
 
-    fun updateTags(users: Array<FieldHighlighterUser>, changed: dynamic)
+    fun updateTags(users: Array<FieldHighlighterUser>, changed: ChangedUserTags)
 
-    fun updateTagsSync(users: Array<FieldHighlighterUser>, changed: dynamic)
+    fun updateTagsSync(users: Array<FieldHighlighterUser>, changed: ChangedUserTags)
 
     fun show()
 
@@ -213,17 +208,11 @@ external class UserTagsElement : web.html.HTMLElement, vaadin.componentbase.Poly
     fun requestContentUpdate()
 }
 
-/** The `<vaadin-user-tags>` custom element. */
-object UserTagsTagName {
-    inline val userTags: web.dom.TagName<UserTagsElement>
-        get() = web.dom.TagName("vaadin-user-tags")
-}
-
-fun registerUserTags(): dynamic = UserTagsModule.UserTags
+fun registerUserTags(): kotlin.js.JsAny = UserTagsModule.UserTags
 
 fun createUserTags(configure: UserTagsElement.() -> Unit = {}): UserTagsElement {
     registerUserTags()
-    return web.dom.document.createElement(UserTagsTagName.userTags).apply(configure)
+    return web.dom.document.createElement(VaadinTagName.userTags).apply(configure)
 }
 
 /** Localization texts of the AI field marker. */
@@ -269,7 +258,7 @@ external class AiFieldMarkerElement :
     var i18n: AiFieldMarkerI18n
 
     /** A DOM node shown between the message and the revert control. */
-    var content: dynamic
+    var content: web.dom.Node?
 
     /** Whether the marker is in its working state. */
     var working: Boolean
@@ -278,43 +267,48 @@ external class AiFieldMarkerElement :
     var confidence: String?
 }
 
-/** The `<vaadin-ai-field-marker>` custom element. */
-object AiFieldMarkerTagName {
-    inline val aiFieldMarker: web.dom.TagName<AiFieldMarkerElement>
-        get() = web.dom.TagName("vaadin-ai-field-marker")
-}
-
-fun registerAiFieldMarker(): dynamic = AiFieldMarkerModule.AiFieldMarker
+fun registerAiFieldMarker(): kotlin.js.JsAny = AiFieldMarkerModule.AiFieldMarker
 
 fun createAiFieldMarker(
     configure: AiFieldMarkerElement.() -> Unit = {},
 ): AiFieldMarkerElement {
     registerAiFieldMarker()
-    return web.dom.document.createElement(AiFieldMarkerTagName.aiFieldMarker).apply(configure)
+    return web.dom.document.createElement(VaadinTagName.aiFieldMarker).apply(configure)
+}
+
+private external interface FieldHighlighterStatics {
+    /** Returns the controller associated with a field, creating it on first use. */
+    fun init(field: web.html.HTMLElement): FieldHighlighterController
+
+    fun addUser(field: web.html.HTMLElement, user: FieldHighlighterUser)
+
+    fun removeUser(field: web.html.HTMLElement, user: FieldHighlighterUser)
+
+    fun setUsers(field: web.html.HTMLElement, users: Array<FieldHighlighterUser>)
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-field-highlighter.js")
 private external object FieldHighlighterModule {
-    val FieldHighlighterController: dynamic
-    val FieldHighlighter: dynamic
+    val FieldHighlighterController: kotlin.js.JsAny
+    val FieldHighlighter: FieldHighlighterStatics
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-field-outline.js")
 private external object FieldOutlineModule {
-    val FieldOutline: dynamic
+    val FieldOutline: kotlin.js.JsAny
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-user-tag.js")
 private external object UserTagModule {
-    val UserTag: dynamic
+    val UserTag: kotlin.js.JsAny
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-user-tags.js")
 private external object UserTagsModule {
-    val UserTags: dynamic
+    val UserTags: kotlin.js.JsAny
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-ai-field-marker.js")
 private external object AiFieldMarkerModule {
-    val AiFieldMarker: dynamic
+    val AiFieldMarker: kotlin.js.JsAny
 }

@@ -44,24 +44,18 @@ abstract external class SelectItemElement : web.html.HTMLElement, vaadin.item.It
     var label: String
 }
 
-/** The `<vaadin-select-item>` custom element. */
-object SelectItemTagName {
-    inline val selectItem: web.dom.TagName<SelectItemElement>
-        get() = web.dom.TagName("vaadin-select-item")
-}
-
 @JsModule("@vaadin/select/src/vaadin-select-item.js")
 private external object SelectItemElementModule {
-    val SelectItem: dynamic
+    val SelectItem: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/select/src/vaadin-select-item.js`, registering `<vaadin-select-item>`, and returns the element class. */
-fun registerSelectItem(): dynamic = SelectItemElementModule.SelectItem
+fun registerSelectItem(): kotlin.js.JsAny = SelectItemElementModule.SelectItem
 
 /** Creates a `<vaadin-select-item>` element. The custom element is registered on first use. */
 fun createSelectItem(configure: SelectItemElement.() -> Unit = {}): SelectItemElement {
     registerSelectItem()
-    return web.dom.document.createElement(SelectItemTagName.selectItem).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.selectItem).apply(configure)
 }
 
 /** Attribute names of `<vaadin-select-item>`, for use with `setAttribute`. */

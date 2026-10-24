@@ -15,7 +15,7 @@ external interface ContextMenuMixin : vaadin.contextmenu.ItemsMixin {
     /**
      * Opens the overlay.
      */
-    fun `open`(e: web.events.Event?): dynamic
+    fun `open`(e: web.events.Event?)
     /**
      * True if the overlay is currently displayed.
      */
@@ -34,14 +34,14 @@ external interface ContextMenuMixin : vaadin.contextmenu.ItemsMixin {
      *   - `context.target`  the target of the menu opening event,
      *   - `context.detail` the menu opening event detail.
      */
-    var renderer: dynamic
+    var renderer: vaadin.contextmenu.ContextMenuRenderer?
     /**
      * Requests an update for the content of the menu overlay.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * CSS selector that can be used to target any child element
      * of the context menu to listen for `openOn` events.

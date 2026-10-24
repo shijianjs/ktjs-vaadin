@@ -56,24 +56,18 @@ abstract external class MessageInputElement : web.html.HTMLElement, vaadin.messa
 
 }
 
-/** The `<vaadin-message-input>` custom element. */
-object MessageInputTagName {
-    inline val messageInput: web.dom.TagName<MessageInputElement>
-        get() = web.dom.TagName("vaadin-message-input")
-}
-
 @JsModule("@vaadin/message-input/src/vaadin-message-input.js")
 private external object MessageInputElementModule {
-    val MessageInput: dynamic
+    val MessageInput: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/message-input/src/vaadin-message-input.js`, registering `<vaadin-message-input>`, and returns the element class. */
-fun registerMessageInput(): dynamic = MessageInputElementModule.MessageInput
+fun registerMessageInput(): kotlin.js.JsAny = MessageInputElementModule.MessageInput
 
 /** Creates a `<vaadin-message-input>` element. The custom element is registered on first use. */
 fun createMessageInput(configure: MessageInputElement.() -> Unit = {}): MessageInputElement {
     registerMessageInput()
-    return web.dom.document.createElement(MessageInputTagName.messageInput).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.messageInput).apply(configure)
 }
 
 /** Attribute names of `<vaadin-message-input>`, for use with `setAttribute`. */

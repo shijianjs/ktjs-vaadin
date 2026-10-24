@@ -5,7 +5,7 @@ external interface SelectionMixin {
     /**
      * Deselects the given item if it is already selected.
      */
-    fun deselectItem(item: dynamic): dynamic
+    fun deselectItem(item: kotlin.js.JsAny)
     /**
      * A function to check whether a specific item in the grid may be
      * selected or deselected by the user. Used by the selection column to
@@ -22,13 +22,13 @@ external interface SelectionMixin {
      * Receives an item instance and should return a boolean indicating
      * whether users may change the selection state of that item.
      */
-    var isItemSelectable: (dynamic) -> Boolean
+    var isItemSelectable: (kotlin.js.JsAny) -> Boolean
     /**
      * An array that contains the selected items.
      */
-    var selectedItems: Array<dynamic>
+    var selectedItems: Array<kotlin.js.JsAny>
     /**
      * Selects the given item.
      */
-    fun selectItem(item: dynamic): dynamic
+    fun selectItem(item: kotlin.js.JsAny)
 }

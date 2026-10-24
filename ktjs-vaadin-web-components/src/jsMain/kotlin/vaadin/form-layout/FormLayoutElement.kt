@@ -193,24 +193,18 @@ abstract external class FormLayoutElement : web.html.HTMLElement, vaadin.formlay
 
 }
 
-/** The `<vaadin-form-layout>` custom element. */
-object FormLayoutTagName {
-    inline val formLayout: web.dom.TagName<FormLayoutElement>
-        get() = web.dom.TagName("vaadin-form-layout")
-}
-
 @JsModule("@vaadin/form-layout/src/vaadin-form-layout.js")
 private external object FormLayoutElementModule {
-    val FormLayout: dynamic
+    val FormLayout: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/form-layout/src/vaadin-form-layout.js`, registering `<vaadin-form-layout>`, and returns the element class. */
-fun registerFormLayout(): dynamic = FormLayoutElementModule.FormLayout
+fun registerFormLayout(): kotlin.js.JsAny = FormLayoutElementModule.FormLayout
 
 /** Creates a `<vaadin-form-layout>` element. The custom element is registered on first use. */
 fun createFormLayout(configure: FormLayoutElement.() -> Unit = {}): FormLayoutElement {
     registerFormLayout()
-    return web.dom.document.createElement(FormLayoutTagName.formLayout).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.formLayout).apply(configure)
 }
 
 /** Attribute names of `<vaadin-form-layout>`, for use with `setAttribute`. */

@@ -28,24 +28,18 @@ abstract external class GridSelectionColumnElement : vaadin.grid.GridColumnEleme
 
 }
 
-/** The `<vaadin-grid-selection-column>` custom element. */
-object GridSelectionColumnTagName {
-    inline val gridSelectionColumn: web.dom.TagName<GridSelectionColumnElement>
-        get() = web.dom.TagName("vaadin-grid-selection-column")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-selection-column.js")
 private external object GridSelectionColumnElementModule {
-    val GridSelectionColumn: dynamic
+    val GridSelectionColumn: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-selection-column.js`, registering `<vaadin-grid-selection-column>`, and returns the element class. */
-fun registerGridSelectionColumn(): dynamic = GridSelectionColumnElementModule.GridSelectionColumn
+fun registerGridSelectionColumn(): kotlin.js.JsAny = GridSelectionColumnElementModule.GridSelectionColumn
 
 /** Creates a `<vaadin-grid-selection-column>` element. The custom element is registered on first use. */
 fun createGridSelectionColumn(configure: GridSelectionColumnElement.() -> Unit = {}): GridSelectionColumnElement {
     registerGridSelectionColumn()
-    return web.dom.document.createElement(GridSelectionColumnTagName.gridSelectionColumn).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridSelectionColumn).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-selection-column>`, for use with `setAttribute`. */

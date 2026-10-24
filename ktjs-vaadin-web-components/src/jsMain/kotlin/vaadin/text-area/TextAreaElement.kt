@@ -100,24 +100,18 @@ abstract external class TextAreaElement : web.html.HTMLElement, vaadin.textarea.
 
 }
 
-/** The `<vaadin-text-area>` custom element. */
-object TextAreaTagName {
-    inline val textArea: web.dom.TagName<TextAreaElement>
-        get() = web.dom.TagName("vaadin-text-area")
-}
-
 @JsModule("@vaadin/text-area/src/vaadin-text-area.js")
 private external object TextAreaElementModule {
-    val TextArea: dynamic
+    val TextArea: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/text-area/src/vaadin-text-area.js`, registering `<vaadin-text-area>`, and returns the element class. */
-fun registerTextArea(): dynamic = TextAreaElementModule.TextArea
+fun registerTextArea(): kotlin.js.JsAny = TextAreaElementModule.TextArea
 
 /** Creates a `<vaadin-text-area>` element. The custom element is registered on first use. */
 fun createTextArea(configure: TextAreaElement.() -> Unit = {}): TextAreaElement {
     registerTextArea()
-    return web.dom.document.createElement(TextAreaTagName.textArea).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.textArea).apply(configure)
 }
 
 /** Attribute names of `<vaadin-text-area>`, for use with `setAttribute`. */

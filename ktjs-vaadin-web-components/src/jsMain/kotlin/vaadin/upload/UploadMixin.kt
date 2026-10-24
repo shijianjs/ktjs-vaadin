@@ -42,7 +42,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
      * - `complete`: True when the file was transferred to the server.
      * - `uploading`: True while transferring data to the server.
      */
-    var files: Array<vaadin.upload.UploadFileElement>
+    var files: Array<vaadin.upload.UploadFile>
     /**
      * Specifies the 'name' property at Content-Disposition for multipart uploads.
      * This property is ignored when uploadFormat is 'raw'.
@@ -109,7 +109,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
     /**
      * Triggers the upload of any files that are not completed
      */
-    fun uploadFiles(files: dynamic = definedExternally): dynamic
+    fun uploadFiles(files: dynamic = definedExternally)
     /**
      * Specifies the upload format to use when sending files to the server.
      * - 'raw': Send file as raw binary data with the file's MIME type as Content-Type (default)

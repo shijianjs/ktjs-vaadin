@@ -103,24 +103,18 @@ abstract external class SliderElement : web.html.HTMLElement, vaadin.fieldbase.F
     var value: Double
 }
 
-/** The `<vaadin-slider>` custom element. */
-object SliderTagName {
-    inline val slider: web.dom.TagName<SliderElement>
-        get() = web.dom.TagName("vaadin-slider")
-}
-
 @JsModule("@vaadin/slider/src/vaadin-slider.js")
 private external object SliderElementModule {
-    val Slider: dynamic
+    val Slider: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/slider/src/vaadin-slider.js`, registering `<vaadin-slider>`, and returns the element class. */
-fun registerSlider(): dynamic = SliderElementModule.Slider
+fun registerSlider(): kotlin.js.JsAny = SliderElementModule.Slider
 
 /** Creates a `<vaadin-slider>` element. The custom element is registered on first use. */
 fun createSlider(configure: SliderElement.() -> Unit = {}): SliderElement {
     registerSlider()
-    return web.dom.document.createElement(SliderTagName.slider).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.slider).apply(configure)
 }
 
 /** Attribute names of `<vaadin-slider>`, for use with `setAttribute`. */

@@ -13,7 +13,7 @@ external interface ColumnBaseMixin {
      * - `root` The footer cell content DOM element. Append your content to it.
      * - `column` The `<vaadin-grid-column>` element.
      */
-    var footerRenderer: dynamic
+    var footerRenderer: vaadin.grid.GridHeaderFooterRenderer?
     /**
      * When true, the column is frozen. When a column inside of a column group is frozen,
      * all of the sibling columns inside the group will get frozen also.
@@ -43,7 +43,7 @@ external interface ColumnBaseMixin {
      * - `root` The header cell content DOM element. Append your content to it.
      * - `column` The `<vaadin-grid-column>` element.
      */
-    var headerRenderer: dynamic
+    var headerRenderer: vaadin.grid.GridHeaderFooterRenderer?
     /**
      * When set to true, the cells for this column are hidden.
      *

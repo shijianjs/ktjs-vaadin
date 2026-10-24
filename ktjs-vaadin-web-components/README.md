@@ -38,10 +38,10 @@ Every npm package maps to one Kotlin package, so imports stay close to the upstr
 | `@vaadin/vaadin-lumo-styles` | `vaadin.lumostyles` |
 | `@vaadin/vaadin-themable-mixin` | `vaadin.themablemixin` |
 
-Each element package provides an element type (`ButtonElement`), a typed tag name
-(`ButtonTagName.button`), a registration function (`registerButton()`), a factory
-(`createButton {}`), attribute names (`ButtonAttributes`) and, when the upstream manifest declares
-events, typed event names (`NotificationEvents.closed`).
+Each element package provides an element type (`ButtonElement`), a registration function
+(`registerButton()`), a factory (`createButton {}`), attribute names (`ButtonAttributes`) and, when
+the upstream manifest declares events, typed event names (`NotificationEvents.closed`). Every tag
+name is collected in one place, `vaadin.VaadinTagName`.
 
 ## Usage
 
@@ -71,12 +71,12 @@ example from a server-rendered page), call the matching `registerXxx()` function
 element is defined:
 
 ```kotlin
-import vaadin.dialog.DialogTagName
+import vaadin.VaadinTagName
 import vaadin.dialog.registerDialog
 import web.dom.document
 
 registerDialog()
-val dialog = document.createElement(DialogTagName.dialog)
+val dialog = document.createElement(VaadinTagName.dialog)
 dialog.headerTitle = "Details"
 ```
 

@@ -10,7 +10,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * `shouldShow` functions for generating tooltip text
      * or detecting whether to show the tooltip or not.
      */
-    var context: dynamic
+    var context: kotlin.js.JsAny
     /**
      * The delay in milliseconds before the tooltip
      * is opened on keyboard focus, when not in manual mode.
@@ -22,7 +22,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * Use the `context` property to provide argument
      * that can be passed to the generator function.
      */
-    var generator: dynamic
+    var generator: kotlin.js.JsAny
     /**
      * The delay in milliseconds before the tooltip
      * is closed on losing hover, when not in manual mode.
@@ -57,17 +57,17 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * Sets the default focus delay to be used by all tooltip instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic
+    fun setDefaultFocusDelay(focusDelay: Double)
     /**
      * Sets the default hide delay to be used by all tooltip instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic
+    fun setDefaultHideDelay(hideDelay: Double)
     /**
      * Sets the default hover delay to be used by all tooltip instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic
+    fun setDefaultHoverDelay(hoverDelay: Double)
     /**
      * Function used to detect whether to show the tooltip based on a condition,
      * called every time the tooltip is about to be shown on hover and focus.
@@ -75,7 +75,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * values of the corresponding tooltip properties at the time of calling.
      * The tooltip is only shown when the function invocation returns `true`.
      */
-    var shouldShow: dynamic
+    var shouldShow: kotlin.js.JsAny
     /**
      * String used as a tooltip content.
      */

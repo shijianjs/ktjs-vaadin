@@ -31,24 +31,18 @@ abstract external class MarkdownElement : web.html.HTMLElement, vaadin.component
     var lineBreaks: Boolean
 }
 
-/** The `<vaadin-markdown>` custom element. */
-object MarkdownTagName {
-    inline val markdown: web.dom.TagName<MarkdownElement>
-        get() = web.dom.TagName("vaadin-markdown")
-}
-
 @JsModule("@vaadin/markdown/src/vaadin-markdown.js")
 private external object MarkdownElementModule {
-    val Markdown: dynamic
+    val Markdown: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/markdown/src/vaadin-markdown.js`, registering `<vaadin-markdown>`, and returns the element class. */
-fun registerMarkdown(): dynamic = MarkdownElementModule.Markdown
+fun registerMarkdown(): kotlin.js.JsAny = MarkdownElementModule.Markdown
 
 /** Creates a `<vaadin-markdown>` element. The custom element is registered on first use. */
 fun createMarkdown(configure: MarkdownElement.() -> Unit = {}): MarkdownElement {
     registerMarkdown()
-    return web.dom.document.createElement(MarkdownTagName.markdown).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.markdown).apply(configure)
 }
 
 /** Attribute names of `<vaadin-markdown>`, for use with `setAttribute`. */

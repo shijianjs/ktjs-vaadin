@@ -9,11 +9,11 @@ external interface DatePickerMixin : vaadin.componentbase.I18nMixin, vaadin.a11y
     /**
      * Clears the `dateMetadataProvider` cache and reloads the date metadata.
      */
-    fun clearCache(): dynamic
+    fun clearCache()
     /**
      * Closes the dropdown.
      */
-    fun close(): dynamic
+    fun close()
     /**
      * A function that provides metadata for the dates the calendar is about to render: whether they
      * are disabled, and CSS `part` names for styling from outside using the `::part()` selector.
@@ -51,7 +51,7 @@ external interface DatePickerMixin : vaadin.componentbase.I18nMixin, vaadin.a11y
      * Keep a stable reference to the function: assigning a new one clears the cache and re-fetches
      * visible range. Call `clearCache()` to re-fetch when the data behind the same function changed.
      */
-    var dateMetadataProvider: dynamic
+    var dateMetadataProvider: vaadin.datepicker.DatePickerDateMetadataProvider?
     /**
      * Date which should be visible when there is no value selected.
      *
@@ -67,7 +67,7 @@ external interface DatePickerMixin : vaadin.componentbase.I18nMixin, vaadin.a11y
      * `dateMetadataProvider` when the answer has to be loaded first, or when dates also need
      * custom part names. A date is disabled when either of the two disables it.
      */
-    var isDateDisabled: (dynamic) -> Boolean?
+    var isDateDisabled: (vaadin.datepicker.DatePickerDate) -> Boolean?
     /**
      * The latest date that can be selected. All later dates will be disabled.
      *
@@ -87,7 +87,7 @@ external interface DatePickerMixin : vaadin.componentbase.I18nMixin, vaadin.a11y
     /**
      * Opens the dropdown.
      */
-    fun `open`(): dynamic
+    fun `open`()
     /**
      * Set true to open the date selector overlay.
      */

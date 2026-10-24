@@ -188,24 +188,18 @@ abstract external class DatePickerElement : web.html.HTMLElement, vaadin.datepic
 
 }
 
-/** The `<vaadin-date-picker>` custom element. */
-object DatePickerTagName {
-    inline val datePicker: web.dom.TagName<DatePickerElement>
-        get() = web.dom.TagName("vaadin-date-picker")
-}
-
 @JsModule("@vaadin/date-picker/src/vaadin-date-picker.js")
 private external object DatePickerElementModule {
-    val DatePicker: dynamic
+    val DatePicker: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/date-picker/src/vaadin-date-picker.js`, registering `<vaadin-date-picker>`, and returns the element class. */
-fun registerDatePicker(): dynamic = DatePickerElementModule.DatePicker
+fun registerDatePicker(): kotlin.js.JsAny = DatePickerElementModule.DatePicker
 
 /** Creates a `<vaadin-date-picker>` element. The custom element is registered on first use. */
 fun createDatePicker(configure: DatePickerElement.() -> Unit = {}): DatePickerElement {
     registerDatePicker()
-    return web.dom.document.createElement(DatePickerTagName.datePicker).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.datePicker).apply(configure)
 }
 
 /** Attribute names of `<vaadin-date-picker>`, for use with `setAttribute`. */

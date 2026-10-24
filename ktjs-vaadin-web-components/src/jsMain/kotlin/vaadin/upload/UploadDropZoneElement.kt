@@ -46,31 +46,25 @@ abstract external class UploadDropZoneElement : web.html.HTMLElement, vaadin.com
      * Reference to an UploadManager.
      * When set, dropped files will be automatically added to the manager.
      */
-    var manager: dynamic
+    var manager: kotlin.js.JsAny?
     /**
      * True when max files has been reached on the manager.
      */
     val maxFilesReached: Boolean
 }
 
-/** The `<vaadin-upload-drop-zone>` custom element. */
-object UploadDropZoneTagName {
-    inline val uploadDropZone: web.dom.TagName<UploadDropZoneElement>
-        get() = web.dom.TagName("vaadin-upload-drop-zone")
-}
-
 @JsModule("@vaadin/upload/src/vaadin-upload-drop-zone.js")
 private external object UploadDropZoneElementModule {
-    val UploadDropZone: dynamic
+    val UploadDropZone: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/upload/src/vaadin-upload-drop-zone.js`, registering `<vaadin-upload-drop-zone>`, and returns the element class. */
-fun registerUploadDropZone(): dynamic = UploadDropZoneElementModule.UploadDropZone
+fun registerUploadDropZone(): kotlin.js.JsAny = UploadDropZoneElementModule.UploadDropZone
 
 /** Creates a `<vaadin-upload-drop-zone>` element. The custom element is registered on first use. */
 fun createUploadDropZone(configure: UploadDropZoneElement.() -> Unit = {}): UploadDropZoneElement {
     registerUploadDropZone()
-    return web.dom.document.createElement(UploadDropZoneTagName.uploadDropZone).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.uploadDropZone).apply(configure)
 }
 
 /** Attribute names of `<vaadin-upload-drop-zone>`, for use with `setAttribute`. */

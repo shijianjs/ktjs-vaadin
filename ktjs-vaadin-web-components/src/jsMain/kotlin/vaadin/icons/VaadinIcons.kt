@@ -13,4 +13,4 @@ private external object VaadinIconsModule
  * The icon set adds a few hundred SVG icons to the bundle, so only call this when the page
  * actually uses `vaadin:` icon names.
  */
-fun registerVaadinIcons(): dynamic = VaadinIconsModule
+fun registerVaadinIcons(): kotlin.js.JsAny = VaadinIconsModule

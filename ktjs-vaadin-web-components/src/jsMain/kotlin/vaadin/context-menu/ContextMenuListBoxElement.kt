@@ -28,24 +28,18 @@ abstract external class ContextMenuListBoxElement : web.html.HTMLElement, vaadin
 
 }
 
-/** The `<vaadin-context-menu-list-box>` custom element. */
-object ContextMenuListBoxTagName {
-    inline val contextMenuListBox: web.dom.TagName<ContextMenuListBoxElement>
-        get() = web.dom.TagName("vaadin-context-menu-list-box")
-}
-
 @JsModule("@vaadin/context-menu/src/vaadin-context-menu-list-box.js")
 private external object ContextMenuListBoxElementModule {
-    val ContextMenuListBox: dynamic
+    val ContextMenuListBox: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/context-menu/src/vaadin-context-menu-list-box.js`, registering `<vaadin-context-menu-list-box>`, and returns the element class. */
-fun registerContextMenuListBox(): dynamic = ContextMenuListBoxElementModule.ContextMenuListBox
+fun registerContextMenuListBox(): kotlin.js.JsAny = ContextMenuListBoxElementModule.ContextMenuListBox
 
 /** Creates a `<vaadin-context-menu-list-box>` element. The custom element is registered on first use. */
 fun createContextMenuListBox(configure: ContextMenuListBoxElement.() -> Unit = {}): ContextMenuListBoxElement {
     registerContextMenuListBox()
-    return web.dom.document.createElement(ContextMenuListBoxTagName.contextMenuListBox).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.contextMenuListBox).apply(configure)
 }
 
 /** Attribute names of `<vaadin-context-menu-list-box>`, for use with `setAttribute`. */

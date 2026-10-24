@@ -5,7 +5,7 @@ external interface VirtualListMixin {
     /**
      * Gets the index of the first visible item in the viewport.
      */
-    val firstVisibleIndex: dynamic
+    val firstVisibleIndex: kotlin.js.JsAny?
     /**
      * A function that generates accessible names for virtual list items.
      * The function gets the item as an argument and the
@@ -13,15 +13,15 @@ external interface VirtualListMixin {
      * result gets applied to the corresponding virtual list child element
      * as an `aria-label` attribute.
      */
-    var itemAccessibleNameGenerator: dynamic
+    var itemAccessibleNameGenerator: ((kotlin.js.JsAny?) -> String)?
     /**
      * An array containing items determining how many instances to render.
      */
-    var items: Array<dynamic>?
+    var items: Array<kotlin.js.JsAny>?
     /**
      * Gets the index of the last visible item in the viewport.
      */
-    val lastVisibleIndex: dynamic
+    val lastVisibleIndex: kotlin.js.JsAny?
     /**
      * Custom function for rendering the content of every item.
      * Receives three arguments:
@@ -33,16 +33,16 @@ external interface VirtualListMixin {
      *   - `model.index` The index of the rendered item.
      *   - `model.item` The item.
      */
-    var renderer: dynamic
+    var renderer: vaadin.virtuallist.VirtualListRenderer?
     /**
      * Requests an update for the content of the rows.
      * While performing the update, it invokes the renderer passed in the `renderer` property for each visible row.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * Scroll to a specific index in the virtual list.
      */
-    fun scrollToIndex(index: Double): dynamic
+    fun scrollToIndex(index: Double)
 }

@@ -17,7 +17,7 @@ external interface UploadFileMixin : vaadin.a11ybase.FocusMixin {
     /**
      * The object representing a file.
      */
-    var `file`: dynamic
+    var `file`: kotlin.js.JsAny
     /**
      * Name of the uploading file.
      */
@@ -29,7 +29,7 @@ external interface UploadFileMixin : vaadin.a11ybase.FocusMixin {
     /**
      * The object used to localize this component.
      */
-    var i18n: dynamic
+    var i18n: kotlin.js.JsAny
     /**
      * True if remaining time is unknown, false otherwise.
      */

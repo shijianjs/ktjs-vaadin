@@ -27,7 +27,7 @@ external interface PositionMixin {
      * with properties `horizontalAlign`, `verticalAlign`, `noHorizontalOverlap`
      * and `noVerticalOverlap`.
      */
-    var positionTarget: dynamic
+    var positionTarget: kotlin.js.JsAny
     /**
      * If the overlay content has no intrinsic height, this property can be used to set
      * the minimum vertical space (in pixels) required by the overlay. Setting a value to

@@ -3,6 +3,6 @@ package vaadin.upload
 
 /** The values exported by `@vaadin/upload/src/vaadin-upload-file-list-mixin.js`. */
 object UploadFileListMixinExports {
-    val DEFAULT_I18N: dynamic
+    val DEFAULT_I18N: kotlin.js.JsAny
         get() = UploadFileListMixinExportsModule.DEFAULT_I18N
 }

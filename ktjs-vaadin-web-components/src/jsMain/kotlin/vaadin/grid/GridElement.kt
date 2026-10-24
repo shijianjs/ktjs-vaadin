@@ -271,7 +271,7 @@ private external interface GridElementStaticMembers {
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String): dynamic
+    fun setDefaultMultiSortPriority(priority: String)
 }
 
 @JsModule("@vaadin/grid/src/vaadin-grid.js")
@@ -285,24 +285,18 @@ object Grid {
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String): dynamic {
-        return GridElementModule.Grid.setDefaultMultiSortPriority(priority)
+    fun setDefaultMultiSortPriority(priority: String) {
+        GridElementModule.Grid.setDefaultMultiSortPriority(priority)
     }
 }
 
-/** The `<vaadin-grid>` custom element. */
-object GridTagName {
-    inline val grid: web.dom.TagName<GridElement>
-        get() = web.dom.TagName("vaadin-grid")
-}
-
 /** Imports `@vaadin/grid/src/vaadin-grid.js`, registering `<vaadin-grid>`, and returns the element class. */
-fun registerGrid(): dynamic = GridElementModule.Grid
+fun registerGrid(): kotlin.js.JsAny = GridElementModule.Grid
 
 /** Creates a `<vaadin-grid>` element. The custom element is registered on first use. */
 fun createGrid(configure: GridElement.() -> Unit = {}): GridElement {
     registerGrid()
-    return web.dom.document.createElement(GridTagName.grid).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.grid).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid>`, for use with `setAttribute`. */

@@ -73,7 +73,7 @@ abstract external class UploadButtonElement : web.html.HTMLElement, vaadin.butto
      * When set, the button will automatically disable when maxFilesReached
      * becomes true on the manager.
      */
-    var manager: dynamic
+    var manager: kotlin.js.JsAny?
     /**
      * True when max files has been reached on the manager.
      */
@@ -81,27 +81,21 @@ abstract external class UploadButtonElement : web.html.HTMLElement, vaadin.butto
     /**
      * Opens the file picker dialog.
      */
-    fun openFilePicker(): dynamic
-}
-
-/** The `<vaadin-upload-button>` custom element. */
-object UploadButtonTagName {
-    inline val uploadButton: web.dom.TagName<UploadButtonElement>
-        get() = web.dom.TagName("vaadin-upload-button")
+    fun openFilePicker()
 }
 
 @JsModule("@vaadin/upload/src/vaadin-upload-button.js")
 private external object UploadButtonElementModule {
-    val UploadButton: dynamic
+    val UploadButton: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/upload/src/vaadin-upload-button.js`, registering `<vaadin-upload-button>`, and returns the element class. */
-fun registerUploadButton(): dynamic = UploadButtonElementModule.UploadButton
+fun registerUploadButton(): kotlin.js.JsAny = UploadButtonElementModule.UploadButton
 
 /** Creates a `<vaadin-upload-button>` element. The custom element is registered on first use. */
 fun createUploadButton(configure: UploadButtonElement.() -> Unit = {}): UploadButtonElement {
     registerUploadButton()
-    return web.dom.document.createElement(UploadButtonTagName.uploadButton).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.uploadButton).apply(configure)
 }
 
 /** Attribute names of `<vaadin-upload-button>`, for use with `setAttribute`. */

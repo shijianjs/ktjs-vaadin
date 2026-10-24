@@ -5,7 +5,7 @@ external interface InputMixin {
     /**
      * Clear the value of the field.
      */
-    fun clear(): dynamic
+    fun clear()
     /**
      * The value of the field.
      */

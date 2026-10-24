@@ -8,17 +8,17 @@ package vaadin.contextmenu
  */
 
 abstract external class ContextMenuTooltipController {
-    fun bringToFront(): dynamic
-    fun close(immediate: Boolean): dynamic
-    fun initCustomNode(tooltipNode: dynamic): dynamic
-    fun `open`(`{ trigger }`: dynamic, options: dynamic): dynamic
-    fun setTarget(target: web.html.HTMLElement?): dynamic
+    fun bringToFront()
+    fun close(immediate: Boolean)
+    fun initCustomNode(tooltipNode: kotlin.js.JsAny?)
+    fun `open`(`{ trigger }`: kotlin.js.JsAny?, options: kotlin.js.JsAny)
+    fun setTarget(target: web.html.HTMLElement?)
 }
 
 @JsModule("@vaadin/context-menu/src/vaadin-context-menu-tooltip-controller.js")
 private external object ContextMenuTooltipControllerModule {
-    val ContextMenuTooltipController: dynamic
+    val ContextMenuTooltipController: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/context-menu/src/vaadin-context-menu-tooltip-controller.js`. */
-fun contextmenutooltipcontrollerClass(): dynamic = ContextMenuTooltipControllerModule.ContextMenuTooltipController
+fun contextmenutooltipcontrollerClass(): kotlin.js.JsAny = ContextMenuTooltipControllerModule.ContextMenuTooltipController

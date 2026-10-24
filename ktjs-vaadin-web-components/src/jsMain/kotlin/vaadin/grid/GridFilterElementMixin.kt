@@ -2,7 +2,7 @@
 package vaadin.grid
 
 external interface GridFilterElementMixin {
-    fun focus(): dynamic
+    fun focus()
     /**
      * JS Path of the property in the item used for filtering the data.
      */

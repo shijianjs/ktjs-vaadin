@@ -16,15 +16,15 @@ package vaadin.popover
  */
 
 abstract external class PopoverFocusController {
-    fun activate(): dynamic
-    fun deactivate(): dynamic
-    var host: dynamic
+    fun activate()
+    fun deactivate()
+    var host: kotlin.js.JsAny?
 }
 
 @JsModule("@vaadin/popover/src/vaadin-popover-focus-controller.js")
 private external object PopoverFocusControllerModule {
-    val PopoverFocusController: dynamic
+    val PopoverFocusController: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/popover/src/vaadin-popover-focus-controller.js`. */
-fun popoverfocuscontrollerClass(): dynamic = PopoverFocusControllerModule.PopoverFocusController
+fun popoverfocuscontrollerClass(): kotlin.js.JsAny = PopoverFocusControllerModule.PopoverFocusController

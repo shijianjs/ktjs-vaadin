@@ -5,7 +5,7 @@ external interface ComboBoxDataProviderMixin {
     /**
      * Clears the cached pages and reloads data from dataprovider when needed.
      */
-    fun clearCache(): dynamic
+    fun clearCache()
     /**
      * Function that provides items lazily. Receives arguments `params`, `callback`
      *
@@ -19,7 +19,7 @@ external interface ComboBoxDataProviderMixin {
      *   - `items` Current page of items
      *   - `size` Total number of items.
      */
-    var dataProvider: dynamic
+    var dataProvider: vaadin.combobox.ComboBoxDataProvider?
     /**
      * Number of items fetched at a time from the dataprovider.
      */

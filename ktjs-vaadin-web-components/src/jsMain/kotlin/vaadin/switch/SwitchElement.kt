@@ -80,24 +80,18 @@ abstract external class SwitchElement : web.html.HTMLElement, vaadin.checkbox.Ch
 
 }
 
-/** The `<vaadin-switch>` custom element. */
-object SwitchTagName {
-    inline val switch: web.dom.TagName<SwitchElement>
-        get() = web.dom.TagName("vaadin-switch")
-}
-
 @JsModule("@vaadin/switch/src/vaadin-switch.js")
 private external object SwitchElementModule {
-    val Switch: dynamic
+    val Switch: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/switch/src/vaadin-switch.js`, registering `<vaadin-switch>`, and returns the element class. */
-fun registerSwitch(): dynamic = SwitchElementModule.Switch
+fun registerSwitch(): kotlin.js.JsAny = SwitchElementModule.Switch
 
 /** Creates a `<vaadin-switch>` element. The custom element is registered on first use. */
 fun createSwitch(configure: SwitchElement.() -> Unit = {}): SwitchElement {
     registerSwitch()
-    return web.dom.document.createElement(SwitchTagName.switch).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.switch).apply(configure)
 }
 
 /** Attribute names of `<vaadin-switch>`, for use with `setAttribute`. */

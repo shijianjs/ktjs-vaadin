@@ -21,7 +21,7 @@ external interface SelectBaseMixin : vaadin.a11ybase.DelegateFocusMixin, vaadin.
      * Note: each item is rendered by default as the internal `<vaadin-select-item>` that is an extension of `<vaadin-item>`.
      * To render the item with a custom component, provide a tag name by the `component` property.
      */
-    var items: Array<dynamic>
+    var items: Array<vaadin.select.SelectItemData>
     /**
      * The name of this element.
      */
@@ -54,14 +54,14 @@ external interface SelectBaseMixin : vaadin.a11ybase.DelegateFocusMixin, vaadin.
      * - `root` The internal container DOM element. Append your content to it.
      * - `select` The reference to the `<vaadin-select>` element.
      */
-    var renderer: dynamic
+    var renderer: vaadin.select.SelectRenderer?
     /**
      * Requests an update for the content of the select.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * The `value` property of the selected item, or an empty string
      * if no item is selected.

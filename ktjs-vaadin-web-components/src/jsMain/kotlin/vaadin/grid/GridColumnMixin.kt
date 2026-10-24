@@ -43,7 +43,7 @@ external interface GridColumnMixin : vaadin.grid.ColumnBaseMixin, vaadin.compone
      *   - `model.detailsOpened` Details opened state.
      *   - `model.hasChildren` Whether the item has children.
      */
-    var renderer: dynamic
+    var renderer: vaadin.grid.GridBodyRenderer?
     /**
      * Width of the cells for this column.
      * Setting the property to `null` or `undefined` restores the default width.

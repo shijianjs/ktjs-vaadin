@@ -64,24 +64,18 @@ abstract external class IconElement : web.html.HTMLElement, vaadin.icon.IconMixi
 
 }
 
-/** The `<vaadin-icon>` custom element. */
-object IconTagName {
-    inline val icon: web.dom.TagName<IconElement>
-        get() = web.dom.TagName("vaadin-icon")
-}
-
 @JsModule("@vaadin/icon/src/vaadin-icon.js")
 private external object IconElementModule {
-    val Icon: dynamic
+    val Icon: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/icon/src/vaadin-icon.js`, registering `<vaadin-icon>`, and returns the element class. */
-fun registerIcon(): dynamic = IconElementModule.Icon
+fun registerIcon(): kotlin.js.JsAny = IconElementModule.Icon
 
 /** Creates a `<vaadin-icon>` element. The custom element is registered on first use. */
 fun createIcon(configure: IconElement.() -> Unit = {}): IconElement {
     registerIcon()
-    return web.dom.document.createElement(IconTagName.icon).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.icon).apply(configure)
 }
 
 /** Attribute names of `<vaadin-icon>`, for use with `setAttribute`. */

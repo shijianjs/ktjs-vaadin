@@ -70,17 +70,17 @@ private external interface TooltipElementStaticMembers {
      * Sets the default focus delay to be used by all tooltip instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic
+    fun setDefaultFocusDelay(focusDelay: Double)
     /**
      * Sets the default hide delay to be used by all tooltip instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic
+    fun setDefaultHideDelay(hideDelay: Double)
     /**
      * Sets the default hover delay to be used by all tooltip instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic
+    fun setDefaultHoverDelay(hoverDelay: Double)
 }
 
 @JsModule("@vaadin/tooltip/src/vaadin-tooltip.js")
@@ -93,40 +93,34 @@ object Tooltip {
      * Sets the default focus delay to be used by all tooltip instances,
      * except for those that have focus delay configured using property.
      */
-    fun setDefaultFocusDelay(focusDelay: Double): dynamic {
-        return TooltipElementModule.Tooltip.setDefaultFocusDelay(focusDelay)
+    fun setDefaultFocusDelay(focusDelay: Double) {
+        TooltipElementModule.Tooltip.setDefaultFocusDelay(focusDelay)
     }
 
     /**
      * Sets the default hide delay to be used by all tooltip instances,
      * except for those that have hide delay configured using property.
      */
-    fun setDefaultHideDelay(hideDelay: Double): dynamic {
-        return TooltipElementModule.Tooltip.setDefaultHideDelay(hideDelay)
+    fun setDefaultHideDelay(hideDelay: Double) {
+        TooltipElementModule.Tooltip.setDefaultHideDelay(hideDelay)
     }
 
     /**
      * Sets the default hover delay to be used by all tooltip instances,
      * except for those that have hover delay configured using property.
      */
-    fun setDefaultHoverDelay(hoverDelay: Double): dynamic {
-        return TooltipElementModule.Tooltip.setDefaultHoverDelay(hoverDelay)
+    fun setDefaultHoverDelay(hoverDelay: Double) {
+        TooltipElementModule.Tooltip.setDefaultHoverDelay(hoverDelay)
     }
 }
 
-/** The `<vaadin-tooltip>` custom element. */
-object TooltipTagName {
-    inline val tooltip: web.dom.TagName<TooltipElement>
-        get() = web.dom.TagName("vaadin-tooltip")
-}
-
 /** Imports `@vaadin/tooltip/src/vaadin-tooltip.js`, registering `<vaadin-tooltip>`, and returns the element class. */
-fun registerTooltip(): dynamic = TooltipElementModule.Tooltip
+fun registerTooltip(): kotlin.js.JsAny = TooltipElementModule.Tooltip
 
 /** Creates a `<vaadin-tooltip>` element. The custom element is registered on first use. */
 fun createTooltip(configure: TooltipElement.() -> Unit = {}): TooltipElement {
     registerTooltip()
-    return web.dom.document.createElement(TooltipTagName.tooltip).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.tooltip).apply(configure)
 }
 
 /** Attribute names of `<vaadin-tooltip>`, for use with `setAttribute`. */

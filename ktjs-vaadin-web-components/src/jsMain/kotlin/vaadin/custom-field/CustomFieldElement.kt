@@ -64,24 +64,18 @@ abstract external class CustomFieldElement : web.html.HTMLElement, vaadin.custom
 
 }
 
-/** The `<vaadin-custom-field>` custom element. */
-object CustomFieldTagName {
-    inline val customField: web.dom.TagName<CustomFieldElement>
-        get() = web.dom.TagName("vaadin-custom-field")
-}
-
 @JsModule("@vaadin/custom-field/src/vaadin-custom-field.js")
 private external object CustomFieldElementModule {
-    val CustomField: dynamic
+    val CustomField: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/custom-field/src/vaadin-custom-field.js`, registering `<vaadin-custom-field>`, and returns the element class. */
-fun registerCustomField(): dynamic = CustomFieldElementModule.CustomField
+fun registerCustomField(): kotlin.js.JsAny = CustomFieldElementModule.CustomField
 
 /** Creates a `<vaadin-custom-field>` element. The custom element is registered on first use. */
 fun createCustomField(configure: CustomFieldElement.() -> Unit = {}): CustomFieldElement {
     registerCustomField()
-    return web.dom.document.createElement(CustomFieldTagName.customField).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.customField).apply(configure)
 }
 
 /** Attribute names of `<vaadin-custom-field>`, for use with `setAttribute`. */

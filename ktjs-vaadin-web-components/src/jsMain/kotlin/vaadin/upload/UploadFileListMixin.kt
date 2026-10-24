@@ -9,12 +9,12 @@ external interface UploadFileListMixin : vaadin.componentbase.I18nMixin {
     /**
      * The array of files being processed, or already uploaded.
      */
-    val items: Array<dynamic>
+    val items: Array<kotlin.js.JsAny?>
     /**
      * Reference to an UploadManager to link this file list to.
      * When set, the file list automatically:
      * - Syncs files from the manager
      * - Forwards retry/abort/start/remove events back to the manager
      */
-    var manager: dynamic
+    var manager: kotlin.js.JsAny?
 }

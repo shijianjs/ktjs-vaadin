@@ -11,12 +11,12 @@ abstract external class UploadManager : web.events.EventTarget {
     /**
      * Abort an upload.
      */
-    fun abortUpload(`file`: vaadin.upload.UploadFileElement): dynamic
-    var accept: dynamic
+    fun abortUpload(`file`: vaadin.upload.UploadFile)
+    var accept: kotlin.js.JsAny?
     /**
      * Add files to the upload list.
      */
-    fun addFiles(files: dynamic): dynamic
+    fun addFiles(files: dynamic)
     /**
      * Whether the upload manager is disabled.
      * When true, connected components (upload-button, upload-drop-zone) will be automatically disabled.
@@ -47,12 +47,12 @@ abstract external class UploadManager : web.events.EventTarget {
      * **Note:** The setter validates files against maxFiles, maxFileSize, and accept constraints.
      * Files that fail validation will be rejected with a 'file-reject' event.
      */
-    var files: Array<vaadin.upload.UploadFileElement>
-    var formDataName: dynamic
+    var files: Array<vaadin.upload.UploadFile>
+    var formDataName: kotlin.js.JsAny?
     /**
      * Key-Value map to send to the server.
      */
-    var headers: dynamic
+    var headers: js.objects.Record<kotlin.js.JsString, kotlin.js.JsString>
     /**
      * Maximum number of files that can be uploaded simultaneously.
      */
@@ -61,7 +61,7 @@ abstract external class UploadManager : web.events.EventTarget {
      * Limit of files to upload, by default it is unlimited.
      */
     var maxFiles: Double
-    var maxFileSize: dynamic
+    var maxFileSize: kotlin.js.JsAny?
     /**
      * Specifies if the maximum number of files have been uploaded.
      */
@@ -70,29 +70,29 @@ abstract external class UploadManager : web.events.EventTarget {
      * HTTP Method used to send the files. Only POST and PUT are allowed.
      */
     var method: String
-    var noAuto: dynamic
+    var noAuto: kotlin.js.JsAny?
     /**
      * Remove a file from the list.
      */
-    fun removeFile(`file`: vaadin.upload.UploadFileElement): dynamic
+    fun removeFile(`file`: vaadin.upload.UploadFile)
     /**
      * Retry a failed upload.
      */
-    fun retryUpload(`file`: vaadin.upload.UploadFileElement): dynamic
-    var target: dynamic
-    var timeout: dynamic
+    fun retryUpload(`file`: vaadin.upload.UploadFile)
+    var target: kotlin.js.JsAny?
+    var timeout: kotlin.js.JsAny?
     /**
      * Triggers the upload of any files that are not completed.
      */
-    fun uploadFiles(files: dynamic = definedExternally): dynamic
-    var uploadFormat: dynamic
-    var withCredentials: dynamic
+    fun uploadFiles(files: dynamic = definedExternally)
+    var uploadFormat: kotlin.js.JsAny?
+    var withCredentials: kotlin.js.JsAny?
 }
 
 @JsModule("@vaadin/upload/src/vaadin-upload-manager.js")
 private external object UploadManagerModule {
-    val UploadManager: dynamic
+    val UploadManager: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/upload/src/vaadin-upload-manager.js`. */
-fun uploadmanagerClass(): dynamic = UploadManagerModule.UploadManager
+fun uploadmanagerClass(): kotlin.js.JsAny = UploadManagerModule.UploadManager

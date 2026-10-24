@@ -5,11 +5,11 @@ external interface DataProviderMixin {
     /**
      * Clears the cached pages and reloads data from dataprovider when needed.
      */
-    fun clearCache(): dynamic
+    fun clearCache()
     /**
      * Collapses the given item tree.
      */
-    fun collapseItem(item: dynamic): dynamic
+    fun collapseItem(item: kotlin.js.JsAny)
     /**
      * Function that provides items lazily. Receives arguments `params`, `callback`
      *
@@ -31,20 +31,20 @@ external interface DataProviderMixin {
      *     are requested, total number of items in the requested sublevel.
      *     Optional when tree is not used, required for tree.
      */
-    var dataProvider: dynamic
+    var dataProvider: vaadin.grid.GridDataProvider?
     /**
      * An array that contains the expanded items.
      */
-    var expandedItems: Array<dynamic>
+    var expandedItems: Array<kotlin.js.JsAny>
     /**
      * Expands the given item tree.
      */
-    fun expandItem(item: dynamic): dynamic
+    fun expandItem(item: kotlin.js.JsAny)
     /**
      * Returns a value that identifies the item. Uses `itemIdPath` if available.
      * Can be customized by overriding.
      */
-    fun getItemId(item: dynamic): dynamic
+    fun getItemId(item: kotlin.js.JsAny): kotlin.js.JsAny
     /**
      * Path to an item sub-property that indicates whether the item has child items.
      */
@@ -74,7 +74,7 @@ external interface DataProviderMixin {
      *
      * Using `Infinity` as an index will point to the last item on the level.
      */
-    fun scrollToIndex(vararg indexes: Double): dynamic
+    fun scrollToIndex(vararg indexes: Double)
     /**
      * The number of root-level items in the grid.
      */

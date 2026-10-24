@@ -8,10 +8,10 @@ package vaadin.icon
  * i.e. if the fix for https://bugs.webkit.org/show_bug.cgi?id=253939 is available.
  */
 
-external fun supportsCQUnitsForPseudoElements(): dynamic
+external fun supportsCQUnitsForPseudoElements()
 
 /**
  * Checks if the current browser needs a fallback for sizing font icons instead of relying on CSS Container Queries.
  */
 
-external fun needsFontIconSizingFallback(): dynamic
+external fun needsFontIconSizingFallback()

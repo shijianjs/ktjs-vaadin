@@ -97,24 +97,18 @@ abstract external class DateTimePickerElement : web.html.HTMLElement, vaadin.dat
 
 }
 
-/** The `<vaadin-date-time-picker>` custom element. */
-object DateTimePickerTagName {
-    inline val dateTimePicker: web.dom.TagName<DateTimePickerElement>
-        get() = web.dom.TagName("vaadin-date-time-picker")
-}
-
 @JsModule("@vaadin/date-time-picker/src/vaadin-date-time-picker.js")
 private external object DateTimePickerElementModule {
-    val DateTimePicker: dynamic
+    val DateTimePicker: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/date-time-picker/src/vaadin-date-time-picker.js`, registering `<vaadin-date-time-picker>`, and returns the element class. */
-fun registerDateTimePicker(): dynamic = DateTimePickerElementModule.DateTimePicker
+fun registerDateTimePicker(): kotlin.js.JsAny = DateTimePickerElementModule.DateTimePicker
 
 /** Creates a `<vaadin-date-time-picker>` element. The custom element is registered on first use. */
 fun createDateTimePicker(configure: DateTimePickerElement.() -> Unit = {}): DateTimePickerElement {
     registerDateTimePicker()
-    return web.dom.document.createElement(DateTimePickerTagName.dateTimePicker).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.dateTimePicker).apply(configure)
 }
 
 /** Attribute names of `<vaadin-date-time-picker>`, for use with `setAttribute`. */

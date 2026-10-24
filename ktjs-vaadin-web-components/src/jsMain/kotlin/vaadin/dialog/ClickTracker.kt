@@ -9,17 +9,17 @@ abstract external class ClickTracker {
     /**
      * Returns true if the pointer hasn't moved since the gesture started.
      */
-    fun isClick(e: dynamic): Boolean
+    fun isClick(e: web.events.Event): Boolean
     /**
      * Stores the position where the gesture started.
      */
-    fun start(e: dynamic): dynamic
+    fun start(e: web.events.Event)
 }
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog-utils.js")
 private external object ClickTrackerModule {
-    val ClickTracker: dynamic
+    val ClickTracker: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/dialog/src/vaadin-dialog-utils.js`. */
-fun clicktrackerClass(): dynamic = ClickTrackerModule.ClickTracker
+fun clicktrackerClass(): kotlin.js.JsAny = ClickTrackerModule.ClickTracker

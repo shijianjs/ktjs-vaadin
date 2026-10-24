@@ -107,24 +107,18 @@ abstract external class NumberFieldElement : web.html.HTMLElement, vaadin.number
 
 }
 
-/** The `<vaadin-number-field>` custom element. */
-object NumberFieldTagName {
-    inline val numberField: web.dom.TagName<NumberFieldElement>
-        get() = web.dom.TagName("vaadin-number-field")
-}
-
 @JsModule("@vaadin/number-field/src/vaadin-number-field.js")
 private external object NumberFieldElementModule {
-    val NumberField: dynamic
+    val NumberField: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/number-field/src/vaadin-number-field.js`, registering `<vaadin-number-field>`, and returns the element class. */
-fun registerNumberField(): dynamic = NumberFieldElementModule.NumberField
+fun registerNumberField(): kotlin.js.JsAny = NumberFieldElementModule.NumberField
 
 /** Creates a `<vaadin-number-field>` element. The custom element is registered on first use. */
 fun createNumberField(configure: NumberFieldElement.() -> Unit = {}): NumberFieldElement {
     registerNumberField()
-    return web.dom.document.createElement(NumberFieldTagName.numberField).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.numberField).apply(configure)
 }
 
 /** Attribute names of `<vaadin-number-field>`, for use with `setAttribute`. */

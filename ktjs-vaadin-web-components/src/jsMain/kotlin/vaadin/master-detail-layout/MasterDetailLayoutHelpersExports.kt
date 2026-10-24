@@ -35,7 +35,7 @@ external fun animateOut(element: web.html.HTMLElement, effects: Array<String>, p
  * Cancels all running animations on the element that match the shared animation ID.
  */
 
-external fun cancelAnimations(element: web.html.HTMLElement): dynamic
+external fun cancelAnimations(element: web.html.HTMLElement)
 
 /**
  * Parses a computed `gridTemplateColumns` / `gridTemplateRows` value

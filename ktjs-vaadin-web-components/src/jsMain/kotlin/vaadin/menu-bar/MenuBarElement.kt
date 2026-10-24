@@ -63,24 +63,18 @@ abstract external class MenuBarElement : web.html.HTMLElement, vaadin.menubar.Me
 
 }
 
-/** The `<vaadin-menu-bar>` custom element. */
-object MenuBarTagName {
-    inline val menuBar: web.dom.TagName<MenuBarElement>
-        get() = web.dom.TagName("vaadin-menu-bar")
-}
-
 @JsModule("@vaadin/menu-bar/src/vaadin-menu-bar.js")
 private external object MenuBarElementModule {
-    val MenuBar: dynamic
+    val MenuBar: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/menu-bar/src/vaadin-menu-bar.js`, registering `<vaadin-menu-bar>`, and returns the element class. */
-fun registerMenuBar(): dynamic = MenuBarElementModule.MenuBar
+fun registerMenuBar(): kotlin.js.JsAny = MenuBarElementModule.MenuBar
 
 /** Creates a `<vaadin-menu-bar>` element. The custom element is registered on first use. */
 fun createMenuBar(configure: MenuBarElement.() -> Unit = {}): MenuBarElement {
     registerMenuBar()
-    return web.dom.document.createElement(MenuBarTagName.menuBar).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.menuBar).apply(configure)
 }
 
 /** Attribute names of `<vaadin-menu-bar>`, for use with `setAttribute`. */

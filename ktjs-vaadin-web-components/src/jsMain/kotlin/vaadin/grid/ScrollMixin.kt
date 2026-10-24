@@ -43,5 +43,5 @@ external interface ScrollMixin {
      * The column can be specified either by its index (among visible columns
      * in visual order) or by the column element itself.
      */
-    fun scrollToColumn(indexOrColumn: dynamic): dynamic
+    fun scrollToColumn(indexOrColumn: dynamic)
 }

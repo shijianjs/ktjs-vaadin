@@ -165,24 +165,18 @@ abstract external class ComboBoxElement : web.html.HTMLElement, vaadin.combobox.
 
 }
 
-/** The `<vaadin-combo-box>` custom element. */
-object ComboBoxTagName {
-    inline val comboBox: web.dom.TagName<ComboBoxElement>
-        get() = web.dom.TagName("vaadin-combo-box")
-}
-
 @JsModule("@vaadin/combo-box/src/vaadin-combo-box.js")
 private external object ComboBoxElementModule {
-    val ComboBox: dynamic
+    val ComboBox: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/combo-box/src/vaadin-combo-box.js`, registering `<vaadin-combo-box>`, and returns the element class. */
-fun registerComboBox(): dynamic = ComboBoxElementModule.ComboBox
+fun registerComboBox(): kotlin.js.JsAny = ComboBoxElementModule.ComboBox
 
 /** Creates a `<vaadin-combo-box>` element. The custom element is registered on first use. */
 fun createComboBox(configure: ComboBoxElement.() -> Unit = {}): ComboBoxElement {
     registerComboBox()
-    return web.dom.document.createElement(ComboBoxTagName.comboBox).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.comboBox).apply(configure)
 }
 
 /** Attribute names of `<vaadin-combo-box>`, for use with `setAttribute`. */

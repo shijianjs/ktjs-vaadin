@@ -22,5 +22,5 @@ external interface I18nMixin {
      * Should be overridden by subclasses to provide a custom JSDoc with the
      * default I18N properties.
      */
-    var i18n: dynamic
+    var i18n: kotlin.js.JsAny
 }

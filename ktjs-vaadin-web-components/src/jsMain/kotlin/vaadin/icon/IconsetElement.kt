@@ -13,7 +13,7 @@ private external interface IconsetElementStaticMembers {
     /**
      * Set of the `vaadin-icon` instances in the DOM.
      */
-    val attachedIcons: dynamic
+    val attachedIcons: kotlin.js.JsAny?
     /**
      * Returns an instance of the iconset by its name.
      */
@@ -22,11 +22,11 @@ private external interface IconsetElementStaticMembers {
      * Returns SVGTemplateResult for the `icon` ID matching `name` of the
      * iconset, or `nothing` literal if there is no matching icon found.
      */
-    fun getIconSvg(icon: String, name: String?): dynamic
+    fun getIconSvg(icon: String, name: String?)
     /**
      * Register an iconset without adding to the DOM.
      */
-    fun register(name: String, size: Double, template: web.components.HTMLTemplateElement?): dynamic
+    fun register(name: String, size: Double, template: web.components.HTMLTemplateElement?)
 }
 
 @JsModule("@vaadin/icon/src/vaadin-iconset.js")
@@ -38,7 +38,7 @@ object Iconset {
     /**
      * Set of the `vaadin-icon` instances in the DOM.
      */
-    val attachedIcons: dynamic
+    val attachedIcons: kotlin.js.JsAny?
         get() = IconsetElementModule.Iconset.attachedIcons
 
     /**
@@ -52,31 +52,25 @@ object Iconset {
      * Returns SVGTemplateResult for the `icon` ID matching `name` of the
      * iconset, or `nothing` literal if there is no matching icon found.
      */
-    fun getIconSvg(icon: String, name: String?): dynamic {
-        return IconsetElementModule.Iconset.getIconSvg(icon, name)
+    fun getIconSvg(icon: String, name: String?) {
+        IconsetElementModule.Iconset.getIconSvg(icon, name)
     }
 
     /**
      * Register an iconset without adding to the DOM.
      */
-    fun register(name: String, size: Double, template: web.components.HTMLTemplateElement?): dynamic {
-        return IconsetElementModule.Iconset.register(name, size, template)
+    fun register(name: String, size: Double, template: web.components.HTMLTemplateElement?) {
+        IconsetElementModule.Iconset.register(name, size, template)
     }
 }
 
-/** The `<vaadin-iconset>` custom element. */
-object IconsetTagName {
-    inline val iconset: web.dom.TagName<IconsetElement>
-        get() = web.dom.TagName("vaadin-iconset")
-}
-
 /** Imports `@vaadin/icon/src/vaadin-iconset.js`, registering `<vaadin-iconset>`, and returns the element class. */
-fun registerIconset(): dynamic = IconsetElementModule.Iconset
+fun registerIconset(): kotlin.js.JsAny = IconsetElementModule.Iconset
 
 /** Creates a `<vaadin-iconset>` element. The custom element is registered on first use. */
 fun createIconset(configure: IconsetElement.() -> Unit = {}): IconsetElement {
     registerIconset()
-    return web.dom.document.createElement(IconsetTagName.iconset).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.iconset).apply(configure)
 }
 
 /** Attribute names of `<vaadin-iconset>`, for use with `setAttribute`. */

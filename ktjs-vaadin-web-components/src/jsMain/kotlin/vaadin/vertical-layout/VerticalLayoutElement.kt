@@ -39,24 +39,18 @@ abstract external class VerticalLayoutElement : web.html.HTMLElement, vaadin.the
 
 }
 
-/** The `<vaadin-vertical-layout>` custom element. */
-object VerticalLayoutTagName {
-    inline val verticalLayout: web.dom.TagName<VerticalLayoutElement>
-        get() = web.dom.TagName("vaadin-vertical-layout")
-}
-
 @JsModule("@vaadin/vertical-layout/src/vaadin-vertical-layout.js")
 private external object VerticalLayoutElementModule {
-    val VerticalLayout: dynamic
+    val VerticalLayout: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/vertical-layout/src/vaadin-vertical-layout.js`, registering `<vaadin-vertical-layout>`, and returns the element class. */
-fun registerVerticalLayout(): dynamic = VerticalLayoutElementModule.VerticalLayout
+fun registerVerticalLayout(): kotlin.js.JsAny = VerticalLayoutElementModule.VerticalLayout
 
 /** Creates a `<vaadin-vertical-layout>` element. The custom element is registered on first use. */
 fun createVerticalLayout(configure: VerticalLayoutElement.() -> Unit = {}): VerticalLayoutElement {
     registerVerticalLayout()
-    return web.dom.document.createElement(VerticalLayoutTagName.verticalLayout).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.verticalLayout).apply(configure)
 }
 
 /** Attribute names of `<vaadin-vertical-layout>`, for use with `setAttribute`. */

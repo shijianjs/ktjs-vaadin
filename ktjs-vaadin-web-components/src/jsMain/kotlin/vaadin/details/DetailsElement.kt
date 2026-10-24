@@ -39,24 +39,18 @@ abstract external class DetailsElement : web.html.HTMLElement, vaadin.details.De
 
 }
 
-/** The `<vaadin-details>` custom element. */
-object DetailsTagName {
-    inline val details: web.dom.TagName<DetailsElement>
-        get() = web.dom.TagName("vaadin-details")
-}
-
 @JsModule("@vaadin/details/src/vaadin-details.js")
 private external object DetailsElementModule {
-    val Details: dynamic
+    val Details: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/details/src/vaadin-details.js`, registering `<vaadin-details>`, and returns the element class. */
-fun registerDetails(): dynamic = DetailsElementModule.Details
+fun registerDetails(): kotlin.js.JsAny = DetailsElementModule.Details
 
 /** Creates a `<vaadin-details>` element. The custom element is registered on first use. */
 fun createDetails(configure: DetailsElement.() -> Unit = {}): DetailsElement {
     registerDetails()
-    return web.dom.document.createElement(DetailsTagName.details).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.details).apply(configure)
 }
 
 /** Attribute names of `<vaadin-details>`, for use with `setAttribute`. */

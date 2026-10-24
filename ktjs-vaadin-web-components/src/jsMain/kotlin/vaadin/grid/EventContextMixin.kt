@@ -21,5 +21,5 @@ external interface EventContextMixin {
      * This may be the case eg. if the event is fired on the `<vaadin-grid>` element and not any deeper in the DOM, or if
      * the event targets the empty part of the grid body.
      */
-    fun getEventContext(event: web.events.Event): dynamic
+    fun getEventContext(event: web.events.Event): vaadin.grid.GridEventContext
 }

@@ -45,24 +45,18 @@ abstract external class AvatarElement : web.html.HTMLElement, vaadin.avatar.Avat
 
 }
 
-/** The `<vaadin-avatar>` custom element. */
-object AvatarTagName {
-    inline val avatar: web.dom.TagName<AvatarElement>
-        get() = web.dom.TagName("vaadin-avatar")
-}
-
 @JsModule("@vaadin/avatar/src/vaadin-avatar.js")
 private external object AvatarElementModule {
-    val Avatar: dynamic
+    val Avatar: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/avatar/src/vaadin-avatar.js`, registering `<vaadin-avatar>`, and returns the element class. */
-fun registerAvatar(): dynamic = AvatarElementModule.Avatar
+fun registerAvatar(): kotlin.js.JsAny = AvatarElementModule.Avatar
 
 /** Creates a `<vaadin-avatar>` element. The custom element is registered on first use. */
 fun createAvatar(configure: AvatarElement.() -> Unit = {}): AvatarElement {
     registerAvatar()
-    return web.dom.document.createElement(AvatarTagName.avatar).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.avatar).apply(configure)
 }
 
 /** Attribute names of `<vaadin-avatar>`, for use with `setAttribute`. */

@@ -18,7 +18,7 @@ abstract external class DateMetadataController {
     /**
      * Clears the cache and invalidates any in-flight requests.
      */
-    fun clearCache(): dynamic
+    fun clearCache()
     /**
      * Ensures the provider has been consulted for the inclusive range between the
      * given dates, rounded out to whole blocks of months. Months already loaded or in
@@ -27,18 +27,18 @@ abstract external class DateMetadataController {
      * Each call that finds a missing month issues its own request, so a caller that
      * loads on scroll should debounce.
      */
-    fun ensureRangeLoaded(startDate: kotlin.js.Date?, endDate: kotlin.js.Date?): dynamic
+    fun ensureRangeLoaded(startDate: kotlin.js.Date?, endDate: kotlin.js.Date?)
     /**
      * The metadata resolved for the given date, or `undefined` when the date has
      * no metadata or its month has not been resolved yet. Returns the entry the
      * provider supplied, which the caller must not modify.
      */
-    fun getMetadata(date: kotlin.js.Date?): dynamic
+    fun getMetadata(date: kotlin.js.Date?): kotlin.js.JsAny?
     /**
      * The controller host element.
      */
     var host: web.html.HTMLElement
-    fun hostConnected(): dynamic
+    fun hostConnected()
     /**
      * Whether the given date is disabled by its metadata.
      */
@@ -61,25 +61,25 @@ abstract external class DateMetadataController {
     /**
      * The provider function, or `null` when none is set.
      */
-    var provider: dynamic
+    var provider: vaadin.datepicker.DatePickerDateMetadataProvider?
     /**
      * Sets the provider function and clears the cache. Passing the same provider again
      * is a no-op, so callers should keep a stable reference.
      */
-    fun setProvider(provider: dynamic): dynamic
+    fun setProvider(provider: vaadin.datepicker.DatePickerDateMetadataProvider?)
     /**
      * Registers an element to be re-rendered whenever the resolved metadata or the
      * loading state changes. The element must render from its bindings, and must not be
      * the one whose own observer triggers a load. It stays registered for the
      * controller's lifetime.
      */
-    fun subscribe(element: dynamic): dynamic
+    fun subscribe(element: web.html.HTMLElement)
 }
 
 @JsModule("@vaadin/date-picker/src/vaadin-date-metadata-controller.js")
 private external object DateMetadataControllerModule {
-    val DateMetadataController: dynamic
+    val DateMetadataController: kotlin.js.JsAny
 }
 
 /** The class registered by `@vaadin/date-picker/src/vaadin-date-metadata-controller.js`. */
-fun datemetadatacontrollerClass(): dynamic = DateMetadataControllerModule.DateMetadataController
+fun datemetadatacontrollerClass(): kotlin.js.JsAny = DateMetadataControllerModule.DateMetadataController

@@ -19,24 +19,18 @@ abstract external class GridTreeColumnElement : vaadin.grid.GridColumnElement, v
 
 }
 
-/** The `<vaadin-grid-tree-column>` custom element. */
-object GridTreeColumnTagName {
-    inline val gridTreeColumn: web.dom.TagName<GridTreeColumnElement>
-        get() = web.dom.TagName("vaadin-grid-tree-column")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-tree-column.js")
 private external object GridTreeColumnElementModule {
-    val GridTreeColumn: dynamic
+    val GridTreeColumn: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-tree-column.js`, registering `<vaadin-grid-tree-column>`, and returns the element class. */
-fun registerGridTreeColumn(): dynamic = GridTreeColumnElementModule.GridTreeColumn
+fun registerGridTreeColumn(): kotlin.js.JsAny = GridTreeColumnElementModule.GridTreeColumn
 
 /** Creates a `<vaadin-grid-tree-column>` element. The custom element is registered on first use. */
 fun createGridTreeColumn(configure: GridTreeColumnElement.() -> Unit = {}): GridTreeColumnElement {
     registerGridTreeColumn()
-    return web.dom.document.createElement(GridTreeColumnTagName.gridTreeColumn).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridTreeColumn).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-tree-column>`, for use with `setAttribute`. */

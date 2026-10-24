@@ -14,7 +14,7 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
     /**
      * Closes the notification.
      */
-    fun close(): dynamic
+    fun close()
     /**
      * The duration in milliseconds to show the notification.
      * Set to `0` or a negative number to disable the notification auto-closing.
@@ -23,7 +23,7 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
     /**
      * Opens the notification.
      */
-    fun `open`(): dynamic
+    fun `open`()
     /**
      * True if the notification is currently displayed.
      */
@@ -41,14 +41,14 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
      *   your content to it.
      * - `notification` The reference to the `<vaadin-notification>` element.
      */
-    var renderer: dynamic
+    var renderer: vaadin.notification.NotificationRenderer?
     /**
      * Requests an update for the content of the notification.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * Shows a notification with the given content.
      * By default, positions the notification at `bottom-start` and uses a 5 second duration.
@@ -69,5 +69,5 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: dynamic, options: dynamic = definedExternally): dynamic
+    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = definedExternally)
 }

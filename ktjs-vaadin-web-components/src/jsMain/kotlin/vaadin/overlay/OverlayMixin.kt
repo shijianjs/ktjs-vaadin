@@ -2,7 +2,7 @@
 package vaadin.overlay
 
 external interface OverlayMixin : vaadin.overlay.OverlayFocusMixin, vaadin.overlay.OverlayStackMixin {
-    fun close(sourceEvent: web.events.Event): dynamic
+    fun close(sourceEvent: web.events.Event)
     /**
      * When set to true, the overlay is hidden. This also closes the overlay
      * immediately in case there is a closing animation in progress.
@@ -14,7 +14,7 @@ external interface OverlayMixin : vaadin.overlay.OverlayFocusMixin, vaadin.overl
     /**
      * Object with properties that is passed to `renderer` function
      */
-    var model: dynamic
+    var model: kotlin.js.JsAny
     /**
      * When true the overlay won't disable the main content, showing
      * it doesn't change the functionality of the user interface.
@@ -36,18 +36,18 @@ external interface OverlayMixin : vaadin.overlay.OverlayFocusMixin, vaadin.overl
      * - `owner` The host element of the renderer function.
      * - `model` The object with the properties related with rendering.
      */
-    var renderer: dynamic
+    var renderer: vaadin.overlay.OverlayRenderer?
     /**
      * Requests an update for the content of the overlay.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * Updates the coordinates of the overlay.
      */
-    fun setBounds(bounds: dynamic, absolute: Boolean = definedExternally): dynamic
+    fun setBounds(bounds: vaadin.overlay.OverlayBoundsParam, absolute: Boolean = definedExternally)
     /**
      * When true the overlay has backdrop on top of content when opened.
      */

@@ -23,5 +23,5 @@ external interface GridMixin : vaadin.grid.ColumnAutoWidthMixin, vaadin.grid.Arr
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
 }

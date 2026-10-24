@@ -34,24 +34,18 @@ abstract external class ListBoxElement : web.html.HTMLElement, vaadin.componentb
 
 }
 
-/** The `<vaadin-list-box>` custom element. */
-object ListBoxTagName {
-    inline val listBox: web.dom.TagName<ListBoxElement>
-        get() = web.dom.TagName("vaadin-list-box")
-}
-
 @JsModule("@vaadin/list-box/src/vaadin-list-box.js")
 private external object ListBoxElementModule {
-    val ListBox: dynamic
+    val ListBox: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/list-box/src/vaadin-list-box.js`, registering `<vaadin-list-box>`, and returns the element class. */
-fun registerListBox(): dynamic = ListBoxElementModule.ListBox
+fun registerListBox(): kotlin.js.JsAny = ListBoxElementModule.ListBox
 
 /** Creates a `<vaadin-list-box>` element. The custom element is registered on first use. */
 fun createListBox(configure: ListBoxElement.() -> Unit = {}): ListBoxElement {
     registerListBox()
-    return web.dom.document.createElement(ListBoxTagName.listBox).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.listBox).apply(configure)
 }
 
 /** Attribute names of `<vaadin-list-box>`, for use with `setAttribute`. */

@@ -26,5 +26,5 @@ external interface TooltipAriaMixin {
      * `ariaLinkMode` property. Supports array of multiple elements.
      * When not set, defaults to `target`.
      */
-    var ariaTarget: dynamic
+    var ariaTarget: kotlin.js.JsAny
 }

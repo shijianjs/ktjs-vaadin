@@ -135,5 +135,5 @@ external interface FormLayoutMixin : vaadin.componentbase.SlotStylesMixin {
      * // 3. Width >= 40em, two columns, labels aside.
      * ```
      */
-    var responsiveSteps: Array<dynamic>
+    var responsiveSteps: Array<vaadin.formlayout.FormLayoutResponsiveStep>
 }

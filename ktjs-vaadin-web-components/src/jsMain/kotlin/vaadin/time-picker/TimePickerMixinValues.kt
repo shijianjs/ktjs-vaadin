@@ -3,6 +3,6 @@ package vaadin.timepicker
 
 /** The values exported by `@vaadin/time-picker/src/vaadin-time-picker-mixin.js`. */
 object TimePickerMixinExports {
-    val timePickerI18nDefaults: dynamic
+    val timePickerI18nDefaults: kotlin.js.JsAny?
         get() = TimePickerMixinExportsModule.timePickerI18nDefaults
 }

@@ -45,13 +45,13 @@ object LumoStyles {
  * Prefer the CSS entry points in [LumoThemes] for new applications; the JS mixins are deprecated
  * upstream and scheduled for removal in Vaadin 26.
  */
-fun registerLumoStyles(): dynamic = LumoAllImportsModule
+fun registerLumoStyles(): kotlin.js.JsAny = LumoAllImportsModule
 
 /**
  * Imports `@vaadin/vaadin-lumo-styles/icons.js`: registers the `lumo:` icon names used by the
  * theme and imports the `<vaadin-icon>` element they rely on.
  */
-fun registerLumoIcons(): dynamic = LumoIconsetModule
+fun registerLumoIcons(): kotlin.js.JsAny = LumoIconsetModule
 
 /** Stylesheet entry points of the Lumo theme. */
 object LumoThemes {

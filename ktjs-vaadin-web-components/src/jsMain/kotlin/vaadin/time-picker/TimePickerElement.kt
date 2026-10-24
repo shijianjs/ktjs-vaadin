@@ -118,24 +118,18 @@ abstract external class TimePickerElement : web.html.HTMLElement, vaadin.timepic
 
 }
 
-/** The `<vaadin-time-picker>` custom element. */
-object TimePickerTagName {
-    inline val timePicker: web.dom.TagName<TimePickerElement>
-        get() = web.dom.TagName("vaadin-time-picker")
-}
-
 @JsModule("@vaadin/time-picker/src/vaadin-time-picker.js")
 private external object TimePickerElementModule {
-    val TimePicker: dynamic
+    val TimePicker: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/time-picker/src/vaadin-time-picker.js`, registering `<vaadin-time-picker>`, and returns the element class. */
-fun registerTimePicker(): dynamic = TimePickerElementModule.TimePicker
+fun registerTimePicker(): kotlin.js.JsAny = TimePickerElementModule.TimePicker
 
 /** Creates a `<vaadin-time-picker>` element. The custom element is registered on first use. */
 fun createTimePicker(configure: TimePickerElement.() -> Unit = {}): TimePickerElement {
     registerTimePicker()
-    return web.dom.document.createElement(TimePickerTagName.timePicker).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.timePicker).apply(configure)
 }
 
 /** Attribute names of `<vaadin-time-picker>`, for use with `setAttribute`. */

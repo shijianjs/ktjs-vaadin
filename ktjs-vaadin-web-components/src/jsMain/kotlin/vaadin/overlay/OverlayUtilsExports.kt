@@ -32,4 +32,4 @@ external fun getStateAnimations(element: web.html.HTMLElement): Array<web.animat
  * in the light DOM in case the overlay is in the shadow DOM of its owner.
  */
 
-external fun setOverlayStateAttribute(overlay: web.html.HTMLElement, name: String, value: dynamic): dynamic
+external fun setOverlayStateAttribute(overlay: web.html.HTMLElement, name: String, value: dynamic)

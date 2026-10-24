@@ -4,5 +4,5 @@
 package vaadin.combobox
 
 internal external object ComboBoxPlaceholderExportsModule {
-    val ComboBoxPlaceholder: dynamic
+    val ComboBoxPlaceholder: kotlin.js.JsAny?
 }

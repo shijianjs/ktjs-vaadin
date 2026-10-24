@@ -12,14 +12,14 @@ external interface ComboBoxMixin : vaadin.fieldbase.ValidateMixin, vaadin.combob
     /**
      * Reverts back to original value.
      */
-    fun cancel(): dynamic
+    fun cancel()
     /**
      * A function used to generate CSS class names for dropdown
      * items based on the item. The return value should be the
      * generated class name as a string, or multiple class names
      * separated by whitespace characters.
      */
-    var itemClassNameGenerator: dynamic
+    var itemClassNameGenerator: kotlin.js.JsAny
     /**
      * When set to `true`, "loading" attribute is added to host and the overlay element.
      */
@@ -35,7 +35,7 @@ external interface ComboBoxMixin : vaadin.fieldbase.ValidateMixin, vaadin.combob
      *   - `model.index` The index of the rendered item.
      *   - `model.item` The item.
      */
-    var renderer: dynamic
+    var renderer: vaadin.combobox.ComboBoxRenderer?
     /**
      * The selected item from the `items` array.
      */

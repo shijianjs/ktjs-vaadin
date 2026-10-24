@@ -120,7 +120,7 @@ private external interface AppLayoutElementStaticMembers {
     /**
      * Helper static method that dispatches a `close-overlay-drawer` event
      */
-    fun dispatchCloseOverlayDrawerEvent(): dynamic
+    fun dispatchCloseOverlayDrawerEvent()
 }
 
 @JsModule("@vaadin/app-layout/src/vaadin-app-layout.js")
@@ -132,24 +132,18 @@ object AppLayout {
     /**
      * Helper static method that dispatches a `close-overlay-drawer` event
      */
-    fun dispatchCloseOverlayDrawerEvent(): dynamic {
-        return AppLayoutElementModule.AppLayout.dispatchCloseOverlayDrawerEvent()
+    fun dispatchCloseOverlayDrawerEvent() {
+        AppLayoutElementModule.AppLayout.dispatchCloseOverlayDrawerEvent()
     }
 }
 
-/** The `<vaadin-app-layout>` custom element. */
-object AppLayoutTagName {
-    inline val appLayout: web.dom.TagName<AppLayoutElement>
-        get() = web.dom.TagName("vaadin-app-layout")
-}
-
 /** Imports `@vaadin/app-layout/src/vaadin-app-layout.js`, registering `<vaadin-app-layout>`, and returns the element class. */
-fun registerAppLayout(): dynamic = AppLayoutElementModule.AppLayout
+fun registerAppLayout(): kotlin.js.JsAny = AppLayoutElementModule.AppLayout
 
 /** Creates a `<vaadin-app-layout>` element. The custom element is registered on first use. */
 fun createAppLayout(configure: AppLayoutElement.() -> Unit = {}): AppLayoutElement {
     registerAppLayout()
-    return web.dom.document.createElement(AppLayoutTagName.appLayout).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.appLayout).apply(configure)
 }
 
 /** Attribute names of `<vaadin-app-layout>`, for use with `setAttribute`. */

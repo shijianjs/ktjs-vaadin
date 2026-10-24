@@ -12,7 +12,7 @@ external interface MessageMixin : vaadin.a11ybase.FocusMixin {
      * Image attachments (type starting with "image/") show a thumbnail preview,
      * while other attachments show a document icon with the file name.
      */
-    var attachments: Array<dynamic>
+    var attachments: Array<kotlin.js.JsAny>
     /**
      * Time of sending the message. It is rendered as-is to the part='time' slot,
      * so the formatting is up to you.

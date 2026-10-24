@@ -14,24 +14,18 @@ abstract external class FormRowElement : web.html.HTMLElement, vaadin.themablemi
 
 }
 
-/** The `<vaadin-form-row>` custom element. */
-object FormRowTagName {
-    inline val formRow: web.dom.TagName<FormRowElement>
-        get() = web.dom.TagName("vaadin-form-row")
-}
-
 @JsModule("@vaadin/form-layout/src/vaadin-form-row.js")
 private external object FormRowElementModule {
-    val FormRow: dynamic
+    val FormRow: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/form-layout/src/vaadin-form-row.js`, registering `<vaadin-form-row>`, and returns the element class. */
-fun registerFormRow(): dynamic = FormRowElementModule.FormRow
+fun registerFormRow(): kotlin.js.JsAny = FormRowElementModule.FormRow
 
 /** Creates a `<vaadin-form-row>` element. The custom element is registered on first use. */
 fun createFormRow(configure: FormRowElement.() -> Unit = {}): FormRowElement {
     registerFormRow()
-    return web.dom.document.createElement(FormRowTagName.formRow).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.formRow).apply(configure)
 }
 
 /** Attribute names of `<vaadin-form-row>`, for use with `setAttribute`. */

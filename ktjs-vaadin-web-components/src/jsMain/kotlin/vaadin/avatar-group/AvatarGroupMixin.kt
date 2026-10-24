@@ -30,7 +30,7 @@ external interface AvatarGroupMixin : vaadin.componentbase.I18nMixin, vaadin.com
      * ];
      * ```
      */
-    var items: Array<dynamic>?
+    var items: Array<vaadin.avatargroup.AvatarGroupItem>?
     /**
      * The maximum number of avatars to display. By default, all the avatars are displayed.
      * When _maxItemsVisible_ is set, the overflowing avatars are grouped into one avatar with

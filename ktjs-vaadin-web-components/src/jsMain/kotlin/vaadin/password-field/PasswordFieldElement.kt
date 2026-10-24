@@ -88,24 +88,18 @@ abstract external class PasswordFieldElement : vaadin.textfield.TextFieldElement
 
 }
 
-/** The `<vaadin-password-field>` custom element. */
-object PasswordFieldTagName {
-    inline val passwordField: web.dom.TagName<PasswordFieldElement>
-        get() = web.dom.TagName("vaadin-password-field")
-}
-
 @JsModule("@vaadin/password-field/src/vaadin-password-field.js")
 private external object PasswordFieldElementModule {
-    val PasswordField: dynamic
+    val PasswordField: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/password-field/src/vaadin-password-field.js`, registering `<vaadin-password-field>`, and returns the element class. */
-fun registerPasswordField(): dynamic = PasswordFieldElementModule.PasswordField
+fun registerPasswordField(): kotlin.js.JsAny = PasswordFieldElementModule.PasswordField
 
 /** Creates a `<vaadin-password-field>` element. The custom element is registered on first use. */
 fun createPasswordField(configure: PasswordFieldElement.() -> Unit = {}): PasswordFieldElement {
     registerPasswordField()
-    return web.dom.document.createElement(PasswordFieldTagName.passwordField).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.passwordField).apply(configure)
 }
 
 /** Attribute names of `<vaadin-password-field>`, for use with `setAttribute`. */

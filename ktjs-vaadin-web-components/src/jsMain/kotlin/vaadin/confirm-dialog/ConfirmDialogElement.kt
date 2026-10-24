@@ -65,24 +65,18 @@ abstract external class ConfirmDialogElement : web.html.HTMLElement, vaadin.conf
 
 }
 
-/** The `<vaadin-confirm-dialog>` custom element. */
-object ConfirmDialogTagName {
-    inline val confirmDialog: web.dom.TagName<ConfirmDialogElement>
-        get() = web.dom.TagName("vaadin-confirm-dialog")
-}
-
 @JsModule("@vaadin/confirm-dialog/src/vaadin-confirm-dialog.js")
 private external object ConfirmDialogElementModule {
-    val ConfirmDialog: dynamic
+    val ConfirmDialog: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/confirm-dialog/src/vaadin-confirm-dialog.js`, registering `<vaadin-confirm-dialog>`, and returns the element class. */
-fun registerConfirmDialog(): dynamic = ConfirmDialogElementModule.ConfirmDialog
+fun registerConfirmDialog(): kotlin.js.JsAny = ConfirmDialogElementModule.ConfirmDialog
 
 /** Creates a `<vaadin-confirm-dialog>` element. The custom element is registered on first use. */
 fun createConfirmDialog(configure: ConfirmDialogElement.() -> Unit = {}): ConfirmDialogElement {
     registerConfirmDialog()
-    return web.dom.document.createElement(ConfirmDialogTagName.confirmDialog).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.confirmDialog).apply(configure)
 }
 
 /** Attribute names of `<vaadin-confirm-dialog>`, for use with `setAttribute`. */

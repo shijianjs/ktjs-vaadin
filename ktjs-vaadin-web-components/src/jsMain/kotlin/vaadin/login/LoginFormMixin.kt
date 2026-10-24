@@ -5,5 +5,5 @@ external interface LoginFormMixin : vaadin.login.LoginMixin {
     /**
      * Submits the form.
      */
-    fun submit(): dynamic
+    fun submit()
 }

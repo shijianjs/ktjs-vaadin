@@ -55,24 +55,18 @@ abstract external class RadioButtonElement : web.html.HTMLElement, vaadin.radiog
 
 }
 
-/** The `<vaadin-radio-button>` custom element. */
-object RadioButtonTagName {
-    inline val radioButton: web.dom.TagName<RadioButtonElement>
-        get() = web.dom.TagName("vaadin-radio-button")
-}
-
 @JsModule("@vaadin/radio-group/src/vaadin-radio-button.js")
 private external object RadioButtonElementModule {
-    val RadioButton: dynamic
+    val RadioButton: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/radio-group/src/vaadin-radio-button.js`, registering `<vaadin-radio-button>`, and returns the element class. */
-fun registerRadioButton(): dynamic = RadioButtonElementModule.RadioButton
+fun registerRadioButton(): kotlin.js.JsAny = RadioButtonElementModule.RadioButton
 
 /** Creates a `<vaadin-radio-button>` element. The custom element is registered on first use. */
 fun createRadioButton(configure: RadioButtonElement.() -> Unit = {}): RadioButtonElement {
     registerRadioButton()
-    return web.dom.document.createElement(RadioButtonTagName.radioButton).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.radioButton).apply(configure)
 }
 
 /** Attribute names of `<vaadin-radio-button>`, for use with `setAttribute`. */

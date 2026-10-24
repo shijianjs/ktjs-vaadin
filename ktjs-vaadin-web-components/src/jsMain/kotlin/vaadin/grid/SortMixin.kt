@@ -30,5 +30,5 @@ external interface SortMixin {
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String): dynamic
+    fun setDefaultMultiSortPriority(priority: String)
 }

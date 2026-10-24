@@ -5,5 +5,5 @@ external interface OverlayStackMixin {
     /**
      * Brings the overlay as visually the frontmost one.
      */
-    fun bringToFront(): dynamic
+    fun bringToFront()
 }

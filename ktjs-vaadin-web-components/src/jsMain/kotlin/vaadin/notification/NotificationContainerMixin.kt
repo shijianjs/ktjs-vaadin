@@ -8,7 +8,7 @@ external interface NotificationContainerMixin {
     /**
      * Move the notification container to the top of the stack.
      */
-    fun bringToFront(): dynamic
+    fun bringToFront()
     /**
      * True when the container is opened
      */

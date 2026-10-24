@@ -57,24 +57,18 @@ abstract external class AccordionHeadingElement : web.html.HTMLElement, vaadin.a
     var opened: Boolean
 }
 
-/** The `<vaadin-accordion-heading>` custom element. */
-object AccordionHeadingTagName {
-    inline val accordionHeading: web.dom.TagName<AccordionHeadingElement>
-        get() = web.dom.TagName("vaadin-accordion-heading")
-}
-
 @JsModule("@vaadin/accordion/src/vaadin-accordion-heading.js")
 private external object AccordionHeadingElementModule {
-    val AccordionHeading: dynamic
+    val AccordionHeading: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/accordion/src/vaadin-accordion-heading.js`, registering `<vaadin-accordion-heading>`, and returns the element class. */
-fun registerAccordionHeading(): dynamic = AccordionHeadingElementModule.AccordionHeading
+fun registerAccordionHeading(): kotlin.js.JsAny = AccordionHeadingElementModule.AccordionHeading
 
 /** Creates a `<vaadin-accordion-heading>` element. The custom element is registered on first use. */
 fun createAccordionHeading(configure: AccordionHeadingElement.() -> Unit = {}): AccordionHeadingElement {
     registerAccordionHeading()
-    return web.dom.document.createElement(AccordionHeadingTagName.accordionHeading).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.accordionHeading).apply(configure)
 }
 
 /** Attribute names of `<vaadin-accordion-heading>`, for use with `setAttribute`. */

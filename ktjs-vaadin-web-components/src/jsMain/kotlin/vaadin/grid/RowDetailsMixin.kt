@@ -5,15 +5,15 @@ external interface RowDetailsMixin {
     /**
      * Close the details row of a given item.
      */
-    fun closeItemDetails(item: dynamic): dynamic
+    fun closeItemDetails(item: kotlin.js.JsAny)
     /**
      * An array containing references to items with open row details.
      */
-    var detailsOpenedItems: Array<dynamic>
+    var detailsOpenedItems: Array<kotlin.js.JsAny>
     /**
      * Open the details row of a given item.
      */
-    fun openItemDetails(item: dynamic): dynamic
+    fun openItemDetails(item: kotlin.js.JsAny)
     /**
      * Custom function for rendering the content of the row details.
      * Receives three arguments:
@@ -28,5 +28,5 @@ external interface RowDetailsMixin {
      *   - `model.expanded` True if the item's tree sublevel is expanded.
      *   - `model.selected` True if the item is selected.
      */
-    var rowDetailsRenderer: dynamic
+    var rowDetailsRenderer: vaadin.grid.GridRowDetailsRenderer?
 }

@@ -13,24 +13,18 @@ abstract external class GridColumnElement : web.html.HTMLElement, vaadin.grid.Gr
 
 }
 
-/** The `<vaadin-grid-column>` custom element. */
-object GridColumnTagName {
-    inline val gridColumn: web.dom.TagName<GridColumnElement>
-        get() = web.dom.TagName("vaadin-grid-column")
-}
-
 @JsModule("@vaadin/grid/src/vaadin-grid-column.js")
 private external object GridColumnElementModule {
-    val GridColumn: dynamic
+    val GridColumn: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-column.js`, registering `<vaadin-grid-column>`, and returns the element class. */
-fun registerGridColumn(): dynamic = GridColumnElementModule.GridColumn
+fun registerGridColumn(): kotlin.js.JsAny = GridColumnElementModule.GridColumn
 
 /** Creates a `<vaadin-grid-column>` element. The custom element is registered on first use. */
 fun createGridColumn(configure: GridColumnElement.() -> Unit = {}): GridColumnElement {
     registerGridColumn()
-    return web.dom.document.createElement(GridColumnTagName.gridColumn).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.gridColumn).apply(configure)
 }
 
 /** Attribute names of `<vaadin-grid-column>`, for use with `setAttribute`. */

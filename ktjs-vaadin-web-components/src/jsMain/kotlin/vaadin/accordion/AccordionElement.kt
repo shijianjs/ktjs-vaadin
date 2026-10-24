@@ -41,24 +41,18 @@ abstract external class AccordionElement : web.html.HTMLElement, vaadin.accordio
 
 }
 
-/** The `<vaadin-accordion>` custom element. */
-object AccordionTagName {
-    inline val accordion: web.dom.TagName<AccordionElement>
-        get() = web.dom.TagName("vaadin-accordion")
-}
-
 @JsModule("@vaadin/accordion/src/vaadin-accordion.js")
 private external object AccordionElementModule {
-    val Accordion: dynamic
+    val Accordion: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/accordion/src/vaadin-accordion.js`, registering `<vaadin-accordion>`, and returns the element class. */
-fun registerAccordion(): dynamic = AccordionElementModule.Accordion
+fun registerAccordion(): kotlin.js.JsAny = AccordionElementModule.Accordion
 
 /** Creates a `<vaadin-accordion>` element. The custom element is registered on first use. */
 fun createAccordion(configure: AccordionElement.() -> Unit = {}): AccordionElement {
     registerAccordion()
-    return web.dom.document.createElement(AccordionTagName.accordion).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.accordion).apply(configure)
 }
 
 /** Attribute names of `<vaadin-accordion>`, for use with `setAttribute`. */

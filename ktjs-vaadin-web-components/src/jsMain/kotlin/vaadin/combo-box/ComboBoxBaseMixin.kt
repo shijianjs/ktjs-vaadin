@@ -9,11 +9,11 @@ external interface ComboBoxBaseMixin : vaadin.a11ybase.KeyboardMixin, vaadin.fie
     /**
      * Closes the dropdown list.
      */
-    fun close(): dynamic
+    fun close()
     /**
      * Opens the dropdown list.
      */
-    fun `open`(): dynamic
+    fun `open`()
     /**
      * True if the dropdown is open, false otherwise.
      */

@@ -57,24 +57,18 @@ abstract external class ItemElement : web.html.HTMLElement, vaadin.item.ItemMixi
     var label: String
 }
 
-/** The `<vaadin-item>` custom element. */
-object ItemTagName {
-    inline val item: web.dom.TagName<ItemElement>
-        get() = web.dom.TagName("vaadin-item")
-}
-
 @JsModule("@vaadin/item/src/vaadin-item.js")
 private external object ItemElementModule {
-    val Item: dynamic
+    val Item: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/item/src/vaadin-item.js`, registering `<vaadin-item>`, and returns the element class. */
-fun registerItem(): dynamic = ItemElementModule.Item
+fun registerItem(): kotlin.js.JsAny = ItemElementModule.Item
 
 /** Creates a `<vaadin-item>` element. The custom element is registered on first use. */
 fun createItem(configure: ItemElement.() -> Unit = {}): ItemElement {
     registerItem()
-    return web.dom.document.createElement(ItemTagName.item).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.item).apply(configure)
 }
 
 /** Attribute names of `<vaadin-item>`, for use with `setAttribute`. */

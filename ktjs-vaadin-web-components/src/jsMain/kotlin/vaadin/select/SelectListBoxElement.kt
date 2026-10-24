@@ -28,24 +28,18 @@ abstract external class SelectListBoxElement : web.html.HTMLElement, vaadin.a11y
 
 }
 
-/** The `<vaadin-select-list-box>` custom element. */
-object SelectListBoxTagName {
-    inline val selectListBox: web.dom.TagName<SelectListBoxElement>
-        get() = web.dom.TagName("vaadin-select-list-box")
-}
-
 @JsModule("@vaadin/select/src/vaadin-select-list-box.js")
 private external object SelectListBoxElementModule {
-    val SelectListBox: dynamic
+    val SelectListBox: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/select/src/vaadin-select-list-box.js`, registering `<vaadin-select-list-box>`, and returns the element class. */
-fun registerSelectListBox(): dynamic = SelectListBoxElementModule.SelectListBox
+fun registerSelectListBox(): kotlin.js.JsAny = SelectListBoxElementModule.SelectListBox
 
 /** Creates a `<vaadin-select-list-box>` element. The custom element is registered on first use. */
 fun createSelectListBox(configure: SelectListBoxElement.() -> Unit = {}): SelectListBoxElement {
     registerSelectListBox()
-    return web.dom.document.createElement(SelectListBoxTagName.selectListBox).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.selectListBox).apply(configure)
 }
 
 /** Attribute names of `<vaadin-select-list-box>`, for use with `setAttribute`. */

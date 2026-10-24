@@ -4,5 +4,5 @@
 package vaadin.upload
 
 internal external object UploadMixinExportsModule {
-    val DEFAULT_I18N: dynamic
+    val DEFAULT_I18N: kotlin.js.JsAny
 }

@@ -5,5 +5,5 @@ external interface ArrayDataProviderMixin {
     /**
      * An array containing the items which will be passed to renderer functions.
      */
-    var items: Array<dynamic>?
+    var items: Array<kotlin.js.JsAny>?
 }

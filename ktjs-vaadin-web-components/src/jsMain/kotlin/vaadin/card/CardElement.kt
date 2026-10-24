@@ -62,24 +62,18 @@ abstract external class CardElement : web.html.HTMLElement, vaadin.componentbase
     var titleHeadingLevel: Double
 }
 
-/** The `<vaadin-card>` custom element. */
-object CardTagName {
-    inline val card: web.dom.TagName<CardElement>
-        get() = web.dom.TagName("vaadin-card")
-}
-
 @JsModule("@vaadin/card/src/vaadin-card.js")
 private external object CardElementModule {
-    val Card: dynamic
+    val Card: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/card/src/vaadin-card.js`, registering `<vaadin-card>`, and returns the element class. */
-fun registerCard(): dynamic = CardElementModule.Card
+fun registerCard(): kotlin.js.JsAny = CardElementModule.Card
 
 /** Creates a `<vaadin-card>` element. The custom element is registered on first use. */
 fun createCard(configure: CardElement.() -> Unit = {}): CardElement {
     registerCard()
-    return web.dom.document.createElement(CardTagName.card).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.card).apply(configure)
 }
 
 /** Attribute names of `<vaadin-card>`, for use with `setAttribute`. */

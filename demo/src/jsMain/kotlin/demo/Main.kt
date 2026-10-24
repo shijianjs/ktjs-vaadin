@@ -110,7 +110,7 @@ private fun buildFormCard(): HTMLElement {
 
     val submit = createButton { textContent = "Say hello" }
     submit.clickEvent.addHandler {
-        val name = nameField.value?.trim().orEmpty().ifEmpty { "world" }
+        val name = nameField.value.trim().ifEmpty { "world" }
         val message = "Hello, $name!"
         result.textContent = message
         Notification.show(message)

@@ -8,5 +8,5 @@ external interface ColumnAutoWidthMixin {
     /**
      * Updates the `width` of all columns which have `autoWidth` set to `true`.
      */
-    fun recalculateColumnWidths(): dynamic
+    fun recalculateColumnWidths()
 }

@@ -8,14 +8,14 @@ package vaadin.timepicker
  * Object is in the format `{ hours: ..., minutes: ..., seconds: ..., milliseconds: ... }`
  */
 
-external fun formatISOTime(time: dynamic): String
+external fun formatISOTime(time: kotlin.js.JsAny): String
 
 /**
  * A function to parse the given string to an `Object` in the format
  * `{ hours: ..., minutes: ..., seconds: ..., milliseconds: ... }`.
  */
 
-external fun parseISOTime(timeString: String): dynamic
+external fun parseISOTime(timeString: String): kotlin.js.JsAny?
 
 /**
  * A function to validate the time object based on the given step.
@@ -24,4 +24,4 @@ external fun parseISOTime(timeString: String): dynamic
  * returned by the `i18n.parseTime` function, is left as it is.
  */
 
-external fun validateTime(timeObject: dynamic, step: Double): dynamic
+external fun validateTime(timeObject: kotlin.js.JsAny, step: Double): kotlin.js.JsAny?

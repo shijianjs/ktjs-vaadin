@@ -13,7 +13,7 @@ external interface PasswordFieldMixin : vaadin.componentbase.SlotStylesMixin, va
      * }
      * ```
      */
-    var i18n: dynamic
+    var i18n: kotlin.js.JsAny
     /**
      * True if the password is visible ([type=text]).
      */

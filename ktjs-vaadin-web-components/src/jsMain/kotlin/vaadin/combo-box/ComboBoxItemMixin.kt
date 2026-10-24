@@ -13,7 +13,7 @@ external interface ComboBoxItemMixin {
     /**
      * The item to render.
      */
-    var item: dynamic
+    var item: kotlin.js.JsAny
     /**
      * The text to render in the item.
      */
@@ -21,14 +21,14 @@ external interface ComboBoxItemMixin {
     /**
      * Custom function for rendering the item content.
      */
-    var renderer: dynamic
+    var renderer: vaadin.combobox.ComboBoxRenderer
     /**
      * Requests an update for the content of the item.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
      *
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
-    fun requestContentUpdate(): dynamic
+    fun requestContentUpdate()
     /**
      * True when item is selected.
      */

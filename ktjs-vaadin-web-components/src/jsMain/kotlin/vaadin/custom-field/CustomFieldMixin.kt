@@ -17,7 +17,7 @@ external interface CustomFieldMixin : vaadin.fieldbase.FieldMixin, vaadin.a11yba
      * }
      * ```
      */
-    var formatValue: dynamic
+    var formatValue: vaadin.customfield.CustomFieldFormatValueFn?
     /**
      * Array of available input nodes
      */
@@ -40,7 +40,7 @@ external interface CustomFieldMixin : vaadin.fieldbase.FieldMixin, vaadin.a11yba
      * }
      * ```
      */
-    var parseValue: dynamic
+    var parseValue: vaadin.customfield.CustomFieldParseValueFn?
     /**
      * The value of the field. When wrapping several inputs, it will contain `\t`
      * (Tab character) as a delimiter indicating parts intended to be used as the

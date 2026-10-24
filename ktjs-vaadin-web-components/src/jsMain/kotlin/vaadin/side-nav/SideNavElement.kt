@@ -79,7 +79,7 @@ abstract external class SideNavElement : web.html.HTMLElement, vaadin.sidenav.Si
      * The main use case for this property is when the side navigation is used with a client-side router. In this case,
      * the component needs to be informed about route changes so it can update the highlighted item.
      */
-    var location: dynamic
+    var location: kotlin.js.JsAny
     /**
      * Whether to expand parent items of the nested matching item after initial
      * rendering or navigation. By default, all the parent items are expanded.
@@ -108,27 +108,21 @@ abstract external class SideNavElement : web.html.HTMLElement, vaadin.sidenav.Si
      *
      * Also see the `location` property for updating the highlighted navigation item on route change.
      */
-    var onNavigate: (dynamic) -> Boolean?
-}
-
-/** The `<vaadin-side-nav>` custom element. */
-object SideNavTagName {
-    inline val sideNav: web.dom.TagName<SideNavElement>
-        get() = web.dom.TagName("vaadin-side-nav")
+    var onNavigate: (kotlin.js.JsAny) -> Boolean?
 }
 
 @JsModule("@vaadin/side-nav/src/vaadin-side-nav.js")
 private external object SideNavElementModule {
-    val SideNav: dynamic
+    val SideNav: kotlin.js.JsAny
 }
 
 /** Imports `@vaadin/side-nav/src/vaadin-side-nav.js`, registering `<vaadin-side-nav>`, and returns the element class. */
-fun registerSideNav(): dynamic = SideNavElementModule.SideNav
+fun registerSideNav(): kotlin.js.JsAny = SideNavElementModule.SideNav
 
 /** Creates a `<vaadin-side-nav>` element. The custom element is registered on first use. */
 fun createSideNav(configure: SideNavElement.() -> Unit = {}): SideNavElement {
     registerSideNav()
-    return web.dom.document.createElement(SideNavTagName.sideNav).apply(configure)
+    return web.dom.document.createElement(vaadin.VaadinTagName.sideNav).apply(configure)
 }
 
 /** Attribute names of `<vaadin-side-nav>`, for use with `setAttribute`. */

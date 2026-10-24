@@ -9,15 +9,15 @@ external interface DialogOverlayMixin : vaadin.overlay.OverlayMixin {
     /**
      * Custom function for rendering the dialog footer.
      */
-    var footerRenderer: dynamic
+    var footerRenderer: kotlin.js.JsAny
     /**
      * Retrieves the coordinates of the overlay.
      */
-    fun getBounds(): dynamic
+    fun getBounds(): vaadin.dialog.DialogOverlayBounds
     /**
      * Custom function for rendering the dialog header.
      */
-    var headerRenderer: dynamic
+    var headerRenderer: kotlin.js.JsAny
     /**
      * String used for rendering a dialog title.
      */
