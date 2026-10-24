@@ -20,12 +20,28 @@ import web.dom.document
 import web.html.HTMLElement
 
 /**
- * Translated from the public part of `packages/grid/test/grid.test.js`,
+ * Translated from the public part of `packages/grid/test/basic.test.js`,
  * `packages/grid/test/column.test.js` and `packages/grid/test/selection.test.js`.
  *
  * The grid is the largest upstream suite (rendering, scrolling, keyboard, drag and drop). The Kotlin
  * suite covers the wrapper surface that a caller touches: the item and column API, the data
  * provider, the selection modes and the header/footer renderers.
+ *
+ * Upstream grid files still untranslated, by group:
+ * - `keyboard-navigation*.test.js`, `keyboard-interaction-mode.test.js`, `drag-and-drop.test.js`,
+ *   `column-reordering.test.js`, `column-resizing.test.js`, `resizing.test.js`,
+ *   `scroll-to-index.test.js`, `scroll-into-view.test.js`, `scroll-restoration.test.js`,
+ *   `scroll-to-column.test.js`, `scrolling-mode.test.js`, `physical-count.test.js`,
+ *   `dynamic-item-size.test.js`: real pointer/key sequences and virtualizer geometry.
+ * - `column-auto-width.test.js`, `frozen-columns.test.js`, `min-height.test.js`,
+ *   `row-height.test.js`, `styling.test.js`, `column-rendering.test.js`, `column-groups.test.js`,
+ *   `light-dom-observing.test.js`, `hidden-grid.test.js`, `grid-wrapper.test.js`: measured layout
+ *   and shadow DOM structure.
+ * - `data-provider.test.js`, `filtering.test.js`, `sorting.test.js`, `selectable-provider.test.js`,
+ *   `tree-toggle.test.js`, `row-details.test.js`, `event-context.test.js`, `accessibility.test.js`:
+ *   they read the rendered body rows and the internal `<vaadin-grid-cell-content>` elements.
+ * - `lit.test.js`, `lit-renderers.test.js`, `lit-renderer-directives.test.js`: the Lit directive
+ *   entries are not wrapped on purpose (see `AGENTS.md`).
  */
 class GridTest {
     private val attached = mutableListOf<HTMLElement>()
