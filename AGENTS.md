@@ -165,6 +165,17 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
   受保护成员、对象字面量 / 事件 init）。注意 `Element.id` 的类型是 `ElementId` 而非 `String`，且强转到
   `HTMLButtonElement` 之类的原生接口会在运行时校验（自定义元素会抛 CCE），要按需改用 `getAttribute` /
   `hasAttribute`。
+- **插槽内容在 light DOM 里**：`InputController` / `SlotController` 创建的 `<input>`、combo-box 的
+  scroller 与下拉 item（`slot="overlay"`）、avatar-group 的头像都挂在宿主 light DOM 上，
+  `shadowQuery(host, "input")` 会返回 `null`，要用 `query(host, "input")` / `queryAll(host, "vaadin-combo-box-item")`。
+  只有组件模板自己写进 `render()` 的节点才在 `shadowRoot` 里（如 avatar-group 的
+  `<vaadin-avatar-group-overlay id="overlay">`）。
+- **`js()` 里不要放 JSON**：上游 fixture 常写成 JS 对象字面量（`[{ abbr: 'PM' }]`），它既不是合法 JSON
+  （键没引号），也不能直接把 `'` 换成 `"` 后交给 `JSON.parse`。要么写成真正的 JSON 字符串，要么用
+  `js("(text) => (new Function('return ' + text))()")(fixture)` 当表达式求值。
+- **强转到生成的元素类也会做运行时校验**：`js("(el) => el.firstElementChild")(x) as AvatarGroupElement`
+  会生成 `instanceof` 检查，而 Kotlin 类名在产物里被重命名，运行时报
+  `ReferenceError: XxxElement is not defined`。拿到 JS 对象后要转成元素类时用 `unsafeCast<XxxElement>()`。
 - **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、
   `XxxAttributes` / `XxxEvents` 常量、静态入口对象、mixin 类型归属、`...Property` 改名映射、
   `JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
