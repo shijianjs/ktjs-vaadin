@@ -16,7 +16,7 @@ abstract external class UploadManager : web.events.EventTarget {
     /**
      * Add files to the upload list.
      */
-    fun addFiles(files: dynamic)
+    fun addFiles(files: FileListOrFileArray)
     /**
      * Whether the upload manager is disabled.
      * When true, connected components (upload-button, upload-drop-zone) will be automatically disabled.
@@ -84,7 +84,7 @@ abstract external class UploadManager : web.events.EventTarget {
     /**
      * Triggers the upload of any files that are not completed.
      */
-    fun uploadFiles(files: dynamic = definedExternally)
+    fun uploadFiles(files: UploadFileOrUploadFileArray = definedExternally)
     var uploadFormat: kotlin.js.JsAny?
     var withCredentials: kotlin.js.JsAny?
 }

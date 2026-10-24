@@ -16,7 +16,7 @@ external fun getClosestCell(node: web.dom.Node): web.html.HTMLElement?
 external fun getBodyRowCells(row: web.html.HTMLTableRowElement): Array<web.html.HTMLTableCellElement>
 
 
-external fun iterateChildren(container: web.html.HTMLElement, callback: dynamic)
+external fun iterateChildren(container: web.html.HTMLElement, callback: (web.html.HTMLElement) -> Unit)
 
 /**
  * Iterates over the cells of a row. This includes the details cell if
@@ -24,19 +24,19 @@ external fun iterateChildren(container: web.html.HTMLElement, callback: dynamic)
  * due to lazy column reordering.
  */
 
-external fun iterateRowCells(row: web.html.HTMLTableRowElement, callback: dynamic)
+external fun iterateRowCells(row: web.html.HTMLTableRowElement, callback: (web.html.HTMLTableCellElement) -> Unit)
 
 
 external fun updateColumnOrders(columns: Array<kotlin.js.JsAny>, scope: Double, baseOrder: Double)
 
 
-external fun updateState(element: web.html.HTMLElement, attribute: String, value: dynamic)
+external fun updateState(element: web.html.HTMLElement, attribute: String, value: BooleanOrString?)
 
 
-external fun updatePart(element: web.html.HTMLElement, part: String, value: dynamic)
+external fun updatePart(element: web.html.HTMLElement, part: String, value: BooleanOrString?)
 
 
-external fun updateCellsPart(cells: Array<web.html.HTMLTableCellElement>, part: String, value: dynamic)
+external fun updateCellsPart(cells: Array<web.html.HTMLTableCellElement>, part: String, value: BooleanOrString?)
 
 
 external fun updateBooleanRowStates(row: web.html.HTMLElement, states: kotlin.js.JsAny)
@@ -45,7 +45,7 @@ external fun updateBooleanRowStates(row: web.html.HTMLElement, states: kotlin.js
 external fun updateStringRowStates(row: web.html.HTMLElement, states: kotlin.js.JsAny)
 
 
-external fun updateCellState(cell: web.html.HTMLElement, attribute: String, value: dynamic, part: String, oldPart: String?)
+external fun updateCellState(cell: web.html.HTMLElement, attribute: String, value: BooleanOrString?, part: String, oldPart: String?)
 
 /**
  * Finds the cell containing the tree toggle element

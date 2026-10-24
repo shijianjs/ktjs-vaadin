@@ -11,7 +11,7 @@ external interface ComboBoxItemsMixin : vaadin.combobox.ComboBoxBaseMixin {
      * can be assigned directly to omit the internal filtering functionality.
      * The items can be of either `String` or `Object` type.
      */
-    var filteredItems: Array<dynamic>?
+    var filteredItems: Array<kotlin.js.JsAny>?
     /**
      * Path for the id of the item. If `items` is an array of objects,
      * the `itemIdPath` is used to compare and identify the same item
@@ -38,7 +38,7 @@ external interface ComboBoxItemsMixin : vaadin.combobox.ComboBoxBaseMixin {
      * A full set of items to filter the visible options from.
      * The items can be of either `String` or `Object` type.
      */
-    var items: Array<dynamic>?
+    var items: Array<kotlin.js.JsAny>?
     /**
      * Path for the value of the item. If `items` is an array of objects, the
      * `itemValuePath:` is used to fetch the string value for the selected

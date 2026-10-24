@@ -39,5 +39,5 @@ external interface ComboBoxMixin : vaadin.fieldbase.ValidateMixin, vaadin.combob
     /**
      * The selected item from the `items` array.
      */
-    var selectedItem: dynamic
+    var selectedItem: kotlin.js.JsAny?
 }

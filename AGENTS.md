@@ -55,8 +55,14 @@ Kotlin/JS wrapper。
 - 只在 manifest 里出现名字、没有结构化信息的具名类型，在对应包内手写 `<Package>Types.kt`
   （`external interface` / `typealias`），再在生成器的 `TYPE_ALIASES` 里登记 FQN。手写文件不带生成标记，
   重新生成不会删除。
-- 仍然允许 `dynamic` 的情形：原始类型与 JS 类型混合的联合（`string | number`、`HTMLElement | string`）、
-  没有签名的裸 `Function`。不要用 `dynamic` 表示「懒得写类型」。
+- 联合类型（`string | number`、`HTMLElement | string`、`MouseEvent | TouchEvent`）映射为不透明
+  `external interface` + 每个成员一个同名工厂函数，照搬 kotlin-wrappers 的 `web.http.BodyInit` 写法：
+  `GridColumn | number` → `GridColumnElementOrDouble`，调用方用 `GridColumnElementOrDouble(column)` 包装。
+  生成器把首次出现的联合写进对应包的 `<Package>Unions.kt`，按 Kotlin 包去重；手写包在 `Types.kt`
+  里按同样方式声明。联合里出现 `JsAny` 时直接收敛为 `JsAny`（它已容纳所有 JS 值）。
+- 确实没有任何类型信息时才保留 `dynamic`（上游只写裸 `Function` 且实现也无法推断签名）。目前 jsMain
+  没有 `dynamic`：原本的三处裸 `Function` 已在 `MODULE_SIGNATURES` / `MEMBER_TYPES` 里按实现补上签名，
+  `lit-renderer` 用手写 `LitRenderer` 接口（`operator fun invoke(vararg ...)`）建模。
 
 `kotlin.js.JsAny` 需要 `kotlin.js.ExperimentalWasmJsInterop` opt-in；根构建脚本已对全部 KMP 子模块统一
 添加，新增模块无需单独配置。

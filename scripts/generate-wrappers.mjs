@@ -188,6 +188,20 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
 ]);
 
+// Module-level functions whose manifest signature is too vague (a bare `Function`), typed after
+// the upstream implementation and `.d.ts`. The value is the Kotlin signature after the name.
+const MODULE_SIGNATURES = new Map([
+  [
+    '@vaadin/grid|iterateChildren',
+    '(container: web.html.HTMLElement, callback: (web.html.HTMLElement) -> Unit)',
+  ],
+  [
+    '@vaadin/grid|iterateRowCells',
+    '(row: web.html.HTMLTableRowElement, callback: (web.html.HTMLTableCellElement) -> Unit)',
+  ],
+  ['@vaadin/overlay|observeMove', '(element: web.html.HTMLElement, callback: () -> Unit): () -> Unit'],
+]);
+
 // Same as MEMBER_TYPES, for individual parameters.
 const PARAMETER_TYPES = new Map([
   [
@@ -196,10 +210,48 @@ const PARAMETER_TYPES = new Map([
   ],
 ]);
 
+// Unions that have no name upstream (for example `string | number`). Kotlin cannot express a
+// union, so each distinct one becomes an opaque `external interface` with an inline factory per
+// member, following kotlin-wrappers (see `web.http.BodyInit`). Keyed by `kotlinPackage|name`.
+const unions = new Map();
+
 const warnings = [];
 
 function warn(message) {
   warnings.push(message);
+}
+
+function unionMemberName(type) {
+  const array = /^Array<(.+)>$/.exec(type);
+  if (array) return `${unionMemberName(array[1])}Array`;
+  if (type.startsWith('(')) return 'Function';
+  return type.slice(type.lastIndexOf('.') + 1).replace(/\?$/, '');
+}
+
+function registerUnion(types, pkg) {
+  // Keep the upstream order for the name (`GridColumn | number` reads better than its reverse);
+  // compare member sets order-insensitively so the same union always maps to one declaration.
+  const members = [...new Set(types)];
+  const signature = [...members].sort().join('|');
+  const simple = members.map(unionMemberName);
+  const name =
+    new Set(simple).size === simple.length
+      ? simple.join('Or')
+      : members.map((type) => type.split('.').slice(-2).join('')).join('Or');
+  const kotlinPkg = kotlinPackage(pkg);
+  const key = `${kotlinPkg}|${name}`;
+  const existing = unions.get(key);
+  if (existing) {
+    if (existing.signature !== signature) {
+      throw new Error(`union ${name} in ${kotlinPkg} is declared with two different member sets`);
+    }
+    return name;
+  }
+  if (declarations.some((item) => item.kotlinPackage === kotlinPkg && item.kotlinName === name)) {
+    throw new Error(`union ${name} in ${kotlinPkg} collides with a generated declaration`);
+  }
+  unions.set(key, { pkg, directory: kotlinDir(pkg), name, members, signature });
+  return name;
 }
 
 function readJson(file) {
@@ -316,18 +368,14 @@ function mapType(text, pkg) {
     base = 'String';
   } else if (mapped.every((type) => type === 'Double' || type === 'Int')) {
     base = 'Double';
-  } else if (mapped.every((type) => type === 'kotlin.js.JsAny')) {
+  } else if (mapped.includes('kotlin.js.JsAny')) {
+    // `JsAny` already accepts every JavaScript value, so the union adds nothing.
     base = 'kotlin.js.JsAny';
-  } else if (mapped.every((type) => type.endsWith('Event'))) {
-    // Event unions such as `MouseEvent | TouchEvent` share `Event` as their DOM base type.
-    base = 'web.events.Event';
   } else {
-    // Mixed unions such as `string | number | null` or `HTMLElement | string` have no Kotlin
-    // equivalent; `dynamic` is the only type that accepts every member.
-    base = 'dynamic';
+    base = registerUnion(mapped, pkg);
   }
 
-  if (nullable && base !== 'dynamic' && base !== 'Unit') return `${base}?`;
+  if (nullable && base !== 'Unit') return `${base}?`;
   return base;
 }
 
@@ -945,13 +993,13 @@ function emitModuleDeclarations(pkg, modulePath, items) {
   const variables = items.filter((item) => item.kind === 'variable');
 
   for (const declaration of functions) {
+    const override = MODULE_SIGNATURES.get(`${declaration.pkg}|${declaration.name}`);
     const returned = declaration.return && declaration.return.type && declaration.return.type.text;
     const returns = returned ? mapType(returned, declaration.pkg) : 'Unit';
-    exportsLines.push(
-      kdoc(declaration.description),
-      `external fun ${id(declaration.name)}(${renderParameters(declaration.parameters, declaration.pkg)})${returns === 'Unit' ? '' : `: ${returns}`}`,
-      '',
-    );
+    const signature =
+      override ||
+      `(${renderParameters(declaration.parameters, declaration.pkg)})${returns === 'Unit' ? '' : `: ${returns}`}`;
+    exportsLines.push(kdoc(declaration.description), `external fun ${id(declaration.name)}${signature}`, '');
   }
 
   const moduleName = `${base}ExportsModule`;
@@ -1055,6 +1103,35 @@ for (const declaration of declarations) {
 for (const group of moduleGroups.values()) {
   emitModuleDeclarations(group[0].pkg, group[0].module, group);
 }
+
+function emitUnions() {
+  const byDirectory = new Map();
+  for (const union of unions.values()) {
+    const list = byDirectory.get(union.directory) || [];
+    list.push(union);
+    byDirectory.set(union.directory, list);
+  }
+  for (const [directory, list] of byDirectory) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+    const lines = [`package ${kotlinPackage(list[0].pkg)}`, '', 'import js.reflect.unsafeCast', ''];
+    for (const union of list) {
+      lines.push(
+        '/**',
+        ' * Union of:',
+        ...union.members.map((member) => ` * - \`${member}\``),
+        ' */',
+        `external interface ${union.name}`,
+      );
+      for (const member of union.members) {
+        lines.push('', `fun ${union.name}(value: ${member}): ${union.name} = unsafeCast(value)`);
+      }
+      lines.push('');
+    }
+    writeFile(path.join(directory, `${pascal(path.basename(directory))}Unions.kt`), lines.join('\n'));
+  }
+}
+
+emitUnions();
 
 // ---------------------------------------------------------------------------------------------
 // Cleanup of stale generated files

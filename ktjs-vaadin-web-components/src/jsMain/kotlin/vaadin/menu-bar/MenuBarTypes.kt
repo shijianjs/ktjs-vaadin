@@ -1,5 +1,31 @@
 package vaadin.menubar
 
+import js.reflect.unsafeCast
+import web.html.HTMLElement
+
+/**
+ * Union of an element and a tag name.
+ *
+ * Kotlin has no union types, so the members are converted explicitly with the [HTMLElementOrString]
+ * factory functions.
+ */
+external interface HTMLElementOrString
+
+/** Wraps an element as a [HTMLElementOrString]. */
+fun HTMLElementOrString(value: HTMLElement): HTMLElementOrString = unsafeCast(value)
+
+/** Wraps a tag name as a [HTMLElementOrString]. */
+fun HTMLElementOrString(value: String): HTMLElementOrString = unsafeCast(value)
+
+/** Union of a list of theme names and a single theme name. */
+external interface StringArrayOrString
+
+/** Wraps a list of theme names as a [StringArrayOrString]. */
+fun StringArrayOrString(value: Array<String>): StringArrayOrString = unsafeCast(value)
+
+/** Wraps a single theme name as a [StringArrayOrString]. */
+fun StringArrayOrString(value: String): StringArrayOrString = unsafeCast(value)
+
 /** A top-level item in the declarative `items` array of `<vaadin-menu-bar>`. */
 external interface MenuBarItem {
     /** The text rendered in the menu button. */
@@ -12,13 +38,13 @@ external interface MenuBarItem {
     var tooltipPosition: String?
 
     /** An element or a tag name used to render the button content. */
-    var component: dynamic
+    var component: HTMLElementOrString?
 
     /** Whether the button is disabled. */
     var disabled: Boolean?
 
     /** A theme name or an array of theme names for the button. */
-    var theme: dynamic
+    var theme: StringArrayOrString?
 
     /** A CSS class name for the button. */
     var className: String?

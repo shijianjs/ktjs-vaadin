@@ -8,7 +8,7 @@ external interface RegisterStylesOptions {
     var moduleId: String?
 
     /** A `moduleId` or an array of them whose styles are included in this registration. */
-    var include: dynamic
+    var include: StringArrayOrString?
 }
 
 /**

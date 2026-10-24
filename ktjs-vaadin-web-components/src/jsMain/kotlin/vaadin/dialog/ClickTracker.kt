@@ -9,11 +9,11 @@ abstract external class ClickTracker {
     /**
      * Returns true if the pointer hasn't moved since the gesture started.
      */
-    fun isClick(e: web.events.Event): Boolean
+    fun isClick(e: MouseEventOrTouchEvent): Boolean
     /**
      * Stores the position where the gesture started.
      */
-    fun start(e: web.events.Event)
+    fun start(e: MouseEventOrTouchEvent)
 }
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog-utils.js")

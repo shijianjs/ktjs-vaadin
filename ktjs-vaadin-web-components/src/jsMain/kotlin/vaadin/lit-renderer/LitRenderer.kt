@@ -11,10 +11,10 @@ package vaadin.litrenderer
  */
 external class LitRendererDirective {
     /** Runs the renderer callback with the current value. */
-    fun render(renderer: dynamic, value: dynamic = definedExternally): dynamic
+    fun render(renderer: LitRenderer, value: kotlin.js.JsAny? = definedExternally): kotlin.js.JsAny
 
     /** Updates the directive part with the renderer and its value. */
-    fun update(part: dynamic, props: dynamic): dynamic
+    fun update(part: kotlin.js.JsAny, props: Array<kotlin.js.JsAny?>): kotlin.js.JsAny
 
     /** Adds the renderer callback to the element. */
     fun addRenderer()
@@ -26,5 +26,5 @@ external class LitRendererDirective {
     fun removeRenderer()
 
     /** Renders the result of a renderer callback into a container. */
-    fun renderRenderer(container: web.dom.Element, vararg args: dynamic)
+    fun renderRenderer(container: web.dom.Element, vararg args: kotlin.js.JsAny?)
 }

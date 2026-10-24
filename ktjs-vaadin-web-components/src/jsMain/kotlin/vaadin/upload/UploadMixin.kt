@@ -55,7 +55,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
      * <vaadin-upload headers='{"X-Foo": "Bar"}'></vaadin-upload>
      * ```
      */
-    var headers: dynamic
+    var headers: kotlin.js.JsAny
     /**
      * Specifies the maximum number of files that can be uploaded simultaneously.
      * This helps prevent browser performance degradation and XHR limitations when
@@ -109,7 +109,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
     /**
      * Triggers the upload of any files that are not completed
      */
-    fun uploadFiles(files: dynamic = definedExternally)
+    fun uploadFiles(files: UploadFileOrUploadFileArray = definedExternally)
     /**
      * Specifies the upload format to use when sending files to the server.
      * - 'raw': Send file as raw binary data with the file's MIME type as Content-Type (default)

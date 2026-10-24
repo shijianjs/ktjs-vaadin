@@ -10,7 +10,7 @@ package vaadin.overlay
  * https://github.com/floating-ui/floating-ui/blob/58ed169/packages/dom/src/autoUpdate.ts#L45
  */
 
-external fun observeMove(element: web.html.HTMLElement, callback: dynamic): dynamic
+external fun observeMove(element: web.html.HTMLElement, callback: () -> Unit): () -> Unit
 
 /**
  * Collect the animations that report the state of the given element, so that their end can be
@@ -32,4 +32,4 @@ external fun getStateAnimations(element: web.html.HTMLElement): Array<web.animat
  * in the light DOM in case the overlay is in the shadow DOM of its owner.
  */
 
-external fun setOverlayStateAttribute(overlay: web.html.HTMLElement, name: String, value: dynamic)
+external fun setOverlayStateAttribute(overlay: web.html.HTMLElement, name: String, value: StringOrBoolean)
