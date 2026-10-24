@@ -9,6 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import vaadin.attach
 import vaadin.detachAll
@@ -174,5 +175,80 @@ class UploadTest {
             dropZone.setAttribute("capture", "user")
             assertEquals("user", dropZone.getAttribute("capture"))
         }
+    }
+
+    // Public parts of `upload.test.js`. The rest of that suite drives the transfer through the
+    // private `_createXhr` fake request and sinon fake timers, so the request lifecycle, progress,
+    // stall detection and response-status cases are dropped.
+
+    @Test
+    fun fileInputHasTheMultipleAttribute(): Promise<Unit> {
+        val upload = newUpload()
+
+        return nextRender(upload).then { assertNotNull(fileInputMultiple(upload)) }
+    }
+
+    @Test
+    fun removesMultipleAttributeWhenMaxFilesIsOne(): Promise<Unit> {
+        val upload = newUpload()
+
+        return nextRender(upload)
+            .then {
+                upload.maxFiles = 1.0
+                nextUpdate(upload)
+            }
+            .then { assertNull(fileInputMultiple(upload)) }
+    }
+
+    @Test
+    fun appliesTheCaptureAttributeToTheInput(): Promise<Unit> {
+        val upload = newUpload()
+
+        return nextRender(upload)
+            .then {
+                upload.capture = "camera"
+                nextUpdate(upload)
+            }
+            .then { assertEquals("camera", fileInputCapture(upload)) }
+    }
+
+    @Test
+    fun parsesHeadersSetAsJsonString(): Promise<Unit> {
+        val upload = newUpload()
+
+        return nextRender(upload)
+            .then {
+                js("(u) => { u.headers = '{\"X-Foo\": \"Bar\"}'; }")(upload)
+                nextUpdate(upload)
+            }
+            .then {
+                // The header string is only parsed when the request is configured, so an upload
+                // has to be triggered for the property to turn into an object.
+                js("(u) => { const f = new Blob([]); f.name = 'x'; try { u.uploadFiles(f); } catch (e) {} }")(upload)
+                assertTrue(js("(u) => typeof u.headers === 'object' && u.headers !== null && u.headers['X-Foo'] === 'Bar'")(upload) as Boolean)
+            }
+    }
+
+    @Test
+    fun resetsHeadersSetAsInvalidJsonString(): Promise<Unit> {
+        val upload = newUpload()
+
+        return nextRender(upload)
+            .then {
+                js("(u) => { u.headers = 'invalid json'; }")(upload)
+                nextUpdate(upload)
+            }
+            .then {
+                // Configuring the request throws a TypeError after the headers have been reset
+                val threw = js(
+                    "(u) => {" +
+                        " const f = new Blob([]);" +
+                        " f.name = 'x';" +
+                        " try { u.uploadFiles(f); return false; } catch (e) { return true; }" +
+                        "}",
+                )(upload) as Boolean
+                assertTrue(threw)
+                assertTrue(js("(u) => u.headers === undefined")(upload) as Boolean)
+            }
     }
 }
