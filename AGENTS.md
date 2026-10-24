@@ -142,10 +142,11 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
   上游文件路径。上游用 `@vaadin/testing-helpers` 的地方用 `vaadin.TestSupport` 的等价辅助函数
   （`attach`、`fixture`、`nextRender`、`nextFrame`、`nextUpdate`、`nextResize`、`timeout`、`keyDown`、
   `on`、`typeInto`、`click`、`shadowQuery`、`computedStyle` 等），不要在用例里重复造。
-- **按 `node_modules` 的版本写断言**：上游源码树可能比 `package.json` 锁定的 npm 版本新（例如源码树是
-  `25.4.0-alpha4`、锁的是 `25.3.4`），属性名和默认值会不一样（`headingLevel` vs `titleHeadingLevel`、
-  哪些属性反射到 attribute、哪些属性默认是 `undefined`）。写用例前先用 `custom-elements.json` 或
-  `scripts/dump-api.py` 核对锁定的版本，KDoc 里注明差异。
+- **上游源码树先切到锁定版本的 tag**：`S:\workspace\github\vaadin\web-components` 默认停在 `main`（比锁定的
+  npm 版本新，例如 `25.4.0-alpha4` 对 `25.3.4`）。动手翻译前先 `git checkout v<package.json 里的版本>`
+  （例如 `git checkout v25.3.4`），再用 `custom-elements.json` 或 `scripts/dump-api.py` 核对属性名与默认值：
+  不同版本里属性名（`headingLevel` vs `titleHeadingLevel`）、是否反射到 attribute、默认值是否为 `undefined`
+  都可能不一样。KDoc 里注明差异。
 - **异步用例**：Kotlin/JS 的 `@Test` 函数直接返回 `Promise<Unit>`（`return nextUpdate(element).then { ... }`），
   不要 sleep，也不要引入协程测试库。
 - **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、

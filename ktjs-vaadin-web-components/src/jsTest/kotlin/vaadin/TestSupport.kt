@@ -139,17 +139,23 @@ internal fun dispatchCustomEvent(element: HTMLElement, type: String, detail: Any
     return event as web.events.Event
 }
 
-/** Sends a `keydown` with [key] to [element]. */
-internal fun keyDown(element: HTMLElement, key: String) {
+/** Sends a `keydown` with [key] to [element], optionally with `shiftKey`. */
+internal fun keyDown(element: HTMLElement, key: String, shiftKey: Boolean = false) {
     element.dispatchEvent(
-        js("(key) => new KeyboardEvent('keydown', { key, bubbles: true, composed: true, cancelable: true })")(key),
+        js(
+            "(key, shift) => new KeyboardEvent('keydown'," +
+                " { key, shiftKey: shift, bubbles: true, composed: true, cancelable: true })",
+        )(key, shiftKey),
     )
 }
 
-/** Sends a `keyup` with [key] to [element]. */
-internal fun keyUp(element: HTMLElement, key: String) {
+/** Sends a `keyup` with [key] to [element], optionally with `shiftKey`. */
+internal fun keyUp(element: HTMLElement, key: String, shiftKey: Boolean = false) {
     element.dispatchEvent(
-        js("(key) => new KeyboardEvent('keyup', { key, bubbles: true, composed: true, cancelable: true })")(key),
+        js(
+            "(key, shift) => new KeyboardEvent('keyup'," +
+                " { key, shiftKey: shift, bubbles: true, composed: true, cancelable: true })",
+        )(key, shiftKey),
     )
 }
 

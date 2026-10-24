@@ -69,6 +69,13 @@ class ListBoxTest {
     }
 
     @Test
+    fun setsTheRoleAttributeToListBox(): Promise<Unit> {
+        val host = listBoxFixture()
+
+        return nextRender(host).then { assertEquals("listbox", host.getAttribute("role")) }
+    }
+
+    @Test
     fun selectsNoItemByDefault(): Promise<Unit> {
         val host = listBoxFixture()
 
