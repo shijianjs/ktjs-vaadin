@@ -132,6 +132,25 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
   `source-map-loader` 的 peer dependency 装第二份，测试包只引到其中一份时构建会报
   `The 'compilation' argument must be an instance of Compilation`。
 
+## 测试覆盖
+
+目标是「除明确不做的功能外，覆盖全部 wrapper 代码」。上游源码树固定放在
+`S:\workspace\github\vaadin\web-components`，`packages/<包>/test/*.test.js` 是首选用例来源。
+
+- **先翻译上游测试**：Kotlin 测试目录与子模块、包名对齐（`src/jsTest/kotlin/vaadin/<包>/`），文件名与
+  上游 `test/*.test.js` 对应（`tabs.test.js` → `TabsTest.kt`），测试函数名对应上游 `it(...)`，KDoc 注明
+  上游文件路径。上游用 `@vaadin/testing-helpers` 的地方用 `vaadin.TestSupport` 的等价辅助函数
+  （`attach`、`nextFrame`、`nextUpdate`、`timeout`、`keyDown` 等），不要在用例里重复造。
+- **异步用例**：Kotlin/JS 的 `@Test` 函数直接返回 `Promise<Unit>`（`return nextUpdate(element).then { ... }`），
+  不要 sleep，也不要引入协程测试库。
+- **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、
+  `XxxAttributes` / `XxxEvents` 常量、静态入口对象、mixin 类型归属、`...Property` 改名映射、
+  `JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
+- **明确放弃的功能**：视觉/截图测试（`test/visual/*`）、shadow DOM 结构快照（`test/dom/*`）、依赖私有
+  成员（`_observer`、`$`、`__*`）的内部测试、Lit 指令入口（`lit.js`，见上一节）。放弃项写在这里，
+  不要在用例里绕道 `js()` 访问私有状态。
+- **测试发现 bug 时修 wrapper，不改断言**：能定位到生成器的问题就修生成器并重新生成，提交信息里说明。
+
 ## UI 编程约定
 
 以下为维护者的通用 UI 编码偏好。新增任何 UI 代码（Web Component 包装、演示页）都按此执行。
