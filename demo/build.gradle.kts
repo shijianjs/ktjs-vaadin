@@ -11,11 +11,24 @@ kotlin {
         browser()
     }
 
+    // The JVM target carries only the Playwright end-to-end suite in `src/jvmTest`; the demo itself
+    // stays a JS page.
+    jvm()
+
     sourceSets {
         jsMain.dependencies {
             implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.10.1")
             // Wrapper modules used by the demo.
             implementation(project(":ktjs-vaadin-web-components"))
+        }
+
+        jvmTest.dependencies {
+            implementation("com.microsoft.playwright:playwright:1.61.0")
+            implementation("cn.hutool:hutool-all:5.8.48")
+            implementation("org.junit.jupiter:junit-jupiter:5.14.1")
+            implementation("org.junit-pioneer:junit-pioneer:2.3.0")
+            implementation(kotlin("test-junit5"))
+            runtimeOnly("org.junit.platform:junit-platform-launcher:1.14.1")
         }
     }
 }
@@ -47,34 +60,30 @@ val copyLumoStyles = tasks.register<Copy>("copyLumoStyles") {
 kotlin.sourceSets.getByName("jsMain").resources.srcDir(copyLumoStyles)
 
 // ---------------------------------------------------------------------------------------------
-// End-to-end tests
+// End-to-end suite
 //
-// `e2e` is a standalone npm/TypeScript project using @playwright/test. Its Chromium comes from the
-// same Playwright browser cache the Kotlin/JS browser tests use
-// (`:ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers`), which is why the Playwright
-// version below is pinned to the one the Kotlin Gradle plugin installs.
+// The suite lives in `src/jvmTest`, so the demo stays one KMP module instead of carrying a second
+// Gradle project. It uses Playwright's official JUnit 5 integration plus Hutool's SimpleServer for
+// the static bundle, and reuses the Chromium that `kotlinInstallPlaywrightBrowsers` installs for
+// the Kotlin/JS browser tests (hence the pinned Playwright version in the dependencies).
+// `jvmTest` itself is disabled to keep `build`/`check` browser-free; this dedicated task runs the
+// same test compilation on demand.
 // ---------------------------------------------------------------------------------------------
-val npmExecutable = if (System.getProperty("os.name").lowercase().contains("win")) "npm.cmd" else "npm"
+val jvmE2eCompilation = kotlin.targets.getByName("jvm").compilations.getByName("test")
 
-val e2eInstall = tasks.register<Exec>("e2eInstall") {
+tasks.register<Test>("e2eTest") {
     group = "verification"
-    description = "Installs the npm dependencies of the end-to-end test project."
-    workingDir = layout.projectDirectory.dir("e2e").asFile
-    commandLine(npmExecutable, "install", "--no-audit", "--no-fund")
-    inputs.file(layout.projectDirectory.file("e2e/package.json"))
-    outputs.dir(layout.projectDirectory.dir("e2e/node_modules"))
+    description = "Runs the Kotlin/JVM Playwright suite against the bundled demo page."
+    useJUnitPlatform()
+    dependsOn("jsBrowserDistribution", ":ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers")
+
+    testClassesDirs = jvmE2eCompilation.output.classesDirs
+    classpath = files(jvmE2eCompilation.output.allOutputs, jvmE2eCompilation.runtimeDependencyFiles)
+    systemProperty("demo.dist", layout.buildDirectory.dir("dist/js/productionExecutable").get().asFile.absolutePath)
+    systemProperty("e2e.output", layout.buildDirectory.dir("e2e-results").get().asFile.absolutePath)
+    systemProperty("junit.jupiter.execution.timeout.default", "30 s")
+
+    outputs.upToDateWhen { false }
 }
 
-tasks.register<Exec>("e2eTest") {
-    group = "verification"
-    description = "Runs the Playwright suite against the bundled demo page."
-    dependsOn("jsBrowserDistribution", e2eInstall, ":ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers")
-
-    val dist = layout.buildDirectory.dir("dist/js/productionExecutable")
-    inputs.dir(dist)
-    inputs.dir(layout.projectDirectory.dir("e2e/tests"))
-    environment("DEMO_DIST", dist.get().asFile.absolutePath)
-
-    workingDir = layout.projectDirectory.dir("e2e").asFile
-    commandLine("node", "node_modules/@playwright/test/cli.js", "test")
-}
+tasks.named<Test>("jvmTest") { enabled = false }

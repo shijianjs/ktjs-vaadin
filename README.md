@@ -42,8 +42,8 @@ the `npm(...)` dependency from these two files:
 - Node.js is downloaded automatically by the Kotlin Gradle plugin. npm is used because Yarn is
   disabled in `gradle.properties`.
 - Chromium is downloaded by Playwright the first time browser tests run.
-- The demo's end-to-end suite is a Playwright Test project (`demo/e2e`, TypeScript), so `node` and
-  `npm` must also be on `PATH`. Its dependencies are installed by `:demo:e2eInstall`.
+- The demo's end-to-end suite runs on the JVM with Playwright's JUnit 5 integration, so no Node.js
+  installation on `PATH` is needed.
 
 ## Build and test
 
@@ -53,7 +53,7 @@ the `npm(...)` dependency from these two files:
 # Per-module tests
 ./gradlew :ktjs-vaadin-web-components:jsBrowserTest
 
-# End-to-end suite for the bundled demo (Playwright Test, needs node and npm on PATH)
+# End-to-end suite for the bundled demo (Playwright + JUnit 5 on the JVM)
 ./gradlew :demo:e2eTest
 
 # GitHub Pages site (demo at the root, Dokka output under /api/)

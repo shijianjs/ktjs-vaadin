@@ -70,13 +70,16 @@ plugins.withType<NodeJsRootPlugin> {
 // kotlinx.browser.* compile and run against the same objects, but the compiler treats them as
 // unrelated types, which breaks callers that use kotlin-browser. detekt.yml forbids the imports.
 // `kotlin.js.JsAny` is the typed stand-in for JS values that have no Kotlin equivalent. The
-// compiler still marks it as part of the experimental JS interop surface, so opt in everywhere
-// the wrappers and their consumers are compiled.
+// compiler still marks it as part of the experimental JS interop surface, so opt in on every JS
+// target. It cannot be set at the extension level: the marker does not exist on the JVM classpath,
+// and the demo's jvm target would only produce an "unresolved opt-in marker" warning.
 subprojects {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
         extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension> {
-            compilerOptions {
-                optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+            targets.withType(org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTarget::class.java).configureEach {
+                compilerOptions {
+                    optIn.add("kotlin.js.ExperimentalWasmJsInterop")
+                }
             }
         }
     }

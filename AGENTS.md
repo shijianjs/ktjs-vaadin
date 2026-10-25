@@ -457,7 +457,7 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
     `example`）、`Readout`（就地更新的读值）与 `EventLog`（滚动事件流）。
 - 每个页面必须提供两条链接：Vaadin 官方文档（`https://vaadin.com/docs/latest/zh/components/<slug>`，
   没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）与 GitHub 上的 Kotlin 源码
-  （`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）。`demo/e2e` 的用例会逐页校验这两条链接。
+  （`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）。端到端用例会逐页校验这两条链接。
 - 侧边栏**不要**给 `vaadin-side-nav-item` 设 `path`：组件用 `document.location.pathname` 判断
   `current`，而 hash 路由的 pathname 从不变化，设了 `path` 会让所有条目都变成「当前页」。改为由
   `AppShell` 处理点击（并补 Enter / 空格），只给当前条目加 `nav__current` 与 `aria-current`。
@@ -466,18 +466,22 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   （自包含、无 `@import`）复制到 demo 资源里，`index.html` 用普通 `<link>` 引入 ——
   `LumoInjectionMixin` 需要从 `document.styleSheets` 读取 `@media lumo_*` 规则再注入各组件的
   Shadow DOM。
-- 端到端测试是 `demo/e2e` 下的独立 npm/TypeScript 项目（`@playwright/test`）：
-  `tests/showcase.spec.ts` 覆盖外壳 / 全路由遍历 / 历史前进后退 / 主题切换 / 窄屏抽屉，
-  `fields.spec.ts`、`overlays.spec.ts`、`data.spec.ts` 覆盖真实交互。运行
-  `./gradlew :demo:e2eTest`（它先跑 `:demo:e2eInstall` 与 `jsBrowserDistribution`，再依赖
-  `:ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers`）；不在 `check` 里，CI 在
-  `pagesSite` 之后单独执行。`tools/serve.mjs` 是套件自带的静态服务器，由
-  `playwright.config.ts` 的 `webServer` 启动。
-  `@playwright/test` 的版本要与 Kotlin Gradle 插件安装的 `playwright` 一致（当前都是 1.61.0），
-  这样两端共用 `%LOCALAPPDATA%/ms-playwright` 里同一份 Chromium；升级 KGP 后若浏览器版本不匹配，
-  需要在 `demo/e2e` 里补 `npx playwright install chromium`。
-- 写用例时的注意点：`vaadin-*` 的文案在 Shadow DOM 里，`toContainText` 只看 `<slot>` 外的文本，
-  所以断言浮层 / 徽标 / 侧边栏文案要用 `getByText` / `getByRole`（从 document 根开始，不要在
+- 端到端测试是 `demo` 的 JVM 目标里的 Playwright JUnit 5 套件（`demo/src/jvmTest/kotlin/demo/e2e`）：
+  `ShowcaseTest` 覆盖外壳 / 全路由遍历 / 历史前进后退 / 主题切换 / 窄屏抽屉，`FieldsTest`、
+  `OverlaysTest`、`DataTest` 覆盖真实交互。运行 `./gradlew :demo:e2eTest`（它先跑
+  `jsBrowserDistribution`，再依赖 `:ktjs-vaadin-web-components:kotlinInstallPlaywrightBrowsers`）；
+  不在 `check` 里，CI 在 `pagesSite` 之后单独执行。`DemoServer` 用 Hutool 的 `SimpleServer` 在
+  测试 JVM 内提供静态文件，`DemoOptions` 复刻原 Playwright Test 配置（baseUrl、`data-test`、
+  locale、timezone、viewport、trace 保留策略）。
+- `com.microsoft.playwright:playwright` 必须与 Kotlin Gradle 插件安装的 `playwright` npm 版本一致
+  （当前都是 1.61.0），这样 Java 驱动与 `kotlinInstallPlaywrightBrowsers` 共用
+  `%LOCALAPPDATA%/ms-playwright` 里同一份 Chromium；升级 KGP 后若浏览器版本不匹配，重新跑安装任务。
+- 并行执行按官方建议用类级并发（`demo/src/jvmTest/resources/junit-platform.properties`：
+  `mode.default=same_thread`、`mode.classes.default=concurrent`），Playwright 实例按线程创建。4 个
+  测试类并发约 13s，串行约 30s。不要改成方法级并发，也不要给任务加 `maxParallelForks`——多 JVM
+  方案实测更慢（每个 fork 都要自起服务端与浏览器）。
+- 写用例时的注意点：`vaadin-*` 的文案在 Shadow DOM 里，`containsText` / `hasText` 只看 `<slot>` 外的
+  文本，所以断言浮层 / 徽标 / 侧边栏文案要用 `getByText` / `getByRole`（从 document 根开始，不要在
   overlay 元素上再链式查找，Playwright 不会从它继续深入 shadow root），或用 `[part="number"]`
   之类的内部 part；勾选类控件要点内部 `input`（宿主的可点区域很大，点中心常常落空）。
 - `./gradlew pagesSite` 把 demo 与 `build/dokka/html` 组装到 `build/pages`：演示页在根目录，API 文档在
