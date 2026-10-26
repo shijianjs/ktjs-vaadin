@@ -1,5 +1,8 @@
 package vaadin.datepicker
 
+import js.reflect.unsafeCast
+import kotlin.js.Promise
+
 /** A calendar date as understood by the date picker helpers. */
 external interface DatePickerDate {
     var day: Double
@@ -29,10 +32,26 @@ external interface DatePickerDateMetadata {
 }
 
 /**
+ * 上游 `DatePickerDateMetadata[] | Promise<DatePickerDateMetadata[] | null | undefined>`。
+ *
+ * 用同名工厂函数包装返回值：同步返回的数组用 [DatePickerDateMetadataArrayOrPromise] 的数组重载，
+ * 异步加载用 Promise 重载。
+ */
+external interface DatePickerDateMetadataArrayOrPromise
+
+fun DatePickerDateMetadataArrayOrPromise(
+    value: Array<DatePickerDateMetadata>,
+): DatePickerDateMetadataArrayOrPromise = unsafeCast(value)
+
+fun DatePickerDateMetadataArrayOrPromise(
+    value: Promise<Array<DatePickerDateMetadata>?>,
+): DatePickerDateMetadataArrayOrPromise = unsafeCast(value)
+
+/**
  * Loads metadata for the given date range.
  *
- * May return the metadata directly, a [kotlin.js.Promise] of metadata, or `null`/`undefined` when
- * no date in the range has metadata. Because the return type is a union of all three, it is left
- * as `dynamic`.
+ * May return the metadata directly, a [Promise] of metadata, or `null`/`undefined` when no date in
+ * the range has metadata; the latter is expressed as a nullable return type.
  */
-typealias DatePickerDateMetadataProvider = (DatePickerDateRange) -> dynamic
+typealias DatePickerDateMetadataProvider =
+    (DatePickerDateRange) -> DatePickerDateMetadataArrayOrPromise?
