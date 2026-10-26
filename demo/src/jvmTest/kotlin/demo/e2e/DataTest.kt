@@ -25,7 +25,8 @@ class DataTest {
         assertTrue(cells.count() > 10)
 
         grid.locator("vaadin-checkbox").last().click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("已选"))).containsText("已选 1 行")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("rows selected")))
+            .containsText("1 rows selected")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -36,7 +37,7 @@ class DataTest {
         val column = sorted.locator("vaadin-grid-sort-column").first()
         assertThat(column).hasJSProperty("direction", "asc")
 
-        sorted.getByText("姓名", Locator.GetByTextOptions().setExact(true)).first().click()
+        sorted.getByText("Name", Locator.GetByTextOptions().setExact(true)).first().click()
         assertThat(column).hasJSProperty("direction", "desc")
     }
 
@@ -45,7 +46,7 @@ class DataTest {
         page.navigate("/#/tabs")
 
         val tabs = page.getByTestId("tabs")
-        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("设置")).click()
+        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Settings")).click()
         assertThat(tabs).hasJSProperty("selected", 2)
         assertThat(page.locator(".event-log")).containsText("selected-changed · 2")
     }
@@ -55,13 +56,13 @@ class DataTest {
         page.navigate("/#/tabsheet")
 
         val sheet = page.getByTestId("tab-sheet")
-        val firstPanel = sheet.getByText("这一页的内容由第一个面板提供。")
-        val thirdPanel = sheet.getByText("第三个面板。")
+        val firstPanel = sheet.getByText("The content of this tab comes from the first panel.")
+        val thirdPanel = sheet.getByText("The third panel.")
 
         assertThat(firstPanel).isVisible()
         assertThat(thirdPanel).isHidden()
 
-        sheet.locator("vaadin-tab", Locator.LocatorOptions().setHasText("权限")).click()
+        sheet.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Permissions")).click()
         assertThat(thirdPanel).isVisible()
         assertThat(firstPanel).isHidden()
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("selected"))).containsText("selected = 2")
@@ -73,13 +74,13 @@ class DataTest {
         page.navigate("/#/accordion")
 
         val accordion = page.getByTestId("accordion")
-        val panel = accordion.locator("vaadin-accordion-panel", Locator.LocatorOptions().setHasText("付款方式"))
-        assertThat(panel.getByText("面板二的内容")).isHidden()
+        val panel = accordion.locator("vaadin-accordion-panel", Locator.LocatorOptions().setHasText("Payment"))
+        assertThat(panel.getByText("Content of the second panel.")).isHidden()
 
         panel.locator("vaadin-accordion-heading").click()
-        assertThat(panel.getByText("面板二的内容")).isVisible()
+        assertThat(panel.getByText("Content of the second panel.")).isVisible()
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("展开第一项")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open the first panel")).click()
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("opened"))).containsText("opened = 0")
     }
 
@@ -100,8 +101,8 @@ class DataTest {
         page.navigate("/#/markdown")
 
         val markdown = page.getByTestId("markdown")
-        assertThat(markdown.locator("h1")).hasText("标题")
-        assertThat(markdown.locator("strong")).hasText("粗体")
+        assertThat(markdown.locator("h1")).hasText("Title")
+        assertThat(markdown.locator("strong")).hasText("bold")
         assertThat(markdown.locator("li")).hasCount(2)
     }
 
@@ -110,10 +111,10 @@ class DataTest {
         page.navigate("/#/virtual-list")
 
         val lists = page.locator("vaadin-virtual-list")
-        assertThat(lists.first()).containsText("第 1 行")
+        assertThat(lists.first()).containsText("Row 1")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("跳到第 300 行")).click()
-        assertThat(lists.nth(1)).containsText("行 300")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Go to row 300")).click()
+        assertThat(lists.nth(1)).containsText("Row 300")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -124,7 +125,7 @@ class DataTest {
 
         val live = page.getByTestId("badge-live").locator("""[part="number"]""")
         assertThat(live).hasText("0")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("加一")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Add one")).click()
         assertThat(live).hasText("1")
     }
 

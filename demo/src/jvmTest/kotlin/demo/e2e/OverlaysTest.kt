@@ -21,15 +21,15 @@ class OverlaysTest {
     fun `dialog opens with rendered content and closes from its footer`(page: Page) {
         page.navigate("/#/dialog")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("打开对话框")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open dialog")).click()
         val overlay = page.locator("vaadin-dialog-overlay[opened]")
         assertThat(overlay).isVisible()
 
         // Dialog content and title live in the overlay's shadow root, so they are asserted by text.
-        assertThat(page.getByText("对话框内容由 renderer 提供")).isVisible()
-        assertThat(page.getByText("示例对话框")).isVisible()
+        assertThat(page.getByText("The dialog content comes from renderer")).isVisible()
+        assertThat(page.getByText("Example dialog")).isVisible()
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("关闭").setExact(true)).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Close").setExact(true)).click()
         assertThat(overlay).isHidden()
         assertThat(page.locator(".event-log")).containsText("closed")
     }
@@ -38,14 +38,14 @@ class OverlaysTest {
     fun `dialog can refuse Esc and outside clicks`(page: Page) {
         page.navigate("/#/dialog")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("打开（自定义尺寸）")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open (custom size)")).click()
         val overlay = page.locator("vaadin-dialog-overlay[opened]")
-        assertThat(page.getByText("只能用下面的按钮关闭")).isVisible()
+        assertThat(page.getByText("Only the button below closes it.")).isVisible()
 
         page.keyboard().press("Escape")
         assertThat(overlay).isVisible()
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("关闭").setExact(true)).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Close").setExact(true)).click()
         assertThat(overlay).isHidden()
     }
 
@@ -53,26 +53,26 @@ class OverlaysTest {
     fun `confirm dialog reports confirm, reject and cancel`(page: Page) {
         page.navigate("/#/confirm-dialog")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("删除记录")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Delete record")).click()
         val overlay = page.locator("vaadin-confirm-dialog-overlay[opened]")
         assertThat(overlay).isVisible()
-        assertThat(page.getByText("删除这条记录？")).isVisible()
+        assertThat(page.getByText("Delete this record?")).isVisible()
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("删除").setExact(true)).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Delete").setExact(true)).click()
         assertThat(page.locator(".event-log").first()).containsText("confirm")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("打开三按钮对话框")).click()
-        assertThat(page.getByText("保存修改？")).isVisible()
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("放弃").setExact(true)).click()
-        assertThat(page.locator(".event-log").nth(1)).containsText("reject → 放弃")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open three-button dialog")).click()
+        assertThat(page.getByText("Save changes?")).isVisible()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Discard").setExact(true)).click()
+        assertThat(page.locator(".event-log").nth(1)).containsText("reject → Discard")
     }
 
     @RetryingTest(maxAttempts = 2)
     fun `notification shows at the requested position`(page: Page) {
         page.navigate("/#/notification")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("右上角")).click()
-        val card = page.locator("vaadin-notification-card", Page.LocatorOptions().setHasText("右上角的提示"))
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Top end")).click()
+        val card = page.locator("vaadin-notification-card", Page.LocatorOptions().setHasText("Message at the top end"))
         assertThat(card).isVisible()
 
         // `top-end` means the card sits in the top-right quadrant of the viewport.
@@ -82,7 +82,7 @@ class OverlaysTest {
         assertTrue(box.x + box.width / 2 > viewport.width / 2.0)
 
         page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("success")).click()
-        assertThat(page.locator("vaadin-notification-card", Page.LocatorOptions().setHasText("保存成功")))
+        assertThat(page.locator("vaadin-notification-card", Page.LocatorOptions().setHasText("Saved successfully")))
             .isVisible()
     }
 
@@ -90,11 +90,15 @@ class OverlaysTest {
     fun `persistent notification stays until it is closed`(page: Page) {
         page.navigate("/#/notification")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("显示常驻通知")).click()
-        val card = page.locator("vaadin-notification-card", Page.LocatorOptions().setHasText("这条通知会一直显示"))
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Show persistent notification")).click()
+        val card =
+            page.locator(
+                "vaadin-notification-card",
+                Page.LocatorOptions().setHasText("This notification stays visible"),
+            )
         assertThat(card).isVisible()
 
-        card.getByRole(AriaRole.BUTTON, Locator.GetByRoleOptions().setName("关闭")).click()
+        card.getByRole(AriaRole.BUTTON, Locator.GetByRoleOptions().setName("Close")).click()
         assertThat(card).isHidden()
     }
 
@@ -103,7 +107,7 @@ class OverlaysTest {
         page.navigate("/#/popover")
 
         page.getByTestId("popover-trigger").click()
-        val content = page.getByText("任意 DOM 都可以放进 popover 的默认插槽。")
+        val content = page.getByText("Any DOM goes into the popover's default slot.")
         assertThat(content).isVisible()
         assertThat(page.locator(".event-log")).containsText("opened-changed · true")
 
@@ -116,9 +120,9 @@ class OverlaysTest {
     fun `tooltip appears on hover`(page: Page) {
         page.navigate("/#/tooltip")
 
-        val trigger = page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("悬停我"))
+        val trigger = page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Hover me"))
         trigger.hover()
-        assertThat(page.getByText("这是按钮上的提示")).isVisible()
+        assertThat(page.getByText("Hint on the button")).isVisible()
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -128,7 +132,7 @@ class OverlaysTest {
         page.getByTestId("context-menu-surface").click(Locator.ClickOptions().setButton(MouseButton.RIGHT))
 
         // The menu renders its items into the light DOM once it is opened.
-        val item = page.locator("vaadin-context-menu-item", Page.LocatorOptions().setHasText("复制"))
+        val item = page.locator("vaadin-context-menu-item", Page.LocatorOptions().setHasText("Copy"))
         assertThat(item).isVisible()
 
         item.click()
@@ -139,11 +143,11 @@ class OverlaysTest {
     fun `bare overlay opens and closes from its own content`(page: Page) {
         page.navigate("/#/overlay")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("打开 overlay")).click()
-        val overlay = page.locator("vaadin-overlay", Page.LocatorOptions().setHasText("这是一个裸 overlay"))
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open overlay")).click()
+        val overlay = page.locator("vaadin-overlay", Page.LocatorOptions().setHasText("This is a bare overlay"))
         assertThat(overlay).isVisible()
 
-        overlay.getByRole(AriaRole.BUTTON, Locator.GetByRoleOptions().setName("关闭")).click()
+        overlay.getByRole(AriaRole.BUTTON, Locator.GetByRoleOptions().setName("Close")).click()
         assertThat(overlay).isHidden()
     }
 
@@ -158,9 +162,9 @@ class OverlaysTest {
             AriaRole.BUTTON,
             Locator.GetByRoleOptions().setName(Pattern.compile("log ?in|sign ?in|submit", Pattern.CASE_INSENSITIVE)),
         ).click()
-        assertThat(form).containsText(Pattern.compile("required|必填", Pattern.CASE_INSENSITIVE))
+        assertThat(form).containsText(Pattern.compile("required", Pattern.CASE_INSENSITIVE))
 
-        page.locator("vaadin-switch", Page.LocatorOptions().setHasText("显示错误状态")).click()
+        page.locator("vaadin-switch", Page.LocatorOptions().setHasText("Show error state")).click()
         assertThat(page.locator(".event-log")).containsText("error-changed · true")
     }
 }

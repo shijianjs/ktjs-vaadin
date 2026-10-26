@@ -1,5 +1,6 @@
 package demo
 
+import demo.ui.anchor
 import demo.ui.div
 import demo.ui.element
 import demo.ui.listen
@@ -31,15 +32,26 @@ import web.window.window
 private val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
 
 /** One collapsible sidebar group: the header button, the list it controls and the current state. */
-private class NavGroup(val toggle: HTMLButtonElement, val list: HTMLElement, var expanded: Boolean)
+private class NavGroup(
+    val group: Group,
+    val toggle: HTMLButtonElement,
+    val list: HTMLElement,
+    val label: HTMLElement,
+    var expanded: Boolean,
+)
 
 /**
- * Application shell: a fixed sidebar built once from [catalog], a top bar with the breadcrumb and
- * the Lumo light/dark switch, and the content area that hosts the current page.
+ * Application shell: a fixed sidebar built once from [catalog], a top bar with the breadcrumb, the
+ * language switch, the light/dark switch and the API reference link, and the content area that
+ * hosts the current page.
  *
- * The shell never rebuilds. Navigation swaps the single child of [contentHost] and keeps the built
- * pages cached, so component state (typed input, selected rows, opened panels) survives a trip to
- * another page and back — the same way a desktop app behaves.
+ * The shell never rebuilds structure. Navigation swaps the single child of [contentHost] and keeps
+ * the built pages cached, so component state (typed input, selected rows, opened panels) survives a
+ * trip to another page and back — the same way a desktop app behaves.
+ *
+ * A language switch is different from navigation: every page is built from copy resolved at build
+ * time, so the cached pages are dropped and the current route is built again. Chrome labels are
+ * updated in place.
  */
 class AppShell {
     private val contentHost = div("content__host")
@@ -52,9 +64,17 @@ class AppShell {
 
     private val pages = mutableMapOf<String, HTMLElement>()
 
-    private val lightButton: ButtonElement = createButton { textContent = "亮色" }
+    private val lightButton: ButtonElement = createButton()
 
-    private val darkButton: ButtonElement = createButton { textContent = "暗色" }
+    private val darkButton: ButtonElement = createButton()
+
+    private val zhButton: ButtonElement = createButton { textContent = Language.ZH.label }
+
+    private val enButton: ButtonElement = createButton { textContent = Language.EN.label }
+
+    private val menuButton: ButtonElement = createButton().withTheme("icon").withClass("topbar__menu")
+
+    private val apiLink = anchor("", API_DOCS_URL, "topbar__link", external = true)
 
     private val nav: HTMLElement = buildNav()
 
@@ -65,15 +85,23 @@ class AppShell {
 
     private var shownRoute: String? = null
 
+    private var currentRoute: String? = null
+
     init {
         lightButton.clickEvent.addHandler { switchTheme(false) }
         darkButton.clickEvent.addHandler { switchTheme(true) }
+        zhButton.clickEvent.addHandler { LanguageState.set(Language.ZH) }
+        enButton.clickEvent.addHandler { LanguageState.set(Language.EN) }
+        LanguageState.onChange { applyLanguage() }
+        syncChrome()
         syncThemeButtons()
+        syncLanguageButtons()
     }
 
     /** Renders [route], falling back to the overview when the fragment names an unknown page. */
     fun show(route: String) {
         val entry = catalogEntry(route) ?: catalogEntry(Router.DEFAULT_ROUTE) ?: return
+        currentRoute = entry.id
 
         if (shownRoute != entry.id) {
             shownRoute = entry.id
@@ -83,8 +111,8 @@ class AppShell {
                 item.ariaCurrent = if (active) "page" else null
             }
             // Reveal the active route even when the user left its group collapsed.
-            setGroupExpanded(entry.group, true)
-            breadcrumb.textContent = "${entry.group} / ${entry.meta.title}"
+            setGroupExpanded(entry.group.id, true)
+            breadcrumb.textContent = "${entry.group.label} / ${entry.meta.title}"
             document.title = "${entry.meta.title} · ktjs-vaadin"
         }
 
@@ -106,6 +134,28 @@ class AppShell {
         syncThemeButtons()
     }
 
+    /**
+     * Rebuilds the copy of the current route: page trees are built from [tr] at construction time,
+     * so switching the language drops the cache instead of walking every text node.
+     */
+    private fun applyLanguage() {
+        syncChrome()
+        syncThemeButtons()
+        syncLanguageButtons()
+        navItems.forEach { (id, item) -> catalogEntry(id)?.let { item.textContent = it.meta.title } }
+        navGroups.values.forEach { it.label.textContent = it.group.label }
+        pages.clear()
+        shownRoute = null
+        currentRoute?.let { show(it) }
+    }
+
+    private fun syncChrome() {
+        lightButton.textContent = tr("亮色", "Light")
+        darkButton.textContent = tr("暗色", "Dark")
+        menuButton.ariaLabel = tr("显示导航", "Show navigation")
+        apiLink.textContent = tr("API 文档", "API reference")
+    }
+
     private fun syncThemeButtons() {
         val dark = Theme.isDark
         lightButton.withTheme(if (dark) "tertiary" else "primary")
@@ -114,8 +164,16 @@ class AppShell {
         darkButton.ariaPressed = if (dark) "true" else "false"
     }
 
-    private fun setGroupExpanded(group: String, expanded: Boolean) {
-        val navGroup = navGroups[group] ?: return
+    private fun syncLanguageButtons() {
+        val chinese = LanguageState.current == Language.ZH
+        zhButton.withTheme(if (chinese) "primary" else "tertiary")
+        enButton.withTheme(if (chinese) "tertiary" else "primary")
+        zhButton.ariaPressed = if (chinese) "true" else "false"
+        enButton.ariaPressed = if (chinese) "false" else "true"
+    }
+
+    private fun setGroupExpanded(groupId: String, expanded: Boolean) {
+        val navGroup = navGroups[groupId] ?: return
         navGroup.expanded = expanded
         navGroup.toggle.ariaExpanded = if (expanded) "true" else "false"
         navGroup.list.setHidden(!expanded)
@@ -156,17 +214,18 @@ class AppShell {
             }
 
             val chevron = createIcon { icon = "lumo:angle-down" }.withClass("nav__group-chevron")
-            val toggle = element(HtmlTagName.button, "nav__group-title", span(group), chevron)
+            val groupLabel = span(group.label)
+            val toggle = element(HtmlTagName.button, "nav__group-title", groupLabel, chevron)
             toggle.type = ButtonType.Companion.button
-            toggle.dataset["group"] = group
+            toggle.dataset["group"] = group.id
             toggle.clickEvent.addHandler {
-                val current = navGroups.getValue(group)
-                setGroupExpanded(group, !current.expanded)
+                val current = navGroups.getValue(group.id)
+                setGroupExpanded(group.id, !current.expanded)
             }
 
-            navGroups[group] = NavGroup(toggle, groupNav, expanded = false)
+            navGroups[group.id] = NavGroup(group, toggle, groupNav, groupLabel, expanded = false)
             // `show()` expands the group of the initial route, so only that one starts open.
-            setGroupExpanded(group, false)
+            setGroupExpanded(group.id, false)
 
             side.append(div("nav__group", toggle, groupNav))
         }
@@ -175,10 +234,16 @@ class AppShell {
     }
 
     private fun buildMain(): HTMLElement {
-        val menuButton = createButton().withTheme("icon").withClass("topbar__menu")
         menuButton.append(createIcon { icon = "lumo:menu" })
-        menuButton.ariaLabel = "显示导航"
         menuButton.clickEvent.addHandler { nav.classList.toggle(ClassName("shell__nav--open")) }
+
+        val actions =
+            div(
+                "topbar__actions",
+                apiLink,
+                div("lang-switch", zhButton, enButton),
+                div("theme-switch", lightButton, darkButton),
+            )
 
         val topbar =
             element(
@@ -186,7 +251,7 @@ class AppShell {
                 "topbar",
                 menuButton,
                 breadcrumb,
-                div("theme-switch", lightButton, darkButton),
+                actions,
             )
 
         val content = element(HtmlTagName.main, "content", contentHost)

@@ -11,6 +11,8 @@ import web.dom.document
  * created through the wrapper factories and configured with typed properties.
  */
 fun main() {
+    // The pages resolve their copy when they are built, so the language has to be settled first.
+    LanguageState.init()
     // Registers the `lumo:*` icon names used by the shell and by the icon examples.
     registerLumoIcons()
     Theme.applyStored()

@@ -460,14 +460,28 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   - `AppShell.kt`：侧边栏 + 顶栏 + 内容区，只构建一次；导航只替换 `.content__host` 的单个子节点，
     已经构建过的页面按路由缓存，因此来回切换不会丢组件状态。
   - `Router.kt`：`#/<route>` hash 路由，`hashchange` 驱动前进 / 后退。
+  - `Language.kt`：中英切换。所有会显示的文案在构建时经 `tr(zh, en)` 取值，页面元信息用
+    `bi(zh, en)` 包成 `Bilingual`（读取时解析）；`LanguageState` 首次跟随
+    `navigator.languages[0]`，显式切换写入 `localStorage` 的 `ktjs-vaadin-language` 并同步
+    `<html lang>`。切换语言时 `AppShell` 丢弃页面缓存、重建当前路由，同时就地更新侧边栏、
+    分组标题与顶栏按钮；不要把语言状态做成字段级响应式刷新。
   - `Theme.kt`：Lumo 亮 / 暗切换，`theme="dark"` 设在 `<html>` 上（`color-scheme.css` 用
     `[theme~='dark']` 切换整套令牌），选择存 `localStorage`，`index.html` 里有一小段内联脚本在首帧前
     应用，避免闪白。
   - `ui/`：DOM 构建辅助（`div` / `paragraph` / `anchor` …）、页面骨架（`page` / `section` /
     `example`）、`Readout`（就地更新的读值）与 `EventLog`（滚动事件流）。
-- 每个页面必须提供两条链接：Vaadin 官方文档（`https://vaadin.com/docs/latest/zh/components/<slug>`，
-  没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）与 GitHub 上的 Kotlin 源码
-  （`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）。端到端用例会逐页校验这两条链接。
+- 每个页面必须提供三条链接：Vaadin 官方文档（中文模式 `https://vaadin.com/docs/latest/zh/components/<slug>`，
+  英文模式自动改为 `/latest/components/`；没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）、
+  GitHub 上的 Kotlin 源码（`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）与 Dokka 的组件包页。
+  API 深链由 `Catalog.kt` 的 `componentApiUrl` 按路由 id 推导为
+  `api/ktjs-vaadin-web-components/vaadin.<去掉连字符的 id>/index.html`（`overview` 指向模块索引、
+  `theming` 指向 `vaadin.lumostyles`），必须是 `api/` 开头的相对路径。端到端用例会逐页校验三条链接。
+- 所有演示文案（导航、标题、摘要、分区说明、示例标签、读值、事件日志）都要走 `tr` / `bi`；新增页面或
+  组件时不要留下硬编码的中文或英文。`PageMeta.title` / `summary` 在创建时传入 `bi(...)`，页面内部的
+  文案在 builder 里调用 `tr(...)`，这样切换语言时重建页面即可整体更新。
+- 端到端用例默认以英文运行（`DemoOptions` 的 `locale = en-US`，`localStorage` 每个测试上下文都是空的），
+  因此断言用英文文案；切换语言、分组折叠等定位用稳定的 `data-group` id（`overview`、`fields` …），
+  不要用翻译后的分组标题。
 - 侧边栏**不要**给 `vaadin-side-nav-item` 设 `path`：组件用 `document.location.pathname` 判断
   `current`，而 hash 路由的 pathname 从不变化，设了 `path` 会让所有条目都变成「当前页」。改为由
   `AppShell` 处理点击（并补 Enter / 空格），只给当前条目加 `nav__current` 与 `aria-current`。
@@ -498,7 +512,8 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   overlay 元素上再链式查找，Playwright 不会从它继续深入 shadow root），或用 `[part="number"]`
   之类的内部 part；勾选类控件要点内部 `input`（宿主的可点区域很大，点中心常常落空）。
 - `./gradlew pagesSite` 把 demo 与 `build/dokka/html` 组装到 `build/pages`：演示页在根目录，API 文档在
-  `api/`。演示页内部链接使用相对路径。
+  `api/`。演示页内部链接使用相对路径。Dokka 的包目录名带点（`vaadin.textfield`），拼 API 链接时不要
+  写成 `vaadintextfield` 这类形式；新增组件页后可用 `pagesSite` 产物核对包目录是否存在。
 - Dokka 2.2.0 同时应用到根项目和所有 wrapper 子模块；聚合入口是根项目的 `dependencies { dokka(...) }`，
   任务为 `dokkaGeneratePublicationHtml`（2.x 已移除旧的 `dokkaHtmlMultiModule`）。
 - `.github/workflows/pages.yml` 只有 `workflow_dispatch`：站点更新在内容值得上线后手动执行

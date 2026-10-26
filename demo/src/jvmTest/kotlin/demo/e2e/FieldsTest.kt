@@ -7,6 +7,7 @@ import com.microsoft.playwright.junit.UsePlaywright
 import com.microsoft.playwright.options.AriaRole
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.util.regex.Pattern
 import org.junitpioneer.jupiter.RetryingTest
 
 /**
@@ -21,16 +22,17 @@ class FieldsTest {
 
         val field = page.getByTestId("text-field-basic")
         field.locator("input").fill("Ada")
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("当前值"))).containsText("Ada")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText(Pattern.compile("Value:"))))
+            .containsText("Ada")
 
         val validated = page.getByTestId("text-field-validated")
         validated.locator("input").fill("AB")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验").setExact(true)).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("失败")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate").setExact(true)).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Failed")
 
         validated.locator("input").fill("abc")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验").setExact(true)).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("通过")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate").setExact(true)).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Valid")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -39,14 +41,14 @@ class FieldsTest {
 
         val area = page.getByTestId("text-area-basic")
         area.locator("textarea").fill("你好")
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("字数"))).containsText("2 / 200")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Characters:"))).containsText("2 / 200")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验")).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("失败")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate")).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Failed")
 
         page.getByTestId("text-area-required").locator("textarea").fill("有内容了")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验")).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("通过")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate")).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Valid")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -81,17 +83,17 @@ class FieldsTest {
 
         val field = page.getByTestId("number-field-basic")
         field.locator("input").fill("42")
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("当前值"))).containsText("42")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Value:"))).containsText("42")
 
         // min / max do not invalidate the field on their own; the page validates the value itself.
         val ranged = page.getByTestId("number-field-range")
         ranged.locator("input").fill("500")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验")).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("失败")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate")).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Failed")
 
         ranged.locator("input").fill("50")
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("校验")).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("校验结果"))).containsText("通过")
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Validate")).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Result:"))).containsText("Valid")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -105,9 +107,9 @@ class FieldsTest {
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("checked")))
             .containsText("checked = true")
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("程序化切换")).click()
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Toggle from code")).click()
         assertThat(box).hasJSProperty("checked", false)
-        assertThat(page.locator(".event-log")).containsText("checked-changed（程序设置）· false")
+        assertThat(page.locator(".event-log")).containsText("checked-changed (from code) · false")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -115,7 +117,7 @@ class FieldsTest {
         page.navigate("/#/switch")
 
         page.getByTestId("switch-basic").locator("input").click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("状态"))).containsText("已关闭")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("State:"))).containsText("off")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -135,7 +137,7 @@ class FieldsTest {
         page.navigate("/#/radio-group")
 
         val group = page.getByTestId("radio-group")
-        group.locator("vaadin-radio-button", Locator.LocatorOptions().setHasText("专业版"))
+        group.locator("vaadin-radio-button", Locator.LocatorOptions().setHasText("Pro"))
             .locator("input")
             .click()
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("value ="))).containsText("pro")
@@ -174,7 +176,7 @@ class FieldsTest {
         slider.locator("input").first().focus()
         page.keyboard().press("ArrowRight")
 
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("数值")).first()).containsText("45")
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Value =")).first()).containsText("45")
     }
 
     @RetryingTest(maxAttempts = 2)

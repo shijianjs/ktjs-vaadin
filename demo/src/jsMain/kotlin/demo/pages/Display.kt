@@ -3,8 +3,10 @@ package demo.pages
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
+import demo.bi
 import demo.ui.EventLog
 import demo.ui.PageMeta
+import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.div
@@ -17,6 +19,7 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
+import demo.tr
 import vaadin.avatar.createAvatar
 import vaadin.avatargroup.AvatarGroupItem
 import vaadin.avatargroup.createAvatarGroup
@@ -40,8 +43,8 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Avatar",
-                    summary = "用户头像：缩写、图片、颜色索引与悬停提示。",
+                    title = bi("Avatar", "Avatar"),
+                    summary = bi("用户头像：缩写、图片、颜色索引与悬停提示。", "User avatars: initials, images, colour index and hover tooltip."),
                     docsUrl = "$DOCS_BASE/avatar",
                     sourcePath = "pages/Display.kt",
                 ),
@@ -52,10 +55,10 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Avatar Group",
-                    summary = "头像组：超出 maxItemsVisible 的部分折叠成计数。",
+                    title = bi("Avatar Group", "Avatar Group"),
+                    summary = bi("头像组：超出 maxItemsVisible 的部分折叠成计数。", "Avatar group: items beyond maxItemsVisible collapse into a counter."),
                     docsUrl = "$DOCS_BASE/avatar",
-                    docsNote = "Avatar Group 与 Avatar 共用一页官方文档。",
+                    docsNote = bi("Avatar Group 与 Avatar 共用一页官方文档。", "Avatar Group shares the Avatar documentation page."),
                     sourcePath = "pages/Display.kt",
                 ),
             builder = ::buildAvatarGroupPage,
@@ -65,8 +68,8 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Badge",
-                    summary = "数字或文本标记：number 决定显示的数字，theme 决定颜色。",
+                    title = bi("Badge", "Badge"),
+                    summary = bi("数字或文本标记：number 决定显示的数字，theme 决定颜色。", "Numeric or text badge: number sets the displayed count and theme sets the colour."),
                     docsUrl = "$DOCS_BASE/badge",
                     sourcePath = "pages/Display.kt",
                 ),
@@ -77,8 +80,8 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Icon",
-                    summary = "图标元素：icon 名称、尺寸、SVG symbol 与字体图标。",
+                    title = bi("Icon", "Icon"),
+                    summary = bi("图标元素：icon 名称、尺寸、SVG symbol 与字体图标。", "Icon element: icon name, size, SVG symbol and font icons."),
                     docsUrl = "$DOCS_BASE/icons",
                     sourcePath = "pages/Display.kt",
                 ),
@@ -89,8 +92,8 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Icon Sets",
-                    summary = "注册额外的图标集：@vaadin/icons 提供 vaadin:* 的几百个图标。",
+                    title = bi("Icon Sets", "Icon Sets"),
+                    summary = bi("注册额外的图标集：@vaadin/icons 提供 vaadin:* 的几百个图标。", "Register additional icon sets: @vaadin/icons provides hundreds of vaadin:* icons."),
                     docsUrl = "$DOCS_BASE/icons",
                     sourcePath = "pages/Display.kt",
                 ),
@@ -101,8 +104,8 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Progress Bar",
-                    summary = "进度条：确定值与不确定状态，min / max 决定比例。",
+                    title = bi("Progress Bar", "Progress Bar"),
+                    summary = bi("进度条：确定值与不确定状态，min / max 决定比例。", "Progress bar: determinate value and indeterminate state; min / max set the ratio."),
                     docsUrl = "$DOCS_BASE/progress-bar",
                     sourcePath = "pages/Display.kt",
                 ),
@@ -113,10 +116,18 @@ val displayEntries: List<CatalogEntry> =
             group = Groups.DISPLAY,
             meta =
                 PageMeta(
-                    title = "Input Container",
-                    summary = "输入类字段的底层容器：前缀 / 后缀插槽、invalid 与 readonly 状态。",
+                    title = bi("Input Container", "Input Container"),
+                    summary =
+                        bi(
+                            "输入类字段的底层容器：前缀 / 后缀插槽、invalid 与 readonly 状态。",
+                            "Low-level container for input fields: prefix/suffix slots plus invalid and readonly states.",
+                        ),
                     docsUrl = "$DOCS_BASE/text-field",
-                    docsNote = "vaadin-input-container 是内部基础元素，官方文档见 Text Field。",
+                    docsNote =
+                        bi(
+                            "vaadin-input-container 是内部基础元素，官方文档见 Text Field。",
+                            "vaadin-input-container is an internal building block; the official documentation is under Text Field.",
+                        ),
                     sourcePath = "pages/Display.kt",
                 ),
             builder = ::buildInputContainerPage,
@@ -135,10 +146,14 @@ private const val AVATAR_DATA_URI =
         "%3Cpath d='M12 80c0-16 12-26 28-26s28 10 28 26z' fill='%23fff'/%3E" +
         "%3C/svg%3E"
 
-private fun buildAvatarPage(meta: PageMeta): HTMLElement {
+private fun buildAvatarPage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    val basic = section("基本用法", "有 img 时显示图片，否则显示 abbr；name 用作无障碍名称。")
+    val basic =
+        section(
+            tr("基本用法", "Basic usage"),
+            tr("有 img 时显示图片，否则显示 abbr；name 用作无障碍名称。", "Shows img when present, otherwise abbr; name is used as the accessible name."),
+        )
     basic.body.append(
         example(
             null,
@@ -154,19 +169,23 @@ private fun buildAvatarPage(meta: PageMeta): HTMLElement {
                     colorIndex = 1.0
                     withTooltip = true
                 },
-                createAvatar { name = "无缩写" },
+                createAvatar { name = tr("无缩写", "No initials") },
             ),
         ),
     )
     view.body.append(basic.root)
 
-    val colors = section("颜色索引", "colorIndex 选择 Lumo 的用户色板，共 7 个颜色。")
+    val colors =
+        section(
+            tr("颜色索引", "Colour index"),
+            tr("colorIndex 选择 Lumo 的用户色板，共 7 个颜色。", "colorIndex selects one of the seven Lumo user colours."),
+        )
     colors.body.append(
         example(
             null,
             row(*(0..6).map { index ->
                 createAvatar {
-                    name = "用户 $index"
+                    name = tr("用户 $index", "User $index")
                     abbr = "U$index"
                     colorIndex = index.toDouble()
                 }
@@ -175,13 +194,20 @@ private fun buildAvatarPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(colors.root)
 
-    val image = section("图片", "img 使用头像图片，同时保留 abbr 作为加载失败时的回退。")
+    val image =
+        section(
+            tr("图片", "Image"),
+            tr(
+                "img 使用头像图片，同时保留 abbr 作为加载失败时的回退。",
+                "img supplies the avatar image, while abbr remains the fallback when loading fails.",
+            ),
+        )
     image.body.append(
         example(
             null,
             row(
                 createAvatar {
-                    name = "带图片的头像"
+                    name = tr("带图片的头像", "Avatar with image")
                     abbr = "IMG"
                     img = AVATAR_DATA_URI
                 },
@@ -190,10 +216,10 @@ private fun buildAvatarPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(image.root)
 
-    return view.root
+    return view
 }
 
-private fun buildAvatarGroupPage(meta: PageMeta): HTMLElement {
+private fun buildAvatarGroupPage(meta: PageMeta): PageView {
     val view = page(meta)
 
     val items: Array<AvatarGroupItem> =
@@ -207,14 +233,25 @@ private fun buildAvatarGroupPage(meta: PageMeta): HTMLElement {
             ])""",
         )
 
-    val basic = section("基本用法", "items 里每个对象描述一个头像，超过 maxItemsVisible 的部分折叠成 +N。")
+    val basic =
+        section(
+            tr("基本用法", "Basic usage"),
+            tr(
+                "items 里每个对象描述一个头像，超过 maxItemsVisible 的部分折叠成 +N。",
+                "Each object in items describes an avatar; items beyond maxItemsVisible collapse into +N.",
+            ),
+        )
     val group = createAvatarGroup { maxItemsVisible = 3.0 }
     group.dataset["test"] = "avatar-group"
     group.items = items
     basic.body.append(example(null, group))
     view.body.append(basic.root)
 
-    val limit = section("可见数量", "maxItemsVisible 越小，折叠得越多。")
+    val limit =
+        section(
+            tr("可见数量", "Visible items"),
+            tr("maxItemsVisible 越小，折叠得越多。", "The smaller maxItemsVisible, the more avatars collapse."),
+        )
     val readout = Readout("maxItemsVisible = 3")
     val limited = createAvatarGroup { maxItemsVisible = 3.0 }
     limited.items = items
@@ -235,13 +272,20 @@ private fun buildAvatarGroupPage(meta: PageMeta): HTMLElement {
     limit.body.append(example(null, column(limited, slider, readout.root)))
     view.body.append(limit.root)
 
-    return view.root
+    return view
 }
 
-private fun buildBadgePage(meta: PageMeta): HTMLElement {
+private fun buildBadgePage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    val basic = section("基本用法", "number 是显示的数字；没有 number 时显示默认插槽文本。")
+    val basic =
+        section(
+            tr("基本用法", "Basic usage"),
+            tr(
+                "number 是显示的数字；没有 number 时显示默认插槽文本。",
+                "number is the displayed count; without number the default slot text is shown.",
+            ),
+        )
     val badge = createBadge { number = 4.0 }
     badge.dataset["test"] = "badge"
     basic.body.append(
@@ -256,7 +300,11 @@ private fun buildBadgePage(meta: PageMeta): HTMLElement {
     )
     view.body.append(basic.root)
 
-    val themes = section("主题变体", "success / error / contrast / pill 改变颜色与形状。")
+    val themes =
+        section(
+            tr("主题变体", "Theme variants"),
+            tr("success / error / contrast / pill 改变颜色与形状。", "success / error / contrast / pill change colour and shape."),
+        )
     themes.body.append(
         example(
             null,
@@ -270,12 +318,16 @@ private fun buildBadgePage(meta: PageMeta): HTMLElement {
     )
     view.body.append(themes.root)
 
-    val dynamic = section("动态更新", "number 可以随时修改，徽标会立即更新。")
+    val dynamic =
+        section(
+            tr("动态更新", "Live updates"),
+            tr("number 可以随时修改，徽标会立即更新。", "number can change at any time and the badge updates immediately."),
+        )
     val live = createBadge { number = 0.0 }
     live.dataset["test"] = "badge-live"
     val log = EventLog(3)
     val addButton =
-        createButton { textContent = "加一" }.withTheme("tertiary").apply {
+        createButton { textContent = tr("加一", "Add one") }.withTheme("tertiary").apply {
             clickEvent.addHandler {
                 live.number += 1.0
                 log.add("number = ${live.number}")
@@ -284,13 +336,20 @@ private fun buildBadgePage(meta: PageMeta): HTMLElement {
     dynamic.body.append(example(null, column(row(live, addButton), log.root)))
     view.body.append(dynamic.root)
 
-    return view.root
+    return view
 }
 
-private fun buildIconPage(meta: PageMeta): HTMLElement {
+private fun buildIconPage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    val basic = section("基本用法", "icon 属性接受 图标集:名称，Lumo 图标集在本页启动时已注册。")
+    val basic =
+        section(
+            tr("基本用法", "Basic usage"),
+            tr(
+                "icon 属性接受 图标集:名称，Lumo 图标集在本页启动时已注册。",
+                "The icon property takes icon-set:name; the Lumo icon set is registered when the page starts.",
+            ),
+        )
     basic.body.append(
         example(
             null,
@@ -306,7 +365,7 @@ private fun buildIconPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(basic.root)
 
-    val sizing = section("尺寸", "size 以像素为单位设置图标大小。")
+    val sizing = section(tr("尺寸", "Size"), tr("size 以像素为单位设置图标大小。", "size sets the icon size in pixels."))
     sizing.body.append(
         example(
             null,
@@ -320,14 +379,28 @@ private fun buildIconPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(sizing.root)
 
-    val fontIcon = section("字体图标", "ligature + fontFamily 使用图标字体，char 直接指定字符。")
+    val fontIcon =
+        section(
+            tr("字体图标", "Font icons"),
+            tr(
+                "fontFamily 选择图标字体，char 传单个字符或十六进制码点（Lumo 的 checkmark 是 ea0f、angle-down 是 ea04）。" +
+                    "Lumo 字体按码点映射，不支持 ligature；连字只适用于本身带连字的第三方图标字体。",
+                "fontFamily selects the icon font and char takes a single character or a hexadecimal code point " +
+                    "(Lumo's checkmark is ea0f, angle-down is ea04). Lumo fonts map code points and do not support " +
+                    "ligatures; ligatures only work with third-party icon fonts that provide them.",
+            ),
+        )
     fontIcon.body.append(
         example(
             null,
             row(
                 createIcon {
-                    ligature = "check"
                     fontFamily = "lumo-icons"
+                    char = "ea0f"
+                },
+                createIcon {
+                    fontFamily = "lumo-icons"
+                    char = "ea04"
                 },
                 createIcon { char = "★" },
             ),
@@ -335,16 +408,23 @@ private fun buildIconPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(fontIcon.root)
 
-    return view.root
+    return view
 }
 
-private fun buildIconsPage(meta: PageMeta): HTMLElement {
+private fun buildIconsPage(meta: PageMeta): PageView {
     val view = page(meta)
 
     // The `vaadin` icon set is a few hundred SVGs; registering it here keeps the cost on this page.
     registerVaadinIcons()
 
-    val basic = section("vaadin 图标集", "registerVaadinIcons() 注册 @vaadin/icons；之后可以直接用 vaadin: 前缀。")
+    val basic =
+        section(
+            tr("vaadin 图标集", "The vaadin icon set"),
+            tr(
+                "registerVaadinIcons() 注册 @vaadin/icons；之后可以直接用 vaadin: 前缀。",
+                "registerVaadinIcons() registers @vaadin/icons; the vaadin: prefix is then available.",
+            ),
+        )
     basic.body.append(
         example(
             null,
@@ -360,7 +440,14 @@ private fun buildIconsPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(basic.root)
 
-    val both = section("同时使用两个图标集", "图标集按名字隔离，lumo: 与 vaadin: 可以在同一页混用。")
+    val both =
+        section(
+            tr("同时使用两个图标集", "Mixing two icon sets"),
+            tr(
+                "图标集按名字隔离，lumo: 与 vaadin: 可以在同一页混用。",
+                "Icon sets are isolated by name, so lumo: and vaadin: can be mixed on the same page.",
+            ),
+        )
     both.body.append(
         example(
             null,
@@ -374,13 +461,20 @@ private fun buildIconsPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(both.root)
 
-    return view.root
+    return view
 }
 
-private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
+private fun buildProgressBarPage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    val basic = section("基本用法", "value 与 min / max 决定进度；不确定进度用 indeterminate。")
+    val basic =
+        section(
+            tr("基本用法", "Basic usage"),
+            tr(
+                "value 与 min / max 决定进度；不确定进度用 indeterminate。",
+                "value together with min / max sets the progress; use indeterminate for unknown progress.",
+            ),
+        )
     val progress = createProgressBar {
         min = 0.0
         max = 100.0
@@ -396,7 +490,7 @@ private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
             }
         }
     val resetButton =
-        createButton { textContent = "重置" }.withTheme("tertiary").apply {
+        createButton { textContent = tr("重置", "Reset") }.withTheme("tertiary").apply {
             clickEvent.addHandler {
                 progress.value = 0.0
                 readout.set("value = 0")
@@ -405,7 +499,11 @@ private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
     basic.body.append(example(null, column(progress, row(addButton, resetButton, readout.root))))
     view.body.append(basic.root)
 
-    val indeterminate = section("不确定进度", "indeterminate 打开后忽略 value，显示循环动画。")
+    val indeterminate =
+        section(
+            tr("不确定进度", "Indeterminate"),
+            tr("indeterminate 打开后忽略 value，显示循环动画。", "When indeterminate is on, value is ignored and a looping animation is shown."),
+        )
     val indeterminateBar = createProgressBar()
     indeterminateBar.indeterminate = true
     val toggle =
@@ -417,7 +515,7 @@ private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
     indeterminate.body.append(example(null, column(indeterminateBar, toggle)))
     view.body.append(indeterminate.root)
 
-    val custom = section("自定义范围", "min / max 不必是 0-100。")
+    val custom = section(tr("自定义范围", "Custom range"), tr("min / max 不必是 0-100。", "min / max do not have to be 0-100."))
     custom.body.append(
         example(
             null,
@@ -430,16 +528,20 @@ private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(custom.root)
 
-    return view.root
+    return view
 }
 
-private fun buildInputContainerPage(meta: PageMeta): HTMLElement {
+private fun buildInputContainerPage(meta: PageMeta): PageView {
     val view = page(meta)
 
     val basic =
         section(
-            "基本用法",
-            "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
+            tr("基本用法", "Basic usage"),
+            tr(
+                "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
+                "The container only handles layout and state; the input element is supplied by the caller. " +
+                    "The prefix/suffix slots hold icons or buttons.",
+            ),
         )
     val container = createInputContainer()
     container.dataset["test"] = "input-container"
@@ -455,20 +557,27 @@ private fun buildInputContainerPage(meta: PageMeta): HTMLElement {
     basic.body.append(example(null, container))
     view.body.append(basic.root)
 
-    val states = section("状态", "readonly / invalid / disabled 三个属性直接对应视觉状态。")
+    val states =
+        section(
+            tr("状态", "States"),
+            tr(
+                "readonly / invalid / disabled 三个属性直接对应视觉状态。",
+                "The readonly / invalid / disabled properties map directly to visual states.",
+            ),
+        )
     states.body.append(
         example(
             null,
             row(
-                plainContainer("只读", readonly = true),
-                plainContainer("无效", invalid = true),
-                plainContainer("禁用", disabled = true),
+                plainContainer(tr("只读", "Read-only"), readonly = true),
+                plainContainer(tr("无效", "Invalid"), invalid = true),
+                plainContainer(tr("禁用", "Disabled"), disabled = true),
             ),
         ),
     )
     view.body.append(states.root)
 
-    return view.root
+    return view
 }
 
 /** Builds an input container with a plain text input inside, for the state examples. */

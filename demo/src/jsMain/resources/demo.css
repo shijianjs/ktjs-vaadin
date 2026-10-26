@@ -146,6 +146,25 @@ body {
     display: none;
 }
 
+.topbar__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lumo-space-s);
+    flex: none;
+}
+
+.topbar__link {
+    font-size: var(--lumo-font-size-s);
+    color: var(--lumo-primary-text-color);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.topbar__link:hover {
+    text-decoration: underline;
+}
+
+.lang-switch,
 .theme-switch {
     display: inline-flex;
     gap: var(--lumo-space-xs);

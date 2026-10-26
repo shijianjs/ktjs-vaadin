@@ -3,14 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="ktjs-vaadin 组件展示：免费版 Vaadin Web Components 的 Kotlin/JS 封装。">
-    <title>ktjs-vaadin · 组件展示</title>
+    <meta name="description" content="ktjs-vaadin component showcase: Kotlin/JS wrappers for the free Vaadin Web Components. 中英双语组件演示。">
+    <title>ktjs-vaadin · Component showcase</title>
     <!-- Lumo is a regular stylesheet: LumoInjectionMixin reads the `@media lumo_*` blocks from the
          document style sheets and copies them into each component's Shadow DOM. -->
     <link rel="stylesheet" href="lumo.css">
     <link rel="stylesheet" href="demo.css">
     <script src="demo.js" defer></script>
     <script>
+        // The demo follows the browser language until the user picks one; mirror that on <html> as
+        // early as possible so assistive technology sees the right language before the bundle runs.
+        (() => {
+            try {
+                const stored = localStorage.getItem('ktjs-vaadin-language');
+                const preferred = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+                const code = stored || (preferred.toLowerCase().startsWith('zh') ? 'zh' : 'en');
+                document.documentElement.lang = code === 'zh' ? 'zh-CN' : 'en';
+            } catch (ignored) {
+                // Private mode with storage disabled: LanguageState detects the browser language.
+            }
+        })();
         // Applied before first paint so a stored dark preference does not flash the light theme.
         // `theme="dark"` on <html> is the Lumo mechanism: color-scheme.css keys the dark token set
         // off `[theme~='dark']`.
@@ -26,6 +38,6 @@
     </script>
 </head>
 <body>
-<noscript>这个演示页面由 Kotlin/JS 构建，需要启用 JavaScript。</noscript>
+<noscript>This showcase is built with Kotlin/JS and needs JavaScript. 这个演示页面由 Kotlin/JS 构建，需要启用 JavaScript。</noscript>
 </body>
 </html>

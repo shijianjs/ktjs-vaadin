@@ -6,6 +6,7 @@ import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.junit.UsePlaywright
 import java.util.regex.Pattern
 import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.junit.jupiter.api.Timeout
 import org.junitpioneer.jupiter.RetryingTest
@@ -45,12 +46,12 @@ class ShowcaseTest {
     @RetryingTest(maxAttempts = 2)
     fun `renders the shell, the sidebar groups and the component index`(page: Page) {
         assertThat(page).hasTitle(Pattern.compile("ktjs-vaadin"))
-        assertThat(page.locator(".page__title")).hasText("组件总览")
+        assertThat(page.locator(".page__title")).hasText("Component overview")
 
         val groups = page.locator(".nav__group-title").allTextContents()
         assertTrue(groups.size >= 9)
-        assertTrue(groups.contains("输入字段"))
-        assertTrue(groups.contains("数据展示"))
+        assertTrue(groups.contains("Input fields"))
+        assertTrue(groups.contains("Data display"))
 
         // Every component has a card in the index and an entry in the sidebar.
         val cards = page.locator(".component-card").count()
@@ -67,9 +68,9 @@ class ShowcaseTest {
     @RetryingTest(maxAttempts = 2)
     fun `filters the component index`(page: Page) {
         val search = page.locator(".page__body input").first()
-        search.fill("grid")
+        search.fill("virtual")
         assertThat(page.locator(".component-card:visible")).hasCount(1)
-        assertThat(page.locator(".component-card:visible")).hasAttribute("data-route", "grid")
+        assertThat(page.locator(".component-card:visible")).hasAttribute("data-route", "virtual-list")
         assertThat(page.locator(".readout").first()).containsText("1")
 
         search.fill("")
@@ -79,7 +80,7 @@ class ShowcaseTest {
     @RetryingTest(maxAttempts = 2)
     @Timeout(240)
     @Suppress("UNCHECKED_CAST")
-    fun `every sidebar entry opens a page with documentation and source links`(page: Page) {
+    fun `every sidebar entry opens a page with documentation, source and API links`(page: Page) {
         val entries = sidebarEntries(page)
         assertTrue(entries.size > 45)
 
@@ -95,17 +96,18 @@ class ShowcaseTest {
             assertThat(pageRoot.locator(".page__title")).hasText(label)
 
             val links = pageRoot.locator(".page__link")
-            assertThat(links).hasCount(2)
+            assertThat(links).hasCount(3)
 
             val hrefs = links.evaluateAll("(nodes) => nodes.map((node) => node.getAttribute('href') || '')") as List<String>
             assertTrue(
-                hrefs[0].matches(Regex("""https://vaadin\.com/docs/latest/zh/.*""")),
+                hrefs[0].matches(Regex("""https://vaadin\.com/docs/latest/(components|styling).*""")),
                 "official docs link of $label",
             )
             assertTrue(
                 hrefs[1].matches(Regex("""https://github\.com/shijianjs/ktjs-vaadin/blob/main/demo/src/jsMain/kotlin/demo/.*""")),
                 "source link of $label",
             )
+            assertEquals(expectedApiUrl(route), hrefs[2], "API link of $label")
 
             // Every page shows at least one runnable section.
             assertTrue(pageRoot.locator(".section").count() > 0, "sections of $label")
@@ -120,11 +122,11 @@ class ShowcaseTest {
 
     @RetryingTest(maxAttempts = 2)
     fun `sidebar groups fold and the active route expands its group`(page: Page) {
-        val overviewToggle = page.locator(".nav__group-title[data-group='概览']")
+        val overviewToggle = page.locator(".nav__group-title[data-group='overview']")
         assertThat(overviewToggle).hasAttribute("aria-expanded", "true")
         assertThat(page.locator(navItem("overview"))).isVisible()
 
-        val fieldsToggle = page.locator(".nav__group-title[data-group='输入字段']")
+        val fieldsToggle = page.locator(".nav__group-title[data-group='fields']")
         assertThat(fieldsToggle).hasAttribute("aria-expanded", "false")
         assertThat(page.locator(navItem("text-field"))).not().isVisible()
 
@@ -161,7 +163,7 @@ class ShowcaseTest {
     @RetryingTest(maxAttempts = 2)
     fun `an unknown route falls back to the overview`(page: Page) {
         page.evaluate("() => { window.location.hash = '#/this-component-does-not-exist' }")
-        assertThat(page.locator(".page__title")).hasText("组件总览")
+        assertThat(page.locator(".page__title")).hasText("Component overview")
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -181,7 +183,7 @@ class ShowcaseTest {
         val lightScheme = page.evaluate("() => getComputedStyle(document.documentElement).colorScheme") as String
         assertTrue(lightScheme.contains("light"))
 
-        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("暗色")).click()
+        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("Dark")).click()
         assertThat(html).hasAttribute("theme", "dark")
 
         // The change comes from Lumo's `color-scheme: dark`, not from a hard-coded page background.
@@ -200,7 +202,7 @@ class ShowcaseTest {
         assertThat(html).hasAttribute("theme", "dark")
         assertThat(page.locator(".page__title")).hasText("Button")
 
-        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("亮色")).click()
+        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("Light")).click()
         assertThat(html).not().hasAttribute("theme", "dark")
     }
 
@@ -222,6 +224,40 @@ class ShowcaseTest {
         assertThat(nav).not().hasClass(Pattern.compile("shell__nav--open"))
     }
 
+    @RetryingTest(maxAttempts = 2)
+    fun `language switch rebuilds the copy, keeps the route and persists`(page: Page) {
+        val html = page.locator("html")
+        assertThat(html).hasAttribute("lang", "en")
+        assertThat(page.locator(".page__title")).hasText("Component overview")
+
+        openNavItem(page, "text-field")
+        assertThat(page.locator(".page__title")).hasText("Text Field")
+
+        page.locator(".lang-switch vaadin-button", Page.LocatorOptions().setHasText("中文")).click()
+
+        // The whole page tree is rebuilt: chrome, metadata, section copy, sidebar labels and links.
+        assertThat(html).hasAttribute("lang", "zh-CN")
+        assertThat(page.locator(".page__title")).hasText("Text Field")
+        assertThat(page.locator(".page__summary")).containsText("单行文本输入")
+        assertThat(page.locator(".page__body .section__title").first()).hasText("基本用法")
+        assertThat(page.locator(".topbar__breadcrumb")).hasText("输入字段 / Text Field")
+        assertTrue(page.locator(".nav__group-title").allTextContents().contains("输入字段"))
+
+        val docsHref = page.locator(".page__link").first().getAttribute("href") ?: ""
+        assertTrue(docsHref.startsWith("https://vaadin.com/docs/latest/zh/components"), "Chinese docs link: $docsHref")
+
+        // The choice is remembered and the route survives the reload.
+        page.reload()
+        assertThat(html).hasAttribute("lang", "zh-CN")
+        assertThat(page.locator(".page__title")).hasText("Text Field")
+        assertThat(page.locator(".page__body .section__title").first()).hasText("基本用法")
+
+        page.locator(".lang-switch vaadin-button", Page.LocatorOptions().setHasText("English")).click()
+        assertThat(html).hasAttribute("lang", "en")
+        assertThat(page.locator(".page__body .section__title").first()).hasText("Basic usage")
+        assertTrue(page.locator(".nav__group-title").allTextContents().contains("Input fields"))
+    }
+
     @Suppress("UNCHECKED_CAST")
     private fun sidebarEntries(page: Page): List<Pair<String, String>> {
         val raw = page.locator(".shell__nav vaadin-side-nav-item").evaluateAll(
@@ -232,4 +268,12 @@ class ShowcaseTest {
         ) as List<Map<String, Any?>>
         return raw.map { (it["route"] as String) to (it["label"] as String) }
     }
+
+    /** Dokka package page the demo links to; mirrors `componentApiUrl` in `Catalog.kt`. */
+    private fun expectedApiUrl(route: String): String =
+        when (route) {
+            "overview" -> "api/ktjs-vaadin-web-components/index.html"
+            "theming" -> "api/ktjs-vaadin-web-components/vaadin.lumostyles/index.html"
+            else -> "api/ktjs-vaadin-web-components/vaadin.${route.replace("-", "")}/index.html"
+        }
 }

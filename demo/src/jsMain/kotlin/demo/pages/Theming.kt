@@ -4,8 +4,10 @@ import demo.CatalogEntry
 import demo.Groups
 import demo.STYLING_BASE
 import demo.Theme
+import demo.bi
 import demo.ui.EventLog
 import demo.ui.PageMeta
+import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.code
 import demo.ui.column
@@ -16,6 +18,7 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
+import demo.tr
 import vaadin.aura.Aura
 import vaadin.button.createButton
 import vaadin.card.createCard
@@ -32,8 +35,13 @@ val themingEntries: List<CatalogEntry> =
             group = Groups.THEMING,
             meta =
                 PageMeta(
-                    title = "主题与样式",
-                    summary = "Demo 使用 Lumo 主题：亮色 / 暗色切换、设计令牌与组件主题变体。",
+                    title = bi("主题与样式", "Theming and styling"),
+                    summary =
+                        bi(
+                            "Demo 使用 Lumo 主题：亮色 / 暗色切换、设计令牌与组件主题变体。",
+                            "The demo uses the Lumo theme: light / dark switching, design tokens and component " +
+                                "theme variants.",
+                        ),
                     docsUrl = "$STYLING_BASE/themes/lumo",
                     sourcePath = "pages/Theming.kt",
                 ),
@@ -41,37 +49,48 @@ val themingEntries: List<CatalogEntry> =
         ),
     )
 
-private fun buildThemingPage(meta: PageMeta): HTMLElement {
+private fun buildThemingPage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    // --- 亮色 / 暗色 -----------------------------------------------------------------------------
+    // --- Light / dark ---------------------------------------------------------------------------
     val switching =
         section(
-            "亮色 / 暗色",
-            "Lumo 的暗色不是另一套样式表：在 <html> 上设置 theme=\"dark\" 后，" +
-                "color-scheme.css 会切换 color-scheme，所有设计令牌随之改变。",
+            tr("亮色 / 暗色", "Light / dark"),
+            tr(
+                "Lumo 的暗色不是另一套样式表：在 <html> 上设置 theme=\"dark\" 后，" +
+                    "color-scheme.css 会切换 color-scheme，所有设计令牌随之改变。",
+                "Lumo's dark mode is not a second stylesheet: once theme=\"dark\" is set on <html>, " +
+                    "color-scheme.css switches color-scheme and every design token follows.",
+            ),
         )
-    val readout = Readout("当前：亮色")
+    val readout = Readout(tr("当前：亮色", "Now: light"))
     val log = EventLog(4)
 
     fun sync() {
-        readout.set("当前：", if (Theme.isDark) "暗色（theme=\"dark\"）" else "亮色（无 theme 属性）")
+        readout.set(
+            tr("当前：", "Now:"),
+            if (Theme.isDark) {
+                tr("暗色（theme=\"dark\"）", "Dark (theme=\"dark\")")
+            } else {
+                tr("亮色（无 theme 属性）", "Light (no theme attribute)")
+            },
+        )
     }
     sync()
 
-    val light = createButton { textContent = "亮色" }
+    val light = createButton { textContent = tr("亮色", "Light") }
     light.clickEvent.addHandler {
         Theme.apply(false)
         sync()
         log.add("Theme.apply(false)")
     }
-    val dark = createButton { textContent = "暗色" }.withTheme("primary")
+    val dark = createButton { textContent = tr("暗色", "Dark") }.withTheme("primary")
     dark.clickEvent.addHandler {
         Theme.apply(true)
         sync()
         log.add("Theme.apply(true)")
     }
-    val toggle = createButton { textContent = "切换" }.withTheme("tertiary")
+    val toggle = createButton { textContent = tr("切换", "Toggle") }.withTheme("tertiary")
     toggle.clickEvent.addHandler {
         Theme.toggle()
         sync()
@@ -81,30 +100,41 @@ private fun buildThemingPage(meta: PageMeta): HTMLElement {
     switching.body.append(example(null, column(row(light, dark, toggle), readout.root, log.root)))
     view.body.append(switching.root)
 
-    // --- 设计令牌 -------------------------------------------------------------------------------
+    // --- Design tokens --------------------------------------------------------------------------
     val tokens =
         section(
-            "设计令牌",
-            "页面自身只用这些 CSS 自定义属性排布，因此切换主题时不会出现写死的颜色。" +
-                "下面的色块会随主题变化。",
+            tr("设计令牌", "Design tokens"),
+            tr(
+                "页面自身只用这些 CSS 自定义属性排布，因此切换主题时不会出现写死的颜色。" +
+                    "下面的色块会随主题变化。",
+                "The page itself is laid out with these CSS custom properties only, so a theme switch never " +
+                    "runs into a hard-coded colour. The swatches below follow the active theme.",
+            ),
         )
     tokens.body.append(
         example(
             null,
             row(
-                swatch("--lumo-primary-color", "主色"),
-                swatch("--lumo-success-color", "成功"),
-                swatch("--lumo-error-color", "错误"),
-                swatch("--lumo-contrast-10pct", "分隔线"),
-                swatch("--lumo-base-color", "底色"),
+                swatch("--lumo-primary-color", tr("主色", "Primary")),
+                swatch("--lumo-success-color", tr("成功", "Success")),
+                swatch("--lumo-error-color", tr("错误", "Error")),
+                swatch("--lumo-contrast-10pct", tr("分隔线", "Divider")),
+                swatch("--lumo-base-color", tr("底色", "Base")),
             ),
         ),
     )
     view.body.append(tokens.root)
 
-    // --- 样式表入口 -----------------------------------------------------------------------------
+    // --- Stylesheet entry points ----------------------------------------------------------------
     val entryPoints =
-        section("样式表入口", "wrapper 把上游的样式表路径暴露成常量，避免在 Kotlin 代码里硬编码 npm 路径。")
+        section(
+            tr("样式表入口", "Stylesheet entry points"),
+            tr(
+                "wrapper 把上游的样式表路径暴露成常量，避免在 Kotlin 代码里硬编码 npm 路径。",
+                "The wrapper exposes the upstream stylesheet paths as constants, so Kotlin code never " +
+                    "hard-codes npm paths.",
+            ),
+        )
     entryPoints.body.append(
         example(
             null,
@@ -114,8 +144,14 @@ private fun buildThemingPage(meta: PageMeta): HTMLElement {
                 entryPoint("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS),
                 entryPoint("Aura.CSS", Aura.CSS),
                 paragraph(
-                    "本 Demo 通过 Gradle 任务把 @vaadin/vaadin-lumo-styles 的 dist/lumo.css 复制到页面目录，" +
-                        "再由 index.html 以普通样式表引入 —— LumoInjectionMixin 需要从 document.styleSheets 读取 @media lumo_* 规则。",
+                    tr(
+                        "本 Demo 通过 Gradle 任务把 @vaadin/vaadin-lumo-styles 的 dist/lumo.css 复制到页面目录，" +
+                            "再由 index.html 以普通样式表引入 —— LumoInjectionMixin 需要从 document.styleSheets " +
+                            "读取 @media lumo_* 规则。",
+                        "The demo copies dist/lumo.css from @vaadin/vaadin-lumo-styles into the page directory " +
+                            "with a Gradle task, then index.html loads it as a plain stylesheet — " +
+                            "LumoInjectionMixin reads the @media lumo_* rules from document.styleSheets.",
+                    ),
                     "small muted",
                 ),
             ),
@@ -123,27 +159,34 @@ private fun buildThemingPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(entryPoints.root)
 
-    // --- 组件主题变体 ---------------------------------------------------------------------------
+    // --- Component theme variants ---------------------------------------------------------------
     val variants =
         section(
-            "组件主题变体",
-            "组件的 theme 属性接受空格分隔的多个变体，与服务端 Vaadin 的写法一致（Kotlin 侧用 setAttribute，属性值不反射）。",
+            tr("组件主题变体", "Component theme variants"),
+            tr(
+                "组件的 theme 属性接受空格分隔的多个变体，与服务端 Vaadin 的写法一致" +
+                    "（Kotlin 侧用 setAttribute，属性值不反射）。",
+                "The theme property takes several space-separated variants, matching server-side Vaadin " +
+                    "(on the Kotlin side setAttribute is used, so the value is not reflected).",
+            ),
         )
     val compactField =
         createTextField {
-            label = "small 变体"
-            placeholder = "更紧凑的输入框"
+            label = tr("small 变体", "small variant")
+            placeholder = tr("更紧凑的输入框", "A more compact field")
         }
     compactField.withTheme("small")
     val helperAbove =
         createTextField {
             label = "helper-above-field"
-            helperText = "说明文字在字段上方"
+            helperText = tr("说明文字在字段上方", "The helper text sits above the field")
         }
     helperAbove.withTheme("helper-above-field")
-    val card = createCard { cardTitle = "elevated 卡片" }
+    val card = createCard { cardTitle = tr("elevated 卡片", "Elevated card") }
     card.withTheme("elevated")
-    card.append(paragraph("主题变体只影响外观，不改变 API。"))
+    card.append(
+        paragraph(tr("主题变体只影响外观，不改变 API。", "Theme variants only change the look, never the API.")),
+    )
 
     variants.body.append(
         example(
@@ -154,47 +197,81 @@ private fun buildThemingPage(meta: PageMeta): HTMLElement {
     )
     view.body.append(variants.root)
 
-    // --- 组件内文案 -----------------------------------------------------------------------------
+    // --- Built-in translations ------------------------------------------------------------------
     val i18n =
         section(
-            "组件内文案",
-            "组件自带的文案（Upload 的「Drop files here」、Login 表单的字段名、「Today」等）来自各元素的 i18n 属性，" +
-                "默认是英文。要本地化时替换整个 i18n 对象（或用 Object.assign 保留其余默认值），而不是逐个属性改文本。",
+            tr("组件内文案", "Built-in translations"),
+            tr(
+                "组件自带的文案（Upload 的「Drop files here」、Login 表单的字段名、「Today」等）来自各元素的 " +
+                    "i18n 属性，默认是英文。要本地化时替换整个 i18n 对象（或用 Object.assign 保留其余默认值），" +
+                    "而不是逐个属性改文本。",
+                "Copy that ships with a component (Upload's \"Drop files here\", the Login field names, " +
+                    "\"Today\" and so on) comes from each element's i18n property and defaults to English. " +
+                    "To localise it, replace the whole i18n object (or use Object.assign to keep the other " +
+                    "defaults) instead of editing one property at a time.",
+            ),
         )
     i18n.body.append(
         example(
             null,
             paragraph(
-                "本 Demo 保持默认的英文文案，以便和上游文档的截图、断言一一对应；页面自身的说明文字是中文。",
+                tr(
+                    "本 Demo 保持默认的英文文案，以便和上游文档的截图、断言一一对应；" +
+                        "页面自身的说明文字则跟随当前语言。",
+                    "The demo keeps each component's default English copy so it matches the screenshots and " +
+                        "assertions of the upstream documentation, while the page prose follows the " +
+                        "selected language.",
+                ),
                 "small muted",
             ),
         ),
     )
     view.body.append(i18n.root)
 
-    // --- 没有独立页面的包 -----------------------------------------------------------------------
+    // --- Packages without a dedicated page ------------------------------------------------------
     val internals =
         section(
-            "没有独立页面的包",
-            "wrapper 里还有几个不产出可视组件的包，它们由其他组件使用，因此不单独建页：" +
-                "a11y-base / component-base / field-base / themable-mixin（mixin 与静态工具）、" +
-                "lit-renderer（Lit 指令，只在 Lit 模板里可用）、以及根包的 VaadinTagName（标签名常量）。",
+            tr("没有独立页面的包", "Packages without a dedicated page"),
+            tr(
+                "wrapper 里还有几个不产出可视组件的包，它们由其他组件使用，因此不单独建页：" +
+                    "a11y-base / component-base / field-base / themable-mixin（mixin 与静态工具）、" +
+                    "lit-renderer（Lit 指令，只在 Lit 模板里可用）、以及根包的 VaadinTagName（标签名常量）。",
+                "A few wrapped packages do not produce a visual component of their own; other components " +
+                    "use them, so they have no page: a11y-base / component-base / field-base / " +
+                    "themable-mixin (mixins and static helpers), lit-renderer (Lit directives, usable only in " +
+                    "Lit templates) and the root package's VaadinTagName (tag name constants).",
+            ),
         )
     internals.body.append(
         example(
             null,
             column(
-                paragraph("这些包的公开 API 通过其他页面的示例间接覆盖：", "small"),
-                entryPoint("vaadin.componentbase.ElementMixin", "所有 Element 的基类"),
-                entryPoint("vaadin.fieldbase.InputControlMixin", "TextField / ComboBox / Select 等字段"),
+                paragraph(
+                    tr(
+                        "这些包的公开 API 通过其他页面的示例间接覆盖：",
+                        "These packages are covered indirectly by examples on other pages:",
+                    ),
+                    "small",
+                ),
+                entryPoint(
+                    "vaadin.componentbase.ElementMixin",
+                    tr("所有 Element 的基类", "Base class of every Element"),
+                ),
+                entryPoint(
+                    "vaadin.fieldbase.InputControlMixin",
+                    tr("TextField / ComboBox / Select 等字段", "Fields such as TextField / ComboBox / Select"),
+                ),
                 entryPoint("vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
-                entryPoint("vaadin.VaadinTagName", "createXxx 内部使用的标签名常量"),
+                entryPoint(
+                    "vaadin.VaadinTagName",
+                    tr("createXxx 内部使用的标签名常量", "Tag name constants used inside createXxx"),
+                ),
             ),
         ),
     )
     view.body.append(internals.root)
 
-    return view.root
+    return view
 }
 
 /** A colour chip bound to one Lumo custom property. */
