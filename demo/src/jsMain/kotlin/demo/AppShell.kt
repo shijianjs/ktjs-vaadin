@@ -3,6 +3,7 @@ package demo
 import demo.ui.div
 import demo.ui.element
 import demo.ui.listen
+import demo.ui.setHidden
 import demo.ui.span
 import demo.ui.withClass
 import demo.ui.withTheme
@@ -17,14 +18,20 @@ import web.dom.clickEvent
 import web.dom.document
 import web.events.EventType
 import web.events.addHandler
+import web.html.ButtonType
 import web.html.HTMLElement
+import web.html.HTMLButtonElement
 import web.html.HtmlTagName
+import web.html.button
 import web.keyboard.KeyboardEvent
 import web.location.location
 import web.window.window
 
 /** `keydown` as a typed event so the listener receives a [KeyboardEvent]. */
 private val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
+
+/** One collapsible sidebar group: the header button, the list it controls and the current state. */
+private class NavGroup(val toggle: HTMLButtonElement, val list: HTMLElement, var expanded: Boolean)
 
 /**
  * Application shell: a fixed sidebar built once from [catalog], a top bar with the breadcrumb and
@@ -40,6 +47,8 @@ class AppShell {
     private val breadcrumb = span("", "topbar__breadcrumb")
 
     private val navItems = mutableMapOf<String, SideNavItemElement>()
+
+    private val navGroups = mutableMapOf<String, NavGroup>()
 
     private val pages = mutableMapOf<String, HTMLElement>()
 
@@ -73,6 +82,8 @@ class AppShell {
                 item.classList.toggle(ClassName("nav__current"), active)
                 item.ariaCurrent = if (active) "page" else null
             }
+            // Reveal the active route even when the user left its group collapsed.
+            setGroupExpanded(entry.group, true)
             breadcrumb.textContent = "${entry.group} / ${entry.meta.title}"
             document.title = "${entry.meta.title} · ktjs-vaadin"
         }
@@ -103,6 +114,13 @@ class AppShell {
         darkButton.ariaPressed = if (dark) "true" else "false"
     }
 
+    private fun setGroupExpanded(group: String, expanded: Boolean) {
+        val navGroup = navGroups[group] ?: return
+        navGroup.expanded = expanded
+        navGroup.toggle.ariaExpanded = if (expanded) "true" else "false"
+        navGroup.list.setHidden(!expanded)
+    }
+
     private fun buildNav(): HTMLElement {
         val side = element(HtmlTagName.nav, "shell__nav")
         side.append(
@@ -114,8 +132,6 @@ class AppShell {
         )
 
         catalogGroups.forEach { group ->
-            side.append(div("nav__group-title").apply { textContent = group })
-
             // One `vaadin-side-nav` per group: the element is a plain list container, and grouping
             // keeps the 60 entries scannable without nesting every component one level deeper.
             val groupNav = createSideNav()
@@ -138,7 +154,21 @@ class AppShell {
                 navItems[entry.id] = item
                 groupNav.append(item)
             }
-            side.append(groupNav)
+
+            val chevron = createIcon { icon = "lumo:angle-down" }.withClass("nav__group-chevron")
+            val toggle = element(HtmlTagName.button, "nav__group-title", span(group), chevron)
+            toggle.type = ButtonType.Companion.button
+            toggle.dataset["group"] = group
+            toggle.clickEvent.addHandler {
+                val current = navGroups.getValue(group)
+                setGroupExpanded(group, !current.expanded)
+            }
+
+            navGroups[group] = NavGroup(toggle, groupNav, expanded = false)
+            // `show()` expands the group of the initial route, so only that one starts open.
+            setGroupExpanded(group, false)
+
+            side.append(div("nav__group", toggle, groupNav))
         }
 
         return side

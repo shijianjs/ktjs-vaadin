@@ -61,13 +61,47 @@ body {
     color: var(--lumo-tertiary-text-color);
 }
 
+/* Group headers are buttons so a long sidebar can be folded down to its groups. */
 .nav__group-title {
-    margin: var(--lumo-space-m) var(--lumo-space-s) var(--lumo-space-xs);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lumo-space-xs);
+    width: 100%;
+    margin: var(--lumo-space-m) 0 var(--lumo-space-xs);
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border: 0;
+    border-radius: var(--lumo-border-radius-s);
+    background: none;
+    font-family: inherit;
     font-size: var(--lumo-font-size-xs);
     font-weight: 600;
     letter-spacing: 0.04em;
+    text-align: start;
     text-transform: uppercase;
     color: var(--lumo-tertiary-text-color);
+    cursor: pointer;
+}
+
+.nav__group-title:hover {
+    background: var(--lumo-contrast-5pct);
+    color: var(--lumo-secondary-text-color);
+}
+
+.nav__group-title:focus-visible {
+    outline: 2px solid var(--lumo-primary-color);
+    outline-offset: -2px;
+}
+
+.nav__group-chevron {
+    flex: none;
+    width: var(--lumo-icon-size-s);
+    height: var(--lumo-icon-size-s);
+    transition: transform 0.15s ease-in-out;
+}
+
+.nav__group-title[aria-expanded='false'] .nav__group-chevron {
+    transform: rotate(-90deg);
 }
 
 /* Lumo gives every side-nav item a subtle background; the sidebar reads better with flat items and
@@ -329,6 +363,74 @@ body {
     display: grid;
     gap: var(--lumo-space-m);
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+/* ------------------------------------------------------------------ overview index */
+
+.index__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--lumo-space-m);
+    margin-bottom: var(--lumo-space-s);
+}
+
+.index__group-title {
+    margin: var(--lumo-space-l) 0 var(--lumo-space-s);
+    font-size: var(--lumo-font-size-s);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lumo-secondary-text-color);
+}
+
+/* `auto-fill` keeps the card width identical across groups; `auto-fit` would blow up the cards of
+   a group with only one or two entries. */
+.index__grid {
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+.component-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lumo-space-xs);
+    padding: var(--lumo-space-m);
+    border: 1px solid var(--lumo-contrast-10pct);
+    border-radius: var(--lumo-border-radius-l);
+    background: var(--lumo-base-color);
+    color: var(--lumo-body-text-color);
+    text-decoration: none;
+    transition:
+        border-color 0.15s ease-in-out,
+        background-color 0.15s ease-in-out;
+}
+
+/* `display: flex` above would otherwise win over the user-agent `[hidden]` rule used by the filter. */
+.component-card[hidden] {
+    display: none;
+}
+
+.component-card:hover {
+    border-color: var(--lumo-primary-color-50pct);
+    background: var(--lumo-primary-color-10pct);
+}
+
+.component-card:focus-visible {
+    outline: 2px solid var(--lumo-primary-color);
+    outline-offset: 2px;
+}
+
+.component-card__title {
+    font-size: var(--lumo-font-size-m);
+    font-weight: 600;
+    color: var(--lumo-header-text-color);
+}
+
+.component-card__summary {
+    margin: 0;
+    font-size: var(--lumo-font-size-s);
+    line-height: 1.4;
+    color: var(--lumo-secondary-text-color);
 }
 
 /* ------------------------------------------------------------------ responsive */

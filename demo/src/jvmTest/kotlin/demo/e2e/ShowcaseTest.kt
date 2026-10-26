@@ -1,5 +1,6 @@
 package demo.e2e
 
+import com.microsoft.playwright.Locator
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.junit.UsePlaywright
@@ -19,6 +20,21 @@ import org.junitpioneer.jupiter.RetryingTest
 @UsePlaywright(DemoOptions::class)
 class ShowcaseTest {
     private fun navItem(route: String): String = ".shell__nav vaadin-side-nav-item[data-route='$route']"
+
+    private fun sidebarGroup(page: Page, route: String): Locator =
+        page.locator(".nav__group:has(vaadin-side-nav-item[data-route='$route'])")
+
+    /** Expands the group of [route] when it is folded and returns the item, still without clicking it. */
+    private fun revealNavItem(page: Page, route: String): Locator {
+        val group = sidebarGroup(page, route)
+        val toggle = group.locator(".nav__group-title")
+        if (toggle.getAttribute("aria-expanded") != "true") {
+            toggle.click()
+        }
+        return group.locator("vaadin-side-nav-item[data-route='$route']")
+    }
+
+    private fun openNavItem(page: Page, route: String): Locator = revealNavItem(page, route).also { it.click() }
 
     @BeforeTest
     fun openDemo(page: Page) {
@@ -103,11 +119,36 @@ class ShowcaseTest {
     }
 
     @RetryingTest(maxAttempts = 2)
+    fun `sidebar groups fold and the active route expands its group`(page: Page) {
+        val overviewToggle = page.locator(".nav__group-title[data-group='概览']")
+        assertThat(overviewToggle).hasAttribute("aria-expanded", "true")
+        assertThat(page.locator(navItem("overview"))).isVisible()
+
+        val fieldsToggle = page.locator(".nav__group-title[data-group='输入字段']")
+        assertThat(fieldsToggle).hasAttribute("aria-expanded", "false")
+        assertThat(page.locator(navItem("text-field"))).not().isVisible()
+
+        overviewToggle.click()
+        assertThat(overviewToggle).hasAttribute("aria-expanded", "false")
+        assertThat(page.locator(navItem("overview"))).not().isVisible()
+
+        overviewToggle.click()
+        assertThat(overviewToggle).hasAttribute("aria-expanded", "true")
+        assertThat(page.locator(navItem("overview"))).isVisible()
+
+        // Navigating to a folded group reveals the page that was opened.
+        page.evaluate("() => { window.location.hash = '#/text-field' }")
+        assertThat(page.locator(".page__title")).hasText("Text Field")
+        assertThat(fieldsToggle).hasAttribute("aria-expanded", "true")
+        assertThat(page.locator(navItem("text-field"))).isVisible()
+    }
+
+    @RetryingTest(maxAttempts = 2)
     fun `history navigation moves between pages`(page: Page) {
-        page.locator(navItem("button")).click()
+        openNavItem(page, "button")
         assertThat(page.locator(".page__title")).hasText("Button")
 
-        page.locator(navItem("text-field")).click()
+        openNavItem(page, "text-field")
         assertThat(page.locator(".page__title")).hasText("Text Field")
 
         page.goBack()
@@ -125,7 +166,7 @@ class ShowcaseTest {
 
     @RetryingTest(maxAttempts = 2)
     fun `keyboard activation opens a sidebar entry`(page: Page) {
-        val item = page.locator(navItem("checkbox"))
+        val item = revealNavItem(page, "checkbox")
         item.focus()
         page.keyboard().press("Enter")
         assertThat(page.locator(".page__title")).hasText("Checkbox")
@@ -150,7 +191,7 @@ class ShowcaseTest {
         assertTrue(darkBackground != lightBackground)
 
         // Navigation keeps the theme.
-        page.locator(navItem("button")).click()
+        openNavItem(page, "button")
         assertThat(page.locator(".page__title")).hasText("Button")
         assertThat(html).hasAttribute("theme", "dark")
 
@@ -176,7 +217,7 @@ class ShowcaseTest {
         assertThat(nav).hasClass(Pattern.compile("shell__nav--open"))
 
         // Navigating closes the drawer again.
-        nav.locator("vaadin-side-nav-item[data-route='text-field']").click()
+        openNavItem(page, "text-field")
         assertThat(page.locator(".page__title")).hasText("Text Field")
         assertThat(nav).not().hasClass(Pattern.compile("shell__nav--open"))
     }

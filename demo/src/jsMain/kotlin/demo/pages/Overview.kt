@@ -18,6 +18,8 @@ import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.section
 import demo.ui.setHidden
+import demo.ui.span
+import demo.ui.withClass
 import vaadin.textfield.TextFieldEvents
 import vaadin.textfield.createTextField
 import web.html.HTMLElement
@@ -71,15 +73,18 @@ private fun buildOverviewPage(meta: PageMeta): HTMLElement {
     val groupBlocks = mutableListOf<Pair<HTMLElement, MutableList<HTMLElement>>>()
 
     catalogGroups.filter { it != Groups.OVERVIEW }.forEach { group ->
-        val groupHeading = heading(3, group)
-        val groupGrid = grid()
+        val groupHeading = heading(3, group, "index__group-title")
+        val groupGrid = grid().withClass("index__grid")
         val groupCards = mutableListOf<HTMLElement>()
         catalogEntriesOf(group).forEach { entry ->
             val card =
-                anchor(entry.meta.title, "#/${entry.id}", "component-card").apply {
+                anchor("", "#/${entry.id}", "component-card").apply {
                     dataset["route"] = entry.id
                 }
-            card.append(paragraph(entry.meta.summary, "small muted"))
+            card.append(
+                span(entry.meta.title, "component-card__title"),
+                paragraph(entry.meta.summary, "component-card__summary"),
+            )
             groupGrid.append(card)
             groupCards += card
             cards += entry to card
@@ -88,7 +93,7 @@ private fun buildOverviewPage(meta: PageMeta): HTMLElement {
         groupBlocks += groupHeading to groupCards
     }
 
-    index.body.prepend(counter.root, search)
+    index.body.prepend(div("index__toolbar", search, counter.root))
     view.body.append(index.root)
 
     search.listen(TextFieldEvents.input) {

@@ -471,6 +471,9 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 - 侧边栏**不要**给 `vaadin-side-nav-item` 设 `path`：组件用 `document.location.pathname` 判断
   `current`，而 hash 路由的 pathname 从不变化，设了 `path` 会让所有条目都变成「当前页」。改为由
   `AppShell` 处理点击（并补 Enter / 空格），只给当前条目加 `nav__current` 与 `aria-current`。
+- 侧边栏按分组折叠：组标题是 `<button class="nav__group-title" aria-expanded>`，列表用原生 `hidden`
+  收起，展开/收起只改这两个状态，不重建节点。初始只有当前路由所在分组展开，换路由时 `show()` 自动展开
+  目标分组；端到端用例点条目之前先通过 `revealNavItem` / `openNavItem` 确保分组已展开。
 - Lumo 样式表不能靠 webpack 打包（Kotlin/JS 的 webpack 配置没有 css loader）：
   `demo/build.gradle.kts` 的 `copyLumoStyles` 把 `@vaadin/vaadin-lumo-styles/dist/lumo.css`
   （自包含、无 `@import`）复制到 demo 资源里，`index.html` 用普通 `<link>` 引入 ——
