@@ -53,6 +53,13 @@ Kotlin/JS wrapper。
 
 ### 类型映射与 `dynamic`
 
+上游类型到 Kotlin 类型的完整对照与写法整理在同目录的 [TYPE-MAPPING.md](TYPE-MAPPING.md)：联合类型的
+同名工厂模式、字符串字面量的 `sealed external interface` + 常量对象、`web.cssom` / `web.canvas` 值类型、
+`js.objects.unsafeJso`、上游 mixin 与 Kotlin 公共基接口的取舍、`JsAny` / `dynamic` 的边界、上游
+`Omit<...> & { ... }` / `data` 收窄 / 元组 / `T | "none"` 这些 Kotlin 表达不了的写法的固定处理方式、包与
+文件划分、落地检查清单和反模式速查。新增或修改 wrapper 声明前先读它。该文档保持通用措辞，与模板仓库
+`ktjs-wrapper-template` 同步维护。
+
 上游 TypeScript 声明了类型的成员必须映射成 Kotlin 类型，`dynamic` 只保留给 Kotlin 无法表达语义的少数
 情况。生成器的映射策略（`SIMPLE_TYPES` / `TYPE_ALIASES` / `mapType`）：
 
@@ -73,6 +80,9 @@ Kotlin/JS wrapper。
 - 确实没有任何类型信息时才保留 `dynamic`（上游只写裸 `Function` 且实现也无法推断签名）。目前 jsMain
   没有 `dynamic`：原本的三处裸 `Function` 已在 `MODULE_SIGNATURES` / `MEMBER_TYPES` 里按实现补上签名，
   `lit-renderer` 用手写 `LitRenderer` 接口（`operator fun invoke(vararg ...)`）建模。
+
+`dynamic` 只留给「上游自己也没写类型、实现也无法推断」的情况；上游写了 `any` / `unknown` 才用 `JsAny`，
+且要在 KDoc 里注明「上游类型是 `unknown`」。退化到这两者之前，先按 TYPE-MAPPING 第 12 节过一遍。
 
 `kotlin.js.JsAny` 需要 `kotlin.js.ExperimentalWasmJsInterop` opt-in；根构建脚本已对全部 KMP 子模块统一
 添加，新增模块无需单独配置。
