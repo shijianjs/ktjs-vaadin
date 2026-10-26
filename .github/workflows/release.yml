@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: "Release tag to create or update, e.g. release-1"
+        description: "Release tag to create or update, e.g. release-25.3.4-kt.1"
         required: true
         type: string
       modules:
@@ -56,8 +56,10 @@ jobs:
           RELEASE: ${{ inputs.release }}
         run: |
           set -euo pipefail
-          if [[ ! "$RELEASE" =~ ^release-[0-9]+$ ]]; then
-            echo "::error::release must look like release-<number>, got '$RELEASE'"
+          # The tag stays inside the release-* namespace; the suffix is either the module version
+          # being published (release-25.3.4-kt.1) or a plain sequence number (release-1).
+          if [[ ! "$RELEASE" =~ ^release-[0-9]+(\.[0-9]+)*(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
+            echo "::error::release must look like release-<version>, got '$RELEASE'"
             exit 1
           fi
 

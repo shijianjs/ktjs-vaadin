@@ -386,11 +386,12 @@ group 固定为 `io.github.shijianjs`。`subprojects` 的 group 必须单独设�
    并在成功后删除已满足的注册。
 
 ```bash
-gh workflow run release.yml -f release=release-1 \
+gh workflow run release.yml -f release=release-<版本> \
   -f modules=ktjs-vaadin-web-components
 ```
 
-- `release`：`release-<数字>`，tag 由工作流创建；工作流不会移动已有 tag。
+- `release`：`release-<版本或序号>`，如 `release-25.3.4-kt.1` 或 `release-1`；tag 由工作流创建，
+  工作流不会移动已有 tag。
 - `modules`：逗号分隔；留空表示全部发布模块。只列本次修订号变化的模块。
 - `register`（默认 true）：把注册推到 hub；关掉则只做构建和 GitHub Release。
 - `verify`（默认 true）：触发 hub 的 dry run 并等待；关掉则到 Release 为止。
@@ -414,7 +415,7 @@ gh workflow run release.yml -f release=release-1 \
 4. **若沿用 hub：新增 KMP 模块（产生新的 `*-js` 坐标）时，先在 hub 的 `artifactOverrides` 里补
    `jar: false` 并关闭 `verifyPom`**。JReleaser 的 PomChecker 不认 klib packaging，且它把 pom/aar/war/zip
    以外的 packaging 都当成必须有同名 `.jar`；漏配会让 hub 整批失败。
-5. 第一次发布用 `release-1`，`modules` 留空（发布全部模块）；之后只列修订号变化的模块。
+5. 第一次发布用 `release-<该次发布的版本>`，`modules` 留空（发布全部模块）；之后只列修订号变化的模块。
 
 ### 本地预演
 
@@ -423,7 +424,7 @@ ORG_GRADLE_PROJECT_signingInMemoryKey="$(< ~/central-signing-key.txt)" \
 ORG_GRADLE_PROJECT_signingInMemoryKeyPassword=... \
 ./gradlew :ktjs-vaadin-web-components:publishAllPublicationsToHubStagingRepository
 
-python3 scripts/hub-release.py --project shijianjs/ktjs-vaadin --release release-1 \
+python3 scripts/hub-release.py --project shijianjs/ktjs-vaadin --release release-<版本> \
   --module ktjs-vaadin-web-components=<version> --repository . \
   --archives build/hub-release/archives --registrations build/hub-release
 ```
