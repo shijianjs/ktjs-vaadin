@@ -44,6 +44,7 @@ import vaadin.tabsheet.TabSheetEvents
 import vaadin.tabsheet.createTabSheet
 import vaadin.textfield.createTextField
 import vaadin.verticallayout.createVerticalLayout
+import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -228,16 +229,16 @@ private fun buildAppLayoutPage(meta: PageMeta): HTMLElement {
     val basic =
         section("基本用法", "navbar 与 drawer 通过 slot 指定；drawerOpened 控制抽屉，窄屏时抽屉变成浮层。")
     val layout = createAppLayout()
-    layout.setAttribute("data-test", "app-layout")
+    layout.dataset["test"] = "app-layout"
     layout.style.setProperty("height", "18rem")
 
     val toggle = createDrawerToggle()
     toggle.style.setProperty("color", "var(--lumo-body-text-color)")
     val title = heading(3, "示例应用")
     title.style.setProperty("margin", "0")
-    val navbar = div().apply { setAttribute("slot", "navbar") }
+    val navbar = div().apply { slot = "navbar" }
     navbar.append(toggle, title)
-    val drawer = div().apply { setAttribute("slot", "drawer") }
+    val drawer = div().apply { slot = "drawer" }
     drawer.style.setProperty("padding", "var(--lumo-space-m)")
     drawer.append(
         column(
@@ -290,14 +291,14 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): HTMLElement {
         example(
             "spacing",
             createHorizontalLayout { }.apply {
-                setAttribute("theme", "spacing")
+                withTheme("spacing")
                 append(box("A"), box("B"), box("C"))
             },
         ),
         example(
             "spacing padding margin",
             createHorizontalLayout().apply {
-                setAttribute("theme", "spacing padding margin")
+                withTheme("spacing", "padding", "margin")
                 append(box("A"), box("B"), box("C"))
             },
         ),
@@ -309,7 +310,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): HTMLElement {
         example(
             null,
             createHorizontalLayout().apply {
-                setAttribute("theme", "spacing wrap")
+                withTheme("spacing", "wrap")
                 style.setProperty("max-width", "24rem")
                 append(box("很长很长的第一项"), box("第二项"), box("第三项"), box("第四项"))
             },
@@ -328,7 +329,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): HTMLElement {
         example(
             null,
             createVerticalLayout().apply {
-                setAttribute("theme", "spacing padding")
+                withTheme("spacing", "padding")
                 append(box("第一行"), box("第二行"), box("第三行"))
             },
         ),
@@ -340,14 +341,14 @@ private fun buildVerticalLayoutPage(meta: PageMeta): HTMLElement {
         example(
             null,
             createVerticalLayout().apply {
-                setAttribute("theme", "spacing")
+                withTheme("spacing")
                 append(
                     createHorizontalLayout().apply {
-                        setAttribute("theme", "spacing")
+                        withTheme("spacing")
                         append(box("左"), box("右"))
                     },
                     createHorizontalLayout().apply {
-                        setAttribute("theme", "spacing")
+                        withTheme("spacing")
                         append(box("下左"), box("下右"))
                     },
                 )
@@ -364,7 +365,7 @@ private fun buildFormLayoutPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "form-item 提供标签，form-layout 依据可用宽度决定列数。")
     val form = createFormLayout()
-    form.setAttribute("data-test", "form-layout")
+    form.dataset["test"] = "form-layout"
     form.append(
         formItem("姓名", createTextField { placeholder = "Ada" }),
         formItem("邮箱", vaadin.emailfield.createEmailField { placeholder = "ada@example.com" }),
@@ -425,7 +426,7 @@ private fun buildScrollerPage(meta: PageMeta): HTMLElement {
 
     val vertical = section("纵向滚动", "内容超出固定高度时出现滚动条。")
     val scroller = createScroller()
-    scroller.setAttribute("data-test", "scroller")
+    scroller.dataset["test"] = "scroller"
     scroller.style.setProperty("height", "10rem")
     scroller.append(
         column(*(1..20).map { paragraph("第 $it 行内容") }.toTypedArray()),
@@ -450,14 +451,14 @@ private fun buildMasterDetailPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "主区在默认插槽，详情放进 slot=\"detail\"；空间不足时详情会变成浮层。")
     val layout = createMasterDetailLayout()
-    layout.setAttribute("data-test", "master-detail-layout")
+    layout.dataset["test"] = "master-detail-layout"
     layout.style.setProperty("height", "16rem")
     layout.masterSize = "16rem"
     layout.detailSize = "1fr"
 
     val master = column(paragraph("主区内容"))
     val detail = div().apply {
-        setAttribute("slot", "detail")
+        slot = "detail"
         style.setProperty("padding", "var(--lumo-space-m)")
         textContent = "详情内容"
     }
@@ -501,11 +502,11 @@ private fun buildCardPage(meta: PageMeta): HTMLElement {
             null,
             row(
                 createCard { }.apply {
-                    setAttribute("theme", "elevated")
+                    withTheme("elevated")
                     append(heading(3, "elevated"), paragraph("带阴影的卡片"))
                 },
                 createCard { }.apply {
-                    setAttribute("theme", "outlined")
+                    withTheme("outlined")
                     append(heading(3, "outlined"), paragraph("带边框的卡片"))
                 },
             ),
@@ -540,7 +541,7 @@ private fun buildAccordionPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "每个 panel 用 summary 定义标题，子节点是展开后的内容。")
     val log = EventLog(4)
     val accordion = createAccordion { headingLevel = 3.0 }
-    accordion.setAttribute("data-test", "accordion")
+    accordion.dataset["test"] = "accordion"
     accordion.append(
         accordionPanel("配送与安装").apply {
             append(paragraph("面板一的内容。"))
@@ -589,7 +590,7 @@ private fun buildDetailsPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "summary 是标题文本，子节点是展开区内容；opened 可读写。")
     val log = EventLog(4)
     val details = createDetails { summary = "更多信息" }
-    details.setAttribute("data-test", "details")
+    details.dataset["test"] = "details"
     details.append(paragraph("这里是展开后显示的详细说明。"))
     details.listen(DetailsEvents.openedChanged) { log.add("opened-changed · ${details.opened}") }
     basic.body.append(example(null, column(details, log.root)))
@@ -619,7 +620,7 @@ private fun buildTabsPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "tab 的 value 可选；selected 是选中下标，selected-changed 在切换时触发。")
     val log = EventLog(4)
     val tabs = createTabs()
-    tabs.setAttribute("data-test", "tabs")
+    tabs.dataset["test"] = "tabs"
     tabs.append(
         createTab { textContent = "概览" },
         createTab { textContent = "明细" },
@@ -636,7 +637,7 @@ private fun buildTabsPage(meta: PageMeta): HTMLElement {
         createTab { textContent = "第二项" },
     )
     val equal = createTabs()
-    equal.setAttribute("theme", "equal-width-tabs")
+    equal.withTheme("equal-width-tabs")
     equal.append(
         createTab { textContent = "左" },
         createTab { textContent = "中" },
@@ -659,14 +660,14 @@ private fun buildTabSheetPage(meta: PageMeta): HTMLElement {
                 "selected 决定显示哪个面板（找不到匹配面板时组件进入 loading 状态）。",
         )
     val sheet = createTabSheet()
-    sheet.setAttribute("data-test", "tab-sheet")
-    val tabs = createTabs().apply { setAttribute("slot", "tabs") }
+    sheet.dataset["test"] = "tab-sheet"
+    val tabs = createTabs().apply { slot = "tabs" }
 
     val tabIds = listOf("tabsheet-demo-basic", "tabsheet-demo-contact", "tabsheet-demo-access")
     tabs.append(
-        createTab { textContent = "基本信息" }.apply { setAttribute("id", tabIds[0]) },
-        createTab { textContent = "联系方式" }.apply { setAttribute("id", tabIds[1]) },
-        createTab { textContent = "权限" }.apply { setAttribute("id", tabIds[2]) },
+        createTab { textContent = "基本信息" }.apply { id = ElementId(tabIds[0]) },
+        createTab { textContent = "联系方式" }.apply { id = ElementId(tabIds[1]) },
+        createTab { textContent = "权限" }.apply { id = ElementId(tabIds[2]) },
     )
     val panels =
         listOf(
@@ -675,6 +676,7 @@ private fun buildTabSheetPage(meta: PageMeta): HTMLElement {
             column(heading(3, "权限"), paragraph("第三个面板。")),
         )
     sheet.append(tabs)
+    // `tab` is a tab-sheet convention rather than a DOM property, so it stays an attribute.
     panels.forEachIndexed { index, panelView -> panelView.setAttribute("tab", tabIds[index]) }
     panels.forEach { sheet.append(it) }
 
@@ -707,7 +709,7 @@ private fun buildSideNavPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "path 生成链接；当前路由与 pathname 匹配的项会自动标记为 current。")
     val nav = createSideNav()
-    nav.setAttribute("data-test", "side-nav")
+    nav.dataset["test"] = "side-nav"
     nav.append(
         createSideNavItem {
             path = "#/side-nav"
@@ -735,12 +737,12 @@ private fun buildSideNavPage(meta: PageMeta): HTMLElement {
         createSideNavItem {
             path = "#/button"
             textContent = "子项一"
-            setAttribute("slot", "children")
+            slot = "children"
         },
         createSideNavItem {
             path = "#/text-field"
             textContent = "子项二"
-            setAttribute("slot", "children")
+            slot = "children"
         },
     )
     val nestedNav = createSideNav { collapsible = true }
@@ -760,7 +762,7 @@ private fun buildBreadcrumbsPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "最后一项自动标记为 current，点击前几项会导航到对应 hash 路由。")
     val crumbs = createBreadcrumbs()
-    crumbs.setAttribute("data-test", "breadcrumbs")
+    crumbs.dataset["test"] = "breadcrumbs"
     crumbs.append(
         createBreadcrumbsItem {
             path = "#/overview"
@@ -819,7 +821,7 @@ private fun accordionPanel(summary: String): vaadin.accordion.AccordionPanelElem
 private fun formItem(label: String, field: HTMLElement): HTMLElement {
     val item = createFormItem()
     val labelNode = div().apply {
-        setAttribute("slot", "label")
+        slot = "label"
         textContent = label
     }
     item.append(labelNode, field)

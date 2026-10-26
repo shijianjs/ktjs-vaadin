@@ -77,7 +77,7 @@ private fun buildOverviewPage(meta: PageMeta): HTMLElement {
         catalogEntriesOf(group).forEach { entry ->
             val card =
                 anchor(entry.meta.title, "#/${entry.id}", "component-card").apply {
-                    setAttribute("data-route", entry.id)
+                    dataset["route"] = entry.id
                 }
             card.append(paragraph(entry.meta.summary, "small muted"))
             groupGrid.append(card)

@@ -37,6 +37,7 @@ import vaadin.popover.createPopover
 import vaadin.switch.createSwitch
 import vaadin.switch.SwitchEvents
 import vaadin.tooltip.createTooltip
+import web.dom.ElementId
 import web.dom.clickEvent
 import web.dom.document
 import web.events.addHandler
@@ -149,7 +150,7 @@ private fun buildDialogPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "内容通过 renderer 注入浮层；footerRenderer 放操作按钮。")
     val log = EventLog(5)
     val dialog = createDialog()
-    dialog.setAttribute("data-test", "dialog-basic")
+    dialog.dataset["test"] = "dialog-basic"
     val content =
         column(
             paragraph("对话框内容由 renderer 提供：renderer(root, dialog) 里向 root 追加节点。"),
@@ -229,7 +230,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "确认 / 取消会分别触发 confirm 与 cancel，之后触发 closed。")
     val log = EventLog(6)
     val confirm = createConfirmDialog()
-    confirm.setAttribute("data-test", "confirm-dialog-basic")
+    confirm.dataset["test"] = "confirm-dialog-basic"
     confirm.header = "删除这条记录？"
     confirm.message = "删除后无法恢复。"
     confirm.confirmText = "删除"
@@ -366,11 +367,11 @@ private fun buildPopoverPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "popover 通过 for 指向触发元素的 id；默认点击触发、点击外部关闭。")
     val log = EventLog(4)
     val trigger = createButton { textContent = "点击查看" }.withTheme("primary")
-    trigger.setAttribute("id", "popover-trigger")
-    trigger.setAttribute("data-test", "popover-trigger")
+    trigger.id = ElementId("popover-trigger")
+    trigger.dataset["test"] = "popover-trigger"
 
     val popover = createPopover()
-    popover.setAttribute("for", "popover-trigger")
+    popover.`for` = "popover-trigger"
     popover.append(
         column(
             heading(3, "浮层内容"),
@@ -387,9 +388,9 @@ private fun buildPopoverPage(meta: PageMeta): HTMLElement {
     listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
         val id = "popover-position-$index"
         val button = createButton { textContent = position }.withTheme("tertiary")
-        button.setAttribute("id", id)
+        button.id = ElementId(id)
         val positioned = createPopover()
-        positioned.setAttribute("for", id)
+        positioned.`for` = id
         positioned.position = position
         positioned.append(paragraph("position = $position"))
         positionedButtons += row(button, positioned)
@@ -399,9 +400,9 @@ private fun buildPopoverPage(meta: PageMeta): HTMLElement {
 
     val modal = section("模态与背景", "modal 会阻止页面其他交互，withBackdrop 打开遮罩。")
     val modalTrigger = createButton { textContent = "打开模态浮层" }.withTheme("contrast")
-    modalTrigger.setAttribute("id", "popover-modal-trigger")
+    modalTrigger.id = ElementId("popover-modal-trigger")
     val modalPopover = createPopover()
-    modalPopover.setAttribute("for", "popover-modal-trigger")
+    modalPopover.`for` = "popover-modal-trigger"
     modalPopover.modal = true
     modalPopover.withBackdrop = true
     val modalClose = createButton { textContent = "关闭" }
@@ -418,35 +419,35 @@ private fun buildTooltipPage(meta: PageMeta): HTMLElement {
 
     val slotted = section("放进插槽", "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。")
     val buttonWithTooltip = createButton { textContent = "悬停我" }
-    buttonWithTooltip.append(createTooltip { text = "这是按钮上的提示" }.apply { setAttribute("slot", "tooltip") })
+    buttonWithTooltip.append(createTooltip { text = "这是按钮上的提示" }.apply { slot = "tooltip" })
     val fieldWithTooltip =
         vaadin.textfield.createTextField {
             label = "字段的提示"
             placeholder = "聚焦后显示"
         }
-    fieldWithTooltip.append(createTooltip { text = "字段级的提示文本" }.apply { setAttribute("slot", "tooltip") })
+    fieldWithTooltip.append(createTooltip { text = "字段级的提示文本" }.apply { slot = "tooltip" })
     slotted.body.append(example(null, row(buttonWithTooltip, fieldWithTooltip)))
     view.body.append(slotted.root)
 
     val linked = section("用 for 关联", "不在组件内部时，用 for 指向目标元素的 id。")
     val target = div("example").apply { textContent = "这个区块带有一个提示" }
-    target.setAttribute("id", "tooltip-target")
+    target.id = ElementId("tooltip-target")
     target.style.setProperty("padding", "var(--lumo-space-m)")
     val tooltip = createTooltip { text = "关联到任意元素的提示" }
-    tooltip.setAttribute("for", "tooltip-target")
+    tooltip.`for` = "tooltip-target"
     linked.body.append(example(null, column(target), tooltip))
     view.body.append(linked.root)
 
     val delays = section("延迟与 Markdown", "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。")
     val mdTarget = createButton { textContent = "Markdown 提示" }
-    mdTarget.setAttribute("id", "tooltip-markdown")
+    mdTarget.id = ElementId("tooltip-markdown")
     val mdTooltip =
         createTooltip {
             text = "**粗体** 与 *斜体*，以及 `代码`"
             markdown = true
             hoverDelay = 0.0
         }
-    mdTooltip.setAttribute("for", "tooltip-markdown")
+    mdTooltip.`for` = "tooltip-markdown"
     delays.body.append(example(null, row(mdTarget, mdTooltip)))
     view.body.append(delays.root)
 
@@ -474,7 +475,7 @@ private fun buildContextMenuPage(meta: PageMeta): HTMLElement {
     val basic = section("右键打开", "openOn 默认是 contextmenu；listenOn 指向接收事件的元素。")
     val log = EventLog(5)
     val surface = div("example").apply { textContent = "在这个区域点击右键" }
-    surface.setAttribute("data-test", "context-menu-surface")
+    surface.dataset["test"] = "context-menu-surface"
     val menu = createContextMenu()
     menu.openOn = "contextmenu"
     menu.listenOn = surface
@@ -501,7 +502,7 @@ private fun buildOverlayPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "renderer(root, owner, model) 负责内容；withBackdrop 打开遮罩。")
     val overlay = createOverlay()
-    overlay.setAttribute("data-test", "overlay-basic")
+    overlay.dataset["test"] = "overlay-basic"
     overlay.withBackdrop = true
     val overlayContent = column(paragraph("这是一个裸 overlay，没有 dialog 的头部与底部。"))
     val overlayClose = createButton { textContent = "关闭" }
@@ -547,7 +548,7 @@ private fun buildLoginPage(meta: PageMeta): HTMLElement {
     val form = section("登录表单", "点击提交后字段会先校验，然后触发 login 事件（本页不连后端）。")
     val log = EventLog(5)
     val loginForm = createLoginForm()
-    loginForm.setAttribute("data-test", "login-form")
+    loginForm.dataset["test"] = "login-form"
     loginForm.listen(LoginFormEvents.login) { log.add("login") }
     loginForm.listen(LoginFormEvents.forgotPassword) { log.add("forgot-password") }
     // `error` starts as `false`, so only the transitions to the error state are interesting.
@@ -563,7 +564,7 @@ private fun buildLoginPage(meta: PageMeta): HTMLElement {
 
     val overlay = section("登录浮层", "LoginOverlay 把同一个表单放进全屏浮层，适合应用入口。")
     val loginOverlay = createLoginOverlay()
-    loginOverlay.setAttribute("data-test", "login-overlay")
+    loginOverlay.dataset["test"] = "login-overlay"
     loginOverlay.description = "使用任意用户名和密码体验交互"
     loginOverlay.listen(LoginFormEvents.login) { loginOverlay.opened = false }
     overlay.body.append(

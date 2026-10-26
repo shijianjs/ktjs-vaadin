@@ -92,7 +92,7 @@ private fun buildTextFieldPage(meta: PageMeta): HTMLElement {
             placeholder = "例如 Ada Lovelace"
             helperText = "显示在输入框下方"
         }
-    nameField.setAttribute("data-test", "text-field-basic")
+    nameField.dataset["test"] = "text-field-basic"
     nameField.listen(TextFieldEvents.input) {
         readout.set("当前值：", nameField.value.ifEmpty { "（空）" })
     }
@@ -110,13 +110,13 @@ private fun buildTextFieldPage(meta: PageMeta): HTMLElement {
             placeholder = "输入关键字"
             clearButtonVisible = true
         }
-    searchField.append(createIcon { icon = "lumo:search" }.apply { setAttribute("slot", "prefix") })
+    searchField.append(createIcon { icon = "lumo:search" }.apply { slot = "prefix" })
     val unitField =
         createTextField {
             label = "金额"
             value = "128"
         }
-    unitField.append(createIcon { icon = "lumo:checkmark" }.apply { setAttribute("slot", "suffix") })
+    unitField.append(createIcon { icon = "lumo:checkmark" }.apply { slot = "suffix" })
     val cleared = Readout("清空按钮会把值置为空字符串")
     searchField.listen(TextFieldEvents.valueChanged) {
         cleared.set("搜索值：", searchField.value.ifEmpty { "（空）" })
@@ -134,7 +134,7 @@ private fun buildTextFieldPage(meta: PageMeta): HTMLElement {
             pattern = "[a-z]{3,6}"
             errorMessage = "请输入 3-6 位小写字母"
         }
-    codeField.setAttribute("data-test", "text-field-validated")
+    codeField.dataset["test"] = "text-field-validated"
     val result = Readout("尚未校验")
     val validateButton =
         createButton { textContent = "校验" }.apply {
@@ -190,7 +190,7 @@ private fun buildTextAreaPage(meta: PageMeta): HTMLElement {
             maxlength = 200.0
             helperText = "支持换行，超出上限会被截断"
         }
-    messageField.setAttribute("data-test", "text-area-basic")
+    messageField.dataset["test"] = "text-area-basic"
     messageField.listen(TextAreaEvents.input) {
         lengthReadout.set("字数：${messageField.value.length} / 200")
     }
@@ -225,7 +225,7 @@ private fun buildTextAreaPage(meta: PageMeta): HTMLElement {
             required = true
             errorMessage = "这一项不能为空"
         }
-    requiredArea.setAttribute("data-test", "text-area-required")
+    requiredArea.dataset["test"] = "text-area-required"
     val result = Readout("尚未校验")
     val validateButton =
         createButton { textContent = "校验" }.apply {
@@ -252,8 +252,8 @@ private fun buildEmailFieldPage(meta: PageMeta): HTMLElement {
             helperText = "用于接收通知"
             errorMessage = "请输入合法的邮箱地址"
         }
-    emailField.setAttribute("data-test", "email-field")
-    emailField.append(createIcon { icon = "lumo:user" }.apply { setAttribute("slot", "prefix") })
+    emailField.dataset["test"] = "email-field"
+    emailField.append(createIcon { icon = "lumo:user" }.apply { slot = "prefix" })
     val readout = Readout("valid = false")
     val sync = {
         readout.set("valid = ${emailField.checkValidity()} · 值：${emailField.value.ifEmpty { "（空）" }}")
@@ -298,7 +298,7 @@ private fun buildPasswordFieldPage(meta: PageMeta): HTMLElement {
             helperText = "至少 8 位"
             clearButtonVisible = false
         }
-    passwordField.setAttribute("data-test", "password-field")
+    passwordField.dataset["test"] = "password-field"
     val readout = Readout("passwordVisible = false")
     val sync = {
         readout.set("passwordVisible = ${passwordField.passwordVisible} · 长度 ${passwordField.value.length}")

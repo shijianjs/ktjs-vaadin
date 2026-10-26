@@ -71,7 +71,7 @@ class AppShell {
             navItems.forEach { (id, item) ->
                 val active = id == entry.id
                 item.classList.toggle(ClassName("nav__current"), active)
-                if (active) item.setAttribute("aria-current", "page") else item.removeAttribute("aria-current")
+                item.ariaCurrent = if (active) "page" else null
             }
             breadcrumb.textContent = "${entry.group} / ${entry.meta.title}"
             document.title = "${entry.meta.title} · ktjs-vaadin"
@@ -99,8 +99,8 @@ class AppShell {
         val dark = Theme.isDark
         lightButton.withTheme(if (dark) "tertiary" else "primary")
         darkButton.withTheme(if (dark) "primary" else "tertiary")
-        lightButton.setAttribute("aria-pressed", if (dark) "false" else "true")
-        darkButton.setAttribute("aria-pressed", if (dark) "true" else "false")
+        lightButton.ariaPressed = if (dark) "false" else "true"
+        darkButton.ariaPressed = if (dark) "true" else "false"
     }
 
     private fun buildNav(): HTMLElement {
@@ -121,13 +121,13 @@ class AppShell {
             val groupNav = createSideNav()
             catalogEntriesOf(group).forEach { entry ->
                 val item = createSideNavItem { textContent = entry.meta.title }
-                item.setAttribute("data-route", entry.id)
+                item.dataset["route"] = entry.id
                 // `vaadin-side-nav-item` derives its `current` state from `path`, comparing
                 // `document.location.pathname` with the resolved path. A hash route always resolves
                 // to the same pathname, so every item would be "current". The shell therefore keeps
                 // navigation in its own hands and marks the active item with `nav__current`.
-                item.setAttribute("role", "link")
-                item.setAttribute("tabindex", "0")
+                item.role = "link"
+                item.tabIndex = 0
                 item.clickEvent.addHandler { open(entry.id) }
                 item.listen(KEY_DOWN) { event ->
                     if (event.key == "Enter" || event.key == " ") {
@@ -147,7 +147,7 @@ class AppShell {
     private fun buildMain(): HTMLElement {
         val menuButton = createButton().withTheme("icon").withClass("topbar__menu")
         menuButton.append(createIcon { icon = "lumo:menu" })
-        menuButton.setAttribute("aria-label", "显示导航")
+        menuButton.ariaLabel = "显示导航"
         menuButton.clickEvent.addHandler { nav.classList.toggle(ClassName("shell__nav--open")) }
 
         val topbar =

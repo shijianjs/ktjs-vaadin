@@ -134,15 +134,15 @@ private fun buildThemingPage(meta: PageMeta): HTMLElement {
             label = "small 变体"
             placeholder = "更紧凑的输入框"
         }
-    compactField.setAttribute("theme", "small")
+    compactField.withTheme("small")
     val helperAbove =
         createTextField {
             label = "helper-above-field"
             helperText = "说明文字在字段上方"
         }
-    helperAbove.setAttribute("theme", "helper-above-field")
+    helperAbove.withTheme("helper-above-field")
     val card = createCard { cardTitle = "elevated 卡片" }
-    card.setAttribute("theme", "elevated")
+    card.withTheme("elevated")
     card.append(paragraph("主题变体只影响外观，不改变 API。"))
 
     variants.body.append(

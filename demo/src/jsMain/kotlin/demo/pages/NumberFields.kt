@@ -98,7 +98,7 @@ private fun buildNumberFieldPage(meta: PageMeta): HTMLElement {
             helperText = "0 - 100，步进 1"
             errorMessage = "请输入 0 到 100 之间的数字"
         }
-    quantity.setAttribute("data-test", "number-field-basic")
+    quantity.dataset["test"] = "number-field-basic"
     quantity.listen(NumberFieldEvents.valueChanged) {
         readout.set("当前值：", quantity.value.ifEmpty { "（空）" })
         log.add("value-changed · ${quantity.value}")
@@ -124,7 +124,7 @@ private fun buildNumberFieldPage(meta: PageMeta): HTMLElement {
             stepButtonsVisible = true
             errorMessage = "单价需要在 0 到 100 之间"
         }
-    price.setAttribute("data-test", "number-field-range")
+    price.dataset["test"] = "number-field-range"
     val priceResult = Readout("尚未校验")
     val validateButton =
         createButton { textContent = "校验" }.apply {
@@ -174,7 +174,7 @@ private fun buildIntegerFieldPage(meta: PageMeta): HTMLElement {
             min = 0.0
             stepButtonsVisible = true
         }
-    count.setAttribute("data-test", "integer-field-basic")
+    count.dataset["test"] = "integer-field-basic"
     count.listen(IntegerFieldEvents.valueChanged) {
         readout.set("当前值：", count.value.ifEmpty { "（空）" })
         log.add("value-changed · ${count.value}")
@@ -233,7 +233,7 @@ private fun buildCustomFieldPage(meta: PageMeta): HTMLElement {
             formatValue = { values -> joinInputs(values) }
             parseValue = { text -> splitInputs(text) }
         }
-    fullName.setAttribute("data-test", "custom-field")
+    fullName.dataset["test"] = "custom-field"
     fullName.append(firstName, lastName)
 
     val readout = Readout("字段值：（空）")
@@ -285,7 +285,7 @@ private fun buildFieldHighlighterPage(meta: PageMeta): HTMLElement {
             value = "季度报告草稿"
             helperText = "下面的按钮模拟其他用户开始 / 结束编辑"
         }
-    field.setAttribute("data-test", "highlighted-field")
+    field.dataset["test"] = "highlighted-field"
     val alice = fieldHighlighterUser(1.0, "Alice", 0.0)
     val bob = fieldHighlighterUser(2.0, "Bob", 1.0)
     val readout = Readout("当前没有其他用户")

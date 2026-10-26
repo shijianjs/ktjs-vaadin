@@ -7,7 +7,12 @@ import web.dom.document
 import web.html.HTMLAnchorElement
 import web.html.HTMLHeadingElement
 import web.html.HTMLElement
+import web.html.Hidden
 import web.html.HtmlTagName
+import web.html.`false`
+import web.html.`true`
+import web.window.WindowTarget
+import web.window._blank
 
 /**
  * Small DOM builders used by every demo page.
@@ -63,16 +68,15 @@ fun anchor(text: String, href: String, className: String? = null, external: Bool
     created.textContent = text
     created.href = href
     if (external) {
-        // `target` is typed as the opaque `WindowTarget`, so the keyword goes through the attribute.
-        created.setAttribute("target", "_blank")
-        created.setAttribute("rel", "noopener noreferrer")
+        created.target = WindowTarget.Companion._blank
+        created.rel = "noopener noreferrer"
     }
     return created
 }
 
-/** Shows or hides the element with the native `hidden` attribute. */
+/** Shows or hides the element with the native `hidden` property. */
 fun HTMLElement.setHidden(hidden: Boolean) {
-    if (hidden) setAttribute("hidden", "") else removeAttribute("hidden")
+    this.hidden = if (hidden) Hidden.Companion.`true` else Hidden.Companion.`false`
 }
 
 /** Whether the element carries the native `hidden` attribute. */
@@ -96,7 +100,12 @@ fun <T : HTMLElement> T.withClass(className: String): T {
     return this
 }
 
-/** Sets the `theme` attribute from [variants]; no variants removes it. */
+/**
+ * Sets the `theme` attribute from [variants]; no variants removes it.
+ *
+ * Vaadin exposes `theme` only as an attribute (there is no JS property), so this helper is the
+ * single place that touches the raw attribute API.
+ */
 fun <T : HTMLElement> T.withTheme(vararg variants: String): T {
     if (variants.isEmpty()) {
         removeAttribute("theme")

@@ -130,7 +130,7 @@ private fun buildGridPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "列用 path 绑定 items 里的字段；选择列把选中项写进 selectedItems。")
     val log = EventLog(6)
     val grid = createGrid()
-    grid.setAttribute("data-test", "grid-basic")
+    grid.dataset["test"] = "grid-basic"
     // Grid defaults to `height: 100%`; inside an auto-height container it needs an explicit height.
     grid.style.setProperty("height", "18rem")
     grid.items = jsArray<JsAny>(PEOPLE_JSON)
@@ -162,7 +162,7 @@ private fun buildGridPage(meta: PageMeta): HTMLElement {
 
     val sorting = section("排序与筛选", "sort-column 的 direction 由表头点击更新，filter-column 提供筛选输入框。")
     val sorted = createGrid()
-    sorted.setAttribute("data-test", "grid-sorted")
+    sorted.dataset["test"] = "grid-sorted"
     sorted.style.setProperty("height", "18rem")
     sorted.items = jsArray<JsAny>(PEOPLE_JSON)
     sorted.append(
@@ -190,10 +190,10 @@ private fun buildGridPage(meta: PageMeta): HTMLElement {
 
     val variants = section("行详情与主题", "rowDetailsRenderer 渲染展开区；theme 控制行条纹、边框与密度。")
     val detailed = createGrid()
-    detailed.setAttribute("data-test", "grid-details")
+    detailed.dataset["test"] = "grid-details"
     detailed.items = jsArray<JsAny>(PEOPLE_JSON)
     detailed.allRowsVisible = true
-    detailed.setAttribute("theme", "row-stripes column-borders compact")
+    detailed.withTheme("row-stripes", "column-borders", "compact")
     detailed.append(
         createGridColumn {
             header = "姓名"
@@ -235,7 +235,7 @@ private fun buildVirtualListPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "renderer 只对可见行调用；滚动时复用容器节点，因此看起来像无限长的列表。")
     val list = createVirtualList()
-    list.setAttribute("data-test", "virtual-list")
+    list.dataset["test"] = "virtual-list"
     list.items = jsArray<JsAny>((1..1000).joinToString(",", "[", "]"))
     list.renderer = { container, _, model ->
         container.textContent = "第 ${model.index + 1} 行"
@@ -276,7 +276,7 @@ private fun buildMessageListPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "items 里每条消息提供 text / userName / userAbbr / time；markdown 打开后按 Markdown 渲染。")
     val messages =
         createMessageList()
-    messages.setAttribute("data-test", "message-list")
+    messages.dataset["test"] = "message-list"
     messages.items =
         jsArray<JsAny?>(
             """
@@ -316,7 +316,7 @@ private fun buildMessageInputPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "回车或点击发送触发 submit；value 不会自动清空，由调用方决定。")
     val input = createMessageInput()
-    input.setAttribute("data-test", "message-input")
+    input.dataset["test"] = "message-input"
     val readout = Readout("尚未发送")
     val log = EventLog(4)
     input.listen(MessageInputEvents.submit) {
@@ -340,7 +340,7 @@ private fun buildMarkdownPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "content 是 Markdown 源码，组件把它渲染成 HTML。")
     val markdown = createMarkdown()
-    markdown.setAttribute("data-test", "markdown")
+    markdown.dataset["test"] = "markdown"
     markdown.content =
         """
         # 标题
@@ -375,7 +375,7 @@ private fun buildUploadPage(meta: PageMeta): HTMLElement {
             "noAuto 打开后文件只进入列表、不会真的上传，因此没有后端也能完整演示选择、移除与数量限制。",
         )
     val upload = createUpload()
-    upload.setAttribute("data-test", "upload")
+    upload.dataset["test"] = "upload"
     upload.noAuto = true
     upload.maxFiles = 3.0
     upload.accept = "image/*,application/pdf"

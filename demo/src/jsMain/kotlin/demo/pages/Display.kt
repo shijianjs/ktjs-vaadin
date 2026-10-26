@@ -209,7 +209,7 @@ private fun buildAvatarGroupPage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "items 里每个对象描述一个头像，超过 maxItemsVisible 的部分折叠成 +N。")
     val group = createAvatarGroup { maxItemsVisible = 3.0 }
-    group.setAttribute("data-test", "avatar-group")
+    group.dataset["test"] = "avatar-group"
     group.items = items
     basic.body.append(example(null, group))
     view.body.append(basic.root)
@@ -243,7 +243,7 @@ private fun buildBadgePage(meta: PageMeta): HTMLElement {
 
     val basic = section("基本用法", "number 是显示的数字；没有 number 时显示默认插槽文本。")
     val badge = createBadge { number = 4.0 }
-    badge.setAttribute("data-test", "badge")
+    badge.dataset["test"] = "badge"
     basic.body.append(
         example(
             null,
@@ -272,7 +272,7 @@ private fun buildBadgePage(meta: PageMeta): HTMLElement {
 
     val dynamic = section("动态更新", "number 可以随时修改，徽标会立即更新。")
     val live = createBadge { number = 0.0 }
-    live.setAttribute("data-test", "badge-live")
+    live.dataset["test"] = "badge-live"
     val log = EventLog(3)
     val addButton =
         createButton { textContent = "加一" }.withTheme("tertiary").apply {
@@ -386,7 +386,7 @@ private fun buildProgressBarPage(meta: PageMeta): HTMLElement {
         max = 100.0
         value = 35.0
     }
-    progress.setAttribute("data-test", "progress-bar")
+    progress.dataset["test"] = "progress-bar"
     val readout = Readout("value = 35")
     val addButton =
         createButton { textContent = "+10" }.withTheme("tertiary").apply {
@@ -442,7 +442,7 @@ private fun buildInputContainerPage(meta: PageMeta): HTMLElement {
             "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
         )
     val container = createInputContainer()
-    container.setAttribute("data-test", "input-container")
+    container.dataset["test"] = "input-container"
     val input = element(HtmlTagName.input)
     input.style.setProperty("border", "none")
     input.style.setProperty("outline", "none")
@@ -450,8 +450,8 @@ private fun buildInputContainerPage(meta: PageMeta): HTMLElement {
     input.style.setProperty("font", "inherit")
     input.style.setProperty("color", "inherit")
     input.style.setProperty("width", "100%")
-    container.append(createIcon { icon = "lumo:search" }.apply { setAttribute("slot", "prefix") }, input)
-    container.append(createIcon { icon = "lumo:checkmark" }.apply { setAttribute("slot", "suffix") })
+    container.append(createIcon { icon = "lumo:search" }.apply { slot = "prefix" }, input)
+    container.append(createIcon { icon = "lumo:checkmark" }.apply { slot = "suffix" })
     basic.body.append(example(null, container))
     view.body.append(basic.root)
 
@@ -479,7 +479,7 @@ private fun plainContainer(label: String, readonly: Boolean = false, invalid: Bo
     container.disabled = disabled
     val input = element(HtmlTagName.input)
     input.value = label
-    input.setAttribute("aria-label", label)
+    input.ariaLabel = label
     input.style.setProperty("border", "none")
     input.style.setProperty("outline", "none")
     input.style.setProperty("background", "transparent")

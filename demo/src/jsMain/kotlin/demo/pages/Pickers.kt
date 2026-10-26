@@ -76,7 +76,7 @@ private fun buildDatePickerPage(meta: PageMeta): HTMLElement {
             clearButtonVisible = true
             helperText = "可以直接输入，也可以从日历选择"
         }
-    datePicker.setAttribute("data-test", "date-picker-basic")
+    datePicker.dataset["test"] = "date-picker-basic"
     val readout = Readout("value = 2026-10-25")
     datePicker.listen(DatePickerEvents.valueChanged) {
         readout.set("value = ", datePicker.value.ifEmpty { "（空）" })
@@ -112,7 +112,7 @@ private fun buildDatePickerPage(meta: PageMeta): HTMLElement {
             autoOpenDisabled = true
             value = "2026-01-15"
         }
-    manualPicker.setAttribute("data-test", "date-picker-manual")
+    manualPicker.dataset["test"] = "date-picker-manual"
     manualPicker.listen(DatePickerEvents.openedChanged) {
         openedReadout.set("opened = ${manualPicker.opened}")
     }
@@ -151,7 +151,7 @@ private fun buildTimePickerPage(meta: PageMeta): HTMLElement {
             clearButtonVisible = true
             helperText = "每 15 分钟一档"
         }
-    picker.setAttribute("data-test", "time-picker-basic")
+    picker.dataset["test"] = "time-picker-basic"
     val readout = Readout("value = 09:30")
     picker.listen(TimePickerEvents.valueChanged) {
         readout.set("value = ", picker.value.ifEmpty { "（空）" })
@@ -226,7 +226,7 @@ private fun buildDateTimePickerPage(meta: PageMeta): HTMLElement {
             step = 900.0
             helperText = "日期与时间可以分别编辑"
         }
-    picker.setAttribute("data-test", "date-time-picker-basic")
+    picker.dataset["test"] = "date-time-picker-basic"
     val readout = Readout("value = 2026-10-25T09:30")
     picker.listen(DateTimePickerEvents.valueChanged) {
         readout.set("value = ", picker.value.ifEmpty { "（空）" })

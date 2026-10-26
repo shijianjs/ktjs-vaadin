@@ -195,7 +195,7 @@ private fun buildCheckboxPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "checked 反映勾选状态；change 只在用户操作时触发，checked-changed 在属性被代码设置时也会触发。")
     val log = EventLog(6)
     val terms = createCheckbox { label = "我已阅读并同意条款" }
-    terms.setAttribute("data-test", "checkbox-basic")
+    terms.dataset["test"] = "checkbox-basic"
     // `change` only fires for user interaction, so the event stream stays readable; the read-out
     // shows `checked-changed` working for programmatic updates as well.
     terms.listen(CheckboxEvents.change) { log.add("change · ${terms.checked}") }
@@ -265,7 +265,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): HTMLElement {
             label = "使用的语言"
             helperText = "可以多选"
         }
-    group.setAttribute("data-test", "checkbox-group")
+    group.dataset["test"] = "checkbox-group"
     group.append(
         createCheckbox {
             value = "kotlin"
@@ -355,7 +355,7 @@ private fun buildRadioGroupPage(meta: PageMeta): HTMLElement {
             label = "套餐"
             value = "standard"
         }
-    group.setAttribute("data-test", "radio-group")
+    group.dataset["test"] = "radio-group"
     group.append(
         createRadioButton {
             value = "basic"
@@ -432,7 +432,7 @@ private fun buildSwitchPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "switch 与 checkbox 共享状态模型，用 checked 读写。")
     val notifications = createSwitch { label = "接收发布通知" }
     notifications.checked = true
-    notifications.setAttribute("data-test", "switch-basic")
+    notifications.dataset["test"] = "switch-basic"
     val readout = Readout("已开启")
     notifications.listen(SwitchEvents.checkedChanged) {
         readout.set("状态：", if (notifications.checked) "已开启" else "已关闭")
@@ -478,7 +478,7 @@ private fun buildListBoxPage(meta: PageMeta): HTMLElement {
     val basic = section("基本用法", "selected 是选中项的下标（Number），未选中时为 undefined。")
     val single =
         createListBox()
-    single.setAttribute("data-test", "list-box-single")
+    single.dataset["test"] = "list-box-single"
     single.append(
         createItem {
             value = "inbox"
@@ -552,7 +552,7 @@ private fun buildItemPage(meta: PageMeta): HTMLElement {
             createItem {
                 label = "带 label 的条目"
                 value = "one"
-            }.apply { setAttribute("data-test", "item-one") },
+            }.apply { dataset["test"] = "item-one" },
             createItem { textContent = "默认插槽文本" },
             createItem {
                 textContent = "已禁用"
@@ -592,7 +592,7 @@ private fun buildSelectPage(meta: PageMeta): HTMLElement {
             value = "helsinki"
             items = js(CITY_ITEMS_JSON)
         }
-    select.setAttribute("data-test", "select-basic")
+    select.dataset["test"] = "select-basic"
     val readout = Readout("value = helsinki")
     select.listen(SelectEvents.valueChanged) {
         readout.set("value = ", select.value.ifEmpty { "（未选择）" })
@@ -671,7 +671,7 @@ private fun buildComboBoxPage(meta: PageMeta): HTMLElement {
             value = "grace"
             clearButtonVisible = true
         }
-    combo.setAttribute("data-test", "combo-box-basic")
+    combo.dataset["test"] = "combo-box-basic"
     val readout = Readout("value = grace")
     val log = EventLog(4)
     combo.listen(ComboBoxEvents.valueChanged) {
@@ -742,7 +742,7 @@ private fun buildMultiSelectComboBoxPage(meta: PageMeta): HTMLElement {
                     ]""",
                 )
         }
-    multi.setAttribute("data-test", "multi-select-combo-box")
+    multi.dataset["test"] = "multi-select-combo-box"
     val readout = Readout("已选 0 项")
     multi.listen(MultiSelectComboBoxEvents.selectedItemsChanged) {
         readout.set("已选 ${multi.selectedItems.size} 项：", selectedNames(multi.selectedItems))
@@ -788,7 +788,7 @@ private fun buildSliderPage(meta: PageMeta): HTMLElement {
             value = 40.0
             valueAlwaysVisible = true
         }
-    slider.setAttribute("data-test", "slider-basic")
+    slider.dataset["test"] = "slider-basic"
     val readout = Readout("value = 40")
     slider.listen(SliderEvents.input) { readout.set("数值 = ", slider.value.toString()) }
     slider.listen(SliderEvents.change) { readout.set("已提交数值 = ", slider.value.toString()) }

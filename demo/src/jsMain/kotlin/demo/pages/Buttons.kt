@@ -66,7 +66,7 @@ private fun buildButtonPage(meta: PageMeta): HTMLElement {
     val log = EventLog()
     var count = 0
     val saveButton = createButton { textContent = "保存更改" }
-    saveButton.setAttribute("data-test", "basic-button")
+    saveButton.dataset["test"] = "basic-button"
     saveButton.clickEvent.addHandler {
         count++
         clicks.set("点击次数：$count")
@@ -104,14 +104,14 @@ private fun buildButtonPage(meta: PageMeta): HTMLElement {
     val sizing = section("尺寸与图标", "small / large 改变内边距与字号；icon 只保留图标；prefix / suffix 插槽放任意节点。")
     val withPrefix =
         createButton { textContent = "新建" }
-    withPrefix.append(createIcon { icon = "lumo:plus" }.apply { setAttribute("slot", "prefix") })
+    withPrefix.append(createIcon { icon = "lumo:plus" }.apply { slot = "prefix" })
     val withSuffix =
         createButton { textContent = "下载" }
-    withSuffix.append(createIcon { icon = "lumo:download" }.apply { setAttribute("slot", "suffix") })
+    withSuffix.append(createIcon { icon = "lumo:download" }.apply { slot = "suffix" })
     val iconOnly = createButton()
     iconOnly.withTheme("icon")
     iconOnly.append(createIcon { icon = "lumo:search" })
-    iconOnly.setAttribute("aria-label", "搜索")
+    iconOnly.ariaLabel = "搜索"
 
     sizing.body.append(
         example(
@@ -130,7 +130,7 @@ private fun buildButtonPage(meta: PageMeta): HTMLElement {
                 iconOnly,
                 createButton { textContent = "primary + 图标" }
                     .withTheme("primary")
-                    .apply { append(createIcon { icon = "lumo:checkmark" }.apply { setAttribute("slot", "prefix") }) },
+                    .apply { append(createIcon { icon = "lumo:checkmark" }.apply { slot = "prefix" }) },
             ),
         ),
     )
@@ -199,7 +199,7 @@ private fun buildMenuBarPage(meta: PageMeta): HTMLElement {
     val log = EventLog(6)
     val readout = Readout("尚未选择菜单项")
     val menuBar = createMenuBar { items = menubarItems }
-    menuBar.setAttribute("data-test", "menu-bar")
+    menuBar.dataset["test"] = "menu-bar"
     menuBar.listen(MenuBarEvents.itemSelected) { event ->
         val value = detailText(event)
         readout.set("已选择：", value)
