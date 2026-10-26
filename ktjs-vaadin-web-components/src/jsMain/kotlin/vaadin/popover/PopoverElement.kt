@@ -173,7 +173,7 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
      * can be only opened programmatically by changing `opened` property. Note, closing
      * on Escape press or outside click is still allowed unless explicitly disabled.
      */
-    var trigger: Array<kotlin.js.JsAny?>
+    var trigger: Array<vaadin.popover.PopoverTrigger>?
     /**
      * Set the width of the popover.
      * If a unitless number is provided, pixels are assumed.

@@ -4,6 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
+import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
@@ -16,9 +17,9 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.setHidden
 import demo.ui.withTheme
-import demo.tr
 import vaadin.button.createButton
 import vaadin.customfield.createCustomField
+import vaadin.fieldhighlighter.AiFieldMarkerConfidences
 import vaadin.fieldhighlighter.FieldHighlighter
 import vaadin.fieldhighlighter.createAiFieldMarker
 import vaadin.fieldhighlighter.fieldHighlighterUser
@@ -416,7 +417,7 @@ private fun buildFieldHighlighterPage(meta: PageMeta): PageView {
             value = tr("自动摘要……", "Automatic summary…")
         }
     val marker = createAiFieldMarker { working = true }
-    marker.confidence = "high"
+    marker.confidence = AiFieldMarkerConfidences.high
     aiField.append(marker)
 
     val toggleButton =

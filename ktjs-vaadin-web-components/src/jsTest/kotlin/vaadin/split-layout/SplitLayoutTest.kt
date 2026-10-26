@@ -2,6 +2,7 @@ package vaadin.splitlayout
 
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -52,13 +53,13 @@ class SplitLayoutTest {
 
     @Test
     fun orientationDefaultsToHorizontal() {
-        assertEquals("horizontal", attach(createSplitLayout()).orientation)
+        assertEquals("horizontal", attach(createSplitLayout()).orientation.unsafeCast<String>())
     }
 
     @Test
     fun orientationReflectsToTheAttribute(): Promise<Unit> {
         val layout = attach(createSplitLayout())
-        layout.orientation = "vertical"
+        layout.orientation = SplitLayoutOrientations.vertical
 
         return nextFrame().then { assertEquals("vertical", layout.getAttribute("orientation")) }
     }

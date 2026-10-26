@@ -28,5 +28,5 @@ external interface AppLayoutMixin : vaadin.componentbase.I18nMixin {
      * - By default (`primary-section="navbar"`), the navbar takes the full available width and moves the drawer down.
      * - If `primary-section="drawer"` is set, then the drawer will move the navbar, taking the full available height.
      */
-    var primarySection: String
+    var primarySection: vaadin.applayout.AppLayoutPrimarySection
 }

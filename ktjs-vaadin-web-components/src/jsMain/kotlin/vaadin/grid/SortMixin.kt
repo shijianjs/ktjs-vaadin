@@ -24,11 +24,11 @@ external interface SortMixin {
      * would add it to the "end" of the sort, and changing column's sort direction would retain
      * it's previous priority. To set this, use `multi-sort-priority="append"`.
      */
-    var multiSortPriority: String
+    var multiSortPriority: vaadin.grid.GridMultiSortPriority
     /**
      * Sets the default multi-sort priority to use for all grid instances.
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String)
+    fun setDefaultMultiSortPriority(priority: vaadin.grid.GridMultiSortPriority)
 }

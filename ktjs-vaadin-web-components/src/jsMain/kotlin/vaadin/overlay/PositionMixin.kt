@@ -10,7 +10,7 @@ external interface PositionMixin {
      * The overlay is automatically flipped to the opposite side when it doesn't fit into
      * the default side defined by this property.
      */
-    var horizontalAlign: String
+    var horizontalAlign: vaadin.overlay.OverlayHorizontalAlign
     /**
      * When `positionTarget` is set, this property defines whether the overlay should overlap
      * the target element in the x-axis, or be positioned right next to it.
@@ -42,5 +42,5 @@ external interface PositionMixin {
      * The overlay is automatically flipped to the opposite side when it doesn't fit into
      * the default side defined by this property.
      */
-    var verticalAlign: String
+    var verticalAlign: vaadin.overlay.OverlayVerticalAlign
 }

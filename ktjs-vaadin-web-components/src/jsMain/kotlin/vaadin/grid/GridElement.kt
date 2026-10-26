@@ -271,7 +271,7 @@ private external interface GridElementStaticMembers {
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String)
+    fun setDefaultMultiSortPriority(priority: vaadin.grid.GridMultiSortPriority)
 }
 
 @JsModule("@vaadin/grid/src/vaadin-grid.js")
@@ -285,7 +285,7 @@ object Grid {
      * This method should be called before creating any grid instances.
      * Changing this setting does not affect the default for existing grids.
      */
-    fun setDefaultMultiSortPriority(priority: String) {
+    fun setDefaultMultiSortPriority(priority: vaadin.grid.GridMultiSortPriority) {
         GridElementModule.Grid.setDefaultMultiSortPriority(priority)
     }
 }

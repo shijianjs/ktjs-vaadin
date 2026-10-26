@@ -38,7 +38,11 @@ class FormLayoutTest {
 
     private fun div(): HTMLElement = document.createElement("div")
 
-    private fun step(columns: Int, minWidth: String? = null, labelsPosition: String? = null): FormLayoutResponsiveStep {
+    private fun step(
+        columns: Int,
+        minWidth: String? = null,
+        labelsPosition: FormLayoutLabelsPosition? = null,
+    ): FormLayoutResponsiveStep {
         val step = js("({})").unsafeCast<FormLayoutResponsiveStep>()
         step.columns = columns.toDouble()
         minWidth?.let { step.minWidth = js("(value) => value")(it).unsafeCast<StringOrDouble>() }
@@ -153,7 +157,7 @@ class FormLayoutTest {
         val item = createFormItem()
         layout.appendChild(field)
         layout.appendChild(item)
-        layout.responsiveSteps = steps(step(1, labelsPosition = "top"))
+        layout.responsiveSteps = steps(step(1, labelsPosition = FormLayoutLabelsPositions.top))
 
         return nextUpdate(layout).then {
             assertNull(field.getAttribute("label-position"))
@@ -170,7 +174,7 @@ class FormLayoutTest {
 
         return nextUpdate(layout)
             .then {
-                layout.responsiveSteps = steps(step(1, labelsPosition = "top"))
+                layout.responsiveSteps = steps(step(1, labelsPosition = FormLayoutLabelsPositions.top))
                 nextUpdate(layout)
             }
             .then {

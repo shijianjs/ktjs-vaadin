@@ -91,7 +91,7 @@ class AppLayoutTest {
     fun usesNavbarAsTheDefaultPrimarySection(): Promise<Unit> {
         val host = newAppLayout()
 
-        return nextRender(host).then { assertEquals("navbar", host.primarySection) }
+        return nextRender(host).then { assertEquals("navbar", host.primarySection.unsafeCast<String>()) }
     }
 
     @Test
@@ -100,7 +100,7 @@ class AppLayoutTest {
 
         return nextUpdate(host)
             .then {
-                host.primarySection = "drawer"
+                host.primarySection = AppLayoutPrimarySections.drawer
                 nextUpdate(host)
             }
             .then { assertEquals("drawer", host.getAttribute("primary-section")) }
@@ -114,7 +114,7 @@ class AppLayoutTest {
 
         return nextRender(host)
             .then {
-                host.primarySection = "drawer"
+                host.primarySection = AppLayoutPrimarySections.drawer
                 nextUpdate(host)
             }
             .then { assertTrue(fired > 0, "expected a primary-section-changed event, got $fired") }
@@ -126,10 +126,10 @@ class AppLayoutTest {
 
         return nextUpdate(host)
             .then {
-                host.primarySection = "invalid"
+                host.primarySection = AppLayoutPrimarySection("invalid")
                 nextUpdate(host)
             }
-            .then { assertEquals("navbar", host.primarySection) }
+            .then { assertEquals("navbar", host.primarySection.unsafeCast<String>()) }
     }
 
     // drawer
@@ -222,9 +222,9 @@ class AppLayoutTest {
 
     @Test
     fun createAppLayoutAppliesTheConfigureBlock() {
-        val host = attach(createAppLayout { primarySection = "drawer" })
+        val host = attach(createAppLayout { primarySection = AppLayoutPrimarySections.drawer })
 
-        assertEquals("drawer", host.primarySection)
+        assertEquals("drawer", host.primarySection.unsafeCast<String>())
     }
 
     @Test

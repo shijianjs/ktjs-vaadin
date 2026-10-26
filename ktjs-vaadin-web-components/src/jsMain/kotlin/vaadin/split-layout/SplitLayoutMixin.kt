@@ -5,5 +5,5 @@ external interface SplitLayoutMixin {
     /**
      * The split layout's orientation. Possible values are: `horizontal|vertical`.
      */
-    var orientation: String
+    var orientation: vaadin.splitlayout.SplitLayoutOrientation
 }

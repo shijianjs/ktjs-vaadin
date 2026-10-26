@@ -3,6 +3,7 @@ package vaadin.scroller
 import vaadin.query
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -78,7 +79,7 @@ class ScrollerTest {
 
         return nextRender(scroller)
             .then {
-                scroller.scrollDirection = "horizontal"
+                scroller.scrollDirection = ScrollerScrollDirections.horizontal
                 nextUpdate(scroller)
             }
             .then { assertEquals("horizontal", scroller.getAttribute("scroll-direction")) }
@@ -135,7 +136,7 @@ class ScrollerTest {
 
     private fun horizontalOverflowScroller(): Promise<ScrollerElement> {
         val scroller = newScroller()
-        scroller.scrollDirection = "horizontal"
+        scroller.scrollDirection = ScrollerScrollDirections.horizontal
         js("(element) => { element.style.fontSize = '15px'; element.style.maxWidth = '6.75em'; }")(scroller)
         val content = document.createElement("div")
         js("(element) => { element.textContent = 'Long text that does not fit'; }")(content)
@@ -168,7 +169,7 @@ class ScrollerTest {
 
     private fun verticalOverflowScroller(): Promise<ScrollerElement> {
         val scroller = newScroller()
-        scroller.scrollDirection = "vertical"
+        scroller.scrollDirection = ScrollerScrollDirections.vertical
         js("(element) => { element.style.fontSize = '15px'; element.style.maxHeight = '3.75em'; }")(scroller)
         val content = document.createElement("div")
         js("(element) => { element.innerHTML = '<div style=\"font-size: 1.25em;\">Long<br>text<br>that<br>has<br>many<br>lines</div>'; }")(
@@ -245,9 +246,9 @@ class ScrollerTest {
 
     @Test
     fun createScrollerAppliesTheConfigureBlock() {
-        val scroller = attach(createScroller { scrollDirection = "vertical" })
+        val scroller = attach(createScroller { scrollDirection = ScrollerScrollDirections.vertical })
 
-        assertEquals("vertical", scroller.scrollDirection)
+        assertEquals("vertical", scroller.scrollDirection.unsafeCast<String>())
     }
 
     @Test

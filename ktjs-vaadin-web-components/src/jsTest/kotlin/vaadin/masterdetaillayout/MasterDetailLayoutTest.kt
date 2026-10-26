@@ -2,6 +2,7 @@ package vaadin.masterdetaillayout
 
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -86,9 +87,9 @@ class MasterDetailLayoutTest {
 
     @Test
     fun appliesTheOrientation(): Promise<Unit> {
-        val layout = attach(createMasterDetailLayout { orientation = "vertical" })
+        val layout = attach(createMasterDetailLayout { orientation = MasterDetailLayoutOrientations.vertical })
 
-        return nextRender(layout).then { assertEquals("vertical", layout.orientation) }
+        return nextRender(layout).then { assertEquals("vertical", layout.orientation.unsafeCast<String>()) }
     }
 
     @Test

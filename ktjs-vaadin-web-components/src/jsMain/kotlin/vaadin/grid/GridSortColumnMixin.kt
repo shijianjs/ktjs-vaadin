@@ -7,7 +7,7 @@ external interface GridSortColumnMixin {
      * Possible values are `asc` to use an ascending algorithm, `desc` to sort the data in
      * descending direction, or `null` for not sorting the data.
      */
-    var direction: String
+    var direction: vaadin.grid.GridSorterDirection?
     /**
      * JS Path of the property in the item used for sorting the data.
      */

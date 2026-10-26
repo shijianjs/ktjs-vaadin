@@ -1,6 +1,7 @@
 package vaadin.combobox
 
 import kotlin.js.Promise
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -45,7 +46,7 @@ class PartialMatchModeTest {
 
     @Test
     fun isNoneByDefault() {
-        assertEquals("none", comboBox().partialMatchMode)
+        assertEquals("none", comboBox().partialMatchMode.unsafeCast<String>())
     }
 
     @Test
@@ -88,7 +89,7 @@ class PartialMatchModeTest {
 
     @Test
     fun commitsTheFirstPartialMatchOnEnter(): Promise<Unit> {
-        val comboBox = comboBox { partialMatchMode = "first-match" }
+        val comboBox = comboBox { partialMatchMode = ComboBoxPartialMatchModes.firstMatch }
 
         return nextRender(comboBox).then {
             setComboBoxInput(comboBox, "grap")
@@ -100,7 +101,7 @@ class PartialMatchModeTest {
 
     @Test
     fun doesNotCommitOnEnterWhenNoItemsMatch(): Promise<Unit> {
-        val comboBox = comboBox { partialMatchMode = "first-match" }
+        val comboBox = comboBox { partialMatchMode = ComboBoxPartialMatchModes.firstMatch }
 
         return nextRender(comboBox).then {
             setComboBoxInput(comboBox, "xyz")
@@ -112,7 +113,7 @@ class PartialMatchModeTest {
 
     @Test
     fun commitsTheFirstPartialMatchOnClose(): Promise<Unit> {
-        val comboBox = comboBox { partialMatchMode = "first-match" }
+        val comboBox = comboBox { partialMatchMode = ComboBoxPartialMatchModes.firstMatch }
 
         return nextRender(comboBox).then {
             setComboBoxInput(comboBox, "grap")
@@ -126,7 +127,7 @@ class PartialMatchModeTest {
 
     @Test
     fun commitsTheOnlyPartialMatchOnEnter(): Promise<Unit> {
-        val comboBox = comboBox { partialMatchMode = "only-match" }
+        val comboBox = comboBox { partialMatchMode = ComboBoxPartialMatchModes.onlyMatch }
 
         return nextRender(comboBox).then {
             setComboBoxInput(comboBox, "grapef")
@@ -138,7 +139,7 @@ class PartialMatchModeTest {
 
     @Test
     fun doesNotCommitWhenMultipleItemsMatch(): Promise<Unit> {
-        val comboBox = comboBox { partialMatchMode = "only-match" }
+        val comboBox = comboBox { partialMatchMode = ComboBoxPartialMatchModes.onlyMatch }
 
         return nextRender(comboBox).then {
             setComboBoxInput(comboBox, "grap")
@@ -154,7 +155,7 @@ class PartialMatchModeTest {
     fun commitsTheExactMatchOnEnterWhileClosed(): Promise<Unit> {
         val comboBox = comboBox {
             autoOpenDisabled = true
-            partialMatchMode = "first-match"
+            partialMatchMode = ComboBoxPartialMatchModes.firstMatch
         }
 
         return nextRender(comboBox).then {
@@ -169,7 +170,7 @@ class PartialMatchModeTest {
     fun doesNotCommitTheFirstPartialMatchOnEnterWhileClosed(): Promise<Unit> {
         val comboBox = comboBox {
             autoOpenDisabled = true
-            partialMatchMode = "first-match"
+            partialMatchMode = ComboBoxPartialMatchModes.firstMatch
         }
 
         return nextRender(comboBox).then {
@@ -184,7 +185,7 @@ class PartialMatchModeTest {
     fun commitsTheFirstPartialMatchOnEnterAfterOpening(): Promise<Unit> {
         val comboBox = comboBox {
             autoOpenDisabled = true
-            partialMatchMode = "first-match"
+            partialMatchMode = ComboBoxPartialMatchModes.firstMatch
         }
 
         return nextRender(comboBox).then {

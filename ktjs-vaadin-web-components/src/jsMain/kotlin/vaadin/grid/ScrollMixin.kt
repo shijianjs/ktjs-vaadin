@@ -36,7 +36,7 @@ external interface ScrollMixin {
      * some of the columns that would include focusable elements in the body cells may be outside the visible viewport
      * and thus not rendered.
      */
-    var columnRendering: String
+    var columnRendering: vaadin.grid.ColumnRendering
     /**
      * Scrolls horizontally so that the column becomes visible in the viewport.
      *

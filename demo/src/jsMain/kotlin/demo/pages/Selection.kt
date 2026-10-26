@@ -4,6 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
+import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
@@ -17,10 +18,10 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import demo.tr
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
+import vaadin.a11ybase.ListOrientations
 import vaadin.button.createButton
 import vaadin.checkbox.CheckboxEvents
 import vaadin.checkbox.createCheckbox
@@ -671,7 +672,7 @@ private fun buildListBoxPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createListBox { orientation = "horizontal" }.apply {
+                createListBox { orientation = ListOrientations.horizontal }.apply {
                     append(
                         createItem { textContent = tr("一", "One") },
                         createItem { textContent = tr("二", "Two") },

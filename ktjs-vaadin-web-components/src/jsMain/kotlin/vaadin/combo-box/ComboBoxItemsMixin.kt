@@ -70,7 +70,7 @@ external interface ComboBoxItemsMixin : vaadin.combobox.ComboBoxBaseMixin {
      * partial match is also a valid custom value. A partial match is not
      * applied when custom values are allowed with `allowCustomValue`.
      */
-    var partialMatchMode: String
+    var partialMatchMode: vaadin.combobox.ComboBoxPartialMatchMode
     /**
      * Requests an update for the content of items.
      * While performing the update, it invokes the renderer (passed in the `renderer` property) once an item.

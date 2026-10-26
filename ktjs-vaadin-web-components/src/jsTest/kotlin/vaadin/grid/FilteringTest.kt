@@ -489,7 +489,7 @@ class FilteringTest {
         }
         .then { grid ->
             val sorter = assertNotNull(vaadin.query(grid, "vaadin-grid-sorter")).unsafeCast<GridSorterElement>()
-            sorter.direction = "asc"
+            sorter.direction = GridSorterDirections.asc
             flushGrid(grid)
             nextFrame().then { grid }
         }

@@ -12,7 +12,7 @@ abstract external class UploadManager : web.events.EventTarget {
      * Abort an upload.
      */
     fun abortUpload(`file`: vaadin.upload.UploadFile)
-    var accept: kotlin.js.JsAny?
+    var accept: String
     /**
      * Add files to the upload list.
      */
@@ -48,7 +48,7 @@ abstract external class UploadManager : web.events.EventTarget {
      * Files that fail validation will be rejected with a 'file-reject' event.
      */
     var files: Array<vaadin.upload.UploadFile>
-    var formDataName: kotlin.js.JsAny?
+    var formDataName: String
     /**
      * Key-Value map to send to the server.
      */
@@ -61,7 +61,7 @@ abstract external class UploadManager : web.events.EventTarget {
      * Limit of files to upload, by default it is unlimited.
      */
     var maxFiles: Double
-    var maxFileSize: kotlin.js.JsAny?
+    var maxFileSize: Double
     /**
      * Specifies if the maximum number of files have been uploaded.
      */
@@ -69,8 +69,8 @@ abstract external class UploadManager : web.events.EventTarget {
     /**
      * HTTP Method used to send the files. Only POST and PUT are allowed.
      */
-    var method: String
-    var noAuto: kotlin.js.JsAny?
+    var method: vaadin.upload.UploadMethod
+    var noAuto: Boolean
     /**
      * Remove a file from the list.
      */
@@ -79,14 +79,14 @@ abstract external class UploadManager : web.events.EventTarget {
      * Retry a failed upload.
      */
     fun retryUpload(`file`: vaadin.upload.UploadFile)
-    var target: kotlin.js.JsAny?
-    var timeout: kotlin.js.JsAny?
+    var target: String
+    var timeout: Double
     /**
      * Triggers the upload of any files that are not completed.
      */
     fun uploadFiles(files: UploadFileOrUploadFileArray = definedExternally)
-    var uploadFormat: kotlin.js.JsAny?
-    var withCredentials: kotlin.js.JsAny?
+    var uploadFormat: vaadin.upload.UploadFormat
+    var withCredentials: Boolean
 }
 
 @JsModule("@vaadin/upload/src/vaadin-upload-manager.js")

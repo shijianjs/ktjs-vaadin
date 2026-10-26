@@ -1,5 +1,6 @@
 package vaadin.grid
 
+import js.reflect.unsafeCast
 import web.html.HTMLElement
 
 /** The model passed to grid item renderers and item-based callbacks. */
@@ -40,8 +41,8 @@ external interface GridSorterDefinition {
     /** The property path of the sorted field. */
     var path: String
 
-    /** The sort direction: `asc` or `desc`. */
-    var direction: String
+    /** The sort direction. */
+    var direction: GridSorterDirection?
 }
 
 /** Parameters passed to a [GridDataProvider]. */
@@ -85,8 +86,8 @@ typealias GridDragAndDropFilter = (GridItemModel) -> Boolean
 
 /** Context about the event target inside a grid. */
 external interface GridEventContext {
-    /** The targeted section: `body`, `details`, `footer`, or `header`. */
-    var section: String?
+    /** The targeted section. */
+    var section: GridEventSection?
 
     /** The item of the targeted row. */
     var item: kotlin.js.JsAny?
@@ -111,4 +112,18 @@ external interface GridEventContext {
 
     /** The tree level of the item. */
     var level: Double?
+}
+
+/** Section of a grid targeted by an event: `body`, `details`, `footer` or `header`. */
+sealed external interface GridEventSection
+
+/** Wraps a value from JavaScript. Prefer the constants in [GridEventSections]. */
+fun GridEventSection(value: String): GridEventSection = unsafeCast(value)
+
+/** All values of [GridEventSection]. */
+object GridEventSections {
+    inline val body: GridEventSection get() = GridEventSection("body")
+    inline val details: GridEventSection get() = GridEventSection("details")
+    inline val footer: GridEventSection get() = GridEventSection("footer")
+    inline val header: GridEventSection get() = GridEventSection("header")
 }

@@ -10,8 +10,8 @@ package vaadin.contextmenu
 abstract external class ContextMenuTooltipController {
     fun bringToFront()
     fun close(immediate: Boolean)
-    fun initCustomNode(tooltipNode: kotlin.js.JsAny?)
-    fun `open`(`{ trigger }`: kotlin.js.JsAny?, options: kotlin.js.JsAny)
+    fun initCustomNode(tooltipNode: web.html.HTMLElement)
+    fun `open`(options: vaadin.contextmenu.ContextMenuTooltipOpenOptions)
     fun setTarget(target: web.html.HTMLElement?)
 }
 

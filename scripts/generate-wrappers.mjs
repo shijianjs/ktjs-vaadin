@@ -194,6 +194,17 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
   ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
+  // The manifest records the column alignment as an untyped `string`; upstream `.d.ts` uses the CSS
+  // `text-align` subset, so the existing kotlin-wrappers value type applies.
+  ['@vaadin/grid|ColumnBaseMixin|textAlign', 'web.cssom.TextAlign?'],
+  // The manifest has no type for these manager fields; the upstream `.d.ts` declares them.
+  ['@vaadin/upload|UploadManager|target', 'String'],
+  ['@vaadin/upload|UploadManager|timeout', 'Double'],
+  ['@vaadin/upload|UploadManager|maxFileSize', 'Double'],
+  ['@vaadin/upload|UploadManager|noAuto', 'Boolean'],
+  ['@vaadin/upload|UploadManager|withCredentials', 'Boolean'],
+  ['@vaadin/upload|UploadManager|accept', 'String'],
+  ['@vaadin/upload|UploadManager|formDataName', 'String'],
   // The Lit SVG literal has no structural information in the manifest (`object`), so it is named
   // explicitly. See `vaadin/icon/IconTypes.kt`.
   ['@vaadin/icon|Icon|svg', 'vaadin.icon.IconSvgLiteral'],
@@ -220,6 +231,15 @@ const MODULE_SIGNATURES = new Map([
   ['@vaadin/icon|ensureSvgLiteral', '(source: kotlin.js.JsAny?): vaadin.icon.IconSvgLiteral'],
   ['@vaadin/icon|isValidSvg', '(source: kotlin.js.JsAny?): Boolean'],
   ['@vaadin/icon|unsafeSvgLiteral', '(source: String): vaadin.icon.IconSvgLiteral'],
+  // The manifest only records `Array<'fade' | 'slide'>`, which collapses to `Array<String>`.
+  [
+    '@vaadin/master-detail-layout|animateIn',
+    '(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>',
+  ],
+  [
+    '@vaadin/master-detail-layout|animateOut',
+    '(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>',
+  ],
 ]);
 
 // Same as MEMBER_TYPES, for individual parameters.
@@ -228,12 +248,132 @@ const PARAMETER_TYPES = new Map([
     '@vaadin/date-picker|DateMetadataController|setProvider|provider',
     'vaadin.datepicker.DatePickerDateMetadataProvider?',
   ],
+  [
+    '@vaadin/grid|SortMixin|setDefaultMultiSortPriority|priority',
+    'vaadin.grid.GridMultiSortPriority',
+  ],
+  [
+    '@vaadin/grid|GridMixin|setDefaultMultiSortPriority|priority',
+    'vaadin.grid.GridMultiSortPriority',
+  ],
+  [
+    '@vaadin/grid|Grid|setDefaultMultiSortPriority|priority',
+    'vaadin.grid.GridMultiSortPriority',
+  ],
+]);
+
+// Method signatures that the manifest cannot express (a destructured parameter is listed as a
+// separate argument, or a parameter has no type at all). The value is the Kotlin parameter list.
+// Key format: `package|declaration|member`.
+const MEMBER_SIGNATURES = new Map([
+  [
+    '@vaadin/context-menu|ContextMenuTooltipController|open',
+    '(options: vaadin.contextmenu.ContextMenuTooltipOpenOptions)',
+  ],
+  [
+    '@vaadin/context-menu|ContextMenuTooltipController|initCustomNode',
+    '(tooltipNode: web.html.HTMLElement)',
+  ],
+]);
+
+// `custom-elements.json` collapses string-literal unions to `string`. Members whose upstream
+// `.d.ts` declares a literal union are mapped explicitly; each distinct name becomes one sealed
+// interface per Kotlin package. Key format: `package|declaration|member`.
+const MEMBER_LITERALS = new Map([
+  [
+    '@vaadin/a11y-base|ListMixin|orientation',
+    { name: 'ListOrientation', values: ['horizontal', 'vertical'] },
+  ],
+  [
+    '@vaadin/app-layout|AppLayoutMixin|primarySection',
+    { name: 'AppLayoutPrimarySection', values: ['drawer', 'navbar'] },
+  ],
+  ...['ComboBoxItemsMixin', 'ComboBoxMixin', 'ComboBox'].map((declaration) => [
+    `@vaadin/combo-box|${declaration}|partialMatchMode`,
+    { name: 'ComboBoxPartialMatchMode', values: ['first-match', 'none', 'only-match'] },
+  ]),
+  ...['DragAndDropMixin', 'GridMixin'].map((declaration) => [
+    `@vaadin/grid|${declaration}|dropMode`,
+    {
+      name: 'GridDropMode',
+      values: ['between', 'on-grid', 'on-top-or-between', 'on-top'],
+      nullable: true,
+    },
+  ]),
+  ...['GridMixin', 'ScrollMixin'].map((declaration) => [
+    `@vaadin/grid|${declaration}|columnRendering`,
+    { name: 'ColumnRendering', values: ['eager', 'lazy'] },
+  ]),
+  ...['GridMixin', 'SortMixin'].map((declaration) => [
+    `@vaadin/grid|${declaration}|multiSortPriority`,
+    { name: 'GridMultiSortPriority', values: ['append', 'prepend'] },
+  ]),
+  ...['GridSortColumnMixin', 'GridSorterMixin'].map((declaration) => [
+    `@vaadin/grid|${declaration}|direction`,
+    { name: 'GridSorterDirection', values: ['asc', 'desc'], nullable: true },
+  ]),
+  [
+    '@vaadin/master-detail-layout|MasterDetailLayout|orientation',
+    { name: 'MasterDetailLayoutOrientation', values: ['horizontal', 'vertical'] },
+  ],
+  [
+    '@vaadin/master-detail-layout|MasterDetailLayout|overlayContainment',
+    { name: 'MasterDetailLayoutOverlayContainment', values: ['layout', 'page'] },
+  ],
+  [
+    '@vaadin/overlay|PositionMixin|horizontalAlign',
+    { name: 'OverlayHorizontalAlign', values: ['end', 'start'] },
+  ],
+  [
+    '@vaadin/overlay|PositionMixin|verticalAlign',
+    { name: 'OverlayVerticalAlign', values: ['bottom', 'top'] },
+  ],
+  [
+    '@vaadin/popover|Popover|trigger',
+    { name: 'PopoverTrigger', values: ['click', 'focus', 'hover'], array: true, nullable: true },
+  ],
+  ...['ScrollerMixin', 'Scroller'].map((declaration) => [
+    `@vaadin/scroller|${declaration}|scrollDirection`,
+    {
+      name: 'ScrollerScrollDirection',
+      values: ['horizontal', 'none', 'vertical'],
+      nullable: true,
+    },
+  ]),
+  ...['SplitLayoutMixin', 'SplitLayout'].map((declaration) => [
+    `@vaadin/split-layout|${declaration}|orientation`,
+    { name: 'SplitLayoutOrientation', values: ['horizontal', 'vertical'] },
+  ]),
+  ...['TabsMixin', 'Tabs'].map((declaration) => [
+    `@vaadin/tabs|${declaration}|orientation`,
+    { name: 'TabsOrientation', values: ['horizontal', 'vertical'] },
+  ]),
+  [
+    '@vaadin/tooltip|TooltipAriaMixin|ariaLinkMode',
+    {
+      name: 'TooltipAriaLinkMode',
+      values: ['aria-describedby', 'aria-labelledby', 'none'],
+      names: { 'aria-describedby': 'ariaDescribedBy', 'aria-labelledby': 'ariaLabelledBy' },
+    },
+  ],
+  ...['UploadManager', 'UploadMixin', 'Upload'].map((declaration) => [
+    `@vaadin/upload|${declaration}|method`,
+    { name: 'UploadMethod', values: ['POST', 'PUT'] },
+  ]),
+  ...['UploadManager', 'UploadMixin', 'Upload'].map((declaration) => [
+    `@vaadin/upload|${declaration}|uploadFormat`,
+    { name: 'UploadFormat', values: ['raw', 'multipart'] },
+  ]),
 ]);
 
 // Unions that have no name upstream (for example `string | number`). Kotlin cannot express a
 // union, so each distinct one becomes an opaque `external interface` with an inline factory per
 // member, following kotlin-wrappers (see `web.http.BodyInit`). Keyed by `kotlinPackage|name`.
 const unions = new Map();
+
+// String-literal unions generated from MEMBER_LITERALS. Keyed by `kotlinPackage|name`, so the same
+// literal used by several members of one package is declared once.
+const literals = new Map();
 
 const warnings = [];
 
@@ -270,8 +410,40 @@ function registerUnion(types, pkg) {
   if (declarations.some((item) => item.kotlinPackage === kotlinPkg && item.kotlinName === name)) {
     throw new Error(`union ${name} in ${kotlinPkg} collides with a generated declaration`);
   }
+  if (literals.has(key)) {
+    throw new Error(`union ${name} in ${kotlinPkg} collides with a literal type`);
+  }
   unions.set(key, { pkg, directory: kotlinDir(pkg), name, members, signature });
   return name;
+}
+
+function literalKotlinType(pkg, spec) {
+  const kotlinPkg = kotlinPackage(pkg);
+  const key = `${kotlinPkg}|${spec.name}`;
+  const existing = literals.get(key);
+  if (existing) {
+    if (existing.values.join('\u0000') !== spec.values.join('\u0000')) {
+      throw new Error(`literal ${spec.name} in ${kotlinPkg} is declared with two different value sets`);
+    }
+  } else {
+    if (declarations.some((item) => item.kotlinPackage === kotlinPkg && item.kotlinName === spec.name)) {
+      throw new Error(`literal ${spec.name} in ${kotlinPkg} collides with a generated declaration`);
+    }
+    if (unions.has(key)) {
+      throw new Error(`literal ${spec.name} in ${kotlinPkg} collides with a union type`);
+    }
+    literals.set(key, {
+      pkg,
+      directory: kotlinDir(pkg),
+      kotlinPackage: kotlinPkg,
+      name: spec.name,
+      values: spec.values,
+      names: spec.names || {},
+    });
+  }
+  const base = `${kotlinPkg}.${spec.name}`;
+  const type = spec.array ? `Array<${base}>` : base;
+  return spec.nullable ? `${type}?` : type;
 }
 
 function readJson(file) {
@@ -663,7 +835,7 @@ function inheritedMembers(declaration) {
   const result = new Map();
   const visit = (current) => {
     for (const member of ownMembers(current)) {
-      const type = memberType(member, current.pkg);
+      const type = memberKotlinType(member, current);
       const disposition = memberDisposition(member.name, type);
       if (disposition === 'skip') continue;
       const name =
@@ -756,8 +928,7 @@ function renderParameters(parameters, pkg, external = true, optionalDefault = 'd
 }
 
 function renderMember(member, pkg, spaces, inherited, declaration = null) {
-  const overrideType = declaration && MEMBER_TYPES.get(`${declaration.pkg}|${declaration.name}|${member.name}`);
-  const type = overrideType || memberType(member, pkg);
+  const type = declaration ? memberKotlinType(member, declaration) : memberType(member, pkg);
   const disposition = memberDisposition(member.name, type);
   if (disposition === 'skip') return null;
   const renamed = disposition === 'rename';
@@ -773,11 +944,15 @@ function renderMember(member, pkg, spaces, inherited, declaration = null) {
     const keyword = member.readonly ? 'val' : 'var';
     return `${doc}${annotation}${override}${keyword} ${id(name)}: ${type}`;
   }
-  const parameters = renderParameters(member.parameters, pkg, true, 'definedExternally', {
-    declaration,
-    member,
-  });
-  return `${doc}${annotation}${override}fun ${id(name)}(${parameters})${type === 'Unit' ? '' : `: ${type}`}`;
+  const overrideSignature =
+    declaration && MEMBER_SIGNATURES.get(`${declaration.pkg}|${declaration.name}|${member.name}`);
+  const parameters =
+    overrideSignature ??
+    `(${renderParameters(member.parameters, pkg, true, 'definedExternally', {
+      declaration,
+      member,
+    })})`;
+  return `${doc}${annotation}${override}fun ${id(name)}${parameters}${type === 'Unit' ? '' : `: ${type}`}`;
 }
 
 function renderMembers(declaration, spaces, inherited) {
@@ -807,10 +982,10 @@ function collectStatics(declaration, packageName) {
 }
 
 function memberKotlinType(member, declaration) {
-  return (
-    MEMBER_TYPES.get(`${declaration.pkg}|${declaration.name}|${member.name}`) ||
-    memberType(member, declaration.pkg)
-  );
+  const key = `${declaration.pkg}|${declaration.name}|${member.name}`;
+  const literal = MEMBER_LITERALS.get(key);
+  if (literal) return literalKotlinType(declaration.pkg, literal);
+  return MEMBER_TYPES.get(key) || memberType(member, declaration.pkg);
 }
 
 function renderStaticMember(member, declaration, spaces) {
@@ -818,8 +993,14 @@ function renderStaticMember(member, declaration, spaces) {
   const pad = ' '.repeat(spaces);
   const returns = memberKotlinType(member, declaration);
   if (member.kind === 'field') return `${doc}${pad}val ${id(member.name)}: ${returns}`;
-  const parameters = renderParameters(member.parameters, declaration.pkg);
-  return `${doc}${pad}fun ${id(member.name)}(${parameters})${returns === 'Unit' ? '' : `: ${returns}`}`;
+  const overrideSignature = MEMBER_SIGNATURES.get(`${declaration.pkg}|${declaration.name}|${member.name}`);
+  const parameters =
+    overrideSignature ??
+    `(${renderParameters(member.parameters, declaration.pkg, true, 'definedExternally', {
+      declaration,
+      member,
+    })})`;
+  return `${doc}${pad}fun ${id(member.name)}${parameters}${returns === 'Unit' ? '' : `: ${returns}`}`;
 }
 
 function collectEvents(declaration) {
@@ -922,11 +1103,26 @@ function emitClass(declaration) {
           if (member.kind === 'field') {
             return `${kdoc(member.description, 4)}    val ${id(member.name)}: ${memberKotlinType(member, declaration)}\n        get() = ${call}`;
           }
-          const parameters = renderParameters(member.parameters, declaration.pkg, false, 'js("undefined")');
           const returns = memberKotlinType(member, declaration);
-          const args = (member.parameters || []).map((parameter) => id(parameter.name || 'arg')).join(', ');
+          const overrideSignature = MEMBER_SIGNATURES.get(
+            `${declaration.pkg}|${declaration.name}|${member.name}`,
+          );
+          const parameters =
+            overrideSignature ??
+            `(${renderParameters(member.parameters, declaration.pkg, false, 'js("undefined")', {
+              declaration,
+              member,
+            })})`;
+          const args = overrideSignature
+            ? overrideSignature
+                .slice(1, -1)
+                .split(',')
+                .map((parameter) => parameter.trim().split(':')[0].replace(/^vararg\s+/, '').trim())
+                .filter(Boolean)
+                .join(', ')
+            : (member.parameters || []).map((parameter) => id(parameter.name || 'arg')).join(', ');
           const prefix = returns === 'Unit' ? '' : 'return ';
-          return `${kdoc(member.description, 4)}    fun ${id(member.name)}(${parameters})${returns === 'Unit' ? '' : `: ${returns}`} {\n        ${prefix}${call}(${args})\n    }`;
+          return `${kdoc(member.description, 4)}    fun ${id(member.name)}${parameters}${returns === 'Unit' ? '' : `: ${returns}`} {\n        ${prefix}${call}(${args})\n    }`;
         })
         .join('\n\n'),
       '}',
@@ -1158,6 +1354,42 @@ function emitUnions() {
 }
 
 emitUnions();
+
+function emitLiterals() {
+  const byDirectory = new Map();
+  for (const literal of literals.values()) {
+    const list = byDirectory.get(literal.directory) || [];
+    list.push(literal);
+    byDirectory.set(literal.directory, list);
+  }
+  for (const [directory, list] of byDirectory) {
+    list.sort((a, b) => a.name.localeCompare(b.name));
+    const lines = [`package ${list[0].kotlinPackage}`, '', 'import js.reflect.unsafeCast', ''];
+    for (const literal of list) {
+      const upstream = literal.values.map((value) => `\`'${value}'\``).join(' | ');
+      const constants = `${literal.name.replace(/y$/, 'ie')}s`;
+      lines.push(
+        `/** Upstream ${upstream}. */`,
+        `sealed external interface ${literal.name}`,
+        '',
+        `/** Wraps a value from JavaScript. Prefer the constants in [${constants}]. */`,
+        `fun ${literal.name}(value: String): ${literal.name} = unsafeCast(value)`,
+        '',
+        `/** All values of [${literal.name}]. */`,
+        `object ${constants} {`,
+        ...literal.values.map((value) => {
+          const constant = literal.names[value] || camel(value);
+          return `    inline val ${id(constant)}: ${literal.name} get() = ${literal.name}("${value}")`;
+        }),
+        '}',
+        '',
+      );
+    }
+    writeFile(path.join(directory, `${pascal(path.basename(directory))}Literals.kt`), lines.join('\n'));
+  }
+}
+
+emitLiterals();
 
 // ---------------------------------------------------------------------------------------------
 // Cleanup of stale generated files

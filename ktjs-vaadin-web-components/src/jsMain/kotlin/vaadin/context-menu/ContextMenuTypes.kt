@@ -81,3 +81,21 @@ external interface ContextMenuItemData {
     /** Sub menu items. */
     var children: Array<ContextMenuItemData>?
 }
+
+/** The gesture that opens the context-menu tooltip: `hover` or `focus`. */
+sealed external interface ContextMenuTooltipTrigger
+
+/** Wraps a value from JavaScript. Prefer the constants in [ContextMenuTooltipTriggers]. */
+fun ContextMenuTooltipTrigger(value: String): ContextMenuTooltipTrigger = unsafeCast(value)
+
+/** All values of [ContextMenuTooltipTrigger]. */
+object ContextMenuTooltipTriggers {
+    inline val hover: ContextMenuTooltipTrigger get() = ContextMenuTooltipTrigger("hover")
+    inline val focus: ContextMenuTooltipTrigger get() = ContextMenuTooltipTrigger("focus")
+}
+
+/** Options accepted by `ContextMenuTooltipController.open`. */
+external interface ContextMenuTooltipOpenOptions {
+    /** The gesture that opened the tooltip. */
+    var trigger: ContextMenuTooltipTrigger
+}

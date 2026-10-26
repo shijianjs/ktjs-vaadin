@@ -23,13 +23,13 @@ external fun getCurrentAnimationProgress(element: web.html.HTMLElement): Double
  * Runs an enter animation on the element.
  */
 
-external fun animateIn(element: web.html.HTMLElement, effects: Array<String>, progress: Double): kotlin.js.Promise<Unit>
+external fun animateIn(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>
 
 /**
  * Runs an exit animation on the element.
  */
 
-external fun animateOut(element: web.html.HTMLElement, effects: Array<String>, progress: Double): kotlin.js.Promise<Unit>
+external fun animateOut(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>
 
 /**
  * Cancels all running animations on the element that match the shared animation ID.

@@ -66,5 +66,5 @@ external interface ColumnBaseMixin {
     /**
      * Aligns the columns cell content horizontally.
      */
-    var textAlign: String
+    var textAlign: web.cssom.TextAlign?
 }

@@ -22,7 +22,7 @@ external interface ListMixin : vaadin.a11ybase.KeyboardDirectionMixin {
      * Possible values are: `horizontal|vertical`.
      * It also changes navigation keys from left/right to up/down.
      */
-    var orientation: String
+    var orientation: vaadin.a11ybase.ListOrientation
     /**
      * The index of the item selected in the items array.
      * Note: Not updated when used in `multiple` selection mode.

@@ -1,5 +1,6 @@
 package vaadin.fieldhighlighter
 
+import js.reflect.unsafeCast
 import kotlin.js.js
 import vaadin.VaadinTagName
 
@@ -264,7 +265,20 @@ external class AiFieldMarkerElement :
     var working: Boolean
 
     /** Confidence level of the AI-filled value, or `null` to hide the indicator. */
-    var confidence: String?
+    var confidence: AiFieldMarkerConfidence?
+}
+
+/** Confidence level of an AI-filled value: `high`, `low` or `medium`. */
+sealed external interface AiFieldMarkerConfidence
+
+/** Wraps a value from JavaScript. Prefer the constants in [AiFieldMarkerConfidences]. */
+fun AiFieldMarkerConfidence(value: String): AiFieldMarkerConfidence = unsafeCast(value)
+
+/** All values of [AiFieldMarkerConfidence]. */
+object AiFieldMarkerConfidences {
+    inline val high: AiFieldMarkerConfidence get() = AiFieldMarkerConfidence("high")
+    inline val low: AiFieldMarkerConfidence get() = AiFieldMarkerConfidence("low")
+    inline val medium: AiFieldMarkerConfidence get() = AiFieldMarkerConfidence("medium")
 }
 
 fun registerAiFieldMarker(): kotlin.js.JsAny = AiFieldMarkerModule.AiFieldMarker

@@ -1,7 +1,9 @@
 package vaadin.tabs
 
+import vaadin.a11ybase.ListOrientations
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -57,13 +59,13 @@ class TabsTest {
 
     @Test
     fun orientationDefaultsToHorizontal() {
-        assertEquals("horizontal", tabsFixture().orientation)
+        assertEquals("horizontal", tabsFixture().orientation.unsafeCast<String>())
     }
 
     @Test
     fun orientationReflectsToTheAttribute(): Promise<Unit> {
         val tabs = tabsFixture()
-        tabs.orientation = "vertical"
+        tabs.orientation = ListOrientations.vertical
         return nextUpdate(tabs).then { assertEquals("vertical", tabs.getAttribute("orientation")) }
     }
 

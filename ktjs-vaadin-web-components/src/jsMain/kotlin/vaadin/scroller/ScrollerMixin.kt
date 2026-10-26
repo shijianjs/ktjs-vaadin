@@ -6,5 +6,5 @@ external interface ScrollerMixin : vaadin.a11ybase.FocusMixin {
      * This property indicates the scroll direction. Supported values are `vertical`, `horizontal`, `none`.
      * When `scrollDirection` is undefined scrollbars will be shown in both directions.
      */
-    var scrollDirection: String
+    var scrollDirection: vaadin.scroller.ScrollerScrollDirection?
 }

@@ -20,7 +20,7 @@ external interface TooltipAriaMixin {
      *
      * Defaults to `aria-describedby`.
      */
-    var ariaLinkMode: String
+    var ariaLinkMode: vaadin.tooltip.TooltipAriaLinkMode
     /**
      * Element used to link with the ARIA attribute controlled by the
      * `ariaLinkMode` property. Supports array of multiple elements.

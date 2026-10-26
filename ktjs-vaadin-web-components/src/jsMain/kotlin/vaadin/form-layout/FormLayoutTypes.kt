@@ -22,6 +22,6 @@ external interface FormLayoutResponsiveStep {
     /** The number of columns for this step. */
     var columns: Double
 
-    /** Label position for this step: `aside` or `top`. */
-    var labelsPosition: String?
+    /** Label position for this step. */
+    var labelsPosition: FormLayoutLabelsPosition?
 }

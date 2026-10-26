@@ -4,6 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
+import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
@@ -12,18 +13,20 @@ import demo.ui.column
 import demo.ui.div
 import demo.ui.example
 import demo.ui.heading
-import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import demo.tr
+import js.objects.unsafeJso
+import kotlin.js.unsafeCast
+import vaadin.a11ybase.ListOrientations
 import vaadin.accordion.AccordionEvents
 import vaadin.accordion.createAccordion
 import vaadin.accordion.createAccordionPanel
 import vaadin.applayout.AppLayoutEvents
+import vaadin.applayout.AppLayoutPrimarySections
 import vaadin.applayout.createAppLayout
 import vaadin.applayout.createDrawerToggle
 import vaadin.breadcrumbs.createBreadcrumbs
@@ -32,13 +35,19 @@ import vaadin.button.createButton
 import vaadin.card.createCard
 import vaadin.details.DetailsEvents
 import vaadin.details.createDetails
+import vaadin.formlayout.FormLayoutLabelsPositions
+import vaadin.formlayout.FormLayoutResponsiveStep
+import vaadin.formlayout.StringOrDouble
 import vaadin.formlayout.createFormItem
 import vaadin.formlayout.createFormLayout
 import vaadin.horizontallayout.createHorizontalLayout
+import vaadin.masterdetaillayout.MasterDetailLayoutOrientations
 import vaadin.masterdetaillayout.createMasterDetailLayout
+import vaadin.scroller.ScrollerScrollDirections
 import vaadin.scroller.createScroller
 import vaadin.sidenav.createSideNav
 import vaadin.sidenav.createSideNavItem
+import vaadin.splitlayout.SplitLayoutOrientations
 import vaadin.splitlayout.createSplitLayout
 import vaadin.tabs.TabsEvents
 import vaadin.tabs.createTab
@@ -51,7 +60,6 @@ import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
-import kotlin.js.unsafeCast
 
 val layoutEntries: List<CatalogEntry> =
     listOf(
@@ -344,9 +352,14 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
     val primaryButton =
         createButton { textContent = tr("切换 primarySection", "Toggle primarySection") }.withTheme("tertiary").apply {
             clickEvent.addHandler {
-                val next = if (layout.primarySection == "drawer") "navbar" else "drawer"
+                val next =
+                    if (layout.primarySection == AppLayoutPrimarySections.drawer) {
+                        AppLayoutPrimarySections.navbar
+                    } else {
+                        AppLayoutPrimarySections.drawer
+                    }
                 layout.primarySection = next
-                primaryReadout.set("primarySection = $next")
+                primaryReadout.set("primarySection = ${next.unsafeCast<String>()}")
             }
         }
     primary.body.append(example(null, row(primaryButton, primaryReadout.root)))
@@ -507,15 +520,21 @@ private fun buildFormLayoutPage(meta: PageMeta): PageView {
     val readout = Readout(tr("maxColumns = 4（默认）", "maxColumns = 4 (default)"))
     val controlled = createFormLayout()
     controlled.responsiveSteps =
-        jsObject(
-            """
-            [
-              {"minWidth": "0px", "columns": 1, "labelsPosition": "top"},
-              {"minWidth": "30rem", "columns": 2},
-              {"minWidth": "50rem", "columns": 3}
-            ]
-            """.trimIndent(),
-        ).unsafeCast<Array<vaadin.formlayout.FormLayoutResponsiveStep>>()
+        arrayOf(
+            unsafeJso<FormLayoutResponsiveStep> {
+                minWidth = StringOrDouble("0px")
+                columns = 1.0
+                labelsPosition = FormLayoutLabelsPositions.top
+            },
+            unsafeJso<FormLayoutResponsiveStep> {
+                minWidth = StringOrDouble("30rem")
+                columns = 2.0
+            },
+            unsafeJso<FormLayoutResponsiveStep> {
+                minWidth = StringOrDouble("50rem")
+                columns = 3.0
+            },
+        )
     controlled.append(
         *(1..6).map { index -> formItem(tr("字段 $index", "Field $index"), createTextField()) }.toTypedArray(),
     )
@@ -543,7 +562,7 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
     horizontal.style.setProperty("height", "10rem")
     horizontal.append(panel(tr("左侧", "Left side")), panel(tr("右侧", "Right side")))
 
-    val vertical = createSplitLayout { orientation = "vertical" }
+    val vertical = createSplitLayout { orientation = SplitLayoutOrientations.vertical }
     vertical.style.setProperty("height", "14rem")
     vertical.append(panel(tr("上方", "Top")), panel(tr("下方", "Bottom")))
 
@@ -578,7 +597,7 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
                 "With scrollDirection set to horizontal only horizontal scrolling is allowed.",
             ),
         )
-    val horizontalScroller = createScroller { scrollDirection = "horizontal" }
+    val horizontalScroller = createScroller { scrollDirection = ScrollerScrollDirections.horizontal }
     horizontalScroller.style.setProperty("height", "6rem")
     val wideRow = row(*(1..15).map { box(tr("列 $it", "Column $it")) }.toTypedArray())
     wideRow.style.setProperty("flex-wrap", "nowrap")
@@ -631,8 +650,13 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     val orientationButton =
         createButton { textContent = tr("切换方向", "Toggle orientation") }.withTheme("tertiary").apply {
             clickEvent.addHandler {
-                layout.orientation = if (layout.orientation == "horizontal") "vertical" else "horizontal"
-                readout.set("orientation = ${layout.orientation}")
+                layout.orientation =
+                    if (layout.orientation == MasterDetailLayoutOrientations.horizontal) {
+                        MasterDetailLayoutOrientations.vertical
+                    } else {
+                        MasterDetailLayoutOrientations.horizontal
+                    }
+                readout.set("orientation = ${layout.orientation.unsafeCast<String>()}")
                 layout.recalculateLayout()
             }
         }
@@ -852,7 +876,7 @@ private fun buildTabsPage(meta: PageMeta): PageView {
                     "the same width.",
             ),
         )
-    val vertical = createTabs { orientation = "vertical" }
+    val vertical = createTabs { orientation = ListOrientations.vertical }
     vertical.append(
         createTab { textContent = tr("第一项", "First item") },
         createTab { textContent = tr("第二项", "Second item") },

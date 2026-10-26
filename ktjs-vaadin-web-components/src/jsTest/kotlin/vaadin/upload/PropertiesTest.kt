@@ -2,6 +2,7 @@ package vaadin.upload
 
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -128,7 +129,7 @@ class PropertiesTest {
     fun uploadFormatIsRawByDefault(): Promise<Unit> {
         val upload = newUpload()
 
-        return nextRender(upload).then { assertEquals("raw", upload.uploadFormat) }
+        return nextRender(upload).then { assertEquals("raw", upload.uploadFormat.unsafeCast<String>()) }
     }
 
     @Test

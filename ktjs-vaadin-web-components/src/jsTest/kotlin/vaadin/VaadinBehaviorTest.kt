@@ -17,10 +17,12 @@ import vaadin.checkbox.createCheckbox
 import vaadin.datepicker.createDatePicker
 import vaadin.dialog.createDialog
 import vaadin.fieldbase.InputFieldMixin
+import vaadin.fieldhighlighter.AiFieldMarkerConfidences
 import vaadin.fieldhighlighter.FieldHighlighter
 import vaadin.fieldhighlighter.createAiFieldMarker
 import vaadin.fieldhighlighter.fieldHighlighterUser
 import vaadin.grid.Grid
+import vaadin.grid.GridMultiSortPriorities
 import vaadin.grid.createGrid
 import vaadin.grid.createGridColumn
 import vaadin.icon.Iconset
@@ -190,7 +192,7 @@ class VaadinBehaviorTest {
 
     @Test
     fun staticConfigurationSettersAcceptValues() {
-        Grid.setDefaultMultiSortPriority("append")
+        Grid.setDefaultMultiSortPriority(GridMultiSortPriorities.append)
         Popover.setDefaultHideDelay(250.0)
         Tooltip.setDefaultHoverDelay(250.0)
     }
@@ -244,10 +246,10 @@ class VaadinBehaviorTest {
     fun aiFieldMarkerRoundTripsItsState() {
         val marker = attach(createAiFieldMarker())
         marker.working = true
-        marker.confidence = "high"
+        marker.confidence = AiFieldMarkerConfidences.high
 
         assertTrue(marker.working)
-        assertEquals("high", marker.confidence)
+        assertEquals("high", marker.confidence.unsafeCast<String>())
     }
 
     @Test

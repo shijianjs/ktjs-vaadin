@@ -39,7 +39,7 @@ external interface DragAndDropMixin {
      * - `on-top-or-between`: The drop event can happen either on top of or between Grid rows.
      * - `on-grid`: The drop event will not happen on any specific row, it will show the drop target outline around the whole grid.
      */
-    var dropMode: String
+    var dropMode: vaadin.grid.GridDropMode?
     /**
      * Runs the `dragFilter` and `dropFilter` hooks for the visible cells.
      * If the filter depends on varying conditions, you may need to

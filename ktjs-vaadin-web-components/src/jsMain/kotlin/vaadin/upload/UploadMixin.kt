@@ -82,7 +82,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
     /**
      * HTTP Method used to send the files. Only POST and PUT are allowed.
      */
-    var method: String
+    var method: vaadin.upload.UploadMethod
     /**
      * Prevents upload(s) from immediately uploading upon adding file(s).
      * When set, you must manually trigger uploads using the `uploadFiles` method
@@ -115,7 +115,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
      * - 'raw': Send file as raw binary data with the file's MIME type as Content-Type (default)
      * - 'multipart': Send file using multipart/form-data encoding
      */
-    var uploadFormat: String
+    var uploadFormat: vaadin.upload.UploadFormat
     /**
      * Set the withCredentials flag on the request.
      */

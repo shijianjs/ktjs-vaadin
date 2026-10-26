@@ -4,6 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
+import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
@@ -19,10 +20,10 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import demo.tr
 import kotlin.js.JsAny
 import vaadin.button.createButton
 import vaadin.grid.GridEvents
+import vaadin.grid.GridSorterDirections
 import vaadin.grid.createGrid
 import vaadin.grid.createGridColumn
 import vaadin.grid.createGridFilterColumn
@@ -213,7 +214,7 @@ private fun buildGridPage(meta: PageMeta): PageView {
         createGridSortColumn {
             header = tr("姓名", "Name")
             path = "name"
-            direction = "asc"
+            direction = GridSorterDirections.asc
         },
         createGridSortColumn {
             header = tr("得分", "Score")

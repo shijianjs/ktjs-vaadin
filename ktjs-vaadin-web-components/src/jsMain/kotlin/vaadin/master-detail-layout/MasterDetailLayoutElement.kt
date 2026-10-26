@@ -116,14 +116,14 @@ abstract external class MasterDetailLayoutElement : web.html.HTMLElement, vaadin
      * Possible values are: `horizontal` or `vertical`.
      * Defaults to horizontal.
      */
-    var orientation: String
+    var orientation: vaadin.masterdetaillayout.MasterDetailLayoutOrientation
     /**
      * Defines the containment of the detail area when the layout is in
      * overlay mode. When set to `layout`, the overlay is confined to the
      * layout. When set to `page`, the overlay is confined to the
      * browser's viewport. Defaults to `layout`.
      */
-    var overlayContainment: String
+    var overlayContainment: vaadin.masterdetaillayout.MasterDetailLayoutOverlayContainment
     /**
      * Size (in CSS length units) for the detail area when shown as an
      * overlay. When not set, falls back to `detailSize`. Set to `100%`
