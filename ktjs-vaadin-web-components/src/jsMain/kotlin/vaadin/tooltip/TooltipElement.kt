@@ -65,7 +65,7 @@ abstract external class TooltipElement : web.html.HTMLElement, vaadin.tooltip.To
 
 }
 
-private external interface TooltipElementStaticMembers {
+private external interface TooltipElementStaticMembers : web.components.CustomElementConstructor<TooltipElement> {
     /**
      * Sets the default focus delay to be used by all tooltip instances,
      * except for those that have focus delay configured using property.
@@ -115,7 +115,7 @@ object Tooltip {
 }
 
 /** Imports `@vaadin/tooltip/src/vaadin-tooltip.js`, registering `<vaadin-tooltip>`, and returns the element class. */
-fun registerTooltip(): kotlin.js.JsAny = TooltipElementModule.Tooltip
+fun registerTooltip(): web.components.CustomElementConstructor<TooltipElement> = TooltipElementModule.Tooltip
 
 /** Creates a `<vaadin-tooltip>` element. The custom element is registered on first use. */
 fun createTooltip(configure: TooltipElement.() -> Unit = {}): TooltipElement {

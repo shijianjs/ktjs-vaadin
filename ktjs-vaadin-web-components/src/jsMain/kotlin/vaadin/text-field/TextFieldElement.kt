@@ -102,11 +102,11 @@ abstract external class TextFieldElement : web.html.HTMLElement, vaadin.textfiel
 
 @JsModule("@vaadin/text-field/src/vaadin-text-field.js")
 private external object TextFieldElementModule {
-    val TextField: kotlin.js.JsAny
+    val TextField: web.components.CustomElementConstructor<TextFieldElement>
 }
 
 /** Imports `@vaadin/text-field/src/vaadin-text-field.js`, registering `<vaadin-text-field>`, and returns the element class. */
-fun registerTextField(): kotlin.js.JsAny = TextFieldElementModule.TextField
+fun registerTextField(): web.components.CustomElementConstructor<TextFieldElement> = TextFieldElementModule.TextField
 
 /** Creates a `<vaadin-text-field>` element. The custom element is registered on first use. */
 fun createTextField(configure: TextFieldElement.() -> Unit = {}): TextFieldElement {

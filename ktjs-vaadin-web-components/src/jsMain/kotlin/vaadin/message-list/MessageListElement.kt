@@ -57,11 +57,11 @@ abstract external class MessageListElement : web.html.HTMLElement, vaadin.compon
 
 @JsModule("@vaadin/message-list/src/vaadin-message-list.js")
 private external object MessageListElementModule {
-    val MessageList: kotlin.js.JsAny
+    val MessageList: web.components.CustomElementConstructor<MessageListElement>
 }
 
 /** Imports `@vaadin/message-list/src/vaadin-message-list.js`, registering `<vaadin-message-list>`, and returns the element class. */
-fun registerMessageList(): kotlin.js.JsAny = MessageListElementModule.MessageList
+fun registerMessageList(): web.components.CustomElementConstructor<MessageListElement> = MessageListElementModule.MessageList
 
 /** Creates a `<vaadin-message-list>` element. The custom element is registered on first use. */
 fun createMessageList(configure: MessageListElement.() -> Unit = {}): MessageListElement {

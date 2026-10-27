@@ -3,6 +3,6 @@ package vaadin.datepicker
 
 /** The values exported by `@vaadin/date-picker/src/vaadin-date-picker-mixin.js`. */
 object DatePickerMixinExports {
-    val datePickerI18nDefaults: kotlin.js.JsAny?
+    val datePickerI18nDefaults: vaadin.datepicker.DatePickerI18n
         get() = DatePickerMixinExportsModule.datePickerI18nDefaults
 }

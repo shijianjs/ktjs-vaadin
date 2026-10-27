@@ -21,11 +21,11 @@ abstract external class GridSortColumnElement : vaadin.grid.GridColumnElement, v
 
 @JsModule("@vaadin/grid/src/vaadin-grid-sort-column.js")
 private external object GridSortColumnElementModule {
-    val GridSortColumn: kotlin.js.JsAny
+    val GridSortColumn: web.components.CustomElementConstructor<GridSortColumnElement>
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-sort-column.js`, registering `<vaadin-grid-sort-column>`, and returns the element class. */
-fun registerGridSortColumn(): kotlin.js.JsAny = GridSortColumnElementModule.GridSortColumn
+fun registerGridSortColumn(): web.components.CustomElementConstructor<GridSortColumnElement> = GridSortColumnElementModule.GridSortColumn
 
 /** Creates a `<vaadin-grid-sort-column>` element. The custom element is registered on first use. */
 fun createGridSortColumn(configure: GridSortColumnElement.() -> Unit = {}): GridSortColumnElement {

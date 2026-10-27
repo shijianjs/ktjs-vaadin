@@ -53,11 +53,11 @@ abstract external class LoginFormElement : web.html.HTMLElement, vaadin.login.Lo
 
 @JsModule("@vaadin/login/src/vaadin-login-form.js")
 private external object LoginFormElementModule {
-    val LoginForm: kotlin.js.JsAny
+    val LoginForm: web.components.CustomElementConstructor<LoginFormElement>
 }
 
 /** Imports `@vaadin/login/src/vaadin-login-form.js`, registering `<vaadin-login-form>`, and returns the element class. */
-fun registerLoginForm(): kotlin.js.JsAny = LoginFormElementModule.LoginForm
+fun registerLoginForm(): web.components.CustomElementConstructor<LoginFormElement> = LoginFormElementModule.LoginForm
 
 /** Creates a `<vaadin-login-form>` element. The custom element is registered on first use. */
 fun createLoginForm(configure: LoginFormElement.() -> Unit = {}): LoginFormElement {

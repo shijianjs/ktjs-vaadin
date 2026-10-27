@@ -30,11 +30,11 @@ abstract external class GridSelectionColumnElement : vaadin.grid.GridColumnEleme
 
 @JsModule("@vaadin/grid/src/vaadin-grid-selection-column.js")
 private external object GridSelectionColumnElementModule {
-    val GridSelectionColumn: kotlin.js.JsAny
+    val GridSelectionColumn: web.components.CustomElementConstructor<GridSelectionColumnElement>
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-selection-column.js`, registering `<vaadin-grid-selection-column>`, and returns the element class. */
-fun registerGridSelectionColumn(): kotlin.js.JsAny = GridSelectionColumnElementModule.GridSelectionColumn
+fun registerGridSelectionColumn(): web.components.CustomElementConstructor<GridSelectionColumnElement> = GridSelectionColumnElementModule.GridSelectionColumn
 
 /** Creates a `<vaadin-grid-selection-column>` element. The custom element is registered on first use. */
 fun createGridSelectionColumn(configure: GridSelectionColumnElement.() -> Unit = {}): GridSelectionColumnElement {

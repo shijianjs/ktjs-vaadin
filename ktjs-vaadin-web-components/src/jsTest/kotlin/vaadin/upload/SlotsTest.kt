@@ -87,7 +87,7 @@ class SlotsTest {
                 assertFalse(slotDisabled(upload, "[slot=add-button]"))
                 upload.maxFiles = 1.0
                 assertFalse(slotDisabled(upload, "[slot=add-button]"))
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then { assertTrue(slotDisabled(upload, "[slot=add-button]")) }

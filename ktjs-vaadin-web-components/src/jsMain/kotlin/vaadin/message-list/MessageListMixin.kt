@@ -32,7 +32,7 @@ external interface MessageListMixin : vaadin.a11ybase.KeyboardDirectionMixin {
      * while other attachments show a document icon with the file name.
      * Clicking an attachment dispatches an `attachment-click` event.
      */
-    var items: Array<kotlin.js.JsAny?>
+    var items: Array<vaadin.messagelist.MessageListItem>?
     /**
      * When set to `true`, the message text is parsed as Markdown.
      */

@@ -10,7 +10,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * `shouldShow` functions for generating tooltip text
      * or detecting whether to show the tooltip or not.
      */
-    var context: kotlin.js.JsAny
+    var context: js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>
     /**
      * The delay in milliseconds before the tooltip
      * is opened on keyboard focus, when not in manual mode.
@@ -22,7 +22,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * Use the `context` property to provide argument
      * that can be passed to the generator function.
      */
-    var generator: kotlin.js.JsAny
+    var generator: ((js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>) -> String)
     /**
      * The delay in milliseconds before the tooltip
      * is closed on losing hover, when not in manual mode.
@@ -75,7 +75,7 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      * values of the corresponding tooltip properties at the time of calling.
      * The tooltip is only shown when the function invocation returns `true`.
      */
-    var shouldShow: kotlin.js.JsAny
+    var shouldShow: ((web.html.HTMLElement, js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>?) -> Boolean)
     /**
      * String used as a tooltip content.
      */

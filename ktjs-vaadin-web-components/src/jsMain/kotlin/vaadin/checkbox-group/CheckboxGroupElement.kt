@@ -67,11 +67,11 @@ abstract external class CheckboxGroupElement : web.html.HTMLElement, vaadin.chec
 
 @JsModule("@vaadin/checkbox-group/src/vaadin-checkbox-group.js")
 private external object CheckboxGroupElementModule {
-    val CheckboxGroup: kotlin.js.JsAny
+    val CheckboxGroup: web.components.CustomElementConstructor<CheckboxGroupElement>
 }
 
 /** Imports `@vaadin/checkbox-group/src/vaadin-checkbox-group.js`, registering `<vaadin-checkbox-group>`, and returns the element class. */
-fun registerCheckboxGroup(): kotlin.js.JsAny = CheckboxGroupElementModule.CheckboxGroup
+fun registerCheckboxGroup(): web.components.CustomElementConstructor<CheckboxGroupElement> = CheckboxGroupElementModule.CheckboxGroup
 
 /** Creates a `<vaadin-checkbox-group>` element. The custom element is registered on first use. */
 fun createCheckboxGroup(configure: CheckboxGroupElement.() -> Unit = {}): CheckboxGroupElement {

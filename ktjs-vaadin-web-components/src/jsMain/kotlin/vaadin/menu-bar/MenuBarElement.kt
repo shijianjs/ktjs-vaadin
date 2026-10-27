@@ -65,11 +65,11 @@ abstract external class MenuBarElement : web.html.HTMLElement, vaadin.menubar.Me
 
 @JsModule("@vaadin/menu-bar/src/vaadin-menu-bar.js")
 private external object MenuBarElementModule {
-    val MenuBar: kotlin.js.JsAny
+    val MenuBar: web.components.CustomElementConstructor<MenuBarElement>
 }
 
 /** Imports `@vaadin/menu-bar/src/vaadin-menu-bar.js`, registering `<vaadin-menu-bar>`, and returns the element class. */
-fun registerMenuBar(): kotlin.js.JsAny = MenuBarElementModule.MenuBar
+fun registerMenuBar(): web.components.CustomElementConstructor<MenuBarElement> = MenuBarElementModule.MenuBar
 
 /** Creates a `<vaadin-menu-bar>` element. The custom element is registered on first use. */
 fun createMenuBar(configure: MenuBarElement.() -> Unit = {}): MenuBarElement {

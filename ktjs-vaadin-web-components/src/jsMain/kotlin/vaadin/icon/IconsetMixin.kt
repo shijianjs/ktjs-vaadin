@@ -5,7 +5,7 @@ external interface IconsetMixin {
     /**
      * Set of the `vaadin-icon` instances in the DOM.
      */
-    val attachedIcons: kotlin.js.JsAny?
+    val attachedIcons: js.collections.JsSet<vaadin.icon.IconElement>
     /**
      * Returns an instance of the iconset by its name.
      */

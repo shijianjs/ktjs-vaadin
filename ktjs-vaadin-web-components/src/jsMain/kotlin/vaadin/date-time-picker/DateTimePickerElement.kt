@@ -99,11 +99,11 @@ abstract external class DateTimePickerElement : web.html.HTMLElement, vaadin.dat
 
 @JsModule("@vaadin/date-time-picker/src/vaadin-date-time-picker.js")
 private external object DateTimePickerElementModule {
-    val DateTimePicker: kotlin.js.JsAny
+    val DateTimePicker: web.components.CustomElementConstructor<DateTimePickerElement>
 }
 
 /** Imports `@vaadin/date-time-picker/src/vaadin-date-time-picker.js`, registering `<vaadin-date-time-picker>`, and returns the element class. */
-fun registerDateTimePicker(): kotlin.js.JsAny = DateTimePickerElementModule.DateTimePicker
+fun registerDateTimePicker(): web.components.CustomElementConstructor<DateTimePickerElement> = DateTimePickerElementModule.DateTimePicker
 
 /** Creates a `<vaadin-date-time-picker>` element. The custom element is registered on first use. */
 fun createDateTimePicker(configure: DateTimePickerElement.() -> Unit = {}): DateTimePickerElement {

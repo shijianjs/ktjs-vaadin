@@ -77,7 +77,7 @@ external fun dateEquals(date1: kotlin.js.Date, date2: kotlin.js.Date, normalizer
  * to the expected format.
  */
 
-external fun extractDateParts(date: kotlin.js.Date): kotlin.js.JsAny
+external fun extractDateParts(date: kotlin.js.Date): vaadin.datepicker.DatePickerDate
 
 /**
  * Check if the given date is in the range of allowed dates.

@@ -73,7 +73,7 @@ abstract external class UploadButtonElement : web.html.HTMLElement, vaadin.butto
      * When set, the button will automatically disable when maxFilesReached
      * becomes true on the manager.
      */
-    var manager: kotlin.js.JsAny?
+    var manager: vaadin.upload.UploadManager?
     /**
      * True when max files has been reached on the manager.
      */
@@ -86,11 +86,11 @@ abstract external class UploadButtonElement : web.html.HTMLElement, vaadin.butto
 
 @JsModule("@vaadin/upload/src/vaadin-upload-button.js")
 private external object UploadButtonElementModule {
-    val UploadButton: kotlin.js.JsAny
+    val UploadButton: web.components.CustomElementConstructor<UploadButtonElement>
 }
 
 /** Imports `@vaadin/upload/src/vaadin-upload-button.js`, registering `<vaadin-upload-button>`, and returns the element class. */
-fun registerUploadButton(): kotlin.js.JsAny = UploadButtonElementModule.UploadButton
+fun registerUploadButton(): web.components.CustomElementConstructor<UploadButtonElement> = UploadButtonElementModule.UploadButton
 
 /** Creates a `<vaadin-upload-button>` element. The custom element is registered on first use. */
 fun createUploadButton(configure: UploadButtonElement.() -> Unit = {}): UploadButtonElement {

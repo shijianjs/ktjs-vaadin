@@ -53,11 +53,11 @@ abstract external class DrawerToggleElement : web.html.HTMLElement, vaadin.butto
 
 @JsModule("@vaadin/app-layout/src/vaadin-drawer-toggle.js")
 private external object DrawerToggleElementModule {
-    val DrawerToggle: kotlin.js.JsAny
+    val DrawerToggle: web.components.CustomElementConstructor<DrawerToggleElement>
 }
 
 /** Imports `@vaadin/app-layout/src/vaadin-drawer-toggle.js`, registering `<vaadin-drawer-toggle>`, and returns the element class. */
-fun registerDrawerToggle(): kotlin.js.JsAny = DrawerToggleElementModule.DrawerToggle
+fun registerDrawerToggle(): web.components.CustomElementConstructor<DrawerToggleElement> = DrawerToggleElementModule.DrawerToggle
 
 /** Creates a `<vaadin-drawer-toggle>` element. The custom element is registered on first use. */
 fun createDrawerToggle(configure: DrawerToggleElement.() -> Unit = {}): DrawerToggleElement {

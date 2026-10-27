@@ -9,11 +9,11 @@ abstract external class IconsetElement : web.html.HTMLElement, vaadin.icon.Icons
 
 }
 
-private external interface IconsetElementStaticMembers {
+private external interface IconsetElementStaticMembers : web.components.CustomElementConstructor<IconsetElement> {
     /**
      * Set of the `vaadin-icon` instances in the DOM.
      */
-    val attachedIcons: kotlin.js.JsAny?
+    val attachedIcons: js.collections.JsSet<vaadin.icon.IconElement>
     /**
      * Returns an instance of the iconset by its name.
      */
@@ -38,7 +38,7 @@ object Iconset {
     /**
      * Set of the `vaadin-icon` instances in the DOM.
      */
-    val attachedIcons: kotlin.js.JsAny?
+    val attachedIcons: js.collections.JsSet<vaadin.icon.IconElement>
         get() = IconsetElementModule.Iconset.attachedIcons
 
     /**
@@ -65,7 +65,7 @@ object Iconset {
 }
 
 /** Imports `@vaadin/icon/src/vaadin-iconset.js`, registering `<vaadin-iconset>`, and returns the element class. */
-fun registerIconset(): kotlin.js.JsAny = IconsetElementModule.Iconset
+fun registerIconset(): web.components.CustomElementConstructor<IconsetElement> = IconsetElementModule.Iconset
 
 /** Creates a `<vaadin-iconset>` element. The custom element is registered on first use. */
 fun createIconset(configure: IconsetElement.() -> Unit = {}): IconsetElement {

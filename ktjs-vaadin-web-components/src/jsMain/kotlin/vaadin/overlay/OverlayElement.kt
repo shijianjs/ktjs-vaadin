@@ -59,11 +59,11 @@ abstract external class OverlayElement : web.html.HTMLElement, vaadin.overlay.Ov
 
 @JsModule("@vaadin/overlay/src/vaadin-overlay.js")
 private external object OverlayElementModule {
-    val Overlay: kotlin.js.JsAny
+    val Overlay: web.components.CustomElementConstructor<OverlayElement>
 }
 
 /** Imports `@vaadin/overlay/src/vaadin-overlay.js`, registering `<vaadin-overlay>`, and returns the element class. */
-fun registerOverlay(): kotlin.js.JsAny = OverlayElementModule.Overlay
+fun registerOverlay(): web.components.CustomElementConstructor<OverlayElement> = OverlayElementModule.Overlay
 
 /** Creates a `<vaadin-overlay>` element. The custom element is registered on first use. */
 fun createOverlay(configure: OverlayElement.() -> Unit = {}): OverlayElement {

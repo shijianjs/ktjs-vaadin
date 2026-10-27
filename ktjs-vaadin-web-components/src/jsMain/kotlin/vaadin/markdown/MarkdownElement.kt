@@ -33,11 +33,11 @@ abstract external class MarkdownElement : web.html.HTMLElement, vaadin.component
 
 @JsModule("@vaadin/markdown/src/vaadin-markdown.js")
 private external object MarkdownElementModule {
-    val Markdown: kotlin.js.JsAny
+    val Markdown: web.components.CustomElementConstructor<MarkdownElement>
 }
 
 /** Imports `@vaadin/markdown/src/vaadin-markdown.js`, registering `<vaadin-markdown>`, and returns the element class. */
-fun registerMarkdown(): kotlin.js.JsAny = MarkdownElementModule.Markdown
+fun registerMarkdown(): web.components.CustomElementConstructor<MarkdownElement> = MarkdownElementModule.Markdown
 
 /** Creates a `<vaadin-markdown>` element. The custom element is registered on first use. */
 fun createMarkdown(configure: MarkdownElement.() -> Unit = {}): MarkdownElement {

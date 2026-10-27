@@ -33,7 +33,7 @@ abstract external class DateMetadataController {
      * no metadata or its month has not been resolved yet. Returns the entry the
      * provider supplied, which the caller must not modify.
      */
-    fun getMetadata(date: kotlin.js.Date?): kotlin.js.JsAny?
+    fun getMetadata(date: kotlin.js.Date?): vaadin.datepicker.DatePickerDateMetadata?
     /**
      * The controller host element.
      */
@@ -78,8 +78,8 @@ abstract external class DateMetadataController {
 
 @JsModule("@vaadin/date-picker/src/vaadin-date-metadata-controller.js")
 private external object DateMetadataControllerModule {
-    val DateMetadataController: kotlin.js.JsAny
+    val DateMetadataController: js.function.ConstructorFunction<js.array.Tuple, DateMetadataController>
 }
 
 /** The class registered by `@vaadin/date-picker/src/vaadin-date-metadata-controller.js`. */
-fun datemetadatacontrollerClass(): kotlin.js.JsAny = DateMetadataControllerModule.DateMetadataController
+fun datemetadatacontrollerClass(): js.function.ConstructorFunction<js.array.Tuple, DateMetadataController> = DateMetadataControllerModule.DateMetadataController

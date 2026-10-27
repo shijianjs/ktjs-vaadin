@@ -18,13 +18,13 @@ package vaadin.popover
 abstract external class PopoverFocusController {
     fun activate()
     fun deactivate()
-    var host: kotlin.js.JsAny?
+    var host: vaadin.popover.PopoverElement
 }
 
 @JsModule("@vaadin/popover/src/vaadin-popover-focus-controller.js")
 private external object PopoverFocusControllerModule {
-    val PopoverFocusController: kotlin.js.JsAny
+    val PopoverFocusController: js.function.ConstructorFunction<js.array.Tuple, PopoverFocusController>
 }
 
 /** The class registered by `@vaadin/popover/src/vaadin-popover-focus-controller.js`. */
-fun popoverfocuscontrollerClass(): kotlin.js.JsAny = PopoverFocusControllerModule.PopoverFocusController
+fun popoverfocuscontrollerClass(): js.function.ConstructorFunction<js.array.Tuple, PopoverFocusController> = PopoverFocusControllerModule.PopoverFocusController

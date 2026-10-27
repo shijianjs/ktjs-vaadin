@@ -51,7 +51,7 @@ class CheckboxGroupTest {
     private fun checkboxes(group: CheckboxGroupElement): Array<HTMLElement> =
         queryAll(group, "vaadin-checkbox")
 
-    private fun values(vararg value: String): Array<JsAny?> = js("(value) => value")(value.toList().toTypedArray())
+    private fun values(vararg value: String): Array<String> = js("(value) => value")(value.toList().toTypedArray())
 
     private fun groupFixture(): CheckboxGroupElement = attach(
         fixture(

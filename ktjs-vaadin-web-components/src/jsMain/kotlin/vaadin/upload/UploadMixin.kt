@@ -55,7 +55,7 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
      * <vaadin-upload headers='{"X-Foo": "Bar"}'></vaadin-upload>
      * ```
      */
-    var headers: kotlin.js.JsAny
+    var headers: kotlin.js.JsAny?
     /**
      * Specifies the maximum number of files that can be uploaded simultaneously.
      * This helps prevent browser performance degradation and XHR limitations when

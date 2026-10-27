@@ -30,11 +30,11 @@ abstract external class ContextMenuListBoxElement : web.html.HTMLElement, vaadin
 
 @JsModule("@vaadin/context-menu/src/vaadin-context-menu-list-box.js")
 private external object ContextMenuListBoxElementModule {
-    val ContextMenuListBox: kotlin.js.JsAny
+    val ContextMenuListBox: web.components.CustomElementConstructor<ContextMenuListBoxElement>
 }
 
 /** Imports `@vaadin/context-menu/src/vaadin-context-menu-list-box.js`, registering `<vaadin-context-menu-list-box>`, and returns the element class. */
-fun registerContextMenuListBox(): kotlin.js.JsAny = ContextMenuListBoxElementModule.ContextMenuListBox
+fun registerContextMenuListBox(): web.components.CustomElementConstructor<ContextMenuListBoxElement> = ContextMenuListBoxElementModule.ContextMenuListBox
 
 /** Creates a `<vaadin-context-menu-list-box>` element. The custom element is registered on first use. */
 fun createContextMenuListBox(configure: ContextMenuListBoxElement.() -> Unit = {}): ContextMenuListBoxElement {

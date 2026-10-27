@@ -50,11 +50,11 @@ abstract external class DetailsSummaryElement : web.html.HTMLElement, vaadin.but
 
 @JsModule("@vaadin/details/src/vaadin-details-summary.js")
 private external object DetailsSummaryElementModule {
-    val DetailsSummary: kotlin.js.JsAny
+    val DetailsSummary: web.components.CustomElementConstructor<DetailsSummaryElement>
 }
 
 /** Imports `@vaadin/details/src/vaadin-details-summary.js`, registering `<vaadin-details-summary>`, and returns the element class. */
-fun registerDetailsSummary(): kotlin.js.JsAny = DetailsSummaryElementModule.DetailsSummary
+fun registerDetailsSummary(): web.components.CustomElementConstructor<DetailsSummaryElement> = DetailsSummaryElementModule.DetailsSummary
 
 /** Creates a `<vaadin-details-summary>` element. The custom element is registered on first use. */
 fun createDetailsSummary(configure: DetailsSummaryElement.() -> Unit = {}): DetailsSummaryElement {

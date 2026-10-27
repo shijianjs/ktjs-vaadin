@@ -50,11 +50,11 @@ abstract external class ScrollerElement : web.html.HTMLElement, vaadin.scroller.
 
 @JsModule("@vaadin/scroller/src/vaadin-scroller.js")
 private external object ScrollerElementModule {
-    val Scroller: kotlin.js.JsAny
+    val Scroller: web.components.CustomElementConstructor<ScrollerElement>
 }
 
 /** Imports `@vaadin/scroller/src/vaadin-scroller.js`, registering `<vaadin-scroller>`, and returns the element class. */
-fun registerScroller(): kotlin.js.JsAny = ScrollerElementModule.Scroller
+fun registerScroller(): web.components.CustomElementConstructor<ScrollerElement> = ScrollerElementModule.Scroller
 
 /** Creates a `<vaadin-scroller>` element. The custom element is registered on first use. */
 fun createScroller(configure: ScrollerElement.() -> Unit = {}): ScrollerElement {

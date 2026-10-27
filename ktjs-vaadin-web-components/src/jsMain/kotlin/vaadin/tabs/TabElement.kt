@@ -44,11 +44,11 @@ abstract external class TabElement : web.html.HTMLElement, vaadin.item.ItemMixin
 
 @JsModule("@vaadin/tabs/src/vaadin-tab.js")
 private external object TabElementModule {
-    val Tab: kotlin.js.JsAny
+    val Tab: web.components.CustomElementConstructor<TabElement>
 }
 
 /** Imports `@vaadin/tabs/src/vaadin-tab.js`, registering `<vaadin-tab>`, and returns the element class. */
-fun registerTab(): kotlin.js.JsAny = TabElementModule.Tab
+fun registerTab(): web.components.CustomElementConstructor<TabElement> = TabElementModule.Tab
 
 /** Creates a `<vaadin-tab>` element. The custom element is registered on first use. */
 fun createTab(configure: TabElement.() -> Unit = {}): TabElement {

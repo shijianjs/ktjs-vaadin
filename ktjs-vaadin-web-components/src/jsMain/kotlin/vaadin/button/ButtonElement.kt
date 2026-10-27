@@ -71,11 +71,11 @@ abstract external class ButtonElement : web.html.HTMLElement, vaadin.button.Butt
 
 @JsModule("@vaadin/button/src/vaadin-button.js")
 private external object ButtonElementModule {
-    val Button: kotlin.js.JsAny
+    val Button: web.components.CustomElementConstructor<ButtonElement>
 }
 
 /** Imports `@vaadin/button/src/vaadin-button.js`, registering `<vaadin-button>`, and returns the element class. */
-fun registerButton(): kotlin.js.JsAny = ButtonElementModule.Button
+fun registerButton(): web.components.CustomElementConstructor<ButtonElement> = ButtonElementModule.Button
 
 /** Creates a `<vaadin-button>` element. The custom element is registered on first use. */
 fun createButton(configure: ButtonElement.() -> Unit = {}): ButtonElement {

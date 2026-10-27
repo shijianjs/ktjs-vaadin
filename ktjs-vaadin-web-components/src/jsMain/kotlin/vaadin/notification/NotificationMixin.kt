@@ -69,5 +69,5 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = definedExternally)
+    fun show(contents: kotlin.js.JsAny?, options: vaadin.notification.NotificationShowOptions? = definedExternally)
 }

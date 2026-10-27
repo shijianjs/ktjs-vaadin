@@ -64,11 +64,11 @@ abstract external class CardElement : web.html.HTMLElement, vaadin.componentbase
 
 @JsModule("@vaadin/card/src/vaadin-card.js")
 private external object CardElementModule {
-    val Card: kotlin.js.JsAny
+    val Card: web.components.CustomElementConstructor<CardElement>
 }
 
 /** Imports `@vaadin/card/src/vaadin-card.js`, registering `<vaadin-card>`, and returns the element class. */
-fun registerCard(): kotlin.js.JsAny = CardElementModule.Card
+fun registerCard(): web.components.CustomElementConstructor<CardElement> = CardElementModule.Card
 
 /** Creates a `<vaadin-card>` element. The custom element is registered on first use. */
 fun createCard(configure: CardElement.() -> Unit = {}): CardElement {

@@ -90,11 +90,11 @@ abstract external class PasswordFieldElement : vaadin.textfield.TextFieldElement
 
 @JsModule("@vaadin/password-field/src/vaadin-password-field.js")
 private external object PasswordFieldElementModule {
-    val PasswordField: kotlin.js.JsAny
+    val PasswordField: web.components.CustomElementConstructor<PasswordFieldElement>
 }
 
 /** Imports `@vaadin/password-field/src/vaadin-password-field.js`, registering `<vaadin-password-field>`, and returns the element class. */
-fun registerPasswordField(): kotlin.js.JsAny = PasswordFieldElementModule.PasswordField
+fun registerPasswordField(): web.components.CustomElementConstructor<PasswordFieldElement> = PasswordFieldElementModule.PasswordField
 
 /** Creates a `<vaadin-password-field>` element. The custom element is registered on first use. */
 fun createPasswordField(configure: PasswordFieldElement.() -> Unit = {}): PasswordFieldElement {

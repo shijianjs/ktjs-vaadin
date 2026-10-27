@@ -31,11 +31,11 @@ abstract external class GridFilterElement : web.html.HTMLElement, vaadin.grid.Gr
 
 @JsModule("@vaadin/grid/src/vaadin-grid-filter.js")
 private external object GridFilterElementModule {
-    val GridFilter: kotlin.js.JsAny
+    val GridFilter: web.components.CustomElementConstructor<GridFilterElement>
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-filter.js`, registering `<vaadin-grid-filter>`, and returns the element class. */
-fun registerGridFilter(): kotlin.js.JsAny = GridFilterElementModule.GridFilter
+fun registerGridFilter(): web.components.CustomElementConstructor<GridFilterElement> = GridFilterElementModule.GridFilter
 
 /** Creates a `<vaadin-grid-filter>` element. The custom element is registered on first use. */
 fun createGridFilter(configure: GridFilterElement.() -> Unit = {}): GridFilterElement {

@@ -54,11 +54,11 @@ abstract external class VirtualListElement : web.html.HTMLElement, vaadin.virtua
 
 @JsModule("@vaadin/virtual-list/src/vaadin-virtual-list.js")
 private external object VirtualListElementModule {
-    val VirtualList: kotlin.js.JsAny
+    val VirtualList: web.components.CustomElementConstructor<VirtualListElement>
 }
 
 /** Imports `@vaadin/virtual-list/src/vaadin-virtual-list.js`, registering `<vaadin-virtual-list>`, and returns the element class. */
-fun registerVirtualList(): kotlin.js.JsAny = VirtualListElementModule.VirtualList
+fun registerVirtualList(): web.components.CustomElementConstructor<VirtualListElement> = VirtualListElementModule.VirtualList
 
 /** Creates a `<vaadin-virtual-list>` element. The custom element is registered on first use. */
 fun createVirtualList(configure: VirtualListElement.() -> Unit = {}): VirtualListElement {

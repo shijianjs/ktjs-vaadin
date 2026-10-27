@@ -57,11 +57,11 @@ abstract external class TabSheetElement : web.html.HTMLElement, vaadin.tabsheet.
 
 @JsModule("@vaadin/tabsheet/src/vaadin-tabsheet.js")
 private external object TabSheetElementModule {
-    val TabSheet: kotlin.js.JsAny
+    val TabSheet: web.components.CustomElementConstructor<TabSheetElement>
 }
 
 /** Imports `@vaadin/tabsheet/src/vaadin-tabsheet.js`, registering `<vaadin-tabsheet>`, and returns the element class. */
-fun registerTabSheet(): kotlin.js.JsAny = TabSheetElementModule.TabSheet
+fun registerTabSheet(): web.components.CustomElementConstructor<TabSheetElement> = TabSheetElementModule.TabSheet
 
 /** Creates a `<vaadin-tabsheet>` element. The custom element is registered on first use. */
 fun createTabSheet(configure: TabSheetElement.() -> Unit = {}): TabSheetElement {

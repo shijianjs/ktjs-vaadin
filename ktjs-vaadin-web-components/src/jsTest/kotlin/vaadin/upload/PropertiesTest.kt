@@ -271,7 +271,7 @@ class PropertiesTest {
         return nextRender(upload)
             .then {
                 upload.maxFiles = 1.0
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then {
@@ -293,7 +293,7 @@ class PropertiesTest {
                     values += js("(e) => e.detail.value")(event) as Boolean
                 }
                 upload.maxFiles = 1.0
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then {

@@ -18,8 +18,8 @@ abstract external class DialogOverflowController {
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog-overflow-controller.js")
 private external object DialogOverflowControllerModule {
-    val DialogOverflowController: kotlin.js.JsAny
+    val DialogOverflowController: js.function.ConstructorFunction<js.array.Tuple, DialogOverflowController>
 }
 
 /** The class registered by `@vaadin/dialog/src/vaadin-dialog-overflow-controller.js`. */
-fun dialogoverflowcontrollerClass(): kotlin.js.JsAny = DialogOverflowControllerModule.DialogOverflowController
+fun dialogoverflowcontrollerClass(): js.function.ConstructorFunction<js.array.Tuple, DialogOverflowController> = DialogOverflowControllerModule.DialogOverflowController

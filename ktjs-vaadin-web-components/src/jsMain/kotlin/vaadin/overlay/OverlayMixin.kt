@@ -14,7 +14,7 @@ external interface OverlayMixin : vaadin.overlay.OverlayFocusMixin, vaadin.overl
     /**
      * Object with properties that is passed to `renderer` function
      */
-    var model: kotlin.js.JsAny
+    var model: kotlin.js.JsAny?
     /**
      * When true the overlay won't disable the main content, showing
      * it doesn't change the functionality of the user interface.

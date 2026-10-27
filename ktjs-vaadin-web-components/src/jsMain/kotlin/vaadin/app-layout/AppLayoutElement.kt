@@ -116,7 +116,7 @@ abstract external class AppLayoutElement : web.html.HTMLElement, vaadin.applayou
 
 }
 
-private external interface AppLayoutElementStaticMembers {
+private external interface AppLayoutElementStaticMembers : web.components.CustomElementConstructor<AppLayoutElement> {
     /**
      * Helper static method that dispatches a `close-overlay-drawer` event
      */
@@ -138,7 +138,7 @@ object AppLayout {
 }
 
 /** Imports `@vaadin/app-layout/src/vaadin-app-layout.js`, registering `<vaadin-app-layout>`, and returns the element class. */
-fun registerAppLayout(): kotlin.js.JsAny = AppLayoutElementModule.AppLayout
+fun registerAppLayout(): web.components.CustomElementConstructor<AppLayoutElement> = AppLayoutElementModule.AppLayout
 
 /** Creates a `<vaadin-app-layout>` element. The custom element is registered on first use. */
 fun createAppLayout(configure: AppLayoutElement.() -> Unit = {}): AppLayoutElement {

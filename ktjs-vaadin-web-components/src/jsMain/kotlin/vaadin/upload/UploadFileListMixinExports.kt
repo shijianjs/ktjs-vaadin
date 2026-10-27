@@ -4,5 +4,5 @@
 package vaadin.upload
 
 internal external object UploadFileListMixinExportsModule {
-    val DEFAULT_I18N: kotlin.js.JsAny
+    val DEFAULT_I18N: vaadin.upload.UploadFileListI18n
 }

@@ -11,7 +11,7 @@ abstract external class ColumnObserver {
     fun getColumns(host: kotlin.js.JsAny?)
 }
 
-private external interface ColumnObserverStaticMembers {
+private external interface ColumnObserverStaticMembers : js.function.ConstructorFunction<js.array.Tuple, ColumnObserver> {
     fun getColumns(host: kotlin.js.JsAny?)
 }
 

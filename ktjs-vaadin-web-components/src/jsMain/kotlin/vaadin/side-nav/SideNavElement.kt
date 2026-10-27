@@ -108,16 +108,16 @@ abstract external class SideNavElement : web.html.HTMLElement, vaadin.sidenav.Si
      *
      * Also see the `location` property for updating the highlighted navigation item on route change.
      */
-    var onNavigate: (kotlin.js.JsAny) -> Boolean?
+    var onNavigate: ((vaadin.sidenav.NavigateEvent) -> Boolean?)?
 }
 
 @JsModule("@vaadin/side-nav/src/vaadin-side-nav.js")
 private external object SideNavElementModule {
-    val SideNav: kotlin.js.JsAny
+    val SideNav: web.components.CustomElementConstructor<SideNavElement>
 }
 
 /** Imports `@vaadin/side-nav/src/vaadin-side-nav.js`, registering `<vaadin-side-nav>`, and returns the element class. */
-fun registerSideNav(): kotlin.js.JsAny = SideNavElementModule.SideNav
+fun registerSideNav(): web.components.CustomElementConstructor<SideNavElement> = SideNavElementModule.SideNav
 
 /** Creates a `<vaadin-side-nav>` element. The custom element is registered on first use. */
 fun createSideNav(configure: SideNavElement.() -> Unit = {}): SideNavElement {

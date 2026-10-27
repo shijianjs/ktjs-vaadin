@@ -83,11 +83,11 @@ abstract external class FormItemElement : web.html.HTMLElement, vaadin.formlayou
 
 @JsModule("@vaadin/form-layout/src/vaadin-form-item.js")
 private external object FormItemElementModule {
-    val FormItem: kotlin.js.JsAny
+    val FormItem: web.components.CustomElementConstructor<FormItemElement>
 }
 
 /** Imports `@vaadin/form-layout/src/vaadin-form-item.js`, registering `<vaadin-form-item>`, and returns the element class. */
-fun registerFormItem(): kotlin.js.JsAny = FormItemElementModule.FormItem
+fun registerFormItem(): web.components.CustomElementConstructor<FormItemElement> = FormItemElementModule.FormItem
 
 /** Creates a `<vaadin-form-item>` element. The custom element is registered on first use. */
 fun createFormItem(configure: FormItemElement.() -> Unit = {}): FormItemElement {

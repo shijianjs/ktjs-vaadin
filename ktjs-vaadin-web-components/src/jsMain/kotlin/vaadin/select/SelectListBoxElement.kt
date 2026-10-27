@@ -30,11 +30,11 @@ abstract external class SelectListBoxElement : web.html.HTMLElement, vaadin.a11y
 
 @JsModule("@vaadin/select/src/vaadin-select-list-box.js")
 private external object SelectListBoxElementModule {
-    val SelectListBox: kotlin.js.JsAny
+    val SelectListBox: web.components.CustomElementConstructor<SelectListBoxElement>
 }
 
 /** Imports `@vaadin/select/src/vaadin-select-list-box.js`, registering `<vaadin-select-list-box>`, and returns the element class. */
-fun registerSelectListBox(): kotlin.js.JsAny = SelectListBoxElementModule.SelectListBox
+fun registerSelectListBox(): web.components.CustomElementConstructor<SelectListBoxElement> = SelectListBoxElementModule.SelectListBox
 
 /** Creates a `<vaadin-select-list-box>` element. The custom element is registered on first use. */
 fun createSelectListBox(configure: SelectListBoxElement.() -> Unit = {}): SelectListBoxElement {

@@ -123,7 +123,7 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
      * - `root` The root container DOM element. Append your content to it.
      * - `popover` The reference to the `vaadin-popover` element.
      */
-    var renderer: kotlin.js.JsAny
+    var renderer: vaadin.popover.PopoverRenderer?
     /**
      * Requests an update for the content of the popover.
      * While performing the update, it invokes the renderer passed in the `renderer` property.
@@ -186,7 +186,7 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
     var withBackdrop: Boolean
 }
 
-private external interface PopoverElementStaticMembers {
+private external interface PopoverElementStaticMembers : web.components.CustomElementConstructor<PopoverElement> {
     /**
      * Sets the default focus delay to be used by all popover instances,
      * except for those that have focus delay configured using property.
@@ -236,7 +236,7 @@ object Popover {
 }
 
 /** Imports `@vaadin/popover/src/vaadin-popover.js`, registering `<vaadin-popover>`, and returns the element class. */
-fun registerPopover(): kotlin.js.JsAny = PopoverElementModule.Popover
+fun registerPopover(): web.components.CustomElementConstructor<PopoverElement> = PopoverElementModule.Popover
 
 /** Creates a `<vaadin-popover>` element. The custom element is registered on first use. */
 fun createPopover(configure: PopoverElement.() -> Unit = {}): PopoverElement {

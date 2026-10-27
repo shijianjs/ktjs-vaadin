@@ -18,5 +18,5 @@ external interface PopoverTargetMixin {
      * Defaults to an element referenced with `for` attribute, in
      * which case it must be located in the same shadow scope.
      */
-    var target: kotlin.js.JsAny
+    var target: web.html.HTMLElement?
 }

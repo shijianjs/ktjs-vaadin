@@ -100,11 +100,11 @@ abstract external class DialogElement : web.html.HTMLElement, vaadin.dialog.Dial
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog.js")
 private external object DialogElementModule {
-    val Dialog: kotlin.js.JsAny
+    val Dialog: web.components.CustomElementConstructor<DialogElement>
 }
 
 /** Imports `@vaadin/dialog/src/vaadin-dialog.js`, registering `<vaadin-dialog>`, and returns the element class. */
-fun registerDialog(): kotlin.js.JsAny = DialogElementModule.Dialog
+fun registerDialog(): web.components.CustomElementConstructor<DialogElement> = DialogElementModule.Dialog
 
 /** Creates a `<vaadin-dialog>` element. The custom element is registered on first use. */
 fun createDialog(configure: DialogElement.() -> Unit = {}): DialogElement {

@@ -211,6 +211,89 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/icon|IconMixin|svg', 'vaadin.icon.IconSvgLiteral'],
   ['@vaadin/icon|Iconset|getIconSvg', 'vaadin.icon.IconSvgInfo'],
   ['@vaadin/icon|IconsetMixin|getIconSvg', 'vaadin.icon.IconSvgInfo'],
+  // `attachedIcons` is a static getter in the upstream implementation (the `.d.ts` declares it as a
+  // method); the manifest records only its `Set<Icon>` return type.
+  ['@vaadin/icon|Iconset|attachedIcons', 'js.collections.JsSet<vaadin.icon.IconElement>'],
+  ['@vaadin/icon|IconsetMixin|attachedIcons', 'js.collections.JsSet<vaadin.icon.IconElement>'],
+  // The manifest records these members as `object` / `array`; the upstream `.d.ts` declares them
+  // against the (erased) `TItem` / `TOwner` type parameters.
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|getItemLabel', '((kotlin.js.JsAny) -> String)'],
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|owner', 'web.html.HTMLElement'],
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|renderer', 'vaadin.combobox.ComboBoxRenderer?'],
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|items', 'Array<kotlin.js.JsAny>'],
+  ['@vaadin/combo-box|ComboBoxScrollerMixin|selectedItem', 'kotlin.js.JsAny?'],
+  ['@vaadin/checkbox-group|CheckboxGroupMixin|value', 'Array<String>'],
+  ['@vaadin/checkbox-group|CheckboxGroup|value', 'Array<String>'],
+  ['@vaadin/context-menu|MenuOverlayMixin|getBoundaries', 'vaadin.contextmenu.MenuOverlayBoundaries'],
+  // The date picker calendar overlay has no `.d.ts`; the property declarations and method bodies
+  // show that the fields hold `Date` objects and the arrays hold element instances.
+  [
+    '@vaadin/date-picker|DatePickerOverlayContentMixin|calendars',
+    'Array<vaadin.datepicker.MonthCalendarMixin>',
+  ],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|years', 'Array<web.html.HTMLElement>'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|focusableDateElement', 'web.html.HTMLElement?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|focusedDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|initialPosition', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|selectedDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|minDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|maxDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|label', 'String?'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|i18n', 'vaadin.datepicker.DatePickerI18n'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|focusDate', 'kotlin.js.Promise<Unit>'],
+  ['@vaadin/date-picker|DatePickerOverlayContentMixin|focusDateElement', 'kotlin.js.Promise<Unit>'],
+  ['@vaadin/date-picker|MonthCalendarMixin|focusableDateElement', 'web.html.HTMLElement?'],
+  ['@vaadin/date-picker|MonthCalendarMixin|focusedDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|MonthCalendarMixin|selectedDate', 'kotlin.js.Date?'],
+  ['@vaadin/date-picker|MonthCalendarMixin|month', 'kotlin.js.Date'],
+  ['@vaadin/date-picker|MonthCalendarMixin|i18n', 'vaadin.datepicker.DatePickerI18n'],
+  [
+    '@vaadin/date-picker|DateMetadataController|getMetadata',
+    'vaadin.datepicker.DatePickerDateMetadata?',
+  ],
+  ['@vaadin/dialog|DialogOverlayMixin|footerRenderer', 'vaadin.dialog.DialogRenderer?'],
+  ['@vaadin/dialog|DialogOverlayMixin|headerRenderer', 'vaadin.dialog.DialogRenderer?'],
+  ['@vaadin/message-list|MessageMixin|attachments', 'Array<vaadin.messagelist.MessageAttachment>?'],
+  ['@vaadin/message-list|MessageListMixin|items', 'Array<vaadin.messagelist.MessageListItem>?'],
+  ['@vaadin/multi-select-combo-box|MultiSelectComboBoxMixin|itemClassNameGenerator', '((kotlin.js.JsAny) -> String)'],
+  ['@vaadin/multi-select-combo-box|MultiSelectComboBoxMixin|selectedItems', 'Array<kotlin.js.JsAny>'],
+  ['@vaadin/multi-select-combo-box|MultiSelectComboBox|itemClassNameGenerator', '((kotlin.js.JsAny) -> String)'],
+  ['@vaadin/multi-select-combo-box|MultiSelectComboBox|selectedItems', 'Array<kotlin.js.JsAny>'],
+  ['@vaadin/overlay|OverlayMixin|model', 'kotlin.js.JsAny?'],
+  ['@vaadin/overlay|PositionMixin|positionTarget', 'web.html.HTMLElement'],
+  ['@vaadin/password-field|PasswordFieldMixin|i18n', 'vaadin.passwordfield.PasswordFieldI18n'],
+  ['@vaadin/password-field|PasswordField|i18n', 'vaadin.passwordfield.PasswordFieldI18n'],
+  ['@vaadin/popover|Popover|renderer', 'vaadin.popover.PopoverRenderer?'],
+  ['@vaadin/popover|Popover|target', 'web.html.HTMLElement?'],
+  ['@vaadin/popover|PopoverTargetMixin|target', 'web.html.HTMLElement?'],
+  ['@vaadin/popover|PopoverFocusController|host', 'vaadin.popover.PopoverElement'],
+  ['@vaadin/side-nav|SideNav|onNavigate', '((vaadin.sidenav.NavigateEvent) -> Boolean?)?'],
+  ['@vaadin/slider|RangeSlider|value', 'Array<Double>'],
+  ['@vaadin/tooltip|TooltipMixin|context', 'js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>'],
+  [
+    '@vaadin/tooltip|TooltipMixin|generator',
+    '((js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>) -> String)',
+  ],
+  [
+    '@vaadin/tooltip|TooltipMixin|shouldShow',
+    '((web.html.HTMLElement, js.objects.Record<kotlin.js.JsString, kotlin.js.JsAny>?) -> Boolean)',
+  ],
+  ['@vaadin/tooltip|TooltipAriaMixin|ariaTarget', 'vaadin.tooltip.HTMLElementOrHTMLElementArray?'],
+  // `object | string | null | undefined` upstream: the two object forms are opaque here.
+  ['@vaadin/upload|UploadMixin|headers', 'kotlin.js.JsAny?'],
+  ['@vaadin/upload|Upload|headers', 'kotlin.js.JsAny?'],
+  ['@vaadin/upload|UploadFileMixin|file', 'web.file.File'],
+  ['@vaadin/upload|UploadFile|file', 'web.file.File'],
+  ['@vaadin/upload|UploadFileMixin|i18n', 'vaadin.upload.UploadFileI18n'],
+  ['@vaadin/upload|UploadFile|i18n', 'vaadin.upload.UploadFileI18n'],
+  ['@vaadin/upload|UploadFileListMixin|items', 'Array<vaadin.upload.UploadFile>'],
+  ['@vaadin/upload|UploadFileList|items', 'Array<vaadin.upload.UploadFile>'],
+  ['@vaadin/upload|UploadFileListMixin|manager', 'vaadin.upload.UploadManager?'],
+  ['@vaadin/upload|UploadFileList|manager', 'vaadin.upload.UploadManager?'],
+  ['@vaadin/upload|UploadButton|manager', 'vaadin.upload.UploadManager?'],
+  ['@vaadin/upload|UploadDropZone|manager', 'vaadin.upload.UploadManager?'],
+  ['@vaadin/virtual-list|VirtualListMixin|firstVisibleIndex', 'Double'],
+  ['@vaadin/virtual-list|VirtualListMixin|lastVisibleIndex', 'Double'],
 ]);
 
 // Module-level functions whose manifest signature is too vague (a bare `Function`), typed after
@@ -240,6 +323,32 @@ const MODULE_SIGNATURES = new Map([
     '@vaadin/master-detail-layout|animateOut',
     '(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>',
   ],
+  ['@vaadin/date-picker|extractDateParts', '(date: kotlin.js.Date): vaadin.datepicker.DatePickerDate'],
+  [
+    '@vaadin/time-picker|formatISOTime',
+    '(time: vaadin.timepicker.TimePickerTime?): String',
+  ],
+  [
+    '@vaadin/time-picker|parseISOTime',
+    '(timeString: String): vaadin.timepicker.TimePickerTime?',
+  ],
+  [
+    '@vaadin/time-picker|validateTime',
+    '(timeObject: vaadin.timepicker.TimePickerTime?, step: Double?): vaadin.timepicker.TimePickerTime?',
+  ],
+  [
+    '@vaadin/upload|parseHeaders',
+    '(headers: kotlin.js.JsAny?): js.objects.Record<kotlin.js.JsString, kotlin.js.JsString>?',
+  ],
+]);
+
+// Module-level variables whose manifest type is too vague to map. Key format: `package|base|name`,
+// where `base` is the Kotlin file base name derived from the module path.
+const MODULE_VARIABLE_TYPES = new Map([
+  ['@vaadin/date-picker|DatePickerMixin|datePickerI18nDefaults', 'vaadin.datepicker.DatePickerI18n'],
+  ['@vaadin/time-picker|TimePickerMixin|timePickerI18nDefaults', 'vaadin.timepicker.TimePickerI18n'],
+  ['@vaadin/upload|UploadMixin|DEFAULT_I18N', 'vaadin.upload.UploadI18n'],
+  ['@vaadin/upload|UploadFileListMixin|DEFAULT_I18N', 'vaadin.upload.UploadFileListI18n'],
 ]);
 
 // Same as MEMBER_TYPES, for individual parameters.
@@ -260,6 +369,14 @@ const PARAMETER_TYPES = new Map([
     '@vaadin/grid|Grid|setDefaultMultiSortPriority|priority',
     'vaadin.grid.GridMultiSortPriority',
   ],
+  [
+    '@vaadin/notification|Notification|show|options',
+    'vaadin.notification.NotificationShowOptions?',
+  ],
+  [
+    '@vaadin/notification|NotificationMixin|show|options',
+    'vaadin.notification.NotificationShowOptions?',
+  ],
 ]);
 
 // Method signatures that the manifest cannot express (a destructured parameter is listed as a
@@ -273,6 +390,24 @@ const MEMBER_SIGNATURES = new Map([
   [
     '@vaadin/context-menu|ContextMenuTooltipController|initCustomNode',
     '(tooltipNode: web.html.HTMLElement)',
+  ],
+  // The date picker calendar overlay has no `.d.ts`; the method bodies take `Date` objects and
+  // booleans. `focusDate` and `focusDateElement` are async and are typed in MEMBER_TYPES.
+  [
+    '@vaadin/date-picker|DatePickerOverlayContentMixin|focusDate',
+    '(date: kotlin.js.Date?, keepMonth: Boolean?)',
+  ],
+  [
+    '@vaadin/date-picker|DatePickerOverlayContentMixin|focusDateElement',
+    '(reveal: Boolean? = definedExternally)',
+  ],
+  [
+    '@vaadin/date-picker|DatePickerOverlayContentMixin|revealDate',
+    '(date: kotlin.js.Date?, animate: Boolean? = definedExternally)',
+  ],
+  [
+    '@vaadin/date-picker|DatePickerOverlayContentMixin|scrollToDate',
+    '(date: kotlin.js.Date?, animate: Boolean?)',
   ],
 ]);
 
@@ -1080,12 +1215,17 @@ function emitClass(declaration) {
   const moduleName = `${declaration.kotlinName}Module`;
   const statics = collectStatics(declaration, declaration.pkg);
   const isElement = Boolean(declaration.tagName);
+  // The exported value is the class itself: a custom element constructor for elements, a plain
+  // constructor function for the helper classes.
+  const constructorType = isElement
+    ? `web.components.CustomElementConstructor<${declaration.kotlinName}>`
+    : `js.function.ConstructorFunction<js.array.Tuple, ${declaration.kotlinName}>`;
 
   if (statics.length > 0) {
     const staticInterface = `${declaration.kotlinName}StaticMembers`;
     lines.push(
       '',
-      `private external interface ${staticInterface} {`,
+      `private external interface ${staticInterface} : ${constructorType} {`,
       statics.map((member) => renderStaticMember(member, declaration, 4)).join('\n'),
       '}',
     );
@@ -1132,11 +1272,11 @@ function emitClass(declaration) {
       '',
       `@JsModule("${declaration.pkg}/${declaration.module}")`,
       `private external object ${moduleName} {`,
-      `    val ${id(declaration.name)}: kotlin.js.JsAny`,
+      `    val ${id(declaration.name)}: ${constructorType}`,
       '}',
       '',
       `/** The class registered by \`${declaration.pkg}/${declaration.module}\`. */`,
-      `fun ${camel(declaration.name)}Class(): kotlin.js.JsAny = ${moduleName}.${id(declaration.name)}`,
+      `fun ${camel(declaration.name)}Class(): ${constructorType} = ${moduleName}.${id(declaration.name)}`,
     );
   }
 
@@ -1148,14 +1288,14 @@ function emitClass(declaration) {
         '',
         `@JsModule("${declaration.pkg}/${declaration.module}")`,
         `private external object ${moduleName} {`,
-        `    val ${id(declaration.name)}: kotlin.js.JsAny`,
+        `    val ${id(declaration.name)}: ${constructorType}`,
         '}',
       );
     }
     lines.push(
       '',
       `/** Imports \`${declaration.pkg}/${declaration.module}\`, registering \`<${declaration.tagName}>\`, and returns the element class. */`,
-      `fun register${baseName}(): kotlin.js.JsAny = ${moduleName}.${id(declaration.name)}`,
+      `fun register${baseName}(): ${constructorType} = ${moduleName}.${id(declaration.name)}`,
       '',
       `/** Creates a \`<${declaration.tagName}>\` element. The custom element is registered on first use. */`,
       `fun create${baseName}(configure: ${declaration.kotlinName}.() -> Unit = {}): ${declaration.kotlinName} {`,
@@ -1205,6 +1345,13 @@ function moduleFileBase(modulePath) {
   return pascal(name);
 }
 
+function moduleVariableType(pkg, base, variable) {
+  return (
+    MODULE_VARIABLE_TYPES.get(`${pkg}|${base}|${variable.name}`) ??
+    mapType(variable.type && variable.type.text, pkg)
+  );
+}
+
 function emitModuleDeclarations(pkg, modulePath, items) {
   const kotlinPkg = kotlinPackage(pkg);
   const base = moduleFileBase(modulePath);
@@ -1228,7 +1375,7 @@ function emitModuleDeclarations(pkg, modulePath, items) {
   if (variables.length > 0) {
     exportsLines.push(`internal external object ${moduleName} {`);
     for (const variable of variables) {
-      exportsLines.push(`    val ${id(variable.name)}: ${mapType(variable.type && variable.type.text, pkg)}`);
+      exportsLines.push(`    val ${id(variable.name)}: ${moduleVariableType(pkg, base, variable)}`);
     }
     exportsLines.push('}', '');
   }
@@ -1245,7 +1392,7 @@ function emitModuleDeclarations(pkg, modulePath, items) {
       `object ${base}Exports {`,
       ...variables.map(
         (variable) =>
-          `${kdoc(variable.description, 4)}    val ${id(variable.name)}: ${mapType(variable.type && variable.type.text, pkg)}\n        get() = ${moduleName}.${id(variable.name)}`,
+          `${kdoc(variable.description, 4)}    val ${id(variable.name)}: ${moduleVariableType(pkg, base, variable)}\n        get() = ${moduleName}.${id(variable.name)}`,
       ),
       '}',
       '',

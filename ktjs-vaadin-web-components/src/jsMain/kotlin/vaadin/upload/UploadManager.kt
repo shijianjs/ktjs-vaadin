@@ -91,8 +91,8 @@ abstract external class UploadManager : web.events.EventTarget {
 
 @JsModule("@vaadin/upload/src/vaadin-upload-manager.js")
 private external object UploadManagerModule {
-    val UploadManager: kotlin.js.JsAny
+    val UploadManager: js.function.ConstructorFunction<js.array.Tuple, UploadManager>
 }
 
 /** The class registered by `@vaadin/upload/src/vaadin-upload-manager.js`. */
-fun uploadmanagerClass(): kotlin.js.JsAny = UploadManagerModule.UploadManager
+fun uploadmanagerClass(): js.function.ConstructorFunction<js.array.Tuple, UploadManager> = UploadManagerModule.UploadManager

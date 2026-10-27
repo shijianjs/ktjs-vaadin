@@ -105,11 +105,11 @@ abstract external class SliderElement : web.html.HTMLElement, vaadin.fieldbase.F
 
 @JsModule("@vaadin/slider/src/vaadin-slider.js")
 private external object SliderElementModule {
-    val Slider: kotlin.js.JsAny
+    val Slider: web.components.CustomElementConstructor<SliderElement>
 }
 
 /** Imports `@vaadin/slider/src/vaadin-slider.js`, registering `<vaadin-slider>`, and returns the element class. */
-fun registerSlider(): kotlin.js.JsAny = SliderElementModule.Slider
+fun registerSlider(): web.components.CustomElementConstructor<SliderElement> = SliderElementModule.Slider
 
 /** Creates a `<vaadin-slider>` element. The custom element is registered on first use. */
 fun createSlider(configure: SliderElement.() -> Unit = {}): SliderElement {

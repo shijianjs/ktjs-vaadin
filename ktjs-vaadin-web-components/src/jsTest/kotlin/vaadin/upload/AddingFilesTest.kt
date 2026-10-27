@@ -148,7 +148,7 @@ class AddingFilesTest {
         return nextRender(upload)
             .then {
                 upload.maxFiles = 1.0
-                upload.files = arrayOf(createFile(512))
+                upload.files = arrayOf(createTrackedFile(512))
                 nextUpdate(upload)
             }
             .then {
@@ -166,7 +166,7 @@ class AddingFilesTest {
         return nextRender(upload)
             .then {
                 upload.maxFiles = 1.0
-                addFilesViaInput(upload, arrayOf(createFile(512)))
+                addFilesViaInput(upload, arrayOf(createTrackedFile(512)))
                 nextUpdate(upload)
             }
             .then {
@@ -251,7 +251,7 @@ class AddingFilesTest {
         return nextRender(upload)
             .then {
                 upload.maxFiles = 1.0
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then {
@@ -271,7 +271,7 @@ class AddingFilesTest {
         return nextRender(upload)
             .then {
                 upload.disabled = true
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then {
@@ -301,7 +301,7 @@ class AddingFilesTest {
         return nextRender(upload)
             .then {
                 upload.maxFiles = 1.0
-                upload.files = arrayOf(createFile(100, "image/jpeg"))
+                upload.files = arrayOf(createTrackedFile(100, "image/jpeg"))
                 nextUpdate(upload)
             }
             .then {

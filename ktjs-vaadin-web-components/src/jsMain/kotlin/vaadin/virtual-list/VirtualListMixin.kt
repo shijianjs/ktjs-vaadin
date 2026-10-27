@@ -5,7 +5,7 @@ external interface VirtualListMixin {
     /**
      * Gets the index of the first visible item in the viewport.
      */
-    val firstVisibleIndex: kotlin.js.JsAny?
+    val firstVisibleIndex: Double
     /**
      * A function that generates accessible names for virtual list items.
      * The function gets the item as an argument and the
@@ -21,7 +21,7 @@ external interface VirtualListMixin {
     /**
      * Gets the index of the last visible item in the viewport.
      */
-    val lastVisibleIndex: kotlin.js.JsAny?
+    val lastVisibleIndex: Double
     /**
      * Custom function for rendering the content of every item.
      * Receives three arguments:

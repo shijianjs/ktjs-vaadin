@@ -20,6 +20,7 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
 import demo.tr
+import js.objects.unsafeJso
 import kotlin.js.js
 import kotlin.js.unsafeCast
 import vaadin.button.createButton
@@ -33,6 +34,7 @@ import vaadin.login.LoginFormEvents
 import vaadin.login.createLoginForm
 import vaadin.login.createLoginOverlay
 import vaadin.notification.Notification
+import vaadin.notification.NotificationShowOptions
 import vaadin.notification.createNotification
 import vaadin.overlay.createOverlay
 import vaadin.popover.PopoverEvents
@@ -385,7 +387,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("右上角的提示", "Message at the top end"),
-                            jsObject("""{"position":"top-end","duration":3000}"""),
+                            unsafeJso<NotificationShowOptions> {
+                                position = "top-end"
+                                duration = 3000.0
+                            },
                         )
                     }
                 },
@@ -393,7 +398,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("顶部居中的提示", "Message at the top center"),
-                            jsObject("""{"position":"top-center","duration":3000}"""),
+                            unsafeJso<NotificationShowOptions> {
+                                position = "top-center"
+                                duration = 3000.0
+                            },
                         )
                     }
                 },
@@ -421,7 +429,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("保存成功", "Saved successfully"),
-                            jsObject("""{"theme":"success","position":"bottom-end"}"""),
+                            unsafeJso<NotificationShowOptions> {
+                                theme = "success"
+                                position = "bottom-end"
+                            },
                         )
                     }
                 },
@@ -429,7 +440,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("保存失败", "Save failed"),
-                            jsObject("""{"theme":"error","position":"bottom-end"}"""),
+                            unsafeJso<NotificationShowOptions> {
+                                theme = "error"
+                                position = "bottom-end"
+                            },
                         )
                     }
                 },
@@ -437,7 +451,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("对比色提示", "Contrast message"),
-                            jsObject("""{"theme":"contrast","position":"bottom-end"}"""),
+                            unsafeJso<NotificationShowOptions> {
+                                theme = "contrast"
+                                position = "bottom-end"
+                            },
                         )
                     }
                 },

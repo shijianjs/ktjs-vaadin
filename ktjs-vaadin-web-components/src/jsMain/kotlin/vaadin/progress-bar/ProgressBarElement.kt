@@ -47,11 +47,11 @@ abstract external class ProgressBarElement : web.html.HTMLElement, vaadin.progre
 
 @JsModule("@vaadin/progress-bar/src/vaadin-progress-bar.js")
 private external object ProgressBarElementModule {
-    val ProgressBar: kotlin.js.JsAny
+    val ProgressBar: web.components.CustomElementConstructor<ProgressBarElement>
 }
 
 /** Imports `@vaadin/progress-bar/src/vaadin-progress-bar.js`, registering `<vaadin-progress-bar>`, and returns the element class. */
-fun registerProgressBar(): kotlin.js.JsAny = ProgressBarElementModule.ProgressBar
+fun registerProgressBar(): web.components.CustomElementConstructor<ProgressBarElement> = ProgressBarElementModule.ProgressBar
 
 /** Creates a `<vaadin-progress-bar>` element. The custom element is registered on first use. */
 fun createProgressBar(configure: ProgressBarElement.() -> Unit = {}): ProgressBarElement {

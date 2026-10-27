@@ -5,5 +5,5 @@ external interface MenuOverlayMixin : vaadin.overlay.OverlayFocusMixin, vaadin.o
     /**
      * Returns the adjusted boundaries of the overlay.
      */
-    fun getBoundaries(): kotlin.js.JsAny
+    fun getBoundaries(): vaadin.contextmenu.MenuOverlayBoundaries
 }

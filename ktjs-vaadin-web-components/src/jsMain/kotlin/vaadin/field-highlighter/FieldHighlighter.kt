@@ -91,7 +91,7 @@ object FieldHighlighter {
 
 external class FieldHighlighterElement : web.html.HTMLElement
 
-fun registerFieldHighlighter(): kotlin.js.JsAny = FieldHighlighterModule.FieldHighlighter
+fun registerFieldHighlighter(): FieldHighlighterConstructor = FieldHighlighterModule.FieldHighlighter
 
 fun createFieldHighlighter(
     configure: FieldHighlighterElement.() -> Unit = {},
@@ -113,7 +113,7 @@ external class FieldOutlineElement :
     var user: FieldHighlighterUser?
 }
 
-fun registerFieldOutline(): kotlin.js.JsAny = FieldOutlineModule.FieldOutline
+fun registerFieldOutline(): web.components.CustomElementConstructor<FieldOutlineElement> = FieldOutlineModule.FieldOutline
 
 fun createFieldOutline(configure: FieldOutlineElement.() -> Unit = {}): FieldOutlineElement {
     registerFieldOutline()
@@ -139,7 +139,7 @@ external class UserTagElement :
     var colorIndex: Double
 }
 
-fun registerUserTag(): kotlin.js.JsAny = UserTagModule.UserTag
+fun registerUserTag(): web.components.CustomElementConstructor<UserTagElement> = UserTagModule.UserTag
 
 fun createUserTag(configure: UserTagElement.() -> Unit = {}): UserTagElement {
     registerUserTag()
@@ -209,7 +209,7 @@ external class UserTagsElement : web.html.HTMLElement, vaadin.componentbase.Poly
     fun requestContentUpdate()
 }
 
-fun registerUserTags(): kotlin.js.JsAny = UserTagsModule.UserTags
+fun registerUserTags(): web.components.CustomElementConstructor<UserTagsElement> = UserTagsModule.UserTags
 
 fun createUserTags(configure: UserTagsElement.() -> Unit = {}): UserTagsElement {
     registerUserTags()
@@ -281,7 +281,7 @@ object AiFieldMarkerConfidences {
     inline val medium: AiFieldMarkerConfidence get() = AiFieldMarkerConfidence("medium")
 }
 
-fun registerAiFieldMarker(): kotlin.js.JsAny = AiFieldMarkerModule.AiFieldMarker
+fun registerAiFieldMarker(): web.components.CustomElementConstructor<AiFieldMarkerElement> = AiFieldMarkerModule.AiFieldMarker
 
 fun createAiFieldMarker(
     configure: AiFieldMarkerElement.() -> Unit = {},
@@ -290,7 +290,11 @@ fun createAiFieldMarker(
     return web.dom.document.createElement(VaadinTagName.aiFieldMarker).apply(configure)
 }
 
-private external interface FieldHighlighterStatics {
+/**
+ * The `<vaadin-field-highlighter>` constructor, which also carries the static helpers for sharing a
+ * controller between fields.
+ */
+external interface FieldHighlighterConstructor : web.components.CustomElementConstructor<FieldHighlighterElement> {
     /** Returns the controller associated with a field, creating it on first use. */
     fun init(field: web.html.HTMLElement): FieldHighlighterController
 
@@ -303,26 +307,27 @@ private external interface FieldHighlighterStatics {
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-field-highlighter.js")
 private external object FieldHighlighterModule {
-    val FieldHighlighterController: kotlin.js.JsAny
-    val FieldHighlighter: FieldHighlighterStatics
+    val FieldHighlighterController:
+        js.function.ConstructorFunction<js.array.Tuple1<web.html.HTMLElement>, FieldHighlighterController>
+    val FieldHighlighter: FieldHighlighterConstructor
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-field-outline.js")
 private external object FieldOutlineModule {
-    val FieldOutline: kotlin.js.JsAny
+    val FieldOutline: web.components.CustomElementConstructor<FieldOutlineElement>
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-user-tag.js")
 private external object UserTagModule {
-    val UserTag: kotlin.js.JsAny
+    val UserTag: web.components.CustomElementConstructor<UserTagElement>
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-user-tags.js")
 private external object UserTagsModule {
-    val UserTags: kotlin.js.JsAny
+    val UserTags: web.components.CustomElementConstructor<UserTagsElement>
 }
 
 @JsModule("@vaadin/field-highlighter/src/vaadin-ai-field-marker.js")
 private external object AiFieldMarkerModule {
-    val AiFieldMarker: kotlin.js.JsAny
+    val AiFieldMarker: web.components.CustomElementConstructor<AiFieldMarkerElement>
 }

@@ -64,7 +64,7 @@ abstract external class NotificationElement : web.html.HTMLElement, vaadin.notif
 
 }
 
-private external interface NotificationElementStaticMembers {
+private external interface NotificationElementStaticMembers : web.components.CustomElementConstructor<NotificationElement> {
     /**
      * Shows a notification with the given content.
      * By default, positions the notification at `bottom-start` and uses a 5 second duration.
@@ -85,7 +85,7 @@ private external interface NotificationElementStaticMembers {
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = definedExternally): vaadin.notification.NotificationElement
+    fun show(contents: kotlin.js.JsAny?, options: vaadin.notification.NotificationShowOptions? = definedExternally): vaadin.notification.NotificationElement
 }
 
 @JsModule("@vaadin/notification/src/vaadin-notification.js")
@@ -114,13 +114,13 @@ object Notification {
      * - [`position`](#/elements/vaadin-notification#property-position)
      * - [`duration`](#/elements/vaadin-notification#property-duration)
      */
-    fun show(contents: kotlin.js.JsAny?, options: kotlin.js.JsAny? = js("undefined")): vaadin.notification.NotificationElement {
+    fun show(contents: kotlin.js.JsAny?, options: vaadin.notification.NotificationShowOptions? = js("undefined")): vaadin.notification.NotificationElement {
         return NotificationElementModule.Notification.show(contents, options)
     }
 }
 
 /** Imports `@vaadin/notification/src/vaadin-notification.js`, registering `<vaadin-notification>`, and returns the element class. */
-fun registerNotification(): kotlin.js.JsAny = NotificationElementModule.Notification
+fun registerNotification(): web.components.CustomElementConstructor<NotificationElement> = NotificationElementModule.Notification
 
 /** Creates a `<vaadin-notification>` element. The custom element is registered on first use. */
 fun createNotification(configure: NotificationElement.() -> Unit = {}): NotificationElement {

@@ -21,6 +21,7 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
 import kotlin.js.JsAny
+import kotlin.js.unsafeCast
 import vaadin.button.createButton
 import vaadin.grid.GridEvents
 import vaadin.grid.GridSorterDirections
@@ -33,6 +34,7 @@ import vaadin.markdown.createMarkdown
 import vaadin.messageinput.MessageInputEvents
 import vaadin.messageinput.createMessageInput
 import vaadin.messagelist.MessageListEvents
+import vaadin.messagelist.MessageListItem
 import vaadin.messagelist.createMessageList
 import vaadin.upload.UploadEvents
 import vaadin.upload.createUpload
@@ -370,7 +372,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
                "userName": "You", "userAbbr": "ME", "time": "09:16", "userColorIndex": 2}
             ]
             """.trimIndent(),
-        )
+        ).unsafeCast<Array<MessageListItem>>()
     messages.markdown = true
     basic.body.append(example(null, messages))
     view.body.append(basic.root)
@@ -391,7 +393,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
             [{"text": "${tr("说点什么吧。", "Say something.")}",
               "userName": "System", "userAbbr": "SY", "time": "09:00"}]
             """.trimIndent(),
-        )
+        ).unsafeCast<Array<MessageListItem>>()
     val input = createMessageInput()
     val log = EventLog(4)
     input.listen(MessageInputEvents.submit) {
@@ -532,11 +534,12 @@ private fun buildUploadPage(meta: PageMeta): PageView {
 }
 
 /** Appends [text] to a message list `items` array and returns the new array. */
-private fun appendMessage(current: Array<JsAny?>?, text: String): Array<JsAny?> {
+private fun appendMessage(current: Array<MessageListItem>?, text: String): Array<MessageListItem> {
     // `Object.assign` keeps the object literal inside a call: the Kotlin/JS `js()` emitter drops the
     // parentheses of `() => ({ ... })`, which would turn the body into a block instead of an object.
-    val message: JsAny =
+    val message =
         kotlin.js.js("(text) => Object.assign({}, { text: text, userName: 'You', userAbbr: 'ME', time: 'now' })")(text)
-    val existing: List<JsAny?> = current?.toList() ?: emptyList()
+            .unsafeCast<MessageListItem>()
+    val existing: List<MessageListItem> = current?.toList() ?: emptyList()
     return (existing + message).toTypedArray()
 }

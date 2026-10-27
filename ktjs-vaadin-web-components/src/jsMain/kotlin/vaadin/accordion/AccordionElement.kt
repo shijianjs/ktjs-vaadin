@@ -43,11 +43,11 @@ abstract external class AccordionElement : web.html.HTMLElement, vaadin.accordio
 
 @JsModule("@vaadin/accordion/src/vaadin-accordion.js")
 private external object AccordionElementModule {
-    val Accordion: kotlin.js.JsAny
+    val Accordion: web.components.CustomElementConstructor<AccordionElement>
 }
 
 /** Imports `@vaadin/accordion/src/vaadin-accordion.js`, registering `<vaadin-accordion>`, and returns the element class. */
-fun registerAccordion(): kotlin.js.JsAny = AccordionElementModule.Accordion
+fun registerAccordion(): web.components.CustomElementConstructor<AccordionElement> = AccordionElementModule.Accordion
 
 /** Creates a `<vaadin-accordion>` element. The custom element is registered on first use. */
 fun createAccordion(configure: AccordionElement.() -> Unit = {}): AccordionElement {

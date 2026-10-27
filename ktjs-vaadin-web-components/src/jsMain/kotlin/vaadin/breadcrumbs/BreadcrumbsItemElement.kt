@@ -56,11 +56,11 @@ abstract external class BreadcrumbsItemElement : web.html.HTMLElement, vaadin.a1
 
 @JsModule("@vaadin/breadcrumbs/src/vaadin-breadcrumbs-item.js")
 private external object BreadcrumbsItemElementModule {
-    val BreadcrumbsItem: kotlin.js.JsAny
+    val BreadcrumbsItem: web.components.CustomElementConstructor<BreadcrumbsItemElement>
 }
 
 /** Imports `@vaadin/breadcrumbs/src/vaadin-breadcrumbs-item.js`, registering `<vaadin-breadcrumbs-item>`, and returns the element class. */
-fun registerBreadcrumbsItem(): kotlin.js.JsAny = BreadcrumbsItemElementModule.BreadcrumbsItem
+fun registerBreadcrumbsItem(): web.components.CustomElementConstructor<BreadcrumbsItemElement> = BreadcrumbsItemElementModule.BreadcrumbsItem
 
 /** Creates a `<vaadin-breadcrumbs-item>` element. The custom element is registered on first use. */
 fun createBreadcrumbsItem(configure: BreadcrumbsItemElement.() -> Unit = {}): BreadcrumbsItemElement {

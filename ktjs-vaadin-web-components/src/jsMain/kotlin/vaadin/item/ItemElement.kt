@@ -59,11 +59,11 @@ abstract external class ItemElement : web.html.HTMLElement, vaadin.item.ItemMixi
 
 @JsModule("@vaadin/item/src/vaadin-item.js")
 private external object ItemElementModule {
-    val Item: kotlin.js.JsAny
+    val Item: web.components.CustomElementConstructor<ItemElement>
 }
 
 /** Imports `@vaadin/item/src/vaadin-item.js`, registering `<vaadin-item>`, and returns the element class. */
-fun registerItem(): kotlin.js.JsAny = ItemElementModule.Item
+fun registerItem(): web.components.CustomElementConstructor<ItemElement> = ItemElementModule.Item
 
 /** Creates a `<vaadin-item>` element. The custom element is registered on first use. */
 fun createItem(configure: ItemElement.() -> Unit = {}): ItemElement {

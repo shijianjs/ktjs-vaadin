@@ -21,11 +21,11 @@ abstract external class GridTreeColumnElement : vaadin.grid.GridColumnElement, v
 
 @JsModule("@vaadin/grid/src/vaadin-grid-tree-column.js")
 private external object GridTreeColumnElementModule {
-    val GridTreeColumn: kotlin.js.JsAny
+    val GridTreeColumn: web.components.CustomElementConstructor<GridTreeColumnElement>
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-tree-column.js`, registering `<vaadin-grid-tree-column>`, and returns the element class. */
-fun registerGridTreeColumn(): kotlin.js.JsAny = GridTreeColumnElementModule.GridTreeColumn
+fun registerGridTreeColumn(): web.components.CustomElementConstructor<GridTreeColumnElement> = GridTreeColumnElementModule.GridTreeColumn
 
 /** Creates a `<vaadin-grid-tree-column>` element. The custom element is registered on first use. */
 fun createGridTreeColumn(configure: GridTreeColumnElement.() -> Unit = {}): GridTreeColumnElement {

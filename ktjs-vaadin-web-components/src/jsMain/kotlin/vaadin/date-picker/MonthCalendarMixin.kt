@@ -4,12 +4,12 @@ package vaadin.datepicker
 external interface MonthCalendarMixin : vaadin.a11ybase.FocusMixin {
     var disabled: Boolean
     var enteredDate: kotlin.js.Date
-    val focusableDateElement: kotlin.js.JsAny?
+    val focusableDateElement: web.html.HTMLElement?
     /**
      * A `Date` object for the currently focused date.
      */
-    var focusedDate: kotlin.js.JsAny
-    var i18n: kotlin.js.JsAny
+    var focusedDate: kotlin.js.Date?
+    var i18n: vaadin.datepicker.DatePickerI18n
     /**
      * Flag stating whether taps on the component should be ignored.
      */
@@ -32,11 +32,11 @@ external interface MonthCalendarMixin : vaadin.a11ybase.FocusMixin {
      * A `Date` object defining the month to be displayed. Only year and
      * month properties are actually used.
      */
-    var month: kotlin.js.JsAny
+    var month: kotlin.js.Date
     /**
      * A `Date` object for the currently selected date.
      */
-    var selectedDate: kotlin.js.JsAny
+    var selectedDate: kotlin.js.Date?
     /**
      * Set true to display ISO-8601 week numbers in the calendar. Notice that
      * displaying week numbers is only supported when `i18n.firstDayOfWeek`

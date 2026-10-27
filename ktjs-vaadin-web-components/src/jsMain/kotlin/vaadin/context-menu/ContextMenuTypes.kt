@@ -99,3 +99,15 @@ external interface ContextMenuTooltipOpenOptions {
     /** The gesture that opened the tooltip. */
     var trigger: ContextMenuTooltipTrigger
 }
+
+/** The boundaries the menu overlay is positioned within. */
+external interface MenuOverlayBoundaries {
+    /** The largest horizontal offset, excluded. */
+    var xMax: Double
+
+    /** The smallest horizontal offset. */
+    var xMin: Double
+
+    /** The largest vertical offset, excluded. */
+    var yMax: Double
+}

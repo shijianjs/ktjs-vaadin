@@ -9,4 +9,4 @@ package vaadin.upload
  * undefined, which throws when the request is configured.
  */
 
-external fun parseHeaders(headers: kotlin.js.JsAny?)
+external fun parseHeaders(headers: kotlin.js.JsAny?): js.objects.Record<kotlin.js.JsString, kotlin.js.JsString>?

@@ -1072,5 +1072,5 @@ private fun buildSliderPage(meta: PageMeta): PageView {
 }
 
 /** Reads the `name` field of the selected item objects for the multi-select read-out. */
-private fun selectedNames(items: Array<kotlin.js.JsAny?>): String =
+private fun selectedNames(items: Array<kotlin.js.JsAny>): String =
     items.joinToString(", ") { item -> js("(item) => String(item.name)")(item) as String }

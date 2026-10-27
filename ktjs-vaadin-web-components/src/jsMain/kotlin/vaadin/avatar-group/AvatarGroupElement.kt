@@ -56,11 +56,11 @@ abstract external class AvatarGroupElement : web.html.HTMLElement, vaadin.avatar
 
 @JsModule("@vaadin/avatar-group/src/vaadin-avatar-group.js")
 private external object AvatarGroupElementModule {
-    val AvatarGroup: kotlin.js.JsAny
+    val AvatarGroup: web.components.CustomElementConstructor<AvatarGroupElement>
 }
 
 /** Imports `@vaadin/avatar-group/src/vaadin-avatar-group.js`, registering `<vaadin-avatar-group>`, and returns the element class. */
-fun registerAvatarGroup(): kotlin.js.JsAny = AvatarGroupElementModule.AvatarGroup
+fun registerAvatarGroup(): web.components.CustomElementConstructor<AvatarGroupElement> = AvatarGroupElementModule.AvatarGroup
 
 /** Creates a `<vaadin-avatar-group>` element. The custom element is registered on first use. */
 fun createAvatarGroup(configure: AvatarGroupElement.() -> Unit = {}): AvatarGroupElement {

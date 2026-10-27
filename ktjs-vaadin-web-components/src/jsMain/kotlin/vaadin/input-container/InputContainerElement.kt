@@ -19,11 +19,11 @@ abstract external class InputContainerElement : web.html.HTMLElement, vaadin.the
 
 @JsModule("@vaadin/input-container/src/vaadin-input-container.js")
 private external object InputContainerElementModule {
-    val InputContainer: kotlin.js.JsAny
+    val InputContainer: web.components.CustomElementConstructor<InputContainerElement>
 }
 
 /** Imports `@vaadin/input-container/src/vaadin-input-container.js`, registering `<vaadin-input-container>`, and returns the element class. */
-fun registerInputContainer(): kotlin.js.JsAny = InputContainerElementModule.InputContainer
+fun registerInputContainer(): web.components.CustomElementConstructor<InputContainerElement> = InputContainerElementModule.InputContainer
 
 /** Creates a `<vaadin-input-container>` element. The custom element is registered on first use. */
 fun createInputContainer(configure: InputContainerElement.() -> Unit = {}): InputContainerElement {

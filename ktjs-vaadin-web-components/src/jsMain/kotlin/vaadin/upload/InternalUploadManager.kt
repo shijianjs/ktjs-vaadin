@@ -19,8 +19,8 @@ abstract external class InternalUploadManager : vaadin.upload.UploadManager {
 
 @JsModule("@vaadin/upload/src/vaadin-upload-internal-manager.js")
 private external object InternalUploadManagerModule {
-    val InternalUploadManager: kotlin.js.JsAny
+    val InternalUploadManager: js.function.ConstructorFunction<js.array.Tuple, InternalUploadManager>
 }
 
 /** The class registered by `@vaadin/upload/src/vaadin-upload-internal-manager.js`. */
-fun internaluploadmanagerClass(): kotlin.js.JsAny = InternalUploadManagerModule.InternalUploadManager
+fun internaluploadmanagerClass(): js.function.ConstructorFunction<js.array.Tuple, InternalUploadManager> = InternalUploadManagerModule.InternalUploadManager

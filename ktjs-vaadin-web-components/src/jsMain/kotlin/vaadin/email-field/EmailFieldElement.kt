@@ -88,11 +88,11 @@ abstract external class EmailFieldElement : vaadin.textfield.TextFieldElement {
 
 @JsModule("@vaadin/email-field/src/vaadin-email-field.js")
 private external object EmailFieldElementModule {
-    val EmailField: kotlin.js.JsAny
+    val EmailField: web.components.CustomElementConstructor<EmailFieldElement>
 }
 
 /** Imports `@vaadin/email-field/src/vaadin-email-field.js`, registering `<vaadin-email-field>`, and returns the element class. */
-fun registerEmailField(): kotlin.js.JsAny = EmailFieldElementModule.EmailField
+fun registerEmailField(): web.components.CustomElementConstructor<EmailFieldElement> = EmailFieldElementModule.EmailField
 
 /** Creates a `<vaadin-email-field>` element. The custom element is registered on first use. */
 fun createEmailField(configure: EmailFieldElement.() -> Unit = {}): EmailFieldElement {

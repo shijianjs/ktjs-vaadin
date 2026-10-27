@@ -1,11 +1,14 @@
 package vaadin.upload
 
+import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
 import vaadin.click
 import vaadin.queryAll
 import vaadin.shadowQuery
+import web.blob.BlobPart
+import web.file.File
 import web.html.HTMLElement
 
 /**
@@ -20,27 +23,35 @@ import web.html.HTMLElement
 
 private var fileCounter = 0
 
-/** Translates `createFile(fileSize, contentType)`; the returned blob carries a unique `name`. */
-internal fun createFile(size: Int = 512, contentType: String = "application/x-octet-stream"): UploadFile {
-    val blob = js(
-        "(size, type) => {" +
-            " const array = [];" +
-            " for (let i = 0; i < size; i++) array.push('A');" +
-            " return new Blob([new Uint8Array(array)], { type });" +
-            "}",
-    )(size, contentType)
-    val file = blob as UploadFile
-    js("(file, name) => { file.name = name; }")(file, "file-$fileCounter")
+/**
+ * Translates `createFile(fileSize, contentType)`: builds a real `File` whose content is [size] bytes
+ * of `A` and whose name is unique within the suite.
+ */
+internal fun createFile(size: Int = 512, contentType: String = "application/x-octet-stream"): File {
+    val name = "file-$fileCounter"
     fileCounter += 1
-    return file
+    return File(
+        arrayOf("A".repeat(size).unsafeCast<BlobPart>()),
+        name,
+        unsafeJso { type = contentType },
+    )
 }
+
+/**
+ * Returns [createFile] as the upload manager sees it: upstream tracks a `File` extended with the
+ * progress state, which Kotlin cannot model as a subinterface of the `File` class.
+ */
+internal fun createTrackedFile(
+    size: Int = 512,
+    contentType: String = "application/x-octet-stream",
+): UploadFile = createFile(size, contentType).unsafeCast<UploadFile>()
 
 /** Translates `createFiles(arraySize, fileSize, contentType)`. */
 internal fun createFiles(
     count: Int,
     size: Int = 512,
     contentType: String = "application/x-octet-stream",
-): Array<UploadFile> = Array(count) { createFile(size, contentType) }
+): Array<UploadFile> = Array(count) { createTrackedFile(size, contentType) }
 
 /**
  * Parses [json] into a JS value.

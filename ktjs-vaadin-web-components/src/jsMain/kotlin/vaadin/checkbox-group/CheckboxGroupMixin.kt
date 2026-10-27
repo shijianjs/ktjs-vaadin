@@ -18,5 +18,5 @@ external interface CheckboxGroupMixin : vaadin.fieldbase.FieldMixin, vaadin.a11y
      * The array is immutable so toggling checkboxes always results in
      * creating a new array.
      */
-    var value: Array<kotlin.js.JsAny?>
+    var value: Array<String>
 }

@@ -265,7 +265,7 @@ abstract external class GridElement : web.html.HTMLElement, vaadin.grid.GridMixi
 
 }
 
-private external interface GridElementStaticMembers {
+private external interface GridElementStaticMembers : web.components.CustomElementConstructor<GridElement> {
     /**
      * Sets the default multi-sort priority to use for all grid instances.
      * This method should be called before creating any grid instances.
@@ -291,7 +291,7 @@ object Grid {
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid.js`, registering `<vaadin-grid>`, and returns the element class. */
-fun registerGrid(): kotlin.js.JsAny = GridElementModule.Grid
+fun registerGrid(): web.components.CustomElementConstructor<GridElement> = GridElementModule.Grid
 
 /** Creates a `<vaadin-grid>` element. The custom element is registered on first use. */
 fun createGrid(configure: GridElement.() -> Unit = {}): GridElement {

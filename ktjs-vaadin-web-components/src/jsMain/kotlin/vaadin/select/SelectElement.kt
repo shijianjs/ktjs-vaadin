@@ -165,11 +165,11 @@ abstract external class SelectElement : web.html.HTMLElement, vaadin.select.Sele
 
 @JsModule("@vaadin/select/src/vaadin-select.js")
 private external object SelectElementModule {
-    val Select: kotlin.js.JsAny
+    val Select: web.components.CustomElementConstructor<SelectElement>
 }
 
 /** Imports `@vaadin/select/src/vaadin-select.js`, registering `<vaadin-select>`, and returns the element class. */
-fun registerSelect(): kotlin.js.JsAny = SelectElementModule.Select
+fun registerSelect(): web.components.CustomElementConstructor<SelectElement> = SelectElementModule.Select
 
 /** Creates a `<vaadin-select>` element. The custom element is registered on first use. */
 fun createSelect(configure: SelectElement.() -> Unit = {}): SelectElement {

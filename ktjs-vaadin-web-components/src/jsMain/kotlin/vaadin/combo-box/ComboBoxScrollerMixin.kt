@@ -10,7 +10,7 @@ external interface ComboBoxScrollerMixin {
     /**
      * Function used to set a label for every combo-box item.
      */
-    var getItemLabel: kotlin.js.JsAny
+    var getItemLabel: ((kotlin.js.JsAny) -> String)
     /**
      * A function used to generate CSS class names for dropdown
      * items based on the item. The return value should be the
@@ -22,7 +22,7 @@ external interface ComboBoxScrollerMixin {
      * A full set of items to filter the visible options from.
      * Set to an empty array when combo-box is not opened.
      */
-    var items: Array<kotlin.js.JsAny?>
+    var items: Array<kotlin.js.JsAny>
     /**
      * Set to true while combo-box fetches new page from the data provider.
      */
@@ -35,11 +35,11 @@ external interface ComboBoxScrollerMixin {
     /**
      * Reference to the owner (combo-box owner), used by the item elements.
      */
-    var owner: kotlin.js.JsAny
+    var owner: web.html.HTMLElement
     /**
      * Function used to render the content of every combo-box item.
      */
-    var renderer: kotlin.js.JsAny
+    var renderer: vaadin.combobox.ComboBoxRenderer?
     /**
      * Updates the virtualizer's size and items.
      */
@@ -55,7 +55,7 @@ external interface ComboBoxScrollerMixin {
     /**
      * The selected item from the `items` array.
      */
-    var selectedItem: kotlin.js.JsAny
+    var selectedItem: kotlin.js.JsAny?
     /**
      * Used to propagate the `theme` attribute from the host element.
      */

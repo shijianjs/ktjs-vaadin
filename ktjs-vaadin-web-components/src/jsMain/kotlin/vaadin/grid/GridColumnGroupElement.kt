@@ -37,11 +37,11 @@ abstract external class GridColumnGroupElement : web.html.HTMLElement, vaadin.gr
 
 @JsModule("@vaadin/grid/src/vaadin-grid-column-group.js")
 private external object GridColumnGroupElementModule {
-    val GridColumnGroup: kotlin.js.JsAny
+    val GridColumnGroup: web.components.CustomElementConstructor<GridColumnGroupElement>
 }
 
 /** Imports `@vaadin/grid/src/vaadin-grid-column-group.js`, registering `<vaadin-grid-column-group>`, and returns the element class. */
-fun registerGridColumnGroup(): kotlin.js.JsAny = GridColumnGroupElementModule.GridColumnGroup
+fun registerGridColumnGroup(): web.components.CustomElementConstructor<GridColumnGroupElement> = GridColumnGroupElementModule.GridColumnGroup
 
 /** Creates a `<vaadin-grid-column-group>` element. The custom element is registered on first use. */
 fun createGridColumnGroup(configure: GridColumnGroupElement.() -> Unit = {}): GridColumnGroupElement {

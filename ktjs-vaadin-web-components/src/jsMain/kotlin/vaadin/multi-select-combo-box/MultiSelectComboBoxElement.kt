@@ -124,11 +124,11 @@ abstract external class MultiSelectComboBoxElement : web.html.HTMLElement, vaadi
 
 @JsModule("@vaadin/multi-select-combo-box/src/vaadin-multi-select-combo-box.js")
 private external object MultiSelectComboBoxElementModule {
-    val MultiSelectComboBox: kotlin.js.JsAny
+    val MultiSelectComboBox: web.components.CustomElementConstructor<MultiSelectComboBoxElement>
 }
 
 /** Imports `@vaadin/multi-select-combo-box/src/vaadin-multi-select-combo-box.js`, registering `<vaadin-multi-select-combo-box>`, and returns the element class. */
-fun registerMultiSelectComboBox(): kotlin.js.JsAny = MultiSelectComboBoxElementModule.MultiSelectComboBox
+fun registerMultiSelectComboBox(): web.components.CustomElementConstructor<MultiSelectComboBoxElement> = MultiSelectComboBoxElementModule.MultiSelectComboBox
 
 /** Creates a `<vaadin-multi-select-combo-box>` element. The custom element is registered on first use. */
 fun createMultiSelectComboBox(configure: MultiSelectComboBoxElement.() -> Unit = {}): MultiSelectComboBoxElement {

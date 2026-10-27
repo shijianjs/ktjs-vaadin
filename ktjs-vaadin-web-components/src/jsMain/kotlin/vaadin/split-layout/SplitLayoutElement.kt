@@ -173,11 +173,11 @@ abstract external class SplitLayoutElement : web.html.HTMLElement, vaadin.splitl
 
 @JsModule("@vaadin/split-layout/src/vaadin-split-layout.js")
 private external object SplitLayoutElementModule {
-    val SplitLayout: kotlin.js.JsAny
+    val SplitLayout: web.components.CustomElementConstructor<SplitLayoutElement>
 }
 
 /** Imports `@vaadin/split-layout/src/vaadin-split-layout.js`, registering `<vaadin-split-layout>`, and returns the element class. */
-fun registerSplitLayout(): kotlin.js.JsAny = SplitLayoutElementModule.SplitLayout
+fun registerSplitLayout(): web.components.CustomElementConstructor<SplitLayoutElement> = SplitLayoutElementModule.SplitLayout
 
 /** Creates a `<vaadin-split-layout>` element. The custom element is registered on first use. */
 fun createSplitLayout(configure: SplitLayoutElement.() -> Unit = {}): SplitLayoutElement {

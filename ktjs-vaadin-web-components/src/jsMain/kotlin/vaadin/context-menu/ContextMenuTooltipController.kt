@@ -17,8 +17,8 @@ abstract external class ContextMenuTooltipController {
 
 @JsModule("@vaadin/context-menu/src/vaadin-context-menu-tooltip-controller.js")
 private external object ContextMenuTooltipControllerModule {
-    val ContextMenuTooltipController: kotlin.js.JsAny
+    val ContextMenuTooltipController: js.function.ConstructorFunction<js.array.Tuple, ContextMenuTooltipController>
 }
 
 /** The class registered by `@vaadin/context-menu/src/vaadin-context-menu-tooltip-controller.js`. */
-fun contextmenutooltipcontrollerClass(): kotlin.js.JsAny = ContextMenuTooltipControllerModule.ContextMenuTooltipController
+fun contextmenutooltipcontrollerClass(): js.function.ConstructorFunction<js.array.Tuple, ContextMenuTooltipController> = ContextMenuTooltipControllerModule.ContextMenuTooltipController

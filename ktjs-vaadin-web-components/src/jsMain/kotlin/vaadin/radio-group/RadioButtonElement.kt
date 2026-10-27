@@ -57,11 +57,11 @@ abstract external class RadioButtonElement : web.html.HTMLElement, vaadin.radiog
 
 @JsModule("@vaadin/radio-group/src/vaadin-radio-button.js")
 private external object RadioButtonElementModule {
-    val RadioButton: kotlin.js.JsAny
+    val RadioButton: web.components.CustomElementConstructor<RadioButtonElement>
 }
 
 /** Imports `@vaadin/radio-group/src/vaadin-radio-button.js`, registering `<vaadin-radio-button>`, and returns the element class. */
-fun registerRadioButton(): kotlin.js.JsAny = RadioButtonElementModule.RadioButton
+fun registerRadioButton(): web.components.CustomElementConstructor<RadioButtonElement> = RadioButtonElementModule.RadioButton
 
 /** Creates a `<vaadin-radio-button>` element. The custom element is registered on first use. */
 fun createRadioButton(configure: RadioButtonElement.() -> Unit = {}): RadioButtonElement {

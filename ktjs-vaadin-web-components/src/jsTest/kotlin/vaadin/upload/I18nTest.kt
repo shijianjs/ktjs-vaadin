@@ -114,7 +114,7 @@ class I18nTest {
 
         return nextRender(upload)
             .then {
-                addFilesViaInput(upload, arrayOf(createFile(100)))
+                addFilesViaInput(upload, arrayOf(createTrackedFile(100)))
                 nextFrame()
             }
             .then {

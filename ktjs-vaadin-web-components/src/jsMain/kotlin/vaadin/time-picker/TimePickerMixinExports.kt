@@ -4,5 +4,5 @@
 package vaadin.timepicker
 
 internal external object TimePickerMixinExportsModule {
-    val timePickerI18nDefaults: kotlin.js.JsAny?
+    val timePickerI18nDefaults: vaadin.timepicker.TimePickerI18n
 }

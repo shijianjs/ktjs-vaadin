@@ -18,8 +18,8 @@ abstract external class ClickTracker {
 
 @JsModule("@vaadin/dialog/src/vaadin-dialog-utils.js")
 private external object ClickTrackerModule {
-    val ClickTracker: kotlin.js.JsAny
+    val ClickTracker: js.function.ConstructorFunction<js.array.Tuple, ClickTracker>
 }
 
 /** The class registered by `@vaadin/dialog/src/vaadin-dialog-utils.js`. */
-fun clicktrackerClass(): kotlin.js.JsAny = ClickTrackerModule.ClickTracker
+fun clicktrackerClass(): js.function.ConstructorFunction<js.array.Tuple, ClickTracker> = ClickTrackerModule.ClickTracker

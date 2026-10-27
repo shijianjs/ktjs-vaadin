@@ -148,11 +148,11 @@ abstract external class MasterDetailLayoutElement : web.html.HTMLElement, vaadin
 
 @JsModule("@vaadin/master-detail-layout/src/vaadin-master-detail-layout.js")
 private external object MasterDetailLayoutElementModule {
-    val MasterDetailLayout: kotlin.js.JsAny
+    val MasterDetailLayout: web.components.CustomElementConstructor<MasterDetailLayoutElement>
 }
 
 /** Imports `@vaadin/master-detail-layout/src/vaadin-master-detail-layout.js`, registering `<vaadin-master-detail-layout>`, and returns the element class. */
-fun registerMasterDetailLayout(): kotlin.js.JsAny = MasterDetailLayoutElementModule.MasterDetailLayout
+fun registerMasterDetailLayout(): web.components.CustomElementConstructor<MasterDetailLayoutElement> = MasterDetailLayoutElementModule.MasterDetailLayout
 
 /** Creates a `<vaadin-master-detail-layout>` element. The custom element is registered on first use. */
 fun createMasterDetailLayout(configure: MasterDetailLayoutElement.() -> Unit = {}): MasterDetailLayoutElement {

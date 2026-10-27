@@ -4,5 +4,5 @@
 package vaadin.datepicker
 
 internal external object DatePickerMixinExportsModule {
-    val datePickerI18nDefaults: kotlin.js.JsAny?
+    val datePickerI18nDefaults: vaadin.datepicker.DatePickerI18n
 }

@@ -31,11 +31,11 @@ abstract external class AccordionPanelElement : web.html.HTMLElement, vaadin.acc
 
 @JsModule("@vaadin/accordion/src/vaadin-accordion-panel.js")
 private external object AccordionPanelElementModule {
-    val AccordionPanel: kotlin.js.JsAny
+    val AccordionPanel: web.components.CustomElementConstructor<AccordionPanelElement>
 }
 
 /** Imports `@vaadin/accordion/src/vaadin-accordion-panel.js`, registering `<vaadin-accordion-panel>`, and returns the element class. */
-fun registerAccordionPanel(): kotlin.js.JsAny = AccordionPanelElementModule.AccordionPanel
+fun registerAccordionPanel(): web.components.CustomElementConstructor<AccordionPanelElement> = AccordionPanelElementModule.AccordionPanel
 
 /** Creates a `<vaadin-accordion-panel>` element. The custom element is registered on first use. */
 fun createAccordionPanel(configure: AccordionPanelElement.() -> Unit = {}): AccordionPanelElement {
