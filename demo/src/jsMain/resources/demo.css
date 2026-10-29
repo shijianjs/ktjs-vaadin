@@ -485,3 +485,13 @@ body {
         font-size: var(--lumo-font-size-xl);
     }
 }
+
+/* ------------------------------------------------------------------ theming page */
+
+/* Shadow parts are the only styling entry point that reaches inside a component; the class
+   limits the rule to the instance that demonstrates it. */
+.theming-part::part(label) {
+    color: var(--lumo-primary-color);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}

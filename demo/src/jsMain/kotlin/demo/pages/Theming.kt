@@ -22,8 +22,10 @@ import demo.tr
 import vaadin.aura.Aura
 import vaadin.button.createButton
 import vaadin.card.createCard
+import vaadin.icon.createIcon
 import vaadin.lumostyles.LumoThemes
 import vaadin.textfield.createTextField
+import web.cssom.ClassName
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -196,6 +198,85 @@ private fun buildThemingPage(meta: PageMeta): PageView {
         example(null, card),
     )
     view.body.append(variants.root)
+
+    // --- Component style properties -------------------------------------------------------------
+    val properties =
+        section(
+            tr("样式属性", "Component style properties"),
+            tr(
+                "每个组件公开一组 --vaadin-* 样式属性，覆盖它们即可调整外观，不必接触 Shadow DOM；" +
+                    "属性会从宿主元素继承进影子树。",
+                "Every component exposes --vaadin-* style properties; overriding them adjusts the look " +
+                    "without touching the Shadow DOM, because custom properties inherit into the shadow tree.",
+            ),
+        )
+    val styled = createButton { textContent = tr("通过样式属性着色", "Styled through properties") }
+    styled.style.setProperty("--vaadin-button-background", "var(--lumo-primary-color)")
+    styled.style.setProperty("--vaadin-button-text-color", "var(--lumo-base-color)")
+    styled.style.setProperty("--vaadin-button-border-radius", "var(--lumo-border-radius-l)")
+    properties.body.append(
+        example(
+            null,
+            column(
+                styled,
+                code("--vaadin-button-background: var(--lumo-primary-color)"),
+                code("--vaadin-button-text-color: var(--lumo-base-color)"),
+                code("--vaadin-button-border-radius: var(--lumo-border-radius-l)"),
+            ),
+        ),
+    )
+    view.body.append(properties.root)
+
+    // --- Shadow parts ---------------------------------------------------------------------------
+    val parts =
+        section(
+            tr("阴影部件", "Shadow parts"),
+            tr(
+                "组件把内部结构声明为 part，宿主样式表用 ::part() 选中它；这里给按钮的 label 部件换颜色，" +
+                    "规则写在 demo.css 里并只作用于本示例。",
+                "Components expose their internals as parts that a host stylesheet selects with ::part(); " +
+                    "this example recolours the label part, scoped to the demo class in demo.css.",
+            ),
+        )
+    val partButton = createButton { textContent = tr("用 ::part 着色的标签", "A label styled through ::part") }
+    partButton.classList.add(ClassName("theming-part"))
+    parts.body.append(
+        example(
+            null,
+            column(partButton, code(".theming-part::part(label) { color: var(--lumo-primary-color); }")),
+        ),
+    )
+    view.body.append(parts.root)
+
+    // --- Utility classes ------------------------------------------------------------------------
+    val utilities =
+        section(
+            tr("工具类", "Utility classes"),
+            tr(
+                "Lumo 自带一套工具类（padding / background / flex / gap / rounded / shadow ...），" +
+                    "给普通元素套用即可，不需要写额外样式表；本页通过 utility.css 加载。",
+                "Lumo ships utility classes (padding / background / flex / gap / rounded / shadow ...) that " +
+                    "can be applied to plain elements without writing extra CSS; this page loads utility.css.",
+            ),
+        )
+    val utilityBox = div("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
+    utilityBox.append(
+        createIcon { icon = "lumo:info" },
+        paragraph(
+            tr("这个盒子只用了工具类排布。", "This box is styled with utility classes only."),
+            "small",
+        ),
+    )
+    utilities.body.append(
+        example(
+            null,
+            column(
+                utilityBox,
+                code("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s"),
+            ),
+        ),
+    )
+    view.body.append(utilities.root)
 
     // --- Built-in translations ------------------------------------------------------------------
     val i18n =

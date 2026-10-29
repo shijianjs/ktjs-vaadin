@@ -53,6 +53,7 @@ val copyLumoStyles = tasks.register<Copy>("copyLumoStyles") {
     dependsOn(":kotlinNpmInstall")
     from(lumoStyles) {
         include("lumo.css")
+        include("utility.css")
     }
     into(layout.buildDirectory.dir("generated/lumo"))
 }
