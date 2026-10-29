@@ -194,6 +194,13 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
   ['@vaadin/date-time-picker|DateTimePicker|i18n', 'vaadin.datetimepicker.DateTimePickerI18n'],
+  // The manifest records the login localization object as a bare `object`; upstream `.d.ts`
+  // declares `interface LoginI18n`. See `vaadin/login/LoginTypes.kt`.
+  ['@vaadin/login|LoginForm|i18n', 'vaadin.login.LoginI18n'],
+  ['@vaadin/login|LoginOverlay|i18n', 'vaadin.login.LoginI18n'],
+  // The manifest says `string`, while the `.d.ts` allows `null` to disable the POST call.
+  ['@vaadin/login|LoginMixin|action', 'String?'],
+  ['@vaadin/login|LoginFormMixin|action', 'String?'],
   ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
   // The manifest records the column alignment as an untyped `string`; upstream `.d.ts` uses the CSS
   // `text-align` subset, so the existing kotlin-wrappers value type applies.
@@ -314,6 +321,34 @@ const EXTRA_MEMBERS = new Map([
         type: { text: 'HTMLElement' },
         description:
           'A reference to the input element controlled by the mixin, set by `InputController`.',
+      },
+    ],
+  ],
+  // The manifest marks `i18n` as inherited from `I18nMixin` (`JsAny`), while upstream declares
+  // `interface LoginI18n` (`vaadin-login-mixin.d.ts`). See `vaadin/login/LoginTypes.kt`.
+  [
+    '@vaadin/login|LoginForm',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the login form. Maps to the `i18n` property; renamed in ' +
+          'Kotlin because the inherited `i18n` is untyped.',
+      },
+    ],
+  ],
+  [
+    '@vaadin/login|LoginOverlay',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the login overlay. Maps to the `i18n` property; renamed in ' +
+          'Kotlin because the inherited `i18n` is untyped.',
       },
     ],
   ],

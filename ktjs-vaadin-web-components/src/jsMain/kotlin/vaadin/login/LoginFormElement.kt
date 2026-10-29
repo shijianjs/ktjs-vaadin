@@ -48,7 +48,11 @@ package vaadin.login
  */
 
 abstract external class LoginFormElement : web.html.HTMLElement, vaadin.login.LoginFormMixin, vaadin.componentbase.ElementMixin, vaadin.themablemixin.ThemableMixin, vaadin.componentbase.PolylitMixin {
-
+    /**
+     * The object used to localize the login form. Maps to the `i18n` property; renamed in Kotlin because the inherited `i18n` is untyped.
+     */
+    @JsName("i18n")
+    var i18nProperty: vaadin.login.LoginI18n
 }
 
 @JsModule("@vaadin/login/src/vaadin-login-form.js")

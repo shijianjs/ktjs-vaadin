@@ -1,5 +1,6 @@
 package vaadin.login
 
+import js.objects.unsafeJso
 import vaadin.queryAll
 import vaadin.query
 import vaadin.shadowQuery
@@ -11,6 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import vaadin.attach
 import vaadin.detachAll
@@ -256,5 +258,40 @@ class LoginFormTest {
         val form = newForm()
 
         assertNotNull(js("(form) => form.i18n")(form))
+    }
+
+    @Test
+    fun typedI18nOverridesTheFormTexts() {
+        val loginForm = newForm()
+        val i18n = unsafeJso<LoginI18n> {
+            // `form` is the localization object of the form texts, not the login form element.
+            form = unsafeJso<LoginI18nForm> { submit = "Kirjaudu sisään" }
+            errorMessage = unsafeJso<LoginI18nErrorMessage> { title = "Väärä tunnus" }
+        }
+
+        // The manifest records `i18n` as an untyped `object`; `i18nProperty` maps back to it.
+        loginForm.i18nProperty = i18n
+
+        assertEquals("Kirjaudu sisään", js("(form) => form.i18n.form.submit")(loginForm))
+        assertEquals("Väärä tunnus", js("(form) => form.i18n.errorMessage.title")(loginForm))
+    }
+
+    @Test
+    fun actionAcceptsNull() {
+        val form = newForm()
+        form.action = "/login"
+        assertEquals("/login", form.action)
+        form.action = null
+        assertNull(form.action)
+    }
+
+    @Test
+    fun overlayExposesTypedI18n() {
+        val overlay = attach(createLoginOverlay())
+        overlay.i18nProperty = unsafeJso<LoginI18n> {
+            additionalInformation = "Contact admin@company.com"
+        }
+
+        assertEquals("Contact admin@company.com", js("(overlay) => overlay.i18n.additionalInformation")(overlay))
     }
 }

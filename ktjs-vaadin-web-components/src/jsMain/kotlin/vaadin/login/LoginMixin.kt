@@ -6,7 +6,7 @@ external interface LoginMixin : vaadin.componentbase.I18nMixin {
      * If set, a synchronous POST call will be fired to the path defined.
      * The `login` event is also dispatched, so `event.preventDefault()` can be called to prevent the POST call.
      */
-    var action: String
+    var action: String?
     /**
      * If set, disable the "Log in" button and prevent user from submitting login form.
      * It is re-enabled automatically, when error is set to true, allowing form resubmission
