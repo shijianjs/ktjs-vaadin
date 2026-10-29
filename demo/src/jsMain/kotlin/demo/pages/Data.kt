@@ -10,26 +10,16 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
-import demo.ui.joinValues
 import demo.ui.jsArray
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import vaadin.button.createButton
-import vaadin.grid.GridEvents
-import vaadin.grid.GridSorterDirections
-import vaadin.grid.createGrid
-import vaadin.grid.createGridColumn
-import vaadin.grid.createGridFilterColumn
-import vaadin.grid.createGridSelectionColumn
-import vaadin.grid.createGridSortColumn
 import vaadin.markdown.createMarkdown
 import vaadin.messageinput.MessageInputEvents
 import vaadin.messageinput.createMessageInput
@@ -45,22 +35,6 @@ import web.html.HTMLElement
 
 val dataEntries: List<CatalogEntry> =
     listOf(
-        CatalogEntry(
-            id = "grid",
-            group = Groups.DATA,
-            meta =
-                PageMeta(
-                    title = bi("Grid", "Grid"),
-                    summary =
-                        bi(
-                            "数据表格：列、排序、筛选、选择、行详情与主题变体。",
-                            "Data table: columns, sorting, filtering, selection, row details and theme variants.",
-                        ),
-                    docsUrl = "$DOCS_BASE/grid",
-                    sourcePath = "pages/Data.kt",
-                ),
-            builder = ::buildGridPage,
-        ),
         CatalogEntry(
             id = "virtual-list",
             group = Groups.DATA,
@@ -144,152 +118,6 @@ val dataEntries: List<CatalogEntry> =
             builder = ::buildUploadPage,
         ),
     )
-
-private const val PEOPLE_JSON =
-    """
-    [
-      {"name": "Ada Lovelace", "role": "Mathematician", "score": 98, "team": "Research"},
-      {"name": "Grace Hopper", "role": "Computer scientist", "score": 95, "team": "Compiler"},
-      {"name": "Margaret Hamilton", "role": "Software engineer", "score": 99, "team": "Apollo"},
-      {"name": "Katherine Johnson", "role": "Mathematician", "score": 97, "team": "Orbital"},
-      {"name": "Barbara Liskov", "role": "Programmer", "score": 96, "team": "Research"}
-    ]
-    """
-
-private fun buildGridPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "列用 path 绑定 items 里的字段；选择列把选中项写进 selectedItems。",
-                "Columns bind fields of items through path; the selection column writes selected rows " +
-                    "into selectedItems.",
-            ),
-        )
-    val log = EventLog(6)
-    val grid = createGrid()
-    grid.dataset["test"] = "grid-basic"
-    // Grid defaults to `height: 100%`; inside an auto-height container it needs an explicit height.
-    grid.style.setProperty("height", "18rem")
-    grid.items = jsArray<JsAny>(PEOPLE_JSON)
-    grid.append(
-        createGridSelectionColumn(),
-        createGridColumn {
-            header = tr("姓名", "Name")
-            path = "name"
-        },
-        createGridColumn {
-            header = tr("职务", "Role")
-            path = "role"
-        },
-        createGridColumn {
-            header = tr("得分", "Score")
-            path = "score"
-            width = "6rem"
-        },
-    )
-    val selection = Readout(tr("已选 0 行", "0 rows selected"))
-    grid.listen(GridEvents.selectedItemsChanged) {
-        selection.set(tr("已选 ${grid.selectedItems.size} 行", "${grid.selectedItems.size} rows selected"))
-    }
-    // `cell-activate` only fires for user interaction (double click / Enter), so the log starts
-    // empty instead of recording the events the grid fires while it initialises.
-    grid.listen(GridEvents.cellActivate) { log.add("cell-activate") }
-    basic.body.append(example(null, column(grid, row(selection.root), log.root)))
-    view.body.append(basic.root)
-
-    val sorting =
-        section(
-            tr("排序与筛选", "Sorting and filtering"),
-            tr(
-                "sort-column 的 direction 由表头点击更新，filter-column 提供筛选输入框。",
-                "Clicking a header updates the direction of sort-column, and filter-column adds a filter input.",
-            ),
-        )
-    val sorted = createGrid()
-    sorted.dataset["test"] = "grid-sorted"
-    sorted.style.setProperty("height", "18rem")
-    sorted.items = jsArray<JsAny>(PEOPLE_JSON)
-    sorted.append(
-        createGridSortColumn {
-            header = tr("姓名", "Name")
-            path = "name"
-            direction = GridSorterDirections.asc
-        },
-        createGridSortColumn {
-            header = tr("得分", "Score")
-            path = "score"
-            width = "6rem"
-        },
-        createGridFilterColumn {
-            header = tr("团队", "Team")
-            path = "team"
-        },
-        createGridColumn {
-            header = tr("职务", "Role")
-            path = "role"
-        },
-    )
-    sorting.body.append(example(null, sorted))
-    view.body.append(sorting.root)
-
-    val variants =
-        section(
-            tr("行详情与主题", "Row details and themes"),
-            tr(
-                "rowDetailsRenderer 渲染展开区；theme 控制行条纹、边框与密度。",
-                "rowDetailsRenderer renders the expanded area; theme controls row stripes, borders and density.",
-            ),
-        )
-    val detailed = createGrid()
-    detailed.dataset["test"] = "grid-details"
-    detailed.items = jsArray<JsAny>(PEOPLE_JSON)
-    detailed.allRowsVisible = true
-    detailed.withTheme("row-stripes", "column-borders", "compact")
-    detailed.append(
-        createGridColumn {
-            header = tr("姓名", "Name")
-            path = "name"
-        },
-        createGridColumn {
-            header = tr("团队", "Team")
-            path = "team"
-        },
-    )
-    detailed.rowDetailsRenderer = { root, _, model ->
-        root.append(
-            paragraph(
-                tr(
-                    "第 ${model.index + 1} 行的详情内容，由 rowDetailsRenderer 生成。",
-                    "Details of row ${model.index + 1}, generated by rowDetailsRenderer.",
-                ),
-            ),
-        )
-    }
-    val openDetails =
-        createButton { textContent = tr("展开第一行详情", "Toggle first row details") }.withTheme("tertiary").apply {
-            clickEvent.addHandler {
-                gridDetailsToggle(detailed)
-            }
-        }
-    variants.body.append(example(null, column(detailed, openDetails)))
-    view.body.append(variants.root)
-
-    return view
-}
-
-/** Opens or closes the details of the first row through the public API. */
-private fun gridDetailsToggle(grid: vaadin.grid.GridElement) {
-    val items = grid.items
-    val first = items?.firstOrNull() ?: return
-    if (grid.detailsOpenedItems.isNotEmpty()) {
-        grid.closeItemDetails(first)
-    } else {
-        grid.openItemDetails(first)
-    }
-}
 
 private fun buildVirtualListPage(meta: PageMeta): PageView {
     val view = page(meta)

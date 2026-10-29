@@ -86,11 +86,11 @@
 `OverlayPopups.kt` 放 notification / popover / tooltip / context-menu），条目的 `sourcePath` 分别指向对应文件。
 登录浮层默认全部关闭，由各自的按钮打开（提交成功后自动关闭），避免多个浮层在页面加载时互相遮挡。
 
-### 数据展示（`Data.kt`）
+### 数据展示（`Grid.kt`、`Data.kt`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| grid | grid | 39 | TODO | |
+| grid | grid | 39 | DONE | 拆成 `Grid.kt`（夹具、基本、列、数据绑定、排序）与 `GridFeatures.kt`（行详情、空状态、菜单与 tooltip、焦点与滚动、拖放、选择、样式、懒列）；inline-editing 的 buffered / unbuffered 只有 Flow 示例，改在数据绑定一节说明 `dataProvider` 的写法；tree-grid 的拖放过滤示例用普通 grid 的 `dragFilter` / `dropFilter` 等价演示 |
 | virtual-list | virtuallist | 1 | TODO | |
 | message-list | messages | 8 | TODO | |
 | message-input | messages | 1 | TODO | |

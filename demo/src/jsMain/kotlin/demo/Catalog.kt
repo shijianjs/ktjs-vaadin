@@ -2,6 +2,7 @@ package demo
 
 import demo.pages.buttonEntries
 import demo.pages.dataEntries
+import demo.pages.gridEntries
 import demo.pages.displayEntries
 import demo.pages.layoutEntries
 import demo.pages.numberFieldEntries
@@ -103,6 +104,7 @@ val catalog: List<CatalogEntry> =
         pickerEntries,
         overlayEntries,
         dataEntries,
+        gridEntries,
         layoutEntries,
         displayEntries,
         themingEntries,

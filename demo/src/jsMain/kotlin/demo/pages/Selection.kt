@@ -267,7 +267,48 @@ internal class Person(
 
     val pictureUrl: String
         get() = portrait(PORTRAIT_FILLS[id % PORTRAIT_FILLS.size])
+
+    // The grid examples need the remaining fields of the upstream `Person` DTO; they are derived
+    // from the id so that every example shows the same person on every visit.
+
+    val birthday: String
+        get() = "${1970 + (id * 3) % 30}-${pad2((id * 5) % 12 + 1)}-${pad2((id * 7) % 27 + 1)}"
+
+    val status: String
+        get() = if (id % 3 == 0) "Unavailable" else "Available"
+
+    val subscriber: Boolean
+        get() = id % 2 == 1
+
+    val membership: String
+        get() = MEMBERSHIPS[id % MEMBERSHIPS.size]
+
+    val customerRating: Double
+        get() = (id * 37 % 100) / 10.0
+
+    val street: String
+        get() = "${100 + id * 7} Elm Street"
+
+    val city: String
+        get() = CITIES[id % CITIES.size]
+
+    val zip: String
+        get() = "02${100 + id}"
+
+    val state: String
+        get() = STATES[id % STATES.size]
+
+    val phone: String
+        get() = "+1 ${300 + id} 555 0${100 + id}"
+
+    private fun pad2(value: Int): String = if (value < 10) "0$value" else "$value"
 }
+
+private val MEMBERSHIPS = listOf("Regular", "Premium", "VIP")
+
+private val CITIES = listOf("Boston", "Austin", "Denver", "Portland", "Chicago", "Seattle")
+
+private val STATES = listOf("MA", "TX", "CO", "OR", "IL", "WA")
 
 private val PORTRAIT_FILLS = listOf("1f4e9c", "b05a2c", "2f7d5b", "7a3f8f", "b07d1f", "3f607d")
 

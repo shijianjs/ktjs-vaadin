@@ -581,13 +581,7 @@ vaadin-context-menu-item.custom {
     color: var(--lumo-error-text-color);
 }
 
-/* Popover user menu: the avatar row and the link column of a `no-padding` popover. */
-.person-item {
-    display: flex;
-    align-items: center;
-    gap: var(--lumo-space-s);
-}
-
+/* Popover user menu: the link column of a `no-padding` popover. */
 .user-menu-links {
     display: flex;
     flex-direction: column;
@@ -602,4 +596,55 @@ vaadin-context-menu-item.custom {
 
 .user-menu-links a:hover {
     background: var(--lumo-contrast-5pct);
+}
+
+/* --- Grid ----------------------------------------------------------------- */
+
+/* Cell renderers produce this two-line layout; the docs examples use the same structure. */
+.person-item__text {
+    display: flex;
+    flex-direction: column;
+}
+
+.person-item__name {
+    font-weight: 600;
+}
+
+.person-item__email {
+    color: var(--lumo-secondary-text-color);
+    font-size: var(--lumo-font-size-s);
+}
+
+/* Row details render six read-only text fields in a single form. */
+.details-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lumo-space-s);
+}
+
+.details-form vaadin-text-field {
+    flex: 1 1 12rem;
+}
+
+.grid-empty-message {
+    color: var(--lumo-secondary-text-color);
+}
+
+/* `cellPartNameGenerator` and `headerPartName` / `footerPartName` let CSS reach individual cells.
+   These part names only exist on the grid that generates them. */
+vaadin-grid::part(font-weight-bold) {
+    font-weight: 700;
+}
+
+vaadin-grid::part(high-rating) {
+    color: var(--lumo-success-text-color);
+}
+
+vaadin-grid::part(low-rating) {
+    color: var(--lumo-error-text-color);
+}
+
+vaadin-grid::part(rating-header),
+vaadin-grid::part(rating-footer) {
+    font-weight: 700;
 }
