@@ -391,6 +391,64 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 }
 
+/* Single cards keep the width the docs examples use instead of filling the whole example. */
+.card-demo {
+    max-width: 20rem;
+}
+
+/* Card configuration playground: preview on the left, slot and theme controls on the right. */
+.card-playground {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lumo-space-l);
+    align-items: flex-start;
+}
+
+.card-playground__preview {
+    flex: 1 1 20rem;
+    min-width: 18rem;
+}
+
+.card-playground__preview vaadin-card {
+    max-width: 24rem;
+}
+
+.card-playground__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lumo-space-m);
+    min-width: 14rem;
+}
+
+/* Selectable people list used by the master-detail examples. */
+.master-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lumo-space-xs);
+    padding: var(--lumo-space-s);
+}
+
+.master-list__item {
+    display: flex;
+    align-items: center;
+    gap: var(--lumo-space-s);
+    padding: var(--lumo-space-xs) var(--lumo-space-s);
+    border-radius: var(--lumo-border-radius-m);
+    cursor: pointer;
+}
+
+.master-list__item:hover {
+    background: var(--lumo-contrast-5pct);
+}
+
+.master-list__item[aria-current='true'] {
+    background: var(--lumo-primary-color-10pct);
+}
+
+.master-list__name {
+    font-weight: 500;
+}
+
 /* ------------------------------------------------------------------ overview index */
 
 .index__toolbar {

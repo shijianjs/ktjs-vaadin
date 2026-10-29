@@ -107,10 +107,10 @@
 | form-layout | formlayout | 7 | DONE | 自动响应式 / 标签位置（labelsAside）/ 列宽与列数（expandColumns、expandFields）/ 跨列（data-colspan）/ 响应式断点（含 form-item 标签宽度） |
 | split-layout | splitlayout | 7 | DONE | 基本拖动 / 嵌套 / 最小尺寸 / 折叠侧栏（图标切换）/ 分隔条主题 |
 | scroller | scroller | 3 | DONE | 基本竖向滚动与滚动事件 / 双向滚动（内联 SVG 插画）/ 移动端横向滚动（图标按钮） |
-| master-detail-layout | master-detail-layout | 1 | TODO | |
-| card | card | 13 | TODO | |
-| accordion | accordion | 8 | TODO | |
-| details | details | 7 | TODO | |
+| master-detail-layout | master-detail-layout | 1 | DONE | 基本用法（人员列表选中同步详情）/ 尺寸与扩展 / 方向 / 浮层（forceOverlay、overlaySize、containment）/ 详情占位（插槽增删 + `recalculateLayout`）/ 嵌套；全高示例在小屏容器里用固定高度复现 |
+| card | card | 13 | DONE | 内容 / 标题与副标题（slot 与 `cardTitle` 对照）/ 头部区域 / 媒体 / 底部操作 / 样式变体 / 组合变体 / 交互式配置（插槽、主题与媒体切换，保留模式增删节点） |
+| accordion | accordion | 8 | DONE | 基本用法 / 自定义 summary 向导（完成图标 + `opened` 推进）/ 内容（链接）/ 禁用面板 / 主题变体（filled、no-padding、reverse、small） |
+| details | details | 7 | DONE | 基本用法 / 内容 / 自定义 summary（错误徽标 + 表单）/ 禁用 / 主题变体 |
 | tabs | tabs | 19 | TODO | 含 tabsheet |
 | tabsheet | tabs | — | TODO | |
 | side-nav | side-nav | 6 | TODO | |

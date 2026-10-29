@@ -9,24 +9,38 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
+import demo.ui.anchor
+import demo.ui.bulletList
 import demo.ui.column
 import demo.ui.div
 import demo.ui.element
 import demo.ui.example
+import demo.ui.grid
 import demo.ui.heading
+import demo.ui.jsArray
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
+import demo.ui.rowStart
 import demo.ui.section
+import demo.ui.setHidden
 import demo.ui.span
+import demo.ui.withClass
 import demo.ui.withTheme
 import js.objects.unsafeJso
+import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import vaadin.a11ybase.ListOrientations
-import vaadin.accordion.AccordionEvents
 import vaadin.accordion.createAccordion
+import vaadin.accordion.createAccordionHeading
 import vaadin.accordion.createAccordionPanel
+import vaadin.avatar.createAvatar
+import vaadin.badge.createBadge
+import vaadin.checkbox.createCheckbox
+import vaadin.checkboxgroup.CheckboxGroupEvents
+import vaadin.checkboxgroup.createCheckboxGroup
+import vaadin.combobox.createComboBox
 import vaadin.applayout.AppLayoutEvents
 import vaadin.applayout.AppLayoutPrimarySections
 import vaadin.applayout.createAppLayout
@@ -35,8 +49,8 @@ import vaadin.breadcrumbs.createBreadcrumbs
 import vaadin.breadcrumbs.createBreadcrumbsItem
 import vaadin.button.createButton
 import vaadin.card.createCard
-import vaadin.details.DetailsEvents
 import vaadin.details.createDetails
+import vaadin.details.createDetailsSummary
 import vaadin.emailfield.createEmailField
 import vaadin.formlayout.FormLayoutLabelsPositions
 import vaadin.formlayout.FormLayoutResponsiveStep
@@ -52,10 +66,14 @@ import vaadin.icon.createIcon
 import vaadin.icons.registerVaadinIcons
 import vaadin.markdown.createMarkdown
 import vaadin.masterdetaillayout.MasterDetailLayoutOrientations
+import vaadin.masterdetaillayout.MasterDetailLayoutOverlayContainments
 import vaadin.masterdetaillayout.createMasterDetailLayout
 import vaadin.passwordfield.createPasswordField
 import vaadin.scroller.ScrollerScrollDirections
 import vaadin.scroller.createScroller
+import vaadin.select.SelectEvents
+import vaadin.select.SelectItemData
+import vaadin.select.createSelect
 import vaadin.sidenav.SideNavElement
 import vaadin.sidenav.SideNavItemElement
 import vaadin.sidenav.createSideNav
@@ -1581,238 +1599,1077 @@ private fun scrollerAction(label: String, icon: String): HTMLElement {
 
 private fun buildMasterDetailPage(meta: PageMeta): PageView {
     val view = page(meta)
+    val crew = people(6)
 
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "主区在默认插槽，详情放进 slot=\"detail\"；空间不足时详情会变成浮层。",
-                "The master uses the default slot and the detail goes into slot=\"detail\"; the detail " +
-                    "becomes an overlay when space runs out.",
+                "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情" +
+                    "自动变成浮层。",
+                "The master goes into the default slot and the detail into slot=\"detail\". Selecting a person " +
+                    "updates the form on the right, and the detail turns into an overlay when space runs out.",
             ),
         )
-    val layout = createMasterDetailLayout()
+    val layout = createMasterDetailLayout {
+        masterSize = "15rem"
+        style.setProperty("height", "24rem")
+    }
     layout.dataset["test"] = "master-detail-layout"
-    layout.style.setProperty("height", "16rem")
-    layout.masterSize = "16rem"
-    layout.detailSize = "1fr"
 
-    val master = column(paragraph(tr("主区内容", "Master content")))
+    val detailName = heading(3, crew.first().displayName)
+    val firstName = createTextField { label = tr("名", "First name") }
+    val lastName = createTextField { label = tr("姓", "Last name") }
+    val emailField = createEmailField { label = tr("邮箱地址", "Email address") }
+    val phoneField = createTextField { label = tr("电话号码", "Phone number") }
+    val detailForm = createFormLayout { autoResponsive = true }
+    detailForm.append(firstName, lastName, emailField, phoneField)
     val detail = div().apply {
         slot = "detail"
         style.setProperty("padding", "var(--lumo-space-m)")
-        textContent = tr("详情内容", "Detail content")
+        append(detailName, detailForm)
     }
+
+    val rows = mutableListOf<HTMLElement>()
+    fun show(person: Person) {
+        detailName.textContent = person.displayName
+        firstName.value = person.firstName
+        lastName.value = person.lastName
+        emailField.value = person.email
+        phoneField.value = person.phone
+    }
+    fun select(person: Person, row: HTMLElement) {
+        rows.forEach { candidate -> candidate.setAttribute("aria-current", if (candidate === row) "true" else "false") }
+        show(person)
+    }
+
+    val master = div("master-list")
+    crew.forEach { person ->
+        val row = div("master-list__item")
+        row.append(
+            createAvatar {
+                name = person.displayName
+                img = person.pictureUrl
+            }.withTheme("small"),
+            column(span(person.displayName, "master-list__name"), span(person.profession, "muted small")),
+        )
+        row.setAttribute("aria-current", "false")
+        row.clickEvent.addHandler { select(person, row) }
+        rows.add(row)
+        master.append(row)
+    }
+    select(crew.first(), rows.first())
     layout.append(master, detail)
     basic.body.append(example(null, layout))
     view.body.append(basic.root)
 
-    val options =
+    val sizes =
         section(
-            tr("方向与浮层", "Orientation and overlay"),
+            tr("尺寸与扩展", "Sizes and expansion"),
             tr(
-                "orientation 切换 master 与 detail 的排列方向，forceOverlay 强制详情以浮层显示。",
-                "orientation switches how master and detail are ordered, and forceOverlay always shows the " +
-                    "detail as an overlay.",
+                "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / expandDetail " +
+                    "让对应区域吃掉剩余宽度。",
+                "masterSize defaults to 30rem, while an unset detailSize is measured from the detail content " +
+                    "and cached. expandMaster / expandDetail let an area take the remaining width.",
             ),
         )
-    val readout = Readout("orientation = horizontal")
-    val overlaySwitch = vaadin.switch.createSwitch { label = "forceOverlay" }
+    val sized = createMasterDetailLayout {
+        masterSize = "12rem"
+        detailSize = "16rem"
+        style.setProperty("height", "12rem")
+    }
+    sized.dataset["test"] = "master-detail-sizes"
+    sized.append(
+        box(tr("master · 12rem", "master · 12rem")),
+        div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+            textContent = tr("detail · 16rem", "detail · 16rem")
+        },
+    )
+    val expandMasterSwitch = vaadin.switch.createSwitch { label = "expandMaster" }
+    val expandDetailSwitch = vaadin.switch.createSwitch { label = "expandDetail" }
+    val sizeReadout = Readout("expandMaster = false · expandDetail = false")
+    fun describeSizes() {
+        sizeReadout.set("expandMaster = ${sized.expandMaster} · expandDetail = ${sized.expandDetail}")
+    }
+    expandMasterSwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+        sized.expandMaster = expandMasterSwitch.checked
+        describeSizes()
+    }
+    expandDetailSwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+        sized.expandDetail = expandDetailSwitch.checked
+        describeSizes()
+    }
+    sizes.body.append(example(null, column(sized, row(expandMasterSwitch, expandDetailSwitch, sizeReadout.root))))
+    view.body.append(sizes.root)
+
+    val orientationSection =
+        section(
+            tr("方向", "Orientation"),
+            tr(
+                "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
+                "orientation decides whether master and detail sit side by side or stacked; the vertical " +
+                    "variant needs enough available height.",
+            ),
+        )
+    val oriented = createMasterDetailLayout {
+        masterSize = "10rem"
+        detailSize = "8rem"
+        style.setProperty("height", "16rem")
+    }
+    oriented.append(
+        box(tr("master", "master")),
+        div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+            textContent = tr("detail", "detail")
+        },
+    )
+    val orientationReadout = Readout("orientation = horizontal")
     val orientationButton =
         createButton { textContent = tr("切换方向", "Toggle orientation") }.withTheme("tertiary").apply {
             clickEvent.addHandler {
-                layout.orientation =
-                    if (layout.orientation == MasterDetailLayoutOrientations.horizontal) {
+                oriented.orientation =
+                    if (oriented.orientation == MasterDetailLayoutOrientations.horizontal) {
                         MasterDetailLayoutOrientations.vertical
                     } else {
                         MasterDetailLayoutOrientations.horizontal
                     }
-                readout.set("orientation = ${layout.orientation.unsafeCast<String>()}")
-                layout.recalculateLayout()
+                orientationReadout.set("orientation = ${oriented.orientation.unsafeCast<String>()}")
+                oriented.recalculateLayout()
             }
         }
-    overlaySwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
-        layout.forceOverlay = overlaySwitch.checked
-        layout.recalculateLayout()
+    orientationSection.body.append(example(null, column(oriented, row(orientationButton, orientationReadout.root))))
+    view.body.append(orientationSection.root)
+
+    val overlaySection =
+        section(
+            tr("浮层", "Overlay"),
+            tr(
+                "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment 决定浮层" +
+                    "覆盖布局还是整个页面。",
+                "forceOverlay always shows the detail as an overlay, overlaySize sets its size separately and " +
+                    "overlayContainment decides whether it covers the layout or the whole page.",
+            ),
+        )
+    val overlayLayout = createMasterDetailLayout {
+        masterSize = "14rem"
+        detailSize = "12rem"
+        style.setProperty("height", "12rem")
     }
-    options.body.append(example(null, row(orientationButton, overlaySwitch, readout.root)))
-    view.body.append(options.root)
+    overlayLayout.dataset["test"] = "master-detail-overlay"
+    overlayLayout.append(
+        box(tr("master", "master")),
+        div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+            textContent = tr("detail", "detail")
+        },
+    )
+    val forceOverlaySwitch = vaadin.switch.createSwitch { label = "forceOverlay" }
+    val fullOverlaySwitch = vaadin.switch.createSwitch { label = "overlaySize = 100%" }
+    val containmentSelect =
+        createSelect {
+            label = "overlayContainment"
+            items =
+                arrayOf(
+                    unsafeJso<SelectItemData> {
+                        this.label = "layout"
+                        value = "layout"
+                    },
+                    unsafeJso<SelectItemData> {
+                        this.label = "page"
+                        value = "page"
+                    },
+                )
+            value = "layout"
+        }
+    forceOverlaySwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+        overlayLayout.forceOverlay = forceOverlaySwitch.checked
+        overlayLayout.recalculateLayout()
+    }
+    fullOverlaySwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+        overlayLayout.overlaySize = if (fullOverlaySwitch.checked) "100%" else ""
+        overlayLayout.recalculateLayout()
+    }
+    containmentSelect.listen(SelectEvents.valueChanged) {
+        overlayLayout.overlayContainment =
+            if (containmentSelect.value == "page") {
+                MasterDetailLayoutOverlayContainments.page
+            } else {
+                MasterDetailLayoutOverlayContainments.layout
+            }
+    }
+    overlaySection.body.append(
+        example(
+            tr("浮层只覆盖布局本身；切到 page 后会遮住整个页面。", "The overlay covers the layout; page containment covers the viewport."),
+            column(overlayLayout, row(forceOverlaySwitch, fullOverlaySwitch, containmentSelect)),
+        ),
+    )
+    view.body.append(overlaySection.root)
+
+    val placeholderSection =
+        section(
+            tr("详情占位", "Detail placeholder"),
+            tr(
+                "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
+                "While nothing is selected, the slot=\"detail-placeholder\" content fills the detail area and " +
+                    "makes way once a detail is provided.",
+            ),
+        )
+    val placeholderLayout = createMasterDetailLayout {
+        masterSize = "14rem"
+        style.setProperty("height", "12rem")
+    }
+    placeholderLayout.dataset["test"] = "master-detail-placeholder"
+    val placeholderDetail = div().apply {
+        slot = "detail"
+        style.setProperty("padding", "var(--lumo-space-m)")
+        textContent = tr("Ada Lovelace 的详细资料", "The details of Ada Lovelace")
+    }
+    var detailShown = false
+    val detailToggle = createButton { textContent = tr("显示详情", "Show detail") }.withTheme("tertiary")
+    detailToggle.clickEvent.addHandler {
+        detailShown = !detailShown
+        if (detailShown) placeholderLayout.append(placeholderDetail) else placeholderDetail.remove()
+        detailToggle.textContent = if (detailShown) tr("隐藏详情", "Hide detail") else tr("显示详情", "Show detail")
+        placeholderLayout.recalculateLayout()
+    }
+    placeholderLayout.append(
+        div("master-list").apply {
+            repeat(3) { index ->
+                append(div("master-list__item").apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
+            }
+        },
+        div().apply {
+            slot = "detail-placeholder"
+            style.setProperty("padding", "var(--lumo-space-m)")
+            textContent = tr("选择左侧成员查看详情", "Select a member to see the details")
+        },
+    )
+    placeholderSection.body.append(example(null, column(placeholderLayout, detailToggle)))
+    view.body.append(placeholderSection.root)
+
+    val nestingSection =
+        section(
+            tr("嵌套", "Nesting"),
+            tr(
+                "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
+                "The detail area can host another master-detail layout; the outer one decides when the inner " +
+                    "one falls back to an overlay.",
+            ),
+        )
+    val inner = createMasterDetailLayout {
+        masterSize = "8rem"
+        style.setProperty("height", "100%")
+    }
+    inner.append(
+        box(tr("二级主区", "Inner master")),
+        div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-s)")
+            textContent = tr("二级详情", "Inner detail")
+        },
+    )
+    val outer = createMasterDetailLayout {
+        masterSize = "10rem"
+        detailSize = "1fr"
+        style.setProperty("height", "16rem")
+    }
+    outer.append(
+        box(tr("一级主区", "Outer master")),
+        div().apply { slot = "detail"; append(inner) },
+    )
+    nestingSection.body.append(example(null, outer))
+    view.body.append(nestingSection.root)
 
     return view
 }
 
 private fun buildCardPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
-    val basic =
+    val content =
         section(
-            tr("基本用法", "Basic usage"),
+            tr("内容", "Content"),
             tr(
-                "cardTitle 生成标题，titleHeadingLevel 决定标题层级，子节点是正文。",
-                "cardTitle generates the heading, titleHeadingLevel sets its level and the children are the body.",
+                "默认插槽里的节点组成卡片正文，可以是任意 DOM 片段。",
+                "Nodes in the default slot form the card content; any DOM fragment is allowed.",
             ),
         )
-    val card = createCard { cardTitle = tr("季度总结", "Quarterly summary") }
-    card.append(
-        paragraph(
+    val contentCard = createCard()
+    contentCard.append(paragraph(laplandLongText()), paragraph(laplandSamiText()))
+    content.body.append(example(null, contentCard))
+
+    val titles =
+        section(
+            tr("标题与副标题", "Title and subtitle"),
             tr(
-                "卡片内容可以是任意节点：文本、按钮、甚至其他组件。",
-                "The card body can hold any nodes: text, buttons, even other components.",
+                "title / subtitle 插槽放自定义的标题节点；cardTitle 属性则直接生成标题元素，标题层级由 " +
+                    "titleHeadingLevel 决定。",
+                "The title / subtitle slots take custom heading nodes, while the cardTitle property generates " +
+                    "the heading itself with titleHeadingLevel as its level.",
             ),
-        ),
+        )
+    val slotTitles = createCard()
+    slotTitles.append(
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        div().apply { textContent = laplandShortText() },
     )
-    basic.body.append(example(null, card))
-    view.body.append(basic.root)
+    val propertyTitle = createCard {
+        cardTitle = tr("拉普兰", "Lapland")
+        titleHeadingLevel = 3.0
+    }
+    propertyTitle.append(div().apply { textContent = laplandShortText() })
+    titles.body.append(example(null, cardGrid(slotTitles.withClass("card-demo"), propertyTitle.withClass("card-demo"))))
+    view.body.append(titles.root)
+
+    val header =
+        section(
+            tr("头部区域", "Header area"),
+            tr(
+                "header 插槽替换默认的标题行，header-prefix / header-suffix 在标题两侧各放一个节点，常见的是" +
+                    "头像与徽标。",
+                "The header slot replaces the default title row; header-prefix / header-suffix place one node " +
+                    "on each side, typically an avatar and a badge.",
+            ),
+        )
+    val headerCard = createCard()
+    headerCard.append(cardHeaderBlock(), div().apply { textContent = laplandShortText() })
+    val prefixCard = createCard()
+    prefixCard.append(
+        createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "header-prefix" },
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        div().apply { textContent = laplandShortText() },
+    )
+    val suffixCard = createCard()
+    suffixCard.append(
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        createBadge { textContent = tr("北极圈", "Arctic") }.withTheme("success").apply { slot = "header-suffix" },
+        div().apply { textContent = laplandShortText() },
+    )
+    header.body.append(example(null, cardGrid(headerCard, prefixCard, suffixCard)))
+    view.body.append(header.root)
+
+    val media =
+        section(
+            tr("媒体", "Media"),
+            tr(
+                "media 插槽放图片、图标或头像；宽高由卡片根据当前变体决定。",
+                "The media slot takes an image, an icon or an avatar; the card sizes it according to the active " +
+                    "variants.",
+            ),
+        )
+    val imageCard = createCard()
+    imageCard.append(cardMediaImage(), div().apply { textContent = laplandShortText() })
+    val iconCard = createCard()
+    iconCard.append(cardMediaIcon(), div().apply { textContent = laplandShortText() })
+    val avatarCard = createCard()
+    avatarCard.append(
+        createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
+        div().apply { textContent = laplandShortText() },
+    )
+    media.body.append(example(null, cardGrid(imageCard, iconCard, avatarCard)))
+    view.body.append(media.root)
+
+    val footer =
+        section(
+            tr("底部操作", "Footer"),
+            tr(
+                "footer 插槽里的按钮固定在卡片底部，配合固定高度的卡片使用。",
+                "Buttons in the footer slot stay at the bottom of the card, which pays off with a fixed height.",
+            ),
+        )
+    val footerCard = createCard()
+    footerCard.style.setProperty("height", "15rem")
+    footerCard.append(
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        div().apply { textContent = laplandShortText() },
+        createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
+        createButton { textContent = tr("了解更多", "Learn More") }.apply { slot = "footer" },
+    )
+    footer.body.append(example(null, footerCard.withClass("card-demo")))
+    view.body.append(footer.root)
 
     val variants =
         section(
-            tr("主题变体", "Theme variants"),
+            tr("样式变体", "Style variants"),
             tr(
-                "elevated 加阴影，outlined 加边框，两者可以对照使用。",
-                "elevated adds a shadow and outlined adds a border; they are shown side by side.",
+                "默认样式之外，outlined 加边框，elevated 加阴影（更适合有底色的背景）。",
+                "Beyond the default style, outlined adds a border and elevated adds a shadow that works best on " +
+                    "a shaded background.",
             ),
         )
     variants.body.append(
         example(
             null,
-            row(
-                createCard { }.apply {
-                    withTheme("elevated")
-                    append(heading(3, "elevated"), paragraph(tr("带阴影的卡片", "Card with a shadow")))
+            cardGrid(
+                createCard { cardTitle = "Default" }.apply { append(div().apply { textContent = tr("默认卡片样式。", "This is the default card style.") }) },
+                createCard { cardTitle = "Outlined" }.withTheme("outlined").apply {
+                    append(div().apply { textContent = tr("在卡片四周加一圈实线边框。", "Adds a solid outline around the card.") })
                 },
-                createCard { }.apply {
-                    withTheme("outlined")
-                    append(heading(3, "outlined"), paragraph(tr("带边框的卡片", "Card with a border")))
+                createCard { cardTitle = "Elevated" }.withTheme("elevated").apply {
+                    append(div().apply { textContent = tr("适合有底色背景的阴影样式。", "This variant works better on a shaded background.") })
                 },
             ),
         ),
     )
     view.body.append(variants.root)
 
-    val levels = section(tr("标题层级", "Heading levels"), "")
-    levels.body.append(
-        example(
-            null,
-            row(
-                createCard {
-                    cardTitle = tr("二级标题", "Level 2 heading")
-                    titleHeadingLevel = 2.0
-                }.apply { append(paragraph("titleHeadingLevel = 2")) },
-                createCard {
-                    cardTitle = tr("四级标题", "Level 4 heading")
-                    titleHeadingLevel = 4.0
-                }.apply { append(paragraph("titleHeadingLevel = 4")) },
+    val combined =
+        section(
+            tr("组合变体", "Combining variants"),
+            tr(
+                "horizontal 让媒体与内容并排，stretch-media 拉伸媒体填满剩余空间，cover-media 让媒体铺满卡片" +
+                    "上方。多个 theme 可以叠加。",
+                "horizontal puts media next to the content, stretch-media stretches the media into the remaining " +
+                    "space and cover-media makes it cover the top of the card. Themes can be combined.",
             ),
-        ),
+        )
+    val combinedCard = createCard()
+    combinedCard.withTheme("outlined", "elevated", "horizontal", "cover-media")
+    combinedCard.style.setProperty("max-width", "34rem")
+    combinedCard.append(
+        cardMediaImage(),
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        div().apply { textContent = laplandShortText() },
     )
-    view.body.append(levels.root)
+    val stretchCard = createCard()
+    stretchCard.withTheme("stretch-media")
+    stretchCard.append(
+        cardMediaImage(),
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        div().apply { textContent = laplandShortText() },
+    )
+    val horizontalCard = createCard()
+    horizontalCard.withTheme("horizontal")
+    horizontalCard.append(
+        createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
+        cardSlotText("title", tr("拉普兰", "Lapland")),
+        cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+        div().apply { textContent = laplandShortText() },
+    )
+    combined.body.append(example(null, cardGrid(combinedCard, stretchCard, horizontalCard)))
+    view.body.append(combined.root)
+
+    val playgroundSection =
+        section(
+            tr("交互式配置", "Interactive configuration"),
+            tr(
+                "勾选插槽与样式变体、切换媒体与正文内容，预览会就地更新：节点只被摘下来或重新挂回去，" +
+                    "不会重建整张卡片。",
+                "Ticking slots and style variants, or switching the media and content, updates the preview in " +
+                    "place: nodes are only detached and reattached, the card is never rebuilt.",
+            ),
+        )
+    playgroundSection.body.append(example(null, cardPlayground()))
+    view.body.append(playgroundSection.root)
 
     return view
 }
+
+/** Builds the interactive card playground: slot checkboxes, media/content selects and theme variants. */
+private fun cardPlayground(): HTMLElement {
+    val playground = createCard()
+    playground.dataset["test"] = "card-playground"
+    playground.withTheme("outlined", "elevated", "cover-media")
+
+    val mediaNodes = arrayOf(cardMediaImage(), cardMediaIcon(), cardMediaAvatar("L"), cardMediaSvg())
+    val contentNodes = arrayOf(cardContentText(), cardContentScroller(), cardContentImage())
+    var mediaNode = mediaNodes[0]
+    var contentNode = contentNodes[0]
+
+    val nodes =
+        linkedMapOf(
+            "media" to mediaNode,
+            "header-prefix" to createAvatar { abbr = "L" }.apply { slot = "header-prefix" },
+            "header" to cardHeaderBlock(),
+            "title" to cardSlotText("title", tr("拉普兰", "Lapland")),
+            "subtitle" to cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
+            "header-suffix" to createBadge { textContent = tr("北极圈", "Arctic") }.withTheme("success").apply { slot = "header-suffix" },
+            "content" to contentNode,
+            "footer" to createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
+        )
+    playground.append(*nodes.values.toTypedArray())
+
+    val slotGroup = createCheckboxGroup { label = tr("插槽", "Slots") }.withTheme("vertical")
+    slotGroup.append(
+        playgroundCheckbox("media", tr("媒体", "Media")),
+        playgroundCheckbox("header-prefix", "Header Prefix"),
+        playgroundCheckbox("header", "Header"),
+        playgroundCheckbox("title", "Title"),
+        playgroundCheckbox("subtitle", "Subtitle"),
+        playgroundCheckbox("header-suffix", "Header Suffix"),
+        playgroundCheckbox("content", tr("内容", "Content")),
+        playgroundCheckbox("footer", "Footer"),
+    )
+
+    val mediaSelect =
+        createSelect {
+            label = tr("媒体内容", "Media")
+            items = selectOptions("Image", "Icon", "Avatar", "Custom SVG")
+            value = "0"
+        }
+    val contentSelect =
+        createSelect {
+            label = tr("正文内容", "Content")
+            items = selectOptions("Text", "Scroller", "Image & Text")
+            value = "0"
+        }
+
+    val themeGroup = createCheckboxGroup { label = tr("样式变体", "Style variants") }.withTheme("vertical")
+    themeGroup.append(
+        playgroundCheckbox("outlined", "Outlined"),
+        playgroundCheckbox("elevated", "Elevated"),
+        playgroundCheckbox("horizontal", "Horizontal"),
+        playgroundCheckbox("stretch-media", "Stretch Media"),
+        playgroundCheckbox("cover-media", "Cover Media"),
+    )
+    themeGroup.value = arrayOf("outlined", "elevated", "cover-media")
+
+    fun syncSlots() {
+        val checked = slotGroup.value.toSet()
+        nodes.forEach { (key, node) ->
+            if (key in checked) {
+                if (node.parentNode == null) playground.append(node)
+            } else if (node.parentNode === playground) {
+                node.remove()
+            }
+        }
+        mediaSelect.disabled = "media" !in checked
+        contentSelect.disabled = "content" !in checked
+    }
+
+    slotGroup.value = arrayOf("media", "content", "title", "subtitle", "header-suffix", "footer")
+    slotGroup.listen(CheckboxGroupEvents.valueChanged) { syncSlots() }
+    syncSlots()
+
+    themeGroup.listen(CheckboxGroupEvents.valueChanged) { playground.withTheme(*themeGroup.value) }
+
+    mediaSelect.listen(SelectEvents.valueChanged) {
+        val next = mediaNodes[mediaSelect.value.toIntOrNull() ?: 0]
+        if (mediaNode.parentNode === playground) mediaNode.remove()
+        mediaNode = next
+        nodes["media"] = next
+        if ("media" in slotGroup.value) playground.append(next)
+    }
+    contentSelect.listen(SelectEvents.valueChanged) {
+        val next = contentNodes[contentSelect.value.toIntOrNull() ?: 0]
+        if (contentNode.parentNode === playground) contentNode.remove()
+        contentNode = next
+        nodes["content"] = next
+        if ("content" in slotGroup.value) playground.append(next)
+    }
+
+    return div("card-playground").apply {
+        append(
+            div("card-playground__preview", playground),
+            div("card-playground__options", slotGroup, mediaSelect, contentSelect, themeGroup),
+        )
+    }
+}
+
+private fun playgroundCheckbox(value: String, label: String) = createCheckbox { this.value = value; this.label = label }
+
+private fun selectOptions(vararg entries: String): Array<SelectItemData> =
+    entries
+        .mapIndexed { index, label ->
+            unsafeJso<SelectItemData> {
+                this.label = label
+                value = index.toString()
+            }
+        }.toTypedArray()
+
+private fun cardGrid(vararg cards: HTMLElement): HTMLElement = div("card-grid", *cards)
+
+private fun laplandShortText(): String =
+    tr("拉普兰是芬兰最北端的地区，也是活跃的户外目的地。", "Lapland is the northern-most region of Finland and an active outdoor destination.")
+
+private fun laplandLongText(): String =
+    tr(
+        "拉普兰是芬兰最北端的地区，也是活跃的户外目的地：这里一年四季都有神奇的光现象、广袤的北极自然" +
+            "与圣诞老人。",
+        "Lapland is the northern-most region of Finland and an active outdoor destination that's known for its " +
+            "incredible, year-round light phenomena, vast arctic nature, and Santa Claus.",
+    )
+
+private fun laplandSamiText(): String =
+    tr(
+        "萨米人的家园——萨米或萨普米——也横跨该地区的北部。来探索芬兰拉普兰这片欧洲最后的荒野吧！",
+        "The land of the indigenous Sámi people, known as Sámi homeland or Sápmi, also crosses the northern part " +
+            "of the region. Explore Finnish Lapland, Europe's last great wilderness!",
+    )
+
+/** A `<div slot="…">` holding [text], for the title / subtitle slots of a card. */
+private fun cardSlotText(slotName: String, text: String): HTMLElement =
+    div().apply {
+        slot = slotName
+        textContent = text
+    }
+
+/** The custom header of the docs header example: an uppercase kicker above the title. */
+private fun cardHeaderBlock(): HTMLElement =
+    div().apply {
+        slot = "header"
+        style.setProperty("line-height", "1.25")
+        append(
+            div().apply {
+                style.setProperty("font-size", "0.8125rem")
+                style.setProperty("text-transform", "uppercase")
+                textContent = tr("异域北方", "The Exotic North")
+            },
+            heading(2, tr("拉普兰", "Lapland")),
+        )
+    }
+
+/** An image in the media slot; the SVG is inlined so the demo never touches the network. */
+private fun cardMediaImage(): HTMLElement =
+    element(HtmlTagName.img).apply {
+        slot = "media"
+        src = laplandIllustration()
+        alt = ""
+        width = 100
+    }
+
+private fun cardMediaIcon(): HTMLElement =
+    createIcon { icon = "lumo:photo" }.apply {
+        slot = "media"
+        style.setProperty("background", "var(--lumo-primary-color-10pct)")
+        style.setProperty("color", "var(--lumo-primary-color)")
+    }
+
+private fun cardMediaAvatar(abbr: String): HTMLElement = createAvatar { this.abbr = abbr }.withTheme("large").apply { slot = "media" }
+
+private fun cardMediaSvg(): HTMLElement =
+    element(HtmlTagName.img).apply {
+        slot = "media"
+        src =
+            svgDataUri(
+                "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'>" +
+                    "<rect width='80' height='80' fill='#eef2f7'/>" +
+                    "<path d='M40 12 L62 62 L18 62 Z' fill='#4a76a8'/>" +
+                    "<path d='M40 30 L53 62 L27 62 Z' fill='#e8f1fb'/>" +
+                    "</svg>",
+            )
+        alt = ""
+        width = 80
+        height = 80
+    }
+
+private fun cardContentText(): HTMLElement = div().apply { textContent = laplandShortText() }
+
+private fun cardContentScroller(): HTMLElement =
+    createScroller { withTheme("overflow-indicators") }.apply {
+        style.setProperty("max-height", "100px")
+        style.setProperty("min-height", "100%")
+        append(div().apply { textContent = "${laplandLongText()} ${laplandSamiText()}" })
+    }
+
+private fun cardContentImage(): HTMLElement =
+    div().apply {
+        append(
+            element(HtmlTagName.img).apply {
+                src = laplandIllustration()
+                alt = ""
+                style.setProperty("max-width", "100%")
+                style.setProperty("border-radius", "var(--lumo-border-radius-m)")
+            },
+            div().apply { textContent = laplandShortText() },
+        )
+    }
+
+/** A compact aurora landscape used wherever the docs examples show the Lapland photo. */
+private fun laplandIllustration(): String =
+    svgDataUri(
+        "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='260'>" +
+            "<rect width='400' height='260' fill='#0b1d3a'/>" +
+            "<circle cx='320' cy='58' r='26' fill='#f6e6a8'/>" +
+            "<path d='M30 46 Q120 6 200 54 T370 34' stroke='#6fe3c1' stroke-width='6' fill='none' opacity='0.7'/>" +
+            "<path d='M0 200 L90 120 L160 200 L240 100 L320 190 L400 130 L400 260 L0 260 Z' fill='#2b5d8c'/>" +
+            "<path d='M0 230 L120 170 L220 240 L330 180 L400 220 L400 260 L0 260 Z' fill='#16375a'/>" +
+            "</svg>",
+    )
 
 private fun buildAccordionPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "每个 panel 用 summary 定义标题，子节点是展开后的内容。",
-                "Each panel defines its header through summary and the children are the expanded content.",
+                "每个 panel 用 summary 定义标题，子节点是展开后的内容；同一时间只展开一个面板（手风琴模式）。",
+                "Each panel defines its header through summary and the children are the expanded content; only " +
+                    "one panel stays open at a time.",
             ),
         )
-    val log = EventLog(4)
-    val accordion = createAccordion { headingLevel = 3.0 }
+    val accordion = infoAccordion()
+    accordion.headingLevel = 3.0
     accordion.dataset["test"] = "accordion"
-    accordion.append(
-        accordionPanel(tr("配送与安装", "Delivery and setup")).apply {
-            append(paragraph(tr("面板一的内容。", "Content of the first panel.")))
-        },
-        accordionPanel(tr("付款方式", "Payment")).apply {
-            append(paragraph(tr("面板二的内容。", "Content of the second panel.")))
-        },
-        accordionPanel(tr("售后服务", "After-sales support")).apply {
-            append(paragraph(tr("面板三的内容。", "Content of the third panel.")))
-        },
-    )
-    accordion.listen(AccordionEvents.openedChanged) {
-        log.add("opened-changed · opened=${accordion.opened}")
-    }
-    basic.body.append(example(null, column(accordion, log.root)))
+    basic.body.append(example(null, accordion))
     view.body.append(basic.root)
 
-    val programmatic =
+    val summarySection =
         section(
-            tr("程序化展开", "Opening panels programmatically"),
+            tr("自定义 summary", "Custom summary"),
             tr(
-                "opened 是要展开的面板下标（Number），可以一次打开多个。",
-                "opened holds the index (Number) of the panel to expand; several can be open at once.",
+                "summary 插槽里可以放 accordion-heading 与任意节点；下方向导用 vaadin:check 图标标记已完成的" +
+                    "步骤，并在点击按钮后展开下一步。",
+                "The summary slot takes an accordion-heading with any content; the wizard below marks completed " +
+                    "steps with a vaadin:check icon and opens the next one from its buttons.",
             ),
         )
-    val readout = Readout("opened = -")
-    val controlled = createAccordion()
-    controlled.append(
-        accordionPanel(tr("第一项", "First item")).apply { append(paragraph(tr("内容一", "Content one"))) },
-        accordionPanel(tr("第二项", "Second item")).apply { append(paragraph(tr("内容二", "Content two"))) },
+    val wizard = createAccordion { opened = 0.0 }
+    wizard.dataset["test"] = "accordion-wizard"
+    val customerIcon = completionIcon()
+    val billingIcon = completionIcon()
+    val paymentIcon = completionIcon()
+    wizard.append(
+        wizardStep(tr("客户信息", "Customer details"), customerIcon, customerForm(), tr("继续", "Continue")) {
+            customerIcon.setHidden(false)
+            wizard.opened = 1.0
+        },
+        wizardStep(tr("账单地址", "Billing address"), billingIcon, billingForm(), tr("继续", "Continue")) {
+            billingIcon.setHidden(false)
+            wizard.opened = 2.0
+        },
+        wizardStep(tr("付款方式", "Payment"), paymentIcon, paymentForm(), tr("完成", "Finish")) {
+            paymentIcon.setHidden(false)
+            wizard.opened = -1.0
+        },
     )
-    controlled.opened = 1.0
-    controlled.listen(AccordionEvents.openedChanged) {
-        readout.set("opened = ${controlled.opened}")
-    }
-    val openFirst =
-        createButton { textContent = tr("展开第一项", "Open the first panel") }.withTheme("tertiary").apply {
-            clickEvent.addHandler { controlled.opened = 0.0 }
-        }
-    val openBoth =
-        createButton { textContent = tr("展开第二项", "Open the second panel") }.withTheme("tertiary").apply {
-            clickEvent.addHandler { controlled.opened = 1.0 }
-        }
-    programmatic.body.append(example(null, column(controlled, row(openFirst, openBoth, readout.root))))
-    view.body.append(programmatic.root)
+    summarySection.body.append(example(null, wizard))
+    view.body.append(summarySection.root)
+
+    val contentSection =
+        section(
+            tr("内容", "Content"),
+            tr(
+                "面板内容可以是链接列表之类的任意节点，展开状态由 opened 控制。",
+                "Panel content can be any nodes, such as a list of links; opened controls the expanded state.",
+            ),
+        )
+    contentSection.body.append(example(null, linksAccordion()))
+    view.body.append(contentSection.root)
+
+    val disabledSection =
+        section(
+            tr("禁用面板", "Disabled panels"),
+            tr(
+                "给 panel 设 disabled 后标题不可点击，也无法通过键盘或程序展开。",
+                "A disabled panel cannot be toggled by pointer, keyboard or programmatic changes.",
+            ),
+        )
+    disabledSection.body.append(example(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
+    view.body.append(disabledSection.root)
+
+    val themes =
+        section(
+            tr("主题变体", "Theme variants"),
+            tr(
+                "filled、no-padding、reverse、small 是 panel 上的主题变体，可以逐面板设置。",
+                "filled, no-padding, reverse and small are panel theme variants and are set per panel.",
+            ),
+        )
+    themes.body.append(
+        example("filled", infoAccordion(theme = "filled")),
+        example("no-padding", infoAccordion(theme = "no-padding")),
+        example("reverse", infoAccordion(theme = "reverse")),
+        example("small", infoAccordion(theme = "small")),
+    )
+    view.body.append(themes.root)
 
     return view
 }
+
+/** Three information panels with the content of the upstream basic example. */
+private fun infoAccordion(theme: String? = null, disabledIndexes: IntArray = intArrayOf()) =
+    createAccordion().apply {
+        val entries =
+            listOf(
+                tr("个人信息", "Personal information") to
+                    listOf("Sophia Williams", "sophia.williams@company.com", "(501) 555-9128"),
+                tr("账单地址", "Billing address") to
+                    listOf("4027 Amber Lake Canyon", "72333-5884 Cozy Nook", "Arkansas"),
+                tr("付款方式", "Payment") to
+                    listOf("MasterCard", "1234 5678 9012 3456", tr("到期 06/21", "Expires 06/21")),
+            )
+        entries.forEachIndexed { index, (summary, lines) ->
+            val panel = accordionPanel(summary)
+            if (theme != null) panel.withTheme(theme)
+            panel.disabled = index in disabledIndexes
+            panel.append(column(*lines.map { span(it) }.toTypedArray()))
+            append(panel)
+        }
+    }
+
+/** Three panels whose content is a list of links, as in the upstream content example. */
+private fun linksAccordion() =
+    createAccordion().apply {
+        val entries =
+            listOf(
+                tr("分析", "Analytics") to listOf(tr("仪表盘", "Dashboard"), tr("报表", "Reports"), tr("数据源", "Data sources")),
+                tr("客户", "Customers") to listOf(tr("账户", "Accounts"), tr("联系人", "Contacts")),
+                tr("财务", "Finances") to listOf(tr("发票", "Invoices"), tr("交易", "Transactions"), tr("对账单", "Statements")),
+            )
+        entries.forEach { (summary, links) ->
+            val panel = accordionPanel(summary)
+            panel.append(column(*links.map { anchor(it, "#/accordion") }.toTypedArray()))
+            append(panel)
+        }
+    }
+
+/** A check icon shown in a wizard summary once the step is complete. */
+private fun completionIcon(): HTMLElement =
+    createIcon { icon = "vaadin:check" }.apply {
+        style.setProperty("--vaadin-icon-size", "1rem")
+        setHidden(true)
+    }
+
+/** One wizard panel: a custom summary plus a form and its call-to-action button. */
+private fun wizardStep(
+    title: String,
+    icon: HTMLElement,
+    form: HTMLElement,
+    actionLabel: String,
+    onAction: () -> Unit,
+) = createAccordionPanel().apply {
+    val headingNode = createAccordionHeading()
+    headingNode.slot = "summary"
+    headingNode.append(createHorizontalLayout { withTheme("spacing") }.apply { append(span(title), icon) })
+    val action = createButton { textContent = actionLabel }.withTheme("primary")
+    action.clickEvent.addHandler { onAction() }
+    append(headingNode, createVerticalLayout { withTheme("spacing") }.apply { append(form, action) })
+}
+
+private fun wizardLayout(vararg fields: HTMLElement): HTMLElement =
+    createFormLayout().apply {
+        responsiveSteps =
+            arrayOf(
+                unsafeJso<FormLayoutResponsiveStep> {
+                    minWidth = StringOrDouble(0.0)
+                    columns = 1.0
+                },
+                unsafeJso<FormLayoutResponsiveStep> {
+                    minWidth = StringOrDouble("20em")
+                    columns = 2.0
+                },
+            )
+        append(*fields)
+    }
+
+private fun customerForm(): HTMLElement =
+    wizardLayout(
+        textField(tr("名", "First name")),
+        textField(tr("姓", "Last name")),
+        emailField(tr("邮箱地址", "Email address")).apply { setAttribute("colspan", "2") },
+        textField(tr("电话号码", "Phone number")).apply { setAttribute("colspan", "2") },
+    )
+
+private fun billingForm(): HTMLElement =
+    wizardLayout(
+        textField(tr("地址", "Address")).apply { setAttribute("colspan", "2") },
+        textField(tr("邮政编码", "ZIP code")),
+        textField(tr("城市", "City")),
+        countryComboBox(tr("国家", "Country")),
+    )
+
+private fun paymentForm(): HTMLElement =
+    wizardLayout(
+        textField(tr("卡号", "Card number")).apply { setAttribute("colspan", "2") },
+        textField(tr("有效期", "Expiry date")),
+        textField("CVV"),
+    )
+
+/** A combo box over a fixed list of countries, labelled through `item-label-path`. */
+private fun countryComboBox(label: String) =
+    createComboBox {
+        this.label = label
+        itemLabelPath = "name"
+        itemValuePath = "name"
+        items =
+            jsArray<JsAny>(
+                """
+                [{"name": "Finland"}, {"name": "Sweden"}, {"name": "Norway"},
+                 {"name": "Denmark"}, {"name": "Iceland"}, {"name": "Estonia"}]
+                """,
+            )
+    }
 
 private fun buildDetailsPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "summary 是标题文本，子节点是展开区内容；opened 可读写。",
-                "summary is the header text and the children are the expanded content; opened is read/write.",
+                "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
+                "summary is the header text and the children are the expanded content; opened is read/write and " +
+                    "starts as false.",
             ),
         )
-    val log = EventLog(4)
-    val details = createDetails { summary = tr("更多信息", "More information") }
-    details.dataset["test"] = "details"
-    details.append(paragraph(tr("这里是展开后显示的详细说明。", "This text appears once the block is expanded.")))
-    details.listen(DetailsEvents.openedChanged) { log.add("opened-changed · ${details.opened}") }
-    basic.body.append(example(null, column(details, log.root)))
-    view.body.append(basic.root)
-
-    val openedSection =
-        section(
-            tr("默认展开", "Open by default"),
-            tr("opened 设为 true 时初始即展开。", "Setting opened to true expands the block from the start."),
-        )
-    val expanded = createDetails {
-        summary = tr("默认展开的区块", "Block opened by default")
+    val details = createDetails {
+        summary = tr("联系方式", "Contact information")
         opened = true
     }
-    expanded.append(paragraph(tr("一开始就能看到的内容。", "This content is visible right away.")))
-    val toggleButton =
-        createButton { textContent = tr("切换", "Toggle") }.withTheme("tertiary").apply {
-            clickEvent.addHandler {
-                expanded.opened = !expanded.opened
-            }
-        }
-    openedSection.body.append(example(null, column(expanded, toggleButton)))
-    view.body.append(openedSection.root)
+    details.dataset["test"] = "details"
+    details.append(column(span("Sophia Williams"), span("sophia.williams@company.com"), span("(501) 555-9128")))
+    basic.body.append(example(null, details))
+    view.body.append(basic.root)
+
+    val contentSection =
+        section(
+            tr("内容", "Content"),
+            tr(
+                "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
+                "The content area takes any nodes; the example shows three groups of links, all opened.",
+            ),
+        )
+    val links =
+        listOf(
+            tr("分析", "Analytics") to listOf(tr("仪表盘", "Dashboard"), tr("报表", "Reports"), tr("数据源", "Data sources")),
+            tr("客户", "Customers") to listOf(tr("账户", "Accounts"), tr("联系人", "Contacts")),
+            tr("财务", "Finances") to listOf(tr("发票", "Invoices"), tr("交易", "Transactions"), tr("对账单", "Statements")),
+        )
+    contentSection.body.append(
+        example(
+            null,
+            column(
+                *links
+                    .map { (summary, items) ->
+                        linkDetails(summary, items)
+                    }.toTypedArray(),
+            ),
+        ),
+    )
+    view.body.append(contentSection.root)
+
+    val summarySection =
+        section(
+            tr("自定义 summary", "Custom summary"),
+            tr(
+                "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
+                "The summary slot takes a details-summary that can combine text, badges and icons; here an error " +
+                    "badge points at the missing fields.",
+            ),
+        )
+    val custom = createDetails { opened = true }
+    custom.dataset["test"] = "details-custom-summary"
+    val summaryNode = createDetailsSummary()
+    summaryNode.slot = "summary"
+    val errorBadge = createBadge { number = 2.0 }.withTheme("error")
+    errorBadge.append(
+        createIcon { icon = "vaadin:exclamation-circle" }.apply { slot = "icon" },
+        span(tr(" 个错误", " errors")),
+    )
+    summaryNode.append(
+        createHorizontalLayout { withTheme("spacing") }.apply {
+            style.setProperty("align-items", "center")
+            append(span(tr("联系方式", "Contact information")), errorBadge)
+        },
+    )
+    val addressField = createTextField {
+        label = tr("地址", "Address")
+        value = "4027 Amber Lake Canyon"
+    }
+    addressField.setAttribute("colspan", "2")
+    val zipField = createTextField {
+        label = tr("邮政编码", "ZIP code")
+        required = true
+    }
+    val cityField = createTextField {
+        label = tr("城市", "City")
+        required = true
+    }
+    val form = createFormLayout()
+    form.responsiveSteps =
+        arrayOf(
+            unsafeJso<FormLayoutResponsiveStep> {
+                minWidth = StringOrDouble(0.0)
+                columns = 1.0
+            },
+            unsafeJso<FormLayoutResponsiveStep> {
+                minWidth = StringOrDouble("20em")
+                columns = 2.0
+            },
+        )
+    form.append(addressField, zipField, cityField, countryComboBox(tr("国家", "Country")))
+    custom.append(summaryNode, form)
+    summarySection.body.append(example(null, custom))
+    view.body.append(summarySection.root)
+
+    val disabledSection =
+        section(
+            tr("禁用", "Disabling"),
+            tr(
+                "disabled 让区块无法展开，标题也不会响应点击与键盘。",
+                "disabled keeps the block from expanding and the header ignores pointer and keyboard input.",
+            ),
+        )
+    val disabledDetails = createDetails {
+        summary = tr("成员（8）", "Members (8)")
+        disabled = true
+    }
+    disabledDetails.append(membersList())
+    disabledSection.body.append(example(null, disabledDetails))
+    view.body.append(disabledSection.root)
+
+    val themes =
+        section(
+            tr("主题变体", "Theme variants"),
+            tr(
+                "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
+                "filled, reverse and small are theme variants of details and can be combined with an opened block.",
+            ),
+        )
+    themes.body.append(
+        example("filled", membersDetails(theme = "filled")),
+        example("reverse", membersDetails(theme = "reverse")),
+        example("small", membersDetails(theme = "small")),
+    )
+    view.body.append(themes.root)
 
     return view
 }
+
+private fun linkDetails(summary: String, items: List<String>) =
+    createDetails {
+        this.summary = summary
+        opened = true
+    }.apply {
+        append(column(*items.map { anchor(it, "#/details") }.toTypedArray()))
+    }
+
+private fun membersList(): HTMLElement =
+    bulletList(
+        listOf(
+            "Blake Martin",
+            "Caroline Clark",
+            "Avery Torres",
+            "Khloe Scott",
+            "Camila Fisher",
+            "Gavin Lewis",
+            "Isabella Powell",
+            "Zoe Wilson",
+        ),
+    )
+
+private fun membersDetails(theme: String) =
+    createDetails {
+        summary = tr("成员（8）", "Members (8)")
+        opened = true
+    }.apply {
+        withTheme(theme)
+        append(membersList())
+    }
 
 private fun buildTabsPage(meta: PageMeta): PageView {
     val view = page(meta)

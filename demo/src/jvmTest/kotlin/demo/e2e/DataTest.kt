@@ -99,14 +99,19 @@ class DataTest {
         page.navigate("/#/accordion")
 
         val accordion = page.getByTestId("accordion")
-        val panel = accordion.locator("vaadin-accordion-panel", Locator.LocatorOptions().setHasText("Payment"))
-        assertThat(panel.getByText("Content of the second panel.")).isHidden()
+        val payment = accordion.locator("vaadin-accordion-panel", Locator.LocatorOptions().setHasText("Payment"))
+        val personal = accordion.locator("vaadin-accordion-panel", Locator.LocatorOptions().setHasText("Personal"))
+        assertThat(payment.getByText("MasterCard")).isHidden()
 
-        panel.locator("vaadin-accordion-heading").click()
-        assertThat(panel.getByText("Content of the second panel.")).isVisible()
+        payment.locator("vaadin-accordion-heading").click()
+        assertThat(payment.getByText("MasterCard")).isVisible()
+        // A single panel stays open at a time.
+        assertThat(personal.getByText("Sophia Williams")).isHidden()
 
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Open the first panel")).click()
-        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("opened"))).containsText("opened = 0")
+        val wizard = page.getByTestId("accordion-wizard")
+        assertThat(wizard).hasJSProperty("opened", 0)
+        wizard.getByRole(AriaRole.BUTTON, Locator.GetByRoleOptions().setName("Continue").setExact(true)).first().click()
+        assertThat(wizard).hasJSProperty("opened", 1)
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -114,11 +119,14 @@ class DataTest {
         page.navigate("/#/details")
 
         val details = page.getByTestId("details")
-        assertThat(details).hasJSProperty("opened", false)
+        assertThat(details).hasJSProperty("opened", true)
 
         details.locator("vaadin-details-summary").click()
-        assertThat(details).hasJSProperty("opened", true)
-        assertThat(page.locator(".event-log")).containsText("opened-changed · true")
+        assertThat(details).hasJSProperty("opened", false)
+
+        val custom = page.getByTestId("details-custom-summary")
+        assertThat(custom).hasJSProperty("opened", true)
+        assertThat(custom.getByText("errors")).isVisible()
     }
 
     @RetryingTest(maxAttempts = 2)
