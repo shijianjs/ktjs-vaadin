@@ -95,7 +95,7 @@
 | message-list | messages | 8 | TODO | |
 | message-input | messages | 1 | TODO | |
 | markdown | markdown | 2 | TODO | |
-| upload | upload | 17 | TODO | |
+| upload | upload | 17 | DONE | 拆出独立 `pages/Upload.kt`：文件选择 / 拖放 / 自动上传与进度 / 数量与类型限制 / 文件操作 / i18n / 自定义按钮与拖放标签 / 事件监听 / 错误消息 / 模块化（manager + button + file list + drop zone）/ 禁用。无后端，用本地 XHR mock 驱动真实的开始、重试与进度流程 |
 
 ### 布局与导航（`Layouts.kt`）
 
@@ -152,6 +152,9 @@
 | 2026-10-29 | date-time-picker | `i18n` 继承自 `I18nMixin`（`JsAny`），上游 `.d.ts` 声明为 `DateTimePickerI18n`（含 `dateLabel` / `timeLabel`） | 手写 `DateTimePickerI18n`，生成器 `EXTRA_MEMBERS` 为元素补 `@JsName("i18n") i18nProperty`；demo 与测试改用类型化访问器 |
 | 2026-10-29 | 生成器 | `resolveName` 用未更新的 `name` 做循环条件，遇到「继承成员同名但类型不同」会死循环；重命名分支只在 DOM 改名时写 `@JsName` | 循环改用 `kotlin`；`@JsName` 按最终 Kotlin 名与 JS 名是否一致决定 |
 | 2026-10-29 | login | `LoginMixin.i18n` 在 manifest 里是 `object`（生成成 `JsAny`），上游 `.d.ts` 声明 `interface LoginI18n`；`LoginMixin.action` 上游是 `string \| null`，manifest 只写 `string` | 手写 `vaadin/login/LoginTypes.kt`（`LoginI18n` / `LoginI18nForm` / `LoginI18nErrorMessage` / `LoginI18nHeader`），生成器 `EXTRA_MEMBERS` 给 `LoginForm` / `LoginOverlay` 补 `@JsName("i18n") i18nProperty`，`MEMBER_TYPES` 把 `action` 改成 `String?`；`LoginFormTest` 补类型化 i18n 与 `action = null` 用例；demo 改用 `i18nProperty` |
+| 2026-10-29 | upload | `UploadMixin.i18n` / `UploadFileListMixin.i18n` 在 manifest 里是 `Object`（生成成 `JsAny`）；`emitMixin` 不把已继承成员传给 `renderMembers`，导致 mixin 里重复声明的成员既没有 `override` 也不会加 `@JsName` 改名 | 手写 `UploadI18n` / `UploadFileListI18n`（按上游 `.d.ts`）；生成器 `EXTRA_MEMBERS` 为两个 mixin 补 `@JsName("i18n") i18nProperty`，`emitMixin` 改为传入 `inheritedMembers`；`I18nTest` / `UploadManagerTest` 补类型化 i18n 用例 |
+| 2026-10-29 | upload | `UploadFile` 缺 `error` 字段：上游 `.d.ts` 只声明 `errorKey`，但文件列表渲染 `file.error`，官方示例直接给 `File` 实例赋值 | 手写 `UploadFile.error: String?` 并在 KDoc 注明来源 |
+| 2026-10-29 | upload | `UploadManager` 是纯 JS 类，manifest 没有构造函数签名，也不导出构造参数类型，无法在 Kotlin 里 `new` 一个 manager（模块化上传必需） | 手写 `UploadManagerOptions`（含 `disabled`）+ `createUploadManager(options)`；`unsafeCast` 而非 `as`，避免外部类没有运行时绑定时 `instanceof` 抛 `ReferenceError`；`UploadManagerTest` 覆盖全部选项与文件跟踪 |
 | 2026-10-29 | 选择控件 | 复核查过一遍：`TooltipMixin.text`、`MultiSelectComboBox.i18n`、`ListBoxEdge` 等成员 manifest 与 `.d.ts` 一致，本轮无新增缺口；`multi-select-combo-box` 的 `i18n` 仍是 `JsAny`（见已知限制） | 未改生成器 |
 
 ### 已知限制（不修）
@@ -164,5 +167,8 @@
 - `context-menu` 的 `ContextMenuItemData<TItemData>` 是「封闭字段 + 交叉泛型」：Kotlin 表达不了 `& TItemData`，
   wrapper 只建模声明过的字段。需要附加数据时声明一个继承 `ContextMenuItemData` 的 `external interface`（demo 的
   `CopyMenuItem` 就是这种写法），再 `unsafeCast` 成 `Array<ContextMenuItemData>` 赋给 `items`。
+- `upload` 的进度不经过 `files-changed`：manager 只在文件增删时派发该事件，进度要靠 `uploadStart` /
+  `uploadProgress` / `uploadSuccess`；demo 的读值就是这么接的。无后端时用 `_createXhr` 私有钩子替换成
+  本地 mock XHR（与上游测试同法），演示页不触网。
 - `multi-select-combo-box` 的 `i18n` 仍是 `JsAny`：上游 `MultiSelectComboBoxI18n` 没有结构化 manifest 信息，demo 用 `jsObject` 传对象；
   后续可按 `DateTimePickerI18n` 的做法手写具名接口。

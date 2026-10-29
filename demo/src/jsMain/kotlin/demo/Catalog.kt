@@ -12,6 +12,7 @@ import demo.pages.pickerEntries
 import demo.pages.selectionEntries
 import demo.pages.textFieldEntries
 import demo.pages.themingEntries
+import demo.pages.uploadEntries
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.anchor
@@ -105,6 +106,7 @@ val catalog: List<CatalogEntry> =
         overlayEntries,
         dataEntries,
         gridEntries,
+        uploadEntries,
         layoutEntries,
         displayEntries,
         themingEntries,

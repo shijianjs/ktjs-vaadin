@@ -1,5 +1,7 @@
 package vaadin.upload
 
+import kotlin.js.unsafeCast
+
 /**
  * A file tracked by the upload manager.
  *
@@ -45,6 +47,14 @@ external interface UploadFile {
     /** The upload status, for example `queued`, `uploading`, `complete`, or `error`. */
     var status: String
 
+    /**
+     * The message shown for a failed upload.
+     *
+     * Not part of the upstream `.d.ts` (the interface only declares [errorKey]), but the file list
+     * renders `file.error` and the docs examples set it directly on the `File` instance.
+     */
+    var error: String?
+
     /** The error key when [status] is `error`. */
     var errorKey: String
 
@@ -72,6 +82,66 @@ external interface UploadFile {
     /** The request performing the upload. */
     var xhr: web.xhr.XMLHttpRequest?
 }
+
+/**
+ * Options accepted by the [UploadManager] constructor.
+ *
+ * Upstream `vaadin-upload-manager.d.ts` declares `constructor(options?: UploadManagerOptions)`,
+ * but the manifest carries no constructor signature, so the generated `uploadmanagerClass()` is a
+ * bare `ConstructorFunction<Tuple, UploadManager>`. Use [createUploadManager] to construct one.
+ */
+external interface UploadManagerOptions {
+    /** The server URL. An empty string means the current location. */
+    var target: String?
+
+    /** The HTTP method, `POST` by default. */
+    var method: UploadMethod?
+
+    /** Extra request headers. */
+    var headers: js.objects.Record<kotlin.js.JsString, kotlin.js.JsString>?
+
+    /** Maximum duration of a request in milliseconds; zero means no timeout. */
+    var timeout: Double?
+
+    /** Maximum number of files in the list; `Infinity` by default. */
+    var maxFiles: Double?
+
+    /** Maximum file size in bytes; `Infinity` by default. */
+    var maxFileSize: Double?
+
+    /** Comma-separated list of accepted MIME types or file extensions. */
+    var accept: String?
+
+    /** Whether files wait for an explicit `uploadFiles()` call. */
+    var noAuto: Boolean?
+
+    /** Whether requests are sent with credentials. */
+    var withCredentials: Boolean?
+
+    /** The request encoding: `raw` (default) or `multipart`. */
+    var uploadFormat: UploadFormat?
+
+    /** How many files are uploaded at the same time. */
+    var maxConcurrentUploads: Double?
+
+    /** The form data field name used by multipart requests. */
+    var formDataName: String?
+
+    /** Whether the manager is disabled; connected upload buttons and drop zones follow it. */
+    var disabled: Boolean?
+}
+
+/**
+ * Creates an [UploadManager] with [options].
+ *
+ * Kotlin cannot express a constructor on the generated external class, so this goes through the
+ * constructor function returned by [uploadmanagerClass]. The result is `unsafeCast` because the
+ * external class has no runtime binding, so a plain `as` would emit an `instanceof` check that
+ * throws `ReferenceError`.
+ */
+fun createUploadManager(options: UploadManagerOptions): UploadManager =
+    js("(UploadManager, options) => new UploadManager(options)")(uploadmanagerClass(), options)
+        .unsafeCast<UploadManager>()
 
 /** The button labels of the `<vaadin-upload-file>` element. */
 external interface UploadFileLabelsI18n {

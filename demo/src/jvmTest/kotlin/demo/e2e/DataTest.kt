@@ -5,6 +5,7 @@ import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.junit.UsePlaywright
 import com.microsoft.playwright.options.AriaRole
+import com.microsoft.playwright.options.FilePayload
 import kotlin.test.assertTrue
 import org.junitpioneer.jupiter.RetryingTest
 
@@ -39,6 +40,30 @@ class DataTest {
 
         sorted.getByText("Name", Locator.GetByTextOptions().setExact(true)).first().click()
         assertThat(column).hasJSProperty("direction", "desc")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `upload lists fake files and completes a simulated upload`(page: Page) {
+        page.navigate("/#/upload")
+
+        val basic = page.getByTestId("upload-basic")
+        assertThat(basic.locator("vaadin-upload-file")).hasCount(3)
+        assertThat(basic.getByText("Workflow.pdf")).isVisible()
+
+        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Upload All Files")).click()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("Upload status"))).containsText("%")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `upload rejects a file outside the accepted format`(page: Page) {
+        page.navigate("/#/upload")
+
+        page.getByTestId("upload-format")
+            .locator("input[type=file]")
+            .setInputFiles(FilePayload("notes.txt", "text/plain", "x".toByteArray()))
+
+        assertThat(page.locator("vaadin-notification-card"))
+            .hasText("The provided file does not have the correct format (PDF document).")
     }
 
     @RetryingTest(maxAttempts = 2)

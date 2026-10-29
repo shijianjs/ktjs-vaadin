@@ -26,8 +26,6 @@ import vaadin.messageinput.createMessageInput
 import vaadin.messagelist.MessageListEvents
 import vaadin.messagelist.MessageListItem
 import vaadin.messagelist.createMessageList
-import vaadin.upload.UploadEvents
-import vaadin.upload.createUpload
 import vaadin.virtuallist.createVirtualList
 import web.dom.clickEvent
 import web.events.addHandler
@@ -99,23 +97,6 @@ val dataEntries: List<CatalogEntry> =
                     sourcePath = "pages/Data.kt",
                 ),
             builder = ::buildMarkdownPage,
-        ),
-        CatalogEntry(
-            id = "upload",
-            group = Groups.DATA,
-            meta =
-                PageMeta(
-                    title = bi("Upload", "Upload"),
-                    summary =
-                        bi(
-                            "文件选择与上传列表；本页不连后端，只演示选择、数量限制与移除。",
-                            "File picker and upload list; this page has no backend and only shows selection, " +
-                                "the file limit and removal.",
-                        ),
-                    docsUrl = "$DOCS_BASE/upload",
-                    sourcePath = "pages/Data.kt",
-                ),
-            builder = ::buildUploadPage,
         ),
     )
 
@@ -316,47 +297,6 @@ private fun buildMarkdownPage(meta: PageMeta): PageView {
     withoutBreaks.content = tr("第一行\n第二行\n第三行", "First line\nSecond line\nThird line")
     lineBreakSection.body.append(example(null, row(withBreaks, withoutBreaks)))
     view.body.append(lineBreakSection.root)
-
-    return view
-}
-
-private fun buildUploadPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("文件选择", "File selection"),
-            tr(
-                "noAuto 打开后文件只进入列表、不会真的上传，因此没有后端也能完整演示选择、移除与数量限制。",
-                "With noAuto on, files only enter the list and are never uploaded, so selection, removal and " +
-                    "the file limit work without a backend.",
-            ),
-        )
-    val upload = createUpload()
-    upload.dataset["test"] = "upload"
-    upload.noAuto = true
-    upload.maxFiles = 3.0
-    upload.accept = "image/*,application/pdf"
-    val readout = Readout(tr("已选择 0 / 3 个文件", "0 of 3 files selected"))
-    val log = EventLog(4)
-    upload.listen(UploadEvents.filesChanged) {
-        readout.set(
-            tr("已选择 ${upload.files.size} / 3 个文件：", "${upload.files.size} of 3 files selected: "),
-            upload.files.joinToString(", ") { it.name },
-        )
-        log.add("files-changed · ${upload.files.size}")
-    }
-    val rejectMessage =
-        tr("file-reject（超出数量或类型不符）", "file-reject (too many files or unsupported type)")
-    upload.listen(UploadEvents.fileReject) { log.add(rejectMessage) }
-    basic.body.append(example(null, column(upload, readout.root, log.root)))
-    view.body.append(basic.root)
-
-    val disabled = section(tr("禁用", "Disabled"), "")
-    val disabledUpload = createUpload { noAuto = true }
-    disabledUpload.disabled = true
-    disabled.body.append(example(null, disabledUpload))
-    view.body.append(disabled.root)
 
     return view
 }

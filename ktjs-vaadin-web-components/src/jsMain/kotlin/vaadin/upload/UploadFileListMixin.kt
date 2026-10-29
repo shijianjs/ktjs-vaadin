@@ -17,4 +17,11 @@ external interface UploadFileListMixin : vaadin.componentbase.I18nMixin {
      * - Forwards retry/abort/start/remove events back to the manager
      */
     var manager: vaadin.upload.UploadManager?
+    /**
+     * The object used to localize the file list.
+     *
+     * Maps to the `i18n` property; renamed in Kotlin because the inherited `i18n` is untyped.
+     */
+    @JsName("i18n")
+    var i18nProperty: vaadin.upload.UploadFileListI18n
 }

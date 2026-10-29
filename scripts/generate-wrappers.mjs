@@ -194,6 +194,8 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
   ['@vaadin/date-time-picker|DateTimePicker|i18n', 'vaadin.datetimepicker.DateTimePickerI18n'],
+  ['@vaadin/upload|UploadMixin|i18n', 'vaadin.upload.UploadI18n'],
+  ['@vaadin/upload|UploadFileListMixin|i18n', 'vaadin.upload.UploadFileListI18n'],
   // The manifest records the login localization object as a bare `object`; upstream `.d.ts`
   // declares `interface LoginI18n`. See `vaadin/login/LoginTypes.kt`.
   ['@vaadin/login|LoginForm|i18n', 'vaadin.login.LoginI18n'],
@@ -365,6 +367,34 @@ const EXTRA_MEMBERS = new Map([
           'The object used to localize the field, including the accessible labels of the inner date ' +
           'and time pickers.\n\nMaps to the `i18n` property; renamed in Kotlin because the inherited ' +
           '`i18n` is untyped.',
+      },
+    ],
+  ],
+  // Same `I18nMixin` gap: upstream `vaadin-upload-mixin.d.ts` / `vaadin-upload-file-list-mixin.d.ts`
+  // declare `i18n` against the structured types that already live in `vaadin/upload/UploadTypes.kt`.
+  [
+    '@vaadin/upload|UploadMixin',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the upload element.\n\nMaps to the `i18n` property; renamed in ' +
+          'Kotlin because the inherited `i18n` is untyped.',
+      },
+    ],
+  ],
+  [
+    '@vaadin/upload|UploadFileListMixin',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the file list.\n\nMaps to the `i18n` property; renamed in ' +
+          'Kotlin because the inherited `i18n` is untyped.',
       },
     ],
   ],
@@ -1282,7 +1312,11 @@ function header(pkg, imports = []) {
 
 function emitMixin(declaration) {
   const parents = removeRedundantMixins(directMixins(declaration)).map((mixin) => mixin.fqn);
-  const body = renderMembers(declaration, 4);
+  // A mixin that redeclares a member of a parent mixin needs the same `override` / rename
+  // treatment as a class: `UploadMixin.i18n` is typed against `UploadI18n` while `I18nMixin`
+  // already declares it as `JsAny`.
+  const inherited = inheritedMembers(declaration);
+  const body = renderMembers(declaration, 4, inherited);
   const doc = kdoc(declaration.description);
   const extendsClause = parents.length > 0 ? ` : ${[...new Set(parents)].join(', ')}` : '';
   const content = `${header(declaration.pkg)}\n${doc}external interface ${declaration.kotlinName}${extendsClause} {\n${body}\n}`;

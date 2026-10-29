@@ -648,3 +648,21 @@ vaadin-grid::part(rating-header),
 vaadin-grid::part(rating-footer) {
     font-weight: 700;
 }
+
+/* --- Upload --------------------------------------------------------------- */
+
+/* The modular drop zone ships no styling; the docs example draws the dashed frame inline. */
+.upload-drop-zone {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--lumo-space-l);
+    border: 1px dashed var(--lumo-contrast-30pct);
+    border-radius: var(--lumo-border-radius-l);
+}
+
+.upload-drop-zone__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--lumo-space-s);
+}

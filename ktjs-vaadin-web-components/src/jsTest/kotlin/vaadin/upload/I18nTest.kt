@@ -1,5 +1,6 @@
 package vaadin.upload
 
+import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.Promise
 import kotlin.js.js
@@ -106,9 +107,22 @@ class I18nTest {
         )
     }
 
+    /**
+     * The generated mixin declares `i18n` as untyped because `custom-elements.json` only records
+     * `object`, so the wrapper adds the typed `i18nProperty` accessor; this covers it.
+     */
     @Test
-    fun translatesFileButtonAriaLabelsForAQueuedFile(): Promise<Unit> {
+    fun typedI18nPropertyDrivesTheSlottedLabels(): Promise<Unit> {
         val upload = attach(createUpload())
+        upload.i18nProperty = unsafeJso { addFiles = unsafeJso { many = "Pick files" } }
+
+        return nextRender(upload).then {
+            assertEquals("Pick files", slotText(upload, "[slot=add-button]"))
+        }
+    }
+
+    @Test
+    fun translatesFileButtonAriaLabelsForAQueuedFile(): Promise<Unit> {        val upload = attach(createUpload())
         js("(u) => { u.i18n = { file: { start: 'Start', retry: 'Retry', remove: 'Remove' } }; }")(upload)
         upload.noAuto = true
 

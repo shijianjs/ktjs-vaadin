@@ -120,4 +120,11 @@ external interface UploadMixin : vaadin.componentbase.I18nMixin {
      * Set the withCredentials flag on the request.
      */
     var withCredentials: Boolean
+    /**
+     * The object used to localize the upload element.
+     *
+     * Maps to the `i18n` property; renamed in Kotlin because the inherited `i18n` is untyped.
+     */
+    @JsName("i18n")
+    var i18nProperty: vaadin.upload.UploadI18n
 }
