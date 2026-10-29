@@ -495,3 +495,67 @@ body {
     font-weight: 600;
     letter-spacing: 0.05em;
 }
+
+/* ------------------------------------------------------- item presentation (selection pages) */
+
+/* The docs examples lay out an avatar, a name and a profession inside a list/combo item. */
+.person-item {
+    display: flex;
+    align-items: center;
+    gap: var(--lumo-space-s);
+}
+
+.person-item span + span,
+.radio-option span + span {
+    color: var(--lumo-secondary-text-color);
+    font-size: var(--lumo-font-size-s);
+}
+
+.radio-option {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Adjacent example groups read better with a little vertical rhythm. */
+.example-stack {
+    gap: var(--lumo-space-m);
+}
+
+/* `itemClassNameGenerator` puts these classes on the dropdown items; colour inherits into the
+   shadow DOM. */
+vaadin-combo-box-item.coral,
+vaadin-multi-select-combo-box-item.coral {
+    color: coral;
+}
+
+vaadin-combo-box-item.gold,
+vaadin-multi-select-combo-box-item.gold {
+    color: gold;
+}
+
+vaadin-combo-box-item.orange,
+vaadin-multi-select-combo-box-item.orange {
+    color: orange;
+}
+
+vaadin-combo-box-item.yellowgreen,
+vaadin-multi-select-combo-box-item.yellowgreen {
+    color: yellowgreen;
+}
+
+vaadin-multi-select-combo-box-chip.coral {
+    background: coral;
+}
+
+vaadin-multi-select-combo-box-chip.gold {
+    background: gold;
+}
+
+vaadin-multi-select-combo-box-chip.orange {
+    background: orange;
+}
+
+vaadin-multi-select-combo-box-chip.yellowgreen {
+    background: yellowgreen;
+}

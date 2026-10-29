@@ -11,41 +11,29 @@ import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
-import demo.ui.joinValues
 import demo.ui.jsArray
+import demo.ui.joinValues
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
+import demo.ui.setHidden
+import demo.ui.span
+import demo.ui.withClass
 import demo.ui.withTheme
 import kotlin.js.JsAny
-import kotlin.js.js
-import kotlin.js.unsafeCast
-import vaadin.a11ybase.ListOrientations
 import vaadin.button.createButton
 import vaadin.checkbox.CheckboxEvents
 import vaadin.checkbox.createCheckbox
 import vaadin.checkboxgroup.CheckboxGroupEvents
 import vaadin.checkboxgroup.createCheckboxGroup
-import vaadin.combobox.ComboBoxEvents
-import vaadin.combobox.createComboBox
-import vaadin.item.createItem
-import vaadin.listbox.ListBoxEvents
-import vaadin.listbox.createListBox
-import vaadin.multiselectcombobox.MultiSelectComboBoxEvents
-import vaadin.multiselectcombobox.createMultiSelectComboBox
 import vaadin.radiogroup.RadioGroupEvents
 import vaadin.radiogroup.createRadioButton
 import vaadin.radiogroup.createRadioGroup
-import vaadin.select.SelectEvents
-import vaadin.select.SelectItemData
-import vaadin.select.createSelect
-import vaadin.slider.RangeSliderEvents
-import vaadin.slider.SliderEvents
-import vaadin.slider.createRangeSlider
-import vaadin.slider.createSlider
 import vaadin.switch.SwitchEvents
 import vaadin.switch.createSwitch
+import vaadin.textfield.createTextField
+import vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -137,12 +125,12 @@ val selectionEntries: List<CatalogEntry> =
                     title = bi("List Box", "List Box"),
                     summary =
                         bi(
-                            "可滚动的选项列表，支持单选、多选与键盘导航。",
-                            "Scrollable list of options with single selection, multiple selection and " +
-                                "keyboard navigation.",
+                            "可滚动的选项列表，支持分隔线、禁用条目、单选与多选。",
+                            "Scrollable list of options with dividers, disabled items, single and multiple " +
+                                "selection.",
                         ),
                     docsUrl = "$DOCS_BASE/list-box",
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionLists.kt",
                 ),
             builder = ::buildListBoxPage,
         ),
@@ -163,7 +151,7 @@ val selectionEntries: List<CatalogEntry> =
                             "vaadin-item 没有独立文档页面，用法见 List Box。",
                             "vaadin-item has no dedicated documentation page; see List Box.",
                         ),
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionLists.kt",
                 ),
             builder = ::buildItemPage,
         ),
@@ -180,7 +168,7 @@ val selectionEntries: List<CatalogEntry> =
                                 "string.",
                         ),
                     docsUrl = "$DOCS_BASE/select",
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionDropdowns.kt",
                 ),
             builder = ::buildSelectPage,
         ),
@@ -197,7 +185,7 @@ val selectionEntries: List<CatalogEntry> =
                                 "values.",
                         ),
                     docsUrl = "$DOCS_BASE/combo-box",
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionDropdowns.kt",
                 ),
             builder = ::buildComboBoxPage,
         ),
@@ -214,7 +202,7 @@ val selectionEntries: List<CatalogEntry> =
                                 "selected objects.",
                         ),
                     docsUrl = "$DOCS_BASE/multi-select-combo-box",
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionDropdowns.kt",
                 ),
             builder = ::buildMultiSelectComboBoxPage,
         ),
@@ -230,23 +218,20 @@ val selectionEntries: List<CatalogEntry> =
                             "Pick a value by dragging, with range slider, step and read-only state.",
                         ),
                     docsUrl = "$DOCS_BASE/slider",
-                    sourcePath = "pages/Selection.kt",
+                    sourcePath = "pages/SelectionLists.kt",
                 ),
             builder = ::buildSliderPage,
         ),
     )
 
-private const val MEMBER_ITEMS_JSON =
-    """
-    [
-      {"label": "Alpha", "value": "alpha"},
-      {"label": "Bravo", "value": "bravo"},
-      {"label": "Charlie", "value": "charlie"},
-      {"label": "Delta", "value": "delta"}
-    ]
-    """
+// ---------------------------------------------------------------------------------------------
+// Shared data
+//
+// The docs examples load fixture data from a backend. The demo has none, so the same shapes are
+// kept in local JSON that the pages parse into the wrapper's `items` arrays.
+// ---------------------------------------------------------------------------------------------
 
-private const val CITY_ITEMS_JSON =
+internal const val CITIES_JSON =
     """
     [
       {"label": "Tallinn", "value": "tallinn"},
@@ -255,6 +240,93 @@ private const val CITY_ITEMS_JSON =
       {"label": "Lisbon", "value": "lisbon"}
     ]
     """
+
+internal const val SORT_ITEMS_JSON =
+    """
+    [
+      {"label": "Most recent first", "value": "recent"},
+      {"label": "Rating: high to low", "value": "rating-desc"},
+      {"label": "Rating: low to high", "value": "rating-asc"},
+      {"label": "Price: high to low", "value": "price-desc"},
+      {"label": "Price: low to high", "value": "price-asc"}
+    ]
+    """
+
+/** One fixture person; the fields mirror the `Person` DTO the docs examples load from the backend. */
+internal class Person(
+    val id: Int,
+    val firstName: String,
+    val lastName: String,
+    val profession: String,
+) {
+    val displayName: String
+        get() = "$firstName $lastName"
+
+    val pictureUrl: String
+        get() = portrait(PORTRAIT_FILLS[id % PORTRAIT_FILLS.size])
+}
+
+private val PORTRAIT_FILLS = listOf("1f4e9c", "b05a2c", "2f7d5b", "7a3f8f", "b07d1f", "3f607d")
+
+internal fun people(count: Int = 6): List<Person> {
+    val firstNames = listOf("Ada", "Grace", "Katherine", "Alan", "Barbara", "Edsger", "Margaret", "Dennis")
+    val lastNames = listOf("Lovelace", "Hopper", "Johnson", "Turing", "Liskov", "Dijkstra", "Hamilton", "Ritchie")
+    val professions =
+        listOf(
+            tr("软件工程师", "Software Engineer"),
+            tr("产品设计师", "Product Designer"),
+            tr("数据分析师", "Data Analyst"),
+            tr("前端开发", "Frontend Developer"),
+            tr("架构师", "Architect"),
+            tr("测试工程师", "Test Engineer"),
+        )
+    return (0 until count).map { index ->
+        Person(
+            id = index + 1,
+            firstName = firstNames[index % firstNames.size],
+            lastName = lastNames[index % lastNames.size],
+            profession = professions[index % professions.size],
+        )
+    }
+}
+
+/** Serialises [list] into the object array the item-based wrappers take. */
+internal fun personItems(list: List<Person>, withDisplayName: Boolean = false): Array<JsAny> {
+    val entries =
+        list.map { person ->
+            val fields =
+                mutableListOf(
+                    "\"id\": ${person.id}",
+                    "\"firstName\": \"${person.firstName}\"",
+                    "\"lastName\": \"${person.lastName}\"",
+                    "\"profession\": \"${person.profession}\"",
+                    "\"pictureUrl\": \"${person.pictureUrl}\"",
+                )
+            if (withDisplayName) fields += "\"displayName\": \"${person.displayName}\""
+            "{${fields.joinToString(", ")}}"
+        }
+    return jsArray("[${entries.joinToString(", ")}]")
+}
+
+/** Builds a local portrait as a `data:` URI; the demo ships no binary assets. */
+internal fun portrait(fill: String): String =
+    svgDataUri(
+        "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'>" +
+            "<rect width='80' height='80' fill='#$fill'/>" +
+            "<circle cx='40' cy='30' r='14' fill='#ffffff'/>" +
+            "<path d='M12 80c0-16 12-26 28-26s28 10 28 26z' fill='#ffffff'/>" +
+            "</svg>",
+    )
+
+private fun svgDataUri(markup: String): String =
+    "data:image/svg+xml," +
+        markup
+            .replace("\"", "'")
+            .replace("%", "%25")
+            .replace("<", "%3C")
+            .replace(">", "%3E")
+            .replace("#", "%23")
+            .replace(" ", "%20")
 
 private fun buildCheckboxPage(meta: PageMeta): PageView {
     val view = page(meta)
@@ -269,7 +341,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
             ),
         )
     val log = EventLog(6)
-    val terms = createCheckbox { label = tr("我已阅读并同意条款", "I have read and accept the terms") }
+    val terms = createCheckbox { label = tr("我接受条款与条件", "I accept the terms and conditions") }
     terms.dataset["test"] = "checkbox-basic"
     // `change` only fires for user interaction, so the event stream stays readable; the read-out
     // shows `checked-changed` working for programmatic updates as well.
@@ -286,59 +358,232 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
     basic.body.append(example(null, column(terms, row(toggleFromCode, stateReadout.root), log.root)))
     view.body.append(basic.root)
 
-    val states =
+    val labeling =
         section(
-            tr("三态与状态", "Tri-state and states"),
+            tr("标签与辅助信息", "Label and helper text"),
             tr(
-                "indeterminate 用于「部分选中」；readonly 只能看不能改，disabled 完全不可交互。",
-                "indeterminate marks a partial selection; readonly can be viewed but not changed, while " +
-                    "disabled blocks all interaction.",
+                "label 是可见标签；helper-text 提示填写方式，两者都通过 property 设置。",
+                "label is the visible caption; helper-text explains the expected input. Both are set " +
+                    "through properties.",
             ),
         )
-    val partial = createCheckbox { label = tr("全选（部分选中）", "Select all (partial)") }
-    partial.indeterminate = true
-    states.body.append(
+    labeling.body.append(
         example(
             null,
-            row(
+            column(
                 createCheckbox {
-                    label = tr("已勾选", "Checked")
-                    checked = true
-                },
-                partial,
-                createCheckbox {
-                    label = tr("只读", "Read-only")
-                    checked = true
-                    readonly = true
+                    label = tr("我同意", "Yes, I agree")
                 },
                 createCheckbox {
-                    label = tr("禁用", "Disabled")
-                    disabled = true
+                    label = tr("接收发布通知", "Receive release notifications")
+                    helperText = tr("每天最多一封邮件", "At most one email per day")
                 },
             ),
         ),
     )
-    view.body.append(states.root)
+    view.body.append(labeling.root)
 
-    val readState =
+    val required =
         section(
-            tr("读取状态", "Reading the state"),
-            tr("点击按钮读取所有勾选框当前状态。", "Read the current state of every checkbox with a button."),
+            tr("必填", "Required"),
+            tr(
+                "required 让空值无法通过校验；error-message 是失败时显示在字段下方的文案。",
+                "required makes an empty value invalid; error-message is shown below the field when " +
+                    "validation fails.",
+            ),
         )
-    val a = createCheckbox { label = tr("邮件通知", "Email notifications") }
-    val b = createCheckbox {
-        label = tr("短信通知", "SMS notifications")
-        checked = true
+    val grant = createCheckbox {
+        label = tr("授予查看权限", "Grant view permissions")
+        this.required = true
+        errorMessage = tr("此项为必填", "This field is required")
     }
-    val readout = Readout(tr("尚未读取", "Not read yet"))
-    val readButton =
-        createButton { textContent = tr("读取", "Read") }.apply {
+    val requiredResult = Readout(tr("尚未校验", "Not validated yet"))
+    val submit =
+        createButton { textContent = tr("校验", "Validate") }.apply {
             clickEvent.addHandler {
-                readout.set(tr("邮件=${a.checked} · 短信=${b.checked}", "Email=${a.checked} · SMS=${b.checked}"))
+                requiredResult.set(
+                    tr("校验：", "Validation: "),
+                    if (grant.validate()) tr("通过", "passed") else tr("失败", "failed"),
+                )
             }
         }
-    readState.body.append(example(null, column(a, b, readButton, readout.root)))
-    view.body.append(readState.root)
+    required.body.append(example(null, column(grant, row(submit, requiredResult.root))))
+    view.body.append(required.root)
+
+    val indeterminate =
+        section(
+            tr("不确定态", "Indeterminate"),
+            tr(
+                "「全选」勾选框用 indeterminate 表示部分选中；它与组件的 checked 一起由选中数量派生。",
+                "The \"select all\" checkbox uses indeterminate for a partial selection; it is derived " +
+                    "from the number of selected items together with checked.",
+            ),
+        )
+    val users = people(3)
+    val selectAll = createCheckbox { label = tr("通知所有用户", "Notify users") }
+    val userGroup =
+        createCheckboxGroup { label = tr("接收通知的用户", "Users to notify") }.withTheme("vertical")
+    userGroup.append(
+        *users.map { person ->
+            createCheckbox {
+                value = person.displayName
+                textContent = person.displayName
+            }
+        }.toTypedArray(),
+    )
+    fun syncSelectAll() {
+        val count = userGroup.value.size
+        selectAll.checked = count == users.size
+        selectAll.indeterminate = count in 1 until users.size
+    }
+    userGroup.value = arrayOf(users[0].displayName, users[2].displayName)
+    syncSelectAll()
+    selectAll.listen(CheckboxEvents.change) {
+        userGroup.value = if (selectAll.checked) users.map { it.displayName }.toTypedArray() else arrayOf()
+        syncSelectAll()
+    }
+    userGroup.listen(CheckboxGroupEvents.valueChanged) { syncSelectAll() }
+    indeterminate.body.append(example(null, column(selectAll, userGroup)))
+    view.body.append(indeterminate.root)
+
+    val orientation =
+        section(
+            tr("方向", "Orientation"),
+            tr(
+                "theme=\"horizontal\" 让选项横排，vertical 让选项竖排；相邻的两个组之间留出间距更易读。",
+                "theme=\"horizontal\" lays the options out in a row, vertical stacks them; adjacent " +
+                    "groups read better with a gap between them.",
+            ),
+        )
+    val horizontal =
+        createCheckboxGroup { label = tr("权限", "Permissions") }.withTheme("horizontal")
+    horizontal.append(
+        createCheckbox {
+            value = "read"
+            textContent = tr("读取", "Read")
+        },
+        createCheckbox {
+            value = "edit"
+            textContent = tr("编辑", "Edit")
+        },
+        createCheckbox {
+            value = "delete"
+            textContent = tr("删除", "Delete")
+        },
+    )
+    val vertical =
+        createCheckboxGroup { label = tr("工作日", "Working days") }.withTheme("vertical")
+    vertical.append(
+        *listOf(
+            tr("周一", "Monday"),
+            tr("周二", "Tuesday"),
+            tr("周三", "Wednesday"),
+            tr("周四", "Thursday"),
+            tr("周五", "Friday"),
+            tr("周六", "Saturday"),
+            tr("周日", "Sunday"),
+        ).map { day ->
+            createCheckbox {
+                value = day
+                textContent = day
+            }
+        }.toTypedArray(),
+    )
+    val manufacturers =
+        createCheckboxGroup { label = tr("制造商", "Manufacturer") }.withTheme("vertical")
+    manufacturers.append(
+        *listOf("Akuchi", "Broek", "Wulf").mapIndexed { index, name ->
+            createCheckbox {
+                value = "$index"
+                textContent = name
+            }
+        }.toTypedArray(),
+    )
+    val statuses =
+        createCheckboxGroup { label = tr("状态", "Status") }.withTheme("vertical")
+    statuses.append(
+        createCheckbox {
+            value = "0"
+            textContent = tr("进行中", "In progress")
+        },
+        createCheckbox {
+            value = "1"
+            textContent = tr("已完成", "Done")
+        },
+        createCheckbox {
+            value = "2"
+            textContent = tr("已取消", "Cancelled")
+        },
+    )
+    val adjacent = column(manufacturers, statuses).withClass("example-stack")
+    orientation.body.append(
+        example(null, horizontal),
+        example(null, vertical),
+        example(null, adjacent),
+    )
+    view.body.append(orientation.root)
+
+    val preset =
+        section(
+            tr("预设值", "Preset value"),
+            tr(
+                "value 可以直接赋值；value-changed 报告用户改动后的数组。",
+                "value can be assigned directly; value-changed reports the new array after user edits.",
+            ),
+        )
+    val exportGroup =
+        createCheckboxGroup {
+            label = tr("导出数据", "Export data")
+            value = arrayOf("0", "2")
+        }.withTheme("vertical")
+    exportGroup.append(
+        createCheckbox {
+            value = "0"
+            textContent = tr("订单号", "Order ID")
+        },
+        createCheckbox {
+            value = "1"
+            textContent = tr("产品名称", "Product name")
+        },
+        createCheckbox {
+            value = "2"
+            textContent = tr("客户", "Customer")
+        },
+        createCheckbox {
+            value = "3"
+            textContent = tr("状态", "Status")
+        },
+    )
+    val exportReadout = Readout("value = 0, 2")
+    exportGroup.listen(CheckboxGroupEvents.valueChanged) {
+        exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { "[]" })
+    }
+    preset.body.append(example(null, column(exportGroup, exportReadout.root)))
+    view.body.append(preset.root)
+
+    val styles =
+        section(
+            tr("样式变体", "Style variants"),
+            tr(
+                "helper-above-field 把辅助信息放到标签与选项之间。",
+                "helper-above-field moves the helper text between the label and the options.",
+            ),
+        )
+    val styled =
+        createCheckboxGroup {
+            label = tr("标签", "Label")
+            helperText = tr("辅助信息", "Helper text")
+        }.withTheme("helper-above-field", "vertical")
+    styled.append(
+        *listOf("Item 1", "Item 2", "Item 3").map { label ->
+            createCheckbox {
+                value = label
+                textContent = label
+            }
+        }.toTypedArray(),
+    )
+    styles.body.append(example(null, styled))
+    view.body.append(styles.root)
 
     return view
 }
@@ -359,7 +604,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
         createCheckboxGroup {
             label = tr("使用的语言", "Languages used")
             helperText = tr("可以多选", "Multiple answers are allowed")
-        }
+        }.withTheme("vertical")
     group.dataset["test"] = "checkbox-group"
     group.append(
         createCheckbox {
@@ -396,7 +641,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
             required = true
             errorMessage = tr("至少选择一项", "Select at least one")
         }
-    skills.value = js("(['css', 'html'])")
+    skills.value = arrayOf("css", "html")
     skills.append(
         createCheckbox {
             value = "css"
@@ -424,24 +669,79 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
     preset.body.append(example(null, column(skills, row(validateButton, result.root))))
     view.body.append(preset.root)
 
+    val features =
+        section(
+            tr("标签、辅助信息与提示", "Label, helper text and tooltip"),
+            tr(
+                "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
+                "label and helper-text live on the group; a tooltip is attached to the field through " +
+                    "slot=\"tooltip\".",
+            ),
+        )
+    val languages =
+        createCheckboxGroup {
+            label = tr("标签", "Label")
+            helperText = tr("辅助信息", "Helper text")
+        }.withTheme("vertical")
+    languages.append(
+        createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
+        createCheckbox {
+            value = "1"
+            textContent = tr("选项 1", "Item 1")
+        },
+        createCheckbox {
+            value = "2"
+            textContent = tr("选项 2", "Item 2")
+        },
+        createCheckbox {
+            value = "3"
+            textContent = tr("选项 3", "Item 3")
+        },
+    )
+    features.body.append(
+        example(
+            null,
+            column(
+                createCheckbox {
+                    label = tr("标签", "Label")
+                    helperText = tr("辅助信息", "Helper text")
+                },
+                languages,
+            ),
+        ),
+    )
+    view.body.append(features.root)
+
     val states = section(tr("只读与禁用", "Read-only and disabled"))
     val readonlyGroup =
-        createCheckboxGroup { label = tr("只读", "Read-only") }
+        createCheckboxGroup { label = tr("只读", "Read-only") }.withTheme("vertical")
     readonlyGroup.readonly = true
+    readonlyGroup.value = arrayOf("a")
     readonlyGroup.append(
         createCheckbox {
             value = "a"
             textContent = tr("选项 A", "Option A")
-        }.apply { checked = true },
+        },
         createCheckbox {
             value = "b"
             textContent = tr("选项 B", "Option B")
         },
     )
     val disabledGroup =
-        createCheckboxGroup { label = tr("禁用", "Disabled") }
+        createCheckboxGroup { label = tr("禁用", "Disabled") }.withTheme("vertical")
     disabledGroup.disabled = true
-    disabledGroup.append(createCheckbox { textContent = tr("不可更改", "Cannot be changed") })
+    disabledGroup.append(
+        *listOf(
+            tr("工程", "Engineering"),
+            tr("人力资源", "Human Resources"),
+            tr("市场", "Marketing"),
+        ).map { name ->
+            createCheckbox {
+                value = name
+                textContent = name
+            }
+        }.toTypedArray(),
+    )
     states.body.append(example(null, row(readonlyGroup, disabledGroup)))
     view.body.append(states.root)
 
@@ -463,7 +763,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("套餐", "Plan")
             value = "standard"
-        }
+        }.withTheme("vertical")
     group.dataset["test"] = "radio-group"
     group.append(
         createRadioButton {
@@ -486,21 +786,131 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
     basic.body.append(example(null, column(group, readout.root)))
     view.body.append(basic.root)
 
-    val states =
+    val defaults =
+        section(
+            tr("默认值与分组标签", "Default value and group labels"),
+            tr(
+                "给组赋初始 value 就有默认选中项；同一页面上的多组互不影响，各自的 label 说明不同维度。",
+                "Assigning an initial value selects a default option; several groups on one page stay " +
+                    "independent and their labels name different dimensions.",
+            ),
+        )
+    val repeat = createRadioGroup { label = tr("重复", "Repeat") }.withTheme("vertical")
+    repeat.append(
+        createRadioButton {
+            value = "none"
+            textContent = tr("从不", "None")
+            checked = true
+        },
+        createRadioButton {
+            value = "daily"
+            textContent = tr("每日", "Daily")
+        },
+        createRadioButton {
+            value = "weekly"
+            textContent = tr("每周", "Weekly")
+        },
+        createRadioButton {
+            value = "monthly"
+            textContent = tr("每月", "Monthly")
+        },
+    )
+    defaults.body.append(example(null, repeat))
+    view.body.append(defaults.root)
+
+    val orientation =
+        section(
+            tr("方向", "Orientation"),
+            tr(
+                "theme=\"horizontal\" 让选项横排，vertical 让选项竖排。",
+                "theme=\"horizontal\" lays the options out in a row, vertical stacks them.",
+            ),
+        )
+    val horizontal =
+        createRadioGroup {
+            label = tr("状态", "Status")
+            value = "pending"
+        }.withTheme("horizontal")
+    horizontal.append(
+        createRadioButton {
+            value = "pending"
+            textContent = tr("待处理", "Pending")
+        },
+        createRadioButton {
+            value = "submitted"
+            textContent = tr("已提交", "Submitted")
+        },
+        createRadioButton {
+            value = "confirmed"
+            textContent = tr("已确认", "Confirmed")
+        },
+    )
+    val vertical =
+        createRadioGroup { label = tr("旅行舱位", "Travel class") }.withTheme("vertical")
+    vertical.append(
+        createRadioButton {
+            value = "economy"
+            textContent = tr("经济舱", "Economy")
+        },
+        createRadioButton {
+            value = "business"
+            textContent = tr("商务舱", "Business")
+        },
+        createRadioButton {
+            value = "firstClass"
+            textContent = tr("头等舱", "First Class")
+        },
+    )
+    orientation.body.append(example(null, horizontal), example(null, vertical))
+    view.body.append(orientation.root)
+
+    val features =
+        section(
+            tr("标签、辅助信息与提示", "Label, helper text and tooltip"),
+            tr(
+                "group 上的 helper-text 与 slot=\"tooltip\" 的 tooltip 覆盖字段级说明。",
+                "helper-text on the group and a slotted tooltip cover the field-level explanation.",
+            ),
+        )
+    val labeled =
+        createRadioGroup {
+            label = tr("标签", "Label")
+            helperText = tr("辅助信息", "Helper text")
+        }.withTheme("vertical")
+    labeled.append(
+        createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
+        createRadioButton {
+            value = "1"
+            textContent = tr("选项 1", "Item 1")
+        },
+        createRadioButton {
+            value = "2"
+            textContent = tr("选项 2", "Item 2")
+        },
+        createRadioButton {
+            value = "3"
+            textContent = tr("选项 3", "Item 3")
+        },
+    )
+    features.body.append(example(null, labeled))
+    view.body.append(features.root)
+
+    val required =
         section(
             tr("校验与状态", "Validation and states"),
             tr(
-                "required 让空值无法通过；readonly 保留选择但不能更改。",
-                "required rejects an empty value; readonly keeps the selection but blocks changes.",
+                "required 让空值无法通过；readonly 保留选择但不能更改，disabled 完全不可交互。",
+                "required rejects an empty value; readonly keeps the selection but blocks changes, " +
+                    "disabled turns off all interaction.",
             ),
         )
-    val required =
+    val payment =
         createRadioGroup {
             label = tr("付款方式", "Payment method")
-            required = true
+            this.required = true
             errorMessage = tr("请选择一种付款方式", "Choose a payment method")
         }
-    required.append(
+    payment.append(
         createRadioButton {
             value = "card"
             textContent = tr("银行卡", "Card")
@@ -514,7 +924,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("只读", "Read-only")
             value = "yes"
-        }
+        }.withTheme("vertical")
     readonly.readonly = true
     readonly.append(
         createRadioButton {
@@ -526,21 +936,153 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
             textContent = tr("否", "No")
         },
     )
+    val disabled =
+        createRadioGroup {
+            label = tr("禁用", "Disabled")
+            value = "inProgress"
+        }.withTheme("vertical")
+    disabled.disabled = true
+    disabled.append(
+        createRadioButton {
+            value = "inProgress"
+            textContent = tr("进行中", "In progress")
+        },
+        createRadioButton {
+            value = "done"
+            textContent = tr("已完成", "Done")
+        },
+    )
     val result = Readout(tr("尚未校验", "Not validated yet"))
     val validateButton =
         createButton { textContent = tr("校验", "Validate") }.apply {
             clickEvent.addHandler {
                 result.set(
                     tr("校验：", "Validation: "),
-                    if (required.validate()) tr("通过", "passed") else tr("失败", "failed"),
+                    if (payment.validate()) tr("通过", "passed") else tr("失败", "failed"),
                 )
             }
         }
-    states.body.append(
-        example(null, column(required, row(validateButton, result.root))),
-        example(null, row(readonly)),
+    val statesRow = row(readonly, disabled).withClass("example-stack")
+    required.body.append(
+        example(null, column(payment, row(validateButton, result.root))),
+        example(null, statesRow),
     )
-    view.body.append(states.root)
+    view.body.append(required.root)
+
+    val customOption =
+        section(
+            tr("自定义选项", "Custom option"),
+            tr(
+                "radio-button 的 label 插槽可以放任意内容；选中「其他」时再补一个输入字段收集详情。",
+                "The label slot of a radio-button accepts arbitrary content; choosing \"Other\" reveals " +
+                    "an extra field for the details.",
+            ),
+        )
+    val cardGroup =
+        createRadioGroup { label = tr("付款方式", "Payment method") }.withTheme("vertical")
+    val visa =
+        createRadioButton { value = "visa" }.apply {
+            append(column(span(tr("Visa · 账户 1234", "Visa · account 1234")), span(tr("有效期 12/28", "Expires 12/28"))).withClass("radio-option"))
+        }
+    visa.firstElementChild?.setAttribute("slot", "label")
+    val other =
+        createRadioButton { value = "-1" }.apply {
+            append(column(span(tr("其他", "Other")), span(tr("手动输入卡号", "Enter the card number manually"))).withClass("radio-option"))
+        }
+    other.firstElementChild?.setAttribute("slot", "label")
+    cardGroup.append(visa, other)
+    val cardNumber = createTextField { label = tr("卡号", "Card number") }
+    cardNumber.setHidden(true)
+    cardGroup.listen(RadioGroupEvents.valueChanged) { cardNumber.setHidden(cardGroup.value != "-1") }
+    customOption.body.append(example(null, column(cardGroup, cardNumber)))
+    view.body.append(customOption.root)
+
+    val alternative =
+        section(
+            tr("替代勾选框", "Alternative to a checkbox"),
+            tr(
+                "单个二选一的决定用 radio-group 更明确：这里的「回复」与「回复全部」始终只有一个生效。",
+                "A single either-or decision reads better as a radio-group: here only one of \"Reply\" " +
+                    "and \"Reply to all\" is ever active.",
+            ),
+        )
+    val replyGroup =
+        createRadioGroup { label = tr("默认回复行为", "Default reply behavior") }.withTheme("horizontal")
+    replyGroup.append(
+        createRadioButton {
+            value = "reply"
+            textContent = tr("回复", "Reply")
+            checked = true
+        },
+        createRadioButton {
+            value = "replyAll"
+            textContent = tr("回复全部", "Reply to all")
+        },
+    )
+    alternative.body.append(
+        example(
+            null,
+            column(
+                createCheckbox { label = tr("默认回复全部（未勾选状态不明确）", "Reply All by default (unchecked state not clear)") },
+                replyGroup,
+            ),
+        ),
+    )
+    view.body.append(alternative.root)
+
+    val presentation =
+        section(
+            tr("自定义条目呈现", "Custom item presentation"),
+            tr(
+                "多行 label 让每个选项带上补充信息，适合需要对比细节的场景。",
+                "A multi-line label adds context to every option, which helps when the details matter.",
+            ),
+        )
+    val accounts =
+        createRadioGroup {
+            label = tr("付款方式", "Payment method")
+            value = "1"
+        }.withTheme("vertical")
+    accounts.append(
+        *people(3).mapIndexed { index, person ->
+            createRadioButton { value = "${person.id}" }.apply {
+                append(
+                    column(
+                        span(tr("账户 ${person.id}", "Account ${person.id}")),
+                        span(tr("持卡人 ${person.displayName}", "Holder ${person.displayName}")),
+                        span(tr("有效期 12/28", "Expires 12/28")),
+                    ).withClass("radio-option").apply { setAttribute("slot", "label") },
+                )
+                if (index == 0) checked = true
+            }
+        }.toTypedArray(),
+    )
+    presentation.body.append(example(null, accounts))
+    view.body.append(presentation.root)
+
+    val styles =
+        section(
+            tr("样式变体", "Style variants"),
+            tr(
+                "helper-above-field 把辅助信息放到标签与选项之间。",
+                "helper-above-field moves the helper text between the label and the options.",
+            ),
+        )
+    val styled =
+        createRadioGroup {
+            label = tr("标签", "Label")
+            helperText = tr("辅助信息", "Helper text")
+        }.withTheme("helper-above-field", "vertical")
+    styled.append(
+        *listOf("Item 1", "Item 2", "Item 3").map { label ->
+            createRadioButton {
+                value = label
+                textContent = label
+            }
+        }.toTypedArray(),
+    )
+    styles.body.append(example(null, styled))
+    view.body.append(styles.root)
 
     return view
 }
@@ -566,501 +1108,76 @@ private fun buildSwitchPage(meta: PageMeta): PageView {
     basic.body.append(example(null, column(notifications, readout.root)))
     view.body.append(basic.root)
 
-    val effect =
+    val features =
         section(
-            tr("即时生效的联动", "Immediate effect"),
-            tr("开关可以直接驱动页面上的其他状态。", "The switch can drive other state on the page directly."),
-        )
-    val compact = createSwitch { label = tr("紧凑模式（compact 主题）", "Compact mode (compact theme)") }
-    val preview =
-        createButton { textContent = tr("预览按钮", "Preview button") }.withTheme("primary")
-    compact.listen(SwitchEvents.checkedChanged) {
-        preview.withTheme(if (compact.checked) "primary small" else "primary")
-    }
-    effect.body.append(example(null, column(compact, row(preview))))
-    view.body.append(effect.root)
-
-    val states = section(tr("禁用", "Disabled"))
-    states.body.append(
-        example(
-            null,
-            row(
-                createSwitch {
-                    label = tr("已开启但禁用", "On but disabled")
-                    checked = true
-                    disabled = true
-                },
-                createSwitch {
-                    label = tr("禁用", "Disabled")
-                    disabled = true
-                },
-            ),
-        ),
-    )
-    view.body.append(states.root)
-
-    return view
-}
-
-private fun buildListBoxPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
+            tr("辅助信息与提示", "Helper text and tooltip"),
             tr(
-                "selected 是选中项的下标（Number），未选中时为 undefined。",
-                "selected is the index of the selected item (Number); it is undefined when nothing is " +
-                    "selected.",
+                "helper-text 说明开关的作用；slot=\"tooltip\" 的 tooltip 补充细节。",
+                "helper-text explains what the switch does; a slotted tooltip adds the details.",
             ),
         )
-    val single =
-        createListBox()
-    single.dataset["test"] = "list-box-single"
-    single.append(
-        createItem {
-            value = "inbox"
-            textContent = tr("收件箱", "Inbox")
-        },
-        createItem {
-            value = "drafts"
-            textContent = tr("草稿", "Drafts")
-        },
-        createItem {
-            value = "sent"
-            textContent = tr("已发送", "Sent")
-        },
-    )
-    val readout = Readout("selected = -")
-    single.listen(ListBoxEvents.selectedChanged) {
-        readout.set("selected = ", single.selected.toString())
-    }
-    basic.body.append(example(null, row(single, readout.root)))
-    view.body.append(basic.root)
-
-    val multiple =
-        section(
-            tr("多选", "Multiple selection"),
-            tr(
-                "multiple 打开后使用 selectedValues 读取所有选中下标。",
-                "With multiple on, selectedValues returns every selected index.",
-            ),
-        )
-    val multi = createListBox { this.multiple = true }
-    multi.append(
-        createItem { textContent = tr("阅读", "Reading") },
-        createItem { textContent = tr("写作", "Writing") },
-        createItem { textContent = tr("运动", "Exercise") },
-        createItem { textContent = tr("旅行", "Travel") },
-    )
-    val multiReadout = Readout("selectedValues = []")
-    multi.listen(ListBoxEvents.selectedValuesChanged) {
-        multiReadout.set("selectedValues = ", joinValues(multi.selectedValues).ifEmpty { "[]" })
-    }
-    multiple.body.append(example(null, row(multi, multiReadout.root)))
-    view.body.append(multiple.root)
-
-    val horizontal =
-        section(
-            tr("方向与禁用", "Orientation and disabled state"),
-            tr(
-                "orientation 控制排布方向，禁用后整组不可交互。",
-                "orientation sets the layout direction; disabling blocks the whole group.",
-            ),
-        )
-    horizontal.body.append(
-        example(
-            null,
-            row(
-                createListBox { orientation = ListOrientations.horizontal }.apply {
-                    append(
-                        createItem { textContent = tr("一", "One") },
-                        createItem { textContent = tr("二", "Two") },
-                        createItem { textContent = tr("三", "Three") },
-                    )
-                },
-                createListBox().apply {
-                    disabled = true
-                    append(
-                        createItem { textContent = tr("禁用项一", "Disabled item 1") },
-                        createItem { textContent = tr("禁用项二", "Disabled item 2") },
-                    )
-                },
-            ),
-        ),
-    )
-    view.body.append(horizontal.root)
-
-    return view
-}
-
-private fun buildItemPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("独立使用", "Standalone use"),
-            tr(
-                "vaadin-item 通常由 List Box / Select / Context Menu 内部创建；这里单独展示它的属性。",
-                "vaadin-item is usually created inside List Box / Select / Context Menu; this page shows its " +
-                    "properties on its own.",
-            ),
-        )
-    val log = EventLog(4)
-    val items =
-        row(
-            createItem {
-                label = tr("带 label 的条目", "Item with a label")
-                value = "one"
-            }.apply { dataset["test"] = "item-one" },
-            createItem { textContent = tr("默认插槽文本", "Default slot text") },
-            createItem {
-                textContent = tr("已禁用", "Disabled")
-                disabled = true
-            },
-        )
-    basic.body.append(example(null, items))
-    view.body.append(basic.root)
-
-    val selection =
-        section(
-            tr("选中状态", "Selected state"),
-            tr(
-                "selected 只是视觉状态，条目本身不维护选中逻辑。",
-                "selected is purely visual; the item does not maintain selection logic itself.",
-            ),
-        )
-    val selectedItem =
-        createItem {
-            textContent = tr("被选中的条目", "Selected item")
-            selected = true
+    val autosave =
+        createSwitch {
+            label = tr("自动保存", "Autosave")
+            helperText = tr("工作时自动保存改动", "Automatically save changes as you work")
         }
-    val toggleButton =
-        createButton { textContent = tr("切换 selected", "Toggle selected") }.apply {
+    autosave.append(
+        createTooltip { text = tr("上次保存于 5 分钟前", "Last saved 5 minutes ago") }.apply {
+            setAttribute("slot", "tooltip")
+        },
+    )
+    features.body.append(example(null, autosave))
+    view.body.append(features.root)
+
+    val validation =
+        section(
+            tr("校验", "Validation"),
+            tr(
+                "开关同样支持 required：未满足时 validate() 失败并显示 error-message。",
+                "The switch supports required as well: validate() fails while it is off and shows the " +
+                    "error-message.",
+            ),
+        )
+    val twoFactor =
+        createSwitch {
+            label = tr("双因素认证", "Two-factor authentication")
+            this.required = true
+            checked = true
+            errorMessage = tr("公司安全策略要求开启", "Required by your workplace security policy")
+        }
+    val result = Readout(tr("尚未校验", "Not validated yet"))
+    val validateButton =
+        createButton { textContent = tr("校验", "Validate") }.apply {
             clickEvent.addHandler {
-                selectedItem.selected = !selectedItem.selected
-                log.add("selected = ${selectedItem.selected}")
+                result.set(
+                    tr("校验：", "Validation: "),
+                    if (twoFactor.validate()) tr("通过", "passed") else tr("失败", "failed"),
+                )
             }
         }
-    selection.body.append(example(null, column(selectedItem, toggleButton, log.root)))
-    view.body.append(selection.root)
-
-    return view
-}
-
-private fun buildSelectPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
-                "items takes an array of { label, value }; the dropdown renders in an overlay and value " +
-                    "is a string.",
-            ),
-        )
-    val select =
-        createSelect {
-            label = tr("所在城市", "City")
-            placeholder = tr("请选择", "Choose one")
-            value = "helsinki"
-            items = js(CITY_ITEMS_JSON)
-        }
-    select.dataset["test"] = "select-basic"
-    val readout = Readout("value = helsinki")
-    select.listen(SelectEvents.valueChanged) {
-        readout.set("value = ", select.value.ifEmpty { tr("（未选择）", "(none)") })
-    }
-    basic.body.append(example(null, column(select, readout.root)))
-    view.body.append(basic.root)
-
-    val placeholderAndEmpty =
-        section(
-            tr("占位符与可选空值", "Placeholder and empty value"),
-            tr(
-                "placeholder 只在没有选中值时显示；allowCustomValue 由 Combo Box 提供，Select 只接受列表内的值。",
-                "placeholder only shows while nothing is selected; allowCustomValue comes from Combo Box, " +
-                    "while Select only accepts values from its list.",
-            ),
-        )
-    val emptySelect =
-        createSelect {
-            label = tr("团队", "Team")
-            placeholder = tr("尚未选择", "Nothing selected yet")
-            items =
-                jsArray<JsAny>(
-                    """[
-                        {"label": "Engineering", "value": "eng"},
-                        {"label": "Design", "value": "design"},
-                        {"label": "${tr("维护中", "Under maintenance")}", "value": "maintenance", "disabled": true}
-                    ]""",
-                ).unsafeCast<Array<SelectItemData>>()
-        }
-    val emptyReadout = Readout(tr("value = （空）", "value = (empty)"))
-    emptySelect.listen(SelectEvents.valueChanged) {
-        emptyReadout.set(tr("当前选择：", "Current value: "), emptySelect.value.ifEmpty { tr("（空）", "(empty)") })
-    }
-    val clearButton =
-        createButton { textContent = tr("清空", "Clear") }.apply {
-            clickEvent.addHandler { emptySelect.value = "" }
-        }
-    placeholderAndEmpty.body.append(example(null, column(emptySelect, row(clearButton, emptyReadout.root))))
-    view.body.append(placeholderAndEmpty.root)
-
-    val states = section(tr("只读与禁用", "Read-only and disabled"))
-    states.body.append(
-        example(
-            null,
-            row(
-                createSelect {
-                    label = tr("只读", "Read-only")
-                    value = "bravo"
-                    readonly = true
-                    items = js(MEMBER_ITEMS_JSON)
-                },
-                createSelect {
-                    label = tr("禁用", "Disabled")
-                    value = "alpha"
-                    disabled = true
-                    items = js(MEMBER_ITEMS_JSON)
-                },
-            ),
-        ),
-    )
-    view.body.append(states.root)
-
-    return view
-}
-
-private fun buildComboBoxPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "给定 itemLabelPath 与 itemValuePath 后，items 可以是任意对象。",
-                "With itemLabelPath and itemValuePath set, items can be any object.",
-            ),
-        )
-    val combo =
-        createComboBox {
-            label = tr("负责人", "Owner")
-            itemLabelPath = "name"
-            itemValuePath = "id"
-            items =
-                js(
-                    """[
-                        {"id": "ada", "name": "Ada Lovelace"},
-                        {"id": "grace", "name": "Grace Hopper"},
-                        {"id": "margaret", "name": "Margaret Hamilton"},
-                        {"id": "katherine", "name": "Katherine Johnson"}
-                    ]""",
-                )
-            value = "grace"
-            clearButtonVisible = true
-        }
-    combo.dataset["test"] = "combo-box-basic"
-    val readout = Readout("value = grace")
-    val log = EventLog(4)
-    combo.listen(ComboBoxEvents.valueChanged) {
-        readout.set("value = ", combo.value.ifEmpty { tr("（空）", "(empty)") })
-        log.add("value-changed · ${combo.value}")
-    }
-    basic.body.append(example(null, column(combo, readout.root)), example(tr("事件流", "Event stream"), log.root))
-    view.body.append(basic.root)
-
-    val custom =
-        section(
-            tr("自定义值", "Custom values"),
-            tr(
-                "allowCustomValue 允许输入列表之外的值，此时 value 就是用户输入的文本。",
-                "allowCustomValue accepts values outside the list; value then holds the typed text.",
-            ),
-        )
-    val customCombo =
-        createComboBox {
-            label = tr("标签", "Tags")
-            allowCustomValue = true
-            items = js("(['alpha', 'bravo', 'charlie'])")
-            helperText = tr("可以输入任意值后回车", "Type any value and press Enter")
-        }
-    val customReadout = Readout(tr("自定义值：（空）", "Custom value: (empty)"))
-    customCombo.listen(ComboBoxEvents.customValueSet) {
-        customReadout.set(tr("自定义值：", "Custom value: "), customCombo.value)
-    }
-    custom.body.append(example(null, column(customCombo, customReadout.root)))
-    view.body.append(custom.root)
+    validation.body.append(example(null, column(twoFactor, row(validateButton, result.root))))
+    view.body.append(validation.root)
 
     val states =
         section(
-            tr("加载中与禁用", "Loading and disabled"),
+            tr("只读与禁用", "Read-only and disabled"),
             tr(
-                "loading 会显示加载指示；disabled 关闭全部交互。",
-                "loading shows a loading indicator; disabled turns off all interaction.",
+                "readonly 只展示当前状态；disabled 让整行不可交互。",
+                "readonly only displays the current state; disabled makes the whole row inert.",
             ),
         )
-    val loading =
-        createComboBox {
-            label = tr("远程选项（加载中）", "Remote items (loading)")
-            loading = true
-            items = js("([])")
-        }
     states.body.append(
         example(
             null,
-            row(
-                loading,
-                createComboBox {
-                    label = tr("禁用", "Disabled")
-                    disabled = true
-                    value = "bravo"
-                    items = js("(['alpha', 'bravo', 'charlie'])")
-                },
-            ),
-        ),
-    )
-    view.body.append(states.root)
-
-    return view
-}
-
-private fun buildMultiSelectComboBoxPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "选中项以 chip 展示；selectedItems 是选中对象的数组。",
-                "Selections render as chips; selectedItems holds the selected objects.",
-            ),
-        )
-    val multi =
-        createMultiSelectComboBox {
-            label = tr("标签", "Tags")
-            itemLabelPath = "name"
-            itemValuePath = "id"
-            items =
-                js(
-                    """[
-                        {"id": "kotlin", "name": "Kotlin"},
-                        {"id": "java", "name": "Java"},
-                        {"id": "js", "name": "JavaScript"},
-                        {"id": "rust", "name": "Rust"},
-                        {"id": "go", "name": "Go"}
-                    ]""",
-                )
-        }
-    multi.dataset["test"] = "multi-select-combo-box"
-    val readout = Readout(tr("已选 0 项", "0 selected"))
-    multi.listen(MultiSelectComboBoxEvents.selectedItemsChanged) {
-        readout.set(
-            tr("已选 ${multi.selectedItems.size} 项：", "${multi.selectedItems.size} selected: "),
-            selectedNames(multi.selectedItems),
-        )
-    }
-    basic.body.append(example(null, column(multi, readout.root)))
-    view.body.append(basic.root)
-
-    val compactChips =
-        section(
-            tr("紧凑显示", "Compact chips"),
-            tr(
-                "collapseChips 把多余的 chip 折叠成计数；selectedItemsOnTop 让选中项排在列表前面。",
-                "collapseChips folds the extra chips into a counter; selectedItemsOnTop moves the selected " +
-                    "items to the top of the list.",
-            ),
-        )
-    val collapsed =
-        createMultiSelectComboBox {
-            label = tr("折叠 chip", "Collapsed chips")
-            collapseChips = true
-            selectedItemsOnTop = true
-            itemLabelPath = "name"
-            itemValuePath = "id"
-            items =
-                jsArray<JsAny>(
-                    """[
-                        {"id": "a", "name": "${tr("选项 A", "Option A")}"},
-                        {"id": "b", "name": "${tr("选项 B", "Option B")}"},
-                        {"id": "c", "name": "${tr("选项 C", "Option C")}"},
-                        {"id": "d", "name": "${tr("选项 D", "Option D")}"},
-                        {"id": "e", "name": "${tr("选项 E", "Option E")}"}
-                    ]""",
-                )
-        }
-    compactChips.body.append(example(null, collapsed))
-    view.body.append(compactChips.root)
-
-    return view
-}
-
-private fun buildSliderPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "拖动时触发 input，松开后触发 change；value 是 Double。",
-                "Dragging fires input and releasing fires change; value is a Double.",
-            ),
-        )
-    val slider =
-        createSlider {
-            label = tr("音量", "Volume")
-            min = 0.0
-            max = 100.0
-            step = 5.0
-            value = 40.0
-            valueAlwaysVisible = true
-        }
-    slider.dataset["test"] = "slider-basic"
-    val readout = Readout("value = 40")
-    slider.listen(SliderEvents.input) { readout.set(tr("数值 = ", "Value = "), slider.value.toString()) }
-    slider.listen(SliderEvents.change) { readout.set(tr("已提交数值 = ", "Committed value = "), slider.value.toString()) }
-    basic.body.append(example(null, column(slider, readout.root)))
-    view.body.append(basic.root)
-
-    val range =
-        section(
-            tr("区间滑块", "Range slider"),
-            tr(
-                "range-slider 的 value 是两元素数组，两个手柄分别控制下限与上限。",
-                "range-slider takes a two-element value; the handles control the lower and the upper bound.",
-            ),
-        )
-    val rangeSlider =
-        createRangeSlider {
-            label = tr("价格区间", "Price range")
-            min = 0.0
-            max = 1000.0
-            step = 50.0
-            value = js("([200, 700])")
-            minMaxVisible = true
-        }
-    val rangeReadout = Readout("value = 200 - 700")
-    rangeSlider.listen(RangeSliderEvents.valueChanged) {
-        rangeReadout.set(tr("区间 = ", "Range = "), joinValues(rangeSlider.value))
-    }
-    range.body.append(example(null, column(rangeSlider, rangeReadout.root)))
-    view.body.append(range.root)
-
-    val states = section(tr("只读与禁用", "Read-only and disabled"))
-    states.body.append(
-        example(
-            null,
-            row(
-                createSlider {
-                    label = tr("只读", "Read-only")
-                    value = 60.0
+            column(
+                createSwitch {
+                    label = tr("审计日志保留（90 天）", "Audit log retention (90 days)")
+                    helperText = tr("商业版套餐已包含", "Included on the Business plan")
                     readonly = true
+                    checked = true
                 },
-                createSlider {
-                    label = tr("禁用", "Disabled")
-                    value = 60.0
+                createSwitch {
+                    label = tr("每日摘要", "Daily digest")
                     disabled = true
                 },
             ),
@@ -1070,7 +1187,3 @@ private fun buildSliderPage(meta: PageMeta): PageView {
 
     return view
 }
-
-/** Reads the `name` field of the selected item objects for the multi-select read-out. */
-private fun selectedNames(items: Array<kotlin.js.JsAny>): String =
-    items.joinToString(", ") { item -> js("(item) => String(item.name)")(item) as String }
