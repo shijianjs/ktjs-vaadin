@@ -50,16 +50,16 @@
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| checkbox | checkbox | 12 | TODO | |
-| checkbox-group | checkbox | 6 | TODO | |
-| radio-group | radiobutton | 12 | TODO | |
-| switch | switch | 4 | TODO | |
-| select | select | 14 | TODO | |
-| combo-box | combobox | 15 | TODO | |
-| multi-select-combo-box | multi-select-combo-box | 9 | TODO | |
-| list-box | listbox | 6 | TODO | |
-| item | listbox | — | TODO | 文档并入 list-box / select |
-| slider | slider | 10 | TODO | |
+| checkbox | checkbox | 12 | DONE | 12 个示例全部覆盖（含 indeterminate 全选、相邻分组） |
+| checkbox-group | checkbox | 6 | DONE | 组 API、预设值、校验、方向、只读/禁用 |
+| radio-group | radiobutton | 12 | DONE | 含自定义选项、多行条目呈现、checkbox 替代方案 |
+| switch | switch | 4 | DONE | |
+| select | select | 14 | DONE | 分隔线 / 禁用项 / 浮层宽度 / 自定义条目（Flow 专属的空选择项除外） |
+| combo-box | combobox | 15 | DONE | 含自定义筛选、部分匹配、懒加载（本地 dataProvider）、renderer |
+| multi-select-combo-box | multi-select-combo-box | 9 | DONE | 含自动展开、置顶、折叠 chip、i18n |
+| list-box | listbox | 6 | DONE | 分隔线、禁用条目、单/多选、自定义条目呈现 |
+| item | listbox | — | DONE | 文档并入 list-box / select |
+| slider | slider | 10 | DONE | 含区间滑块、区间校验（Flow 的值变更模式改为 input/change 对照） |
 
 ### 日期与时间（`Pickers.kt`）
 
@@ -147,6 +147,7 @@
 | 2026-10-29 | date-picker | `parseDate` 被生成为非空 `Date`，上游是 `Date \| undefined`；`dateEquals` 也不接受 `null` | 两个模块级函数写进 `MODULE_SIGNATURES`（可空参数 / 返回值）；测试改为直接用 `null` 断言 |
 | 2026-10-29 | date-time-picker | `i18n` 继承自 `I18nMixin`（`JsAny`），上游 `.d.ts` 声明为 `DateTimePickerI18n`（含 `dateLabel` / `timeLabel`） | 手写 `DateTimePickerI18n`，生成器 `EXTRA_MEMBERS` 为元素补 `@JsName("i18n") i18nProperty`；demo 与测试改用类型化访问器 |
 | 2026-10-29 | 生成器 | `resolveName` 用未更新的 `name` 做循环条件，遇到「继承成员同名但类型不同」会死循环；重命名分支只在 DOM 改名时写 `@JsName` | 循环改用 `kotlin`；`@JsName` 按最终 Kotlin 名与 JS 名是否一致决定 |
+| 2026-10-29 | 选择控件 | 复核查过一遍：`TooltipMixin.text`、`MultiSelectComboBox.i18n`、`ListBoxEdge` 等成员 manifest 与 `.d.ts` 一致，本轮无新增缺口；`multi-select-combo-box` 的 `i18n` 仍是 `JsAny`（见已知限制） | 未改生成器 |
 
 ### 已知限制（不修）
 
@@ -155,3 +156,5 @@
 - `date-time-picker` 内部的两个 picker 只在 light DOM 里（`slot="date-picker"` / `slot="time-picker"`），上游没有暴露
   属性，demo 用一次 `js()` 读回它们的值。
 - `field-highlighter`、`input-container` 等内部元素没有独立文档页，页面文案已注明。
+- `multi-select-combo-box` 的 `i18n` 仍是 `JsAny`：上游 `MultiSelectComboBoxI18n` 没有结构化 manifest 信息，demo 用 `jsObject` 传对象；
+  后续可按 `DateTimePickerI18n` 的做法手写具名接口。
