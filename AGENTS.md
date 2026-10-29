@@ -360,7 +360,7 @@ update(data) { this.replaceChildren(); this.render(data); }   // 禁止
 ## CI 与依赖更新
 
 - `.github/workflows/ci.yml` 只在**所有 PR** 和手动触发时运行 `./gradlew build`（JDK 21，Ubuntu），
-  **不被 push 到 master 触发**：能进 `master` 的提交已经在 PR 上跑过同一套构建。需要验证 `master`
+  **不被 push 到 `main` 触发**：能进 `main` 的提交已经在 PR 上跑过同一套构建。需要验证 `main`
   现状时用 `gh workflow run ci.yml`。
 - `.github/workflows/dependabot-auto-merge.yml` 在 CI 成功后自动 squash 合并 Dependabot 的 PR。它用
   `workflow_run` 而不是直接由 Dependabot PR 触发，因为后者拿到的 `GITHUB_TOKEN` 只读。

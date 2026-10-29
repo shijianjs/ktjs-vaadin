@@ -1,10 +1,10 @@
 name: CI
 
 on:
-  # Pull requests only: a commit that reached master was already verified by the PR run, so a push
-  # to master would just spend the same build again. Run this manually when needed.
+  # Pull requests only: a commit that reached main was already verified by the PR run, so a push
+  # to main would just spend the same build again. Run this manually when needed.
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
