@@ -262,6 +262,9 @@ internal class Person(
     val displayName: String
         get() = "$firstName $lastName"
 
+    val email: String
+        get() = "${firstName.lowercase()}.${lastName.lowercase()}@example.com"
+
     val pictureUrl: String
         get() = portrait(PORTRAIT_FILLS[id % PORTRAIT_FILLS.size])
 }
@@ -300,6 +303,7 @@ internal fun personItems(list: List<Person>, withDisplayName: Boolean = false): 
                     "\"firstName\": \"${person.firstName}\"",
                     "\"lastName\": \"${person.lastName}\"",
                     "\"profession\": \"${person.profession}\"",
+                    "\"email\": \"${person.email}\"",
                     "\"pictureUrl\": \"${person.pictureUrl}\"",
                 )
             if (withDisplayName) fields += "\"displayName\": \"${person.displayName}\""

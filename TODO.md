@@ -69,18 +69,22 @@
 | time-picker | timepicker | 10 | DONE | 自定义解析器用 `i18n.parseTime` / `formatTime` 复现 |
 | date-time-picker | datetimepicker | 15 | DONE | 校验示例区分语法错误 / 缺失 / 超范围 |
 
-### 浮层与反馈（`Overlays.kt`）
+### 浮层与反馈（`Overlays.kt`、`OverlayPopups.kt`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| dialog | dialog | 7 | TODO | |
-| confirm-dialog | confirmdialog | 4 | TODO | |
-| notification | notification | 15 | TODO | |
-| popover | popover | 8 | TODO | |
-| tooltip | tooltip | 4 | TODO | |
-| context-menu | contextmenu | 11 | TODO | |
-| overlay | — | — | TODO | 内部元素，文档并入 popover/notification |
-| login | login | 11 | TODO | |
+| dialog | dialog | 7 | DONE | 基本 / 表单内容 / 尺寸与关闭行为 / 可拖动 / 自定义头部 / 底部按钮布局 / 无内边距 / 可调整大小 |
+| confirm-dialog | confirmdialog | 4 | DONE | 基本 / 三种结果 / 取消按钮样式 / 仅确认按钮（插槽消息） |
+| notification | notification | 15 | DONE | 位置与时长 / 全部位置 / 主题变体 / 常驻 / 富内容 / 带操作 / 键盘快捷键 / 内容长度 |
+| popover | popover | 8 | DONE | 基本 / 位置 / 箭头 / 模态 / 交互式提示 / 下拉字段（预设日期区间）/ 通知面板 / 用户菜单 / 浮层里的表单 |
+| tooltip | tooltip | 4 | DONE | 插槽 / `for` 关联 / 手动模式 / 延迟与 Markdown / 动态文本 / 位置 |
+| context-menu | contextmenu | 11 | DONE | 右键 / 表格行 / 勾选条目 / className / 自定义条目数据 / 分隔线与层级 / 左键 / 自定义呈现 / 条目提示 / 表格操作 |
+| overlay | — | — | DONE | 内部元素，文档并入 popover/notification；基本 / 无遮罩非模态 / `setBounds` 尺寸 |
+| login | login | 11 | DONE | 表单校验 / 禁用与重新启用 / 国际化 / 登录浮层 / 浮层插槽 / 标题与本地化 / 错误状态 / 富内容背景 |
+
+说明：浮层页面拆成两个文件（`Overlays.kt` 放 dialog / confirm-dialog / overlay / login，
+`OverlayPopups.kt` 放 notification / popover / tooltip / context-menu），条目的 `sourcePath` 分别指向对应文件。
+登录浮层默认全部关闭，由各自的按钮打开（提交成功后自动关闭），避免多个浮层在页面加载时互相遮挡。
 
 ### 数据展示（`Data.kt`）
 
@@ -147,6 +151,7 @@
 | 2026-10-29 | date-picker | `parseDate` 被生成为非空 `Date`，上游是 `Date \| undefined`；`dateEquals` 也不接受 `null` | 两个模块级函数写进 `MODULE_SIGNATURES`（可空参数 / 返回值）；测试改为直接用 `null` 断言 |
 | 2026-10-29 | date-time-picker | `i18n` 继承自 `I18nMixin`（`JsAny`），上游 `.d.ts` 声明为 `DateTimePickerI18n`（含 `dateLabel` / `timeLabel`） | 手写 `DateTimePickerI18n`，生成器 `EXTRA_MEMBERS` 为元素补 `@JsName("i18n") i18nProperty`；demo 与测试改用类型化访问器 |
 | 2026-10-29 | 生成器 | `resolveName` 用未更新的 `name` 做循环条件，遇到「继承成员同名但类型不同」会死循环；重命名分支只在 DOM 改名时写 `@JsName` | 循环改用 `kotlin`；`@JsName` 按最终 Kotlin 名与 JS 名是否一致决定 |
+| 2026-10-29 | login | `LoginMixin.i18n` 在 manifest 里是 `object`（生成成 `JsAny`），上游 `.d.ts` 声明 `interface LoginI18n`；`LoginMixin.action` 上游是 `string \| null`，manifest 只写 `string` | 手写 `vaadin/login/LoginTypes.kt`（`LoginI18n` / `LoginI18nForm` / `LoginI18nErrorMessage` / `LoginI18nHeader`），生成器 `EXTRA_MEMBERS` 给 `LoginForm` / `LoginOverlay` 补 `@JsName("i18n") i18nProperty`，`MEMBER_TYPES` 把 `action` 改成 `String?`；`LoginFormTest` 补类型化 i18n 与 `action = null` 用例；demo 改用 `i18nProperty` |
 | 2026-10-29 | 选择控件 | 复核查过一遍：`TooltipMixin.text`、`MultiSelectComboBox.i18n`、`ListBoxEdge` 等成员 manifest 与 `.d.ts` 一致，本轮无新增缺口；`multi-select-combo-box` 的 `i18n` 仍是 `JsAny`（见已知限制） | 未改生成器 |
 
 ### 已知限制（不修）
@@ -156,5 +161,8 @@
 - `date-time-picker` 内部的两个 picker 只在 light DOM 里（`slot="date-picker"` / `slot="time-picker"`），上游没有暴露
   属性，demo 用一次 `js()` 读回它们的值。
 - `field-highlighter`、`input-container` 等内部元素没有独立文档页，页面文案已注明。
+- `context-menu` 的 `ContextMenuItemData<TItemData>` 是「封闭字段 + 交叉泛型」：Kotlin 表达不了 `& TItemData`，
+  wrapper 只建模声明过的字段。需要附加数据时声明一个继承 `ContextMenuItemData` 的 `external interface`（demo 的
+  `CopyMenuItem` 就是这种写法），再 `unsafeCast` 成 `Array<ContextMenuItemData>` 赋给 `items`。
 - `multi-select-combo-box` 的 `i18n` 仍是 `JsAny`：上游 `MultiSelectComboBoxI18n` 没有结构化 manifest 信息，demo 用 `jsObject` 传对象；
   后续可按 `DateTimePickerI18n` 的做法手写具名接口。

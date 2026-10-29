@@ -4,6 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
+import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
@@ -12,36 +13,45 @@ import demo.ui.column
 import demo.ui.div
 import demo.ui.example
 import demo.ui.heading
+import demo.ui.jsArray
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
+import demo.ui.setHidden
+import demo.ui.withClass
 import demo.ui.withTheme
-import demo.tr
 import js.objects.unsafeJso
+import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
 import vaadin.button.createButton
 import vaadin.confirmdialog.ConfirmDialogEvents
 import vaadin.confirmdialog.createConfirmDialog
-import vaadin.contextmenu.ContextMenuEvents
-import vaadin.contextmenu.ContextMenuItemData
-import vaadin.contextmenu.createContextMenu
+import vaadin.dialog.DialogEvents
 import vaadin.dialog.createDialog
+import vaadin.emailfield.createEmailField
+import vaadin.formlayout.createFormLayout
+import vaadin.grid.GridElement
+import vaadin.grid.createGrid
+import vaadin.grid.createGridColumn
+import vaadin.grid.createGridSelectionColumn
+import vaadin.icon.createIcon
+import vaadin.integerfield.createIntegerField
 import vaadin.login.LoginFormEvents
+import vaadin.login.LoginI18n
+import vaadin.login.LoginI18nErrorMessage
+import vaadin.login.LoginI18nForm
+import vaadin.login.LoginI18nHeader
 import vaadin.login.createLoginForm
 import vaadin.login.createLoginOverlay
-import vaadin.notification.Notification
-import vaadin.notification.NotificationShowOptions
-import vaadin.notification.createNotification
 import vaadin.overlay.createOverlay
-import vaadin.popover.PopoverEvents
-import vaadin.popover.createPopover
-import vaadin.switch.createSwitch
 import vaadin.switch.SwitchEvents
-import vaadin.tooltip.createTooltip
+import vaadin.switch.createSwitch
+import vaadin.textarea.createTextArea
+import vaadin.textfield.createTextField
 import web.dom.ElementId
 import web.dom.clickEvent
 import web.dom.document
@@ -84,73 +94,6 @@ val overlayEntries: List<CatalogEntry> =
             builder = ::buildConfirmDialogPage,
         ),
         CatalogEntry(
-            id = "notification",
-            group = Groups.OVERLAYS,
-            meta =
-                PageMeta(
-                    title = bi("Notification", "Notification"),
-                    summary =
-                        bi(
-                            "轻量提示：位置、时长、主题变体，以及需要手动关闭的常驻通知。",
-                            "Short messages: position, duration, theme variants and persistent notices " +
-                                "that are closed by hand.",
-                        ),
-                    docsUrl = "$DOCS_BASE/notification",
-                    sourcePath = "pages/Overlays.kt",
-                ),
-            builder = ::buildNotificationPage,
-        ),
-        CatalogEntry(
-            id = "popover",
-            group = Groups.OVERLAYS,
-            meta =
-                PageMeta(
-                    title = bi("Popover", "Popover"),
-                    summary =
-                        bi(
-                            "锚定到某个元素的浮层，支持点击 / 悬停触发、位置与模态模式。",
-                            "An overlay anchored to an element, with click / hover triggers, positions and " +
-                                "a modal mode.",
-                        ),
-                    docsUrl = "$DOCS_BASE/popover",
-                    sourcePath = "pages/Overlays.kt",
-                ),
-            builder = ::buildPopoverPage,
-        ),
-        CatalogEntry(
-            id = "tooltip",
-            group = Groups.OVERLAYS,
-            meta =
-                PageMeta(
-                    title = bi("Tooltip", "Tooltip"),
-                    summary =
-                        bi(
-                            "悬停提示：可以放进组件的 tooltip 插槽，也可以用 for 关联任意元素。",
-                            "Hover hint: goes into a component's tooltip slot, or is linked to any element " +
-                                "with for.",
-                        ),
-                    docsUrl = "$DOCS_BASE/tooltip",
-                    sourcePath = "pages/Overlays.kt",
-                ),
-            builder = ::buildTooltipPage,
-        ),
-        CatalogEntry(
-            id = "context-menu",
-            group = Groups.OVERLAYS,
-            meta =
-                PageMeta(
-                    title = bi("Context Menu", "Context Menu"),
-                    summary =
-                        bi(
-                            "右键 / 点击菜单：items 是树形结构，选择后触发 item-selected。",
-                            "Right-click or click menu: items form a tree and choosing one fires item-selected.",
-                        ),
-                    docsUrl = "$DOCS_BASE/context-menu",
-                    sourcePath = "pages/Overlays.kt",
-                ),
-            builder = ::buildContextMenuPage,
-        ),
-        CatalogEntry(
             id = "overlay",
             group = Groups.OVERLAYS,
             meta =
@@ -189,7 +132,101 @@ val overlayEntries: List<CatalogEntry> =
                 ),
             builder = ::buildLoginPage,
         ),
+        CatalogEntry(
+            id = "notification",
+            group = Groups.OVERLAYS,
+            meta =
+                PageMeta(
+                    title = bi("Notification", "Notification"),
+                    summary =
+                        bi(
+                            "轻量提示：位置、时长、主题变体，以及需要手动关闭的常驻通知。",
+                            "Short messages: position, duration, theme variants and persistent notices " +
+                                "that are closed by hand.",
+                        ),
+                    docsUrl = "$DOCS_BASE/notification",
+                    sourcePath = "pages/OverlayPopups.kt",
+                ),
+            builder = ::buildNotificationPage,
+        ),
+        CatalogEntry(
+            id = "popover",
+            group = Groups.OVERLAYS,
+            meta =
+                PageMeta(
+                    title = bi("Popover", "Popover"),
+                    summary =
+                        bi(
+                            "锚定到某个元素的浮层，支持点击 / 悬停触发、位置与模态模式。",
+                            "An overlay anchored to an element, with click / hover triggers, positions and " +
+                                "a modal mode.",
+                        ),
+                    docsUrl = "$DOCS_BASE/popover",
+                    sourcePath = "pages/OverlayPopups.kt",
+                ),
+            builder = ::buildPopoverPage,
+        ),
+        CatalogEntry(
+            id = "tooltip",
+            group = Groups.OVERLAYS,
+            meta =
+                PageMeta(
+                    title = bi("Tooltip", "Tooltip"),
+                    summary =
+                        bi(
+                            "悬停提示：可以放进组件的 tooltip 插槽，也可以用 for 关联任意元素。",
+                            "Hover hint: goes into a component's tooltip slot, or is linked to any element " +
+                                "with for.",
+                        ),
+                    docsUrl = "$DOCS_BASE/tooltip",
+                    sourcePath = "pages/OverlayPopups.kt",
+                ),
+            builder = ::buildTooltipPage,
+        ),
+        CatalogEntry(
+            id = "context-menu",
+            group = Groups.OVERLAYS,
+            meta =
+                PageMeta(
+                    title = bi("Context Menu", "Context Menu"),
+                    summary =
+                        bi(
+                            "右键 / 点击菜单：items 是树形结构，选择后触发 item-selected。",
+                            "Right-click or click menu: items form a tree and choosing one fires item-selected.",
+                        ),
+                    docsUrl = "$DOCS_BASE/context-menu",
+                    sourcePath = "pages/OverlayPopups.kt",
+                ),
+            builder = ::buildContextMenuPage,
+        ),
     )
+
+/** Grid of people with the columns the overlay examples filter and right-click on. */
+internal fun personGrid(list: List<Person> = people(5), withSelection: Boolean = false): GridElement {
+    val table = createGrid()
+    table.items = personItems(list, withDisplayName = true)
+    table.allRowsVisible = true
+    if (withSelection) table.append(createGridSelectionColumn())
+    table.append(
+        createGridColumn {
+            header = tr("名", "First name")
+            path = "firstName"
+        },
+        createGridColumn {
+            header = tr("姓", "Last name")
+            path = "lastName"
+        },
+        createGridColumn {
+            header = tr("邮箱", "Email")
+            path = "email"
+        },
+        createGridColumn {
+            header = tr("职务", "Profession")
+            path = "profession"
+        },
+    )
+    return table
+}
 
 private fun buildDialogPage(meta: PageMeta): PageView {
     val view = page(meta)
@@ -228,10 +265,10 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     // `opened` is initialised to `false` when the dialog upgrades, which also fires
     // `opened-changed`; the log only starts once the example is actually used.
     var openedByUser = false
-    dialog.listen(vaadin.dialog.DialogEvents.openedChanged) {
+    dialog.listen(DialogEvents.openedChanged) {
         if (openedByUser) log.add("opened-changed · ${dialog.opened}")
     }
-    dialog.listen(vaadin.dialog.DialogEvents.closed) { log.add("closed") }
+    dialog.listen(DialogEvents.closed) { log.add("closed") }
 
     val openButton =
         createButton { textContent = tr("打开对话框", "Open dialog") }.apply {
@@ -243,6 +280,44 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     // The dialog element itself has to be in the document; it renders its content into an overlay.
     basic.body.append(example(null, column(openButton, dialog, log.root)))
     view.body.append(basic.root)
+
+    val formSection =
+        section(
+            tr("表单内容", "Form content"),
+            tr(
+                "表单放进 renderer 里，取消与确认按钮放进 footerRenderer。",
+                "The form goes into the renderer and the cancel / confirm buttons into footerRenderer.",
+            ),
+        )
+    val formDialog = createDialog { headerTitle = tr("新员工", "New employee") }
+    val employeeForm =
+        createFormLayout {
+            autoResponsive = true
+            columnWidth = "18rem"
+            expandFields = true
+        }
+    employeeForm.append(
+        createTextField { label = tr("名", "First name") },
+        createTextField { label = tr("姓", "Last name") },
+    )
+    val cancelButton = createButton { textContent = tr("取消", "Cancel") }
+    cancelButton.clickEvent.addHandler { formDialog.opened = false }
+    val addButton = createButton { textContent = tr("添加", "Add") }.withTheme("primary")
+    addButton.clickEvent.addHandler { formDialog.opened = false }
+    formDialog.renderer = { root, _ -> root.append(employeeForm) }
+    formDialog.footerRenderer = { root, _ -> root.append(cancelButton, addButton) }
+    formSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开表单对话框", "Open form dialog") }.apply {
+                    clickEvent.addHandler { formDialog.opened = true }
+                },
+                formDialog,
+            ),
+        ),
+    )
+    view.body.append(formSection.root)
 
     val options =
         section(
@@ -264,15 +339,15 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     configured.renderer = { root, _ -> root.append(configuredContent) }
     configured.footerRenderer = { root, _ -> root.append(configuredClose) }
 
-    val modeless = createDialog()
-    modeless.modeless = true
-    modeless.headerTitle = tr("非模态对话框", "Modeless dialog")
+    val modelessDialog = createDialog()
+    modelessDialog.modeless = true
+    modelessDialog.headerTitle = tr("非模态对话框", "Modeless dialog")
     val modelessContent =
         paragraph(tr("非模态对话框不会阻塞页面其他部分。", "A modeless dialog does not block the rest of the page."))
     val modelessClose = createButton { textContent = tr("关闭", "Close") }
-    modelessClose.clickEvent.addHandler { modeless.opened = false }
-    modeless.renderer = { root, _ -> root.append(modelessContent) }
-    modeless.footerRenderer = { root, _ -> root.append(modelessClose) }
+    modelessClose.clickEvent.addHandler { modelessDialog.opened = false }
+    modelessDialog.renderer = { root, _ -> root.append(modelessContent) }
+    modelessDialog.footerRenderer = { root, _ -> root.append(modelessClose) }
 
     options.body.append(
         example(
@@ -285,16 +360,197 @@ private fun buildDialogPage(meta: PageMeta): PageView {
                         },
                     createButton { textContent = tr("打开（非模态）", "Open (modeless)") }
                         .withTheme("tertiary").apply {
-                            clickEvent.addHandler { modeless.opened = true }
+                            clickEvent.addHandler { modelessDialog.opened = true }
                         },
                 ),
                 // Dialogs only render their overlay while they are part of the document.
                 configured,
-                modeless,
+                modelessDialog,
             ),
         ),
     )
     view.body.append(options.root)
+
+    val draggableSection =
+        section(
+            tr("可拖动", "Draggable"),
+            tr(
+                "draggable 让用户拖动浮层；非模态时对话框不会抢走焦点。",
+                "draggable lets the user move the overlay; a modeless dialog does not take the focus.",
+            ),
+        )
+    val noteDialog = createDialog {
+        headerTitle = tr("添加笔记", "Add note")
+        modeless = true
+    }
+    noteDialog.draggable = true
+    val noteForm =
+        createFormLayout {
+            autoResponsive = true
+            columnWidth = "18rem"
+            expandFields = true
+        }
+    noteForm.append(
+        createTextField { label = tr("标题", "Title") },
+        createTextArea { label = tr("描述", "Description") },
+    )
+    val noteCancel = createButton { textContent = tr("取消", "Cancel") }
+    noteCancel.clickEvent.addHandler { noteDialog.opened = false }
+    val noteAdd = createButton { textContent = tr("添加笔记", "Add note") }.withTheme("primary")
+    noteAdd.clickEvent.addHandler { noteDialog.opened = false }
+    noteDialog.renderer = { root, _ -> root.append(noteForm) }
+    noteDialog.footerRenderer = { root, _ -> root.append(noteCancel, noteAdd) }
+    draggableSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开可拖动对话框", "Open draggable dialog") }.apply {
+                    clickEvent.addHandler { noteDialog.opened = true }
+                },
+                noteDialog,
+            ),
+        ),
+    )
+    view.body.append(draggableSection.root)
+
+    val headerSection =
+        section(
+            tr("自定义头部", "Custom header"),
+            tr(
+                "headerRenderer 放在标题右侧，适合放关闭按钮等附加操作。",
+                "headerRenderer fills the area next to the title, which suits extra actions such as a close button.",
+            ),
+        )
+    val user = people(1).first()
+    val userDialog = createDialog { headerTitle = tr("用户详情", "User details") }
+    val headerClose = createButton { textContent = "" }.withTheme("tertiary icon").apply {
+        append(createIcon { icon = "lumo:cross" })
+        clickEvent.addHandler { userDialog.opened = false }
+    }
+    userDialog.headerRenderer = { root, _ -> root.append(headerClose) }
+    val detailForm =
+        createFormLayout {
+            autoResponsive = true
+            columnWidth = "18rem"
+            expandFields = true
+        }
+    detailForm.append(
+        createTextField {
+            label = tr("姓名", "Name")
+            value = user.displayName
+            readonly = true
+        },
+        createEmailField {
+            label = tr("邮箱", "Email")
+            value = user.email
+            readonly = true
+        },
+        createTextField {
+            label = tr("地址", "Address")
+            value = tr("万荣路 700 号，上海，中国", "700 Wanrong Road, Shanghai, China")
+            readonly = true
+        },
+    )
+    userDialog.renderer = { root, _ -> root.append(detailForm) }
+    headerSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开用户详情", "Open user details") }.apply {
+                    clickEvent.addHandler { userDialog.opened = true }
+                },
+                userDialog,
+            ),
+        ),
+    )
+    view.body.append(headerSection.root)
+
+    val footerSection =
+        section(
+            tr("底部按钮布局", "Footer layout"),
+            tr(
+                "footerRenderer 里的按钮按添加顺序排列，用 marginInlineEnd: auto 把危险操作推到左边。",
+                "Buttons in footerRenderer follow insertion order; marginInlineEnd: auto pushes the destructive " +
+                    "action to the leading edge.",
+            ),
+        )
+    val deleteDialog = createDialog { headerTitle = tr("删除用户「${user.displayName}」？", "Delete user \"${user.displayName}\"?") }
+    val deleteText = paragraph(tr("确定要永久删除这个用户吗？", "Are you sure you want to delete this user permanently?"))
+    val deleteButton = createButton { textContent = tr("删除", "Delete") }.withTheme("primary", "error")
+    deleteButton.style.setProperty("margin-inline-end", "auto")
+    deleteButton.clickEvent.addHandler { deleteDialog.opened = false }
+    val keepButton = createButton { textContent = tr("取消", "Cancel") }.withTheme("tertiary")
+    keepButton.clickEvent.addHandler { deleteDialog.opened = false }
+    deleteDialog.renderer = { root, _ -> root.append(deleteText) }
+    deleteDialog.footerRenderer = { root, _ -> root.append(deleteButton, keepButton) }
+    footerSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("删除用户", "Delete user") }.withTheme("error").apply {
+                    clickEvent.addHandler { deleteDialog.opened = true }
+                },
+                deleteDialog,
+            ),
+        ),
+    )
+    view.body.append(footerSection.root)
+
+    val noPaddingSection =
+        section(
+            tr("无内边距", "No padding"),
+            tr(
+                "theme=\"no-padding\" 去掉内容区的内边距，适合放表格这类自带留白的组件。",
+                "theme=\"no-padding\" removes the content padding, which suits components such as a grid.",
+            ),
+        )
+    val filterDialog = createDialog { headerTitle = tr("按用户筛选报表：", "Filter reports by users:") }
+    filterDialog.withTheme("no-padding")
+    val filterGrid = personGrid(withSelection = true)
+    filterDialog.renderer = { root, _ -> root.append(filterGrid) }
+    val filterButton = createButton { textContent = tr("筛选", "Filter") }.withTheme("primary")
+    filterButton.clickEvent.addHandler { filterDialog.opened = false }
+    filterDialog.footerRenderer = { root, _ -> root.append(filterButton) }
+    noPaddingSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开筛选对话框", "Open filter dialog") }.apply {
+                    clickEvent.addHandler { filterDialog.opened = true }
+                },
+                filterDialog,
+            ),
+        ),
+    )
+    view.body.append(noPaddingSection.root)
+
+    val resizableSection =
+        section(
+            tr("可调整大小", "Resizable"),
+            tr(
+                "resizable 允许拖动边角改变尺寸；最小值通过 ::part(overlay) 上的 CSS 指定。",
+                "resizable lets the user drag the edges; the minimum size comes from CSS on ::part(overlay).",
+            ),
+        )
+    val employeeDialog = createDialog { headerTitle = tr("员工列表", "Employee list") }
+    employeeDialog.resizable = true
+    employeeDialog.draggable = true
+    employeeDialog.withClass("resizable-dialog")
+    employeeDialog.width = "40rem"
+    val employeeGrid = personGrid(people(8))
+    employeeDialog.renderer = { root, _ -> root.append(employeeGrid) }
+    resizableSection.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开可调整对话框", "Open resizable dialog") }.apply {
+                    clickEvent.addHandler { employeeDialog.opened = true }
+                },
+                employeeDialog,
+            ),
+        ),
+    )
+    view.body.append(resizableSection.root)
 
     return view
 }
@@ -311,21 +567,32 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
             ),
         )
     val log = EventLog(6)
+    val status = Readout(tr("状态：", "Status: "))
     val confirm = createConfirmDialog()
     confirm.dataset["test"] = "confirm-dialog-basic"
     confirm.header = tr("删除这条记录？", "Delete this record?")
     confirm.message = tr("删除后无法恢复。", "This cannot be undone.")
     confirm.confirmText = tr("删除", "Delete")
     confirm.cancelText = tr("保留", "Keep")
-    confirm.listen(ConfirmDialogEvents.confirm) { log.add("confirm") }
-    confirm.listen(ConfirmDialogEvents.cancel) { log.add("cancel") }
+    confirm.cancelButtonVisible = true
+    confirm.listen(ConfirmDialogEvents.confirm) {
+        log.add("confirm")
+        status.set(tr("状态：", "Status: "), tr("已删除", "Deleted"))
+    }
+    confirm.listen(ConfirmDialogEvents.cancel) {
+        log.add("cancel")
+        status.set(tr("状态：", "Status: "), tr("已取消", "Canceled"))
+    }
     confirm.listen(ConfirmDialogEvents.closed) { log.add("closed") }
 
     val openButton =
         createButton { textContent = tr("删除记录", "Delete record") }.withTheme("error").apply {
-            clickEvent.addHandler { confirm.opened = true }
+            clickEvent.addHandler {
+                confirm.opened = true
+                status.set(tr("状态：", "Status: "))
+            }
         }
-    basic.body.append(example(null, column(openButton, confirm, log.root)))
+    basic.body.append(example(null, column(row(openButton, status.root), confirm, log.root)))
     view.body.append(basic.root)
 
     val threeWay =
@@ -344,6 +611,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
     threeWayDialog.confirmText = tr("保存", "Save")
     threeWayDialog.rejectText = tr("放弃", "Discard")
     threeWayDialog.cancelText = tr("返回", "Back")
+    threeWayDialog.cancelButtonVisible = true
     threeWayDialog.rejectButtonVisible = true
     threeWayDialog.rejectTheme = "error tertiary"
     threeWayDialog.listen(ConfirmDialogEvents.confirm) { threeLog.add(tr("confirm → 保存", "confirm → Save")) }
@@ -365,335 +633,84 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
     )
     view.body.append(threeWay.root)
 
-    return view
-}
-
-private fun buildNotificationPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val positions =
+    val cancelSection =
         section(
-            tr("位置与时长", "Position and duration"),
+            tr("取消按钮", "Cancel button"),
             tr(
-                "Notification.show 是一次性提示；options 可以指定 position、duration 与 theme。",
-                "Notification.show shows a one-off message; options can set position, duration and theme.",
+                "cancelButtonVisible 显示取消按钮，confirmTheme 让确认按钮表达危险操作。",
+                "cancelButtonVisible shows the cancel button; confirmTheme marks the confirm action as destructive.",
             ),
         )
-    positions.body.append(
-        example(
-            null,
-            row(
-                createButton { textContent = tr("右上角", "Top end") }.withTheme("tertiary").apply {
-                    clickEvent.addHandler {
-                        Notification.show(
-                            tr("右上角的提示", "Message at the top end"),
-                            unsafeJso<NotificationShowOptions> {
-                                position = "top-end"
-                                duration = 3000.0
-                            },
-                        )
-                    }
-                },
-                createButton { textContent = tr("顶部居中", "Top center") }.withTheme("tertiary").apply {
-                    clickEvent.addHandler {
-                        Notification.show(
-                            tr("顶部居中的提示", "Message at the top center"),
-                            unsafeJso<NotificationShowOptions> {
-                                position = "top-center"
-                                duration = 3000.0
-                            },
-                        )
-                    }
-                },
-                createButton { textContent = tr("底部居中（默认）", "Bottom center (default)") }
-                    .withTheme("tertiary").apply {
-                        clickEvent.addHandler {
-                            Notification.show(tr("底部居中的提示", "Message at the bottom center"))
-                        }
-                    },
-            ),
-        ),
-    )
-    view.body.append(positions.root)
-
-    val themes =
-        section(
-            tr("主题变体", "Theme variants"),
-            tr("theme 会传播到内部的 notification-card。", "theme propagates to the inner notification-card."),
-        )
-    themes.body.append(
-        example(
-            null,
-            row(
-                createButton { textContent = "success" }.withTheme("success").apply {
-                    clickEvent.addHandler {
-                        Notification.show(
-                            tr("保存成功", "Saved successfully"),
-                            unsafeJso<NotificationShowOptions> {
-                                theme = "success"
-                                position = "bottom-end"
-                            },
-                        )
-                    }
-                },
-                createButton { textContent = "error" }.withTheme("error").apply {
-                    clickEvent.addHandler {
-                        Notification.show(
-                            tr("保存失败", "Save failed"),
-                            unsafeJso<NotificationShowOptions> {
-                                theme = "error"
-                                position = "bottom-end"
-                            },
-                        )
-                    }
-                },
-                createButton { textContent = "contrast" }.withTheme("contrast").apply {
-                    clickEvent.addHandler {
-                        Notification.show(
-                            tr("对比色提示", "Contrast message"),
-                            unsafeJso<NotificationShowOptions> {
-                                theme = "contrast"
-                                position = "bottom-end"
-                            },
-                        )
-                    }
-                },
-            ),
-        ),
-    )
-    view.body.append(themes.root)
-
-    val persistent =
-        section(
-            tr("常驻通知", "Persistent notification"),
-            tr(
-                "duration 设为 0 时不自动关闭，需要在 renderer 里放一个关闭按钮。",
-                "With duration set to 0 the notification stays open; put a close button in the renderer.",
-            ),
-        )
-    val persistentNote = createNotification()
-    persistentNote.duration = 0.0
-    persistentNote.position = "middle"
-    val noteContent =
-        row(
-            paragraph(tr("这条通知会一直显示，直到点击关闭。", "This notification stays visible until it is closed.")),
-            createButton { textContent = tr("关闭", "Close") }.withTheme("tertiary small").apply {
-                clickEvent.addHandler { persistentNote.opened = false }
-            },
-        )
-    persistentNote.renderer = { root, _ -> root.append(noteContent) }
-    document.body.appendChild(persistentNote)
-
-    persistent.body.append(
-        example(
-            null,
-            row(
-                createButton { textContent = tr("显示常驻通知", "Show persistent notification") }.apply {
-                    clickEvent.addHandler { persistentNote.opened = true }
-                },
-                createButton { textContent = tr("关闭", "Close") }.withTheme("tertiary").apply {
-                    clickEvent.addHandler { persistentNote.opened = false }
-                },
-            ),
-        ),
-    )
-    view.body.append(persistent.root)
-
-    return view
-}
-
-private fun buildPopoverPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "popover 通过 for 指向触发元素的 id；默认点击触发、点击外部关闭。",
-                "popover points at the trigger's id through for; it opens on click and closes on an outside click.",
-            ),
-        )
-    val log = EventLog(4)
-    val trigger = createButton { textContent = tr("点击查看", "Click to open") }.withTheme("primary")
-    trigger.id = ElementId("popover-trigger")
-    trigger.dataset["test"] = "popover-trigger"
-
-    val popover = createPopover()
-    popover.`for` = "popover-trigger"
-    popover.append(
-        column(
-            heading(3, tr("浮层内容", "Overlay content")),
-            paragraph(tr("任意 DOM 都可以放进 popover 的默认插槽。", "Any DOM goes into the popover's default slot.")),
-        ),
-    )
-    popover.listen(PopoverEvents.openedChanged) { log.add("opened-changed · ${popover.opened}") }
-
-    basic.body.append(example(null, column(row(trigger, popover), log.root)))
-    view.body.append(basic.root)
-
-    val positions =
-        section(
-            tr("位置", "Position"),
-            tr(
-                "position 接受 top / bottom / start / end 等值，改变浮层相对触发元素的位置。",
-                "position takes values such as top / bottom / start / end and moves the overlay around the trigger.",
-            ),
-        )
-    val positionedButtons = mutableListOf<HTMLElement>()
-    listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
-        val id = "popover-position-$index"
-        val button = createButton { textContent = position }.withTheme("tertiary")
-        button.id = ElementId(id)
-        val positioned = createPopover()
-        positioned.`for` = id
-        positioned.position = position
-        positioned.append(paragraph("position = $position"))
-        positionedButtons += row(button, positioned)
+    val deleteStatus = Readout(tr("状态：", "Status: "))
+    val deleteDialog = createConfirmDialog()
+    deleteDialog.header = tr("删除「Q4 报告」？", "Delete \"Report Q4\"?")
+    deleteDialog.message = tr("确定要永久删除这一项吗？", "Are you sure you want to permanently delete this item?")
+    deleteDialog.confirmText = tr("删除", "Delete")
+    deleteDialog.confirmTheme = "error primary"
+    deleteDialog.cancelButtonVisible = true
+    deleteDialog.listen(ConfirmDialogEvents.confirm) {
+        deleteStatus.set(tr("状态：", "Status: "), tr("已删除", "Deleted"))
     }
-    positions.body.append(example(null, row(*positionedButtons.toTypedArray())))
-    view.body.append(positions.root)
-
-    val modal =
-        section(
-            tr("模态与背景", "Modal and backdrop"),
-            tr(
-                "modal 会阻止页面其他交互，withBackdrop 打开遮罩。",
-                "modal blocks the rest of the page and withBackdrop shows the backdrop.",
+    deleteDialog.listen(ConfirmDialogEvents.cancel) {
+        deleteStatus.set(tr("状态：", "Status: "), tr("已取消", "Canceled"))
+    }
+    cancelSection.body.append(
+        example(
+            null,
+            column(
+                row(
+                    createButton { textContent = tr("删除报告", "Delete report") }.withTheme("error").apply {
+                        clickEvent.addHandler { deleteDialog.opened = true }
+                    },
+                    deleteStatus.root,
+                ),
+                deleteDialog,
             ),
-        )
-    val modalTrigger = createButton { textContent = tr("打开模态浮层", "Open modal popover") }.withTheme("contrast")
-    modalTrigger.id = ElementId("popover-modal-trigger")
-    val modalPopover = createPopover()
-    modalPopover.`for` = "popover-modal-trigger"
-    modalPopover.modal = true
-    modalPopover.withBackdrop = true
-    val modalClose = createButton { textContent = tr("关闭", "Close") }
-    modalClose.clickEvent.addHandler { modalPopover.opened = false }
-    modalPopover.append(column(paragraph(tr("这是模态浮层。", "This is a modal popover.")), modalClose))
-    modal.body.append(example(null, row(modalTrigger, modalPopover)))
-    view.body.append(modal.root)
-
-    return view
-}
-
-private fun buildTooltipPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val slotted =
-        section(
-            tr("放进插槽", "Inside a slot"),
-            tr(
-                "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
-                "Add the tooltip as a child with slot=\"tooltip\"; the component shows it on hover / focus.",
-            ),
-        )
-    val buttonWithTooltip = createButton { textContent = tr("悬停我", "Hover me") }
-    buttonWithTooltip.append(
-        createTooltip { text = tr("这是按钮上的提示", "Hint on the button") }.apply { slot = "tooltip" },
+        ),
     )
-    val fieldWithTooltip =
-        vaadin.textfield.createTextField {
-            label = tr("字段的提示", "Field hint")
-            placeholder = tr("聚焦后显示", "Shown on focus")
-        }
-    fieldWithTooltip.append(
-        createTooltip { text = tr("字段级的提示文本", "Field-level hint text") }.apply { slot = "tooltip" },
+    view.body.append(cancelSection.root)
+
+    val confirmOnlySection =
+        section(
+            tr("仅确认按钮", "Confirm only"),
+            tr(
+                "只保留一个确认按钮时，它用于告知结果；消息支持任意 DOM，包括粗体与链接。",
+                "With only a confirm button left it acknowledges a result; the message takes any DOM, " +
+                    "including bold text and links.",
+            ),
+        )
+    val exportStatus = Readout(tr("状态：", "Status: "))
+    val exportDialog = createConfirmDialog()
+    exportDialog.header = tr("导出失败", "Export failed")
+    exportDialog.confirmText = tr("好", "OK")
+    exportDialog.cancelButtonVisible = false
+    exportDialog.listen(ConfirmDialogEvents.confirm) {
+        exportStatus.set(tr("状态：", "Status: "), tr("已确认", "Acknowledged"))
+    }
+    val exportMessage =
+        paragraph(
+            tr(
+                "导出「Q4 报告」时发生错误，请重试。若问题仍然存在，请联系 support@company.com。",
+                "An error occurred while exporting Report Q4. Please try again. If the problem persists, " +
+                    "contact support@company.com.",
+            ),
+        )
+    exportDialog.append(exportMessage)
+    confirmOnlySection.body.append(
+        example(
+            null,
+            column(
+                row(
+                    createButton { textContent = tr("导出报告", "Export report") }.withTheme("tertiary").apply {
+                        clickEvent.addHandler { exportDialog.opened = true }
+                    },
+                    exportStatus.root,
+                ),
+                exportDialog,
+            ),
+        ),
     )
-    slotted.body.append(example(null, row(buttonWithTooltip, fieldWithTooltip)))
-    view.body.append(slotted.root)
-
-    val linked =
-        section(
-            tr("用 for 关联", "Linked with for"),
-            tr(
-                "不在组件内部时，用 for 指向目标元素的 id。",
-                "Outside a component, point for at the id of the target element.",
-            ),
-        )
-    val target = div("example").apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
-    target.id = ElementId("tooltip-target")
-    target.style.setProperty("padding", "var(--lumo-space-m)")
-    val tooltip = createTooltip { text = tr("关联到任意元素的提示", "Hint linked to any element") }
-    tooltip.`for` = "tooltip-target"
-    linked.body.append(example(null, column(target), tooltip))
-    view.body.append(linked.root)
-
-    val delays =
-        section(
-            tr("延迟与 Markdown", "Delays and Markdown"),
-            tr(
-                "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
-                "hoverDelay / focusDelay / hideDelay are in milliseconds; markdown parses the hint as Markdown.",
-            ),
-        )
-    val mdTarget = createButton { textContent = tr("Markdown 提示", "Markdown hint") }
-    mdTarget.id = ElementId("tooltip-markdown")
-    val mdTooltip =
-        createTooltip {
-            text = tr("**粗体** 与 *斜体*，以及 `代码`", "**Bold** and *italic*, plus `code`")
-            markdown = true
-            hoverDelay = 0.0
-        }
-    mdTooltip.`for` = "tooltip-markdown"
-    delays.body.append(example(null, row(mdTarget, mdTooltip)))
-    view.body.append(delays.root)
-
-    return view
-}
-
-private fun buildContextMenuPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val items: Array<ContextMenuItemData> =
-        jsObject(
-            """
-            [
-              {"text": "${tr("剪切", "Cut")}"},
-              {"text": "${tr("复制", "Copy")}"},
-              {"text": "${tr("粘贴", "Paste")}", "disabled": true},
-              {"text": "${tr("更多", "More")}", "children": [
-                {"text": "${tr("导出为 CSV", "Export as CSV")}"},
-                {"text": "${tr("导出为 JSON", "Export as JSON")}"}
-              ]}
-            ]
-            """.trimIndent(),
-        ).unsafeCast<Array<ContextMenuItemData>>()
-
-    val basic =
-        section(
-            tr("右键打开", "Open on right-click"),
-            tr(
-                "openOn 默认是 contextmenu；listenOn 指向接收事件的元素。",
-                "openOn defaults to contextmenu; listenOn points at the element that receives the event.",
-            ),
-        )
-    val log = EventLog(5)
-    val surface = div("example").apply { textContent = tr("在这个区域点击右键", "Right-click in this area") }
-    surface.dataset["test"] = "context-menu-surface"
-    val menu = createContextMenu()
-    menu.openOn = "contextmenu"
-    menu.listenOn = surface
-    menu.items = items
-    menu.listen(ContextMenuEvents.itemSelected) { log.add("item-selected") }
-    menu.listen(ContextMenuEvents.openedChanged) { log.add("opened-changed · ${menu.opened}") }
-    basic.body.append(example(null, column(surface, log.root, menu)))
-    view.body.append(basic.root)
-
-    val clickMode =
-        section(
-            tr("左键打开", "Open on click"),
-            tr(
-                "openOn 设为 click 时用左键展开，适合做「操作」按钮。",
-                "With openOn set to click the menu opens on a left click, which suits an actions button.",
-            ),
-        )
-    val trigger = createButton { textContent = tr("操作", "Actions") }.withTheme("tertiary")
-    val clickMenu = createContextMenu()
-    clickMenu.openOn = "click"
-    clickMenu.listenOn = trigger
-    clickMenu.items = items
-    clickMode.body.append(example(null, row(trigger, clickMenu)))
-    view.body.append(clickMode.root)
+    view.body.append(confirmOnlySection.root)
 
     return view
 }
@@ -766,13 +783,65 @@ private fun buildOverlayPage(meta: PageMeta): PageView {
     )
     view.body.append(modeless.root)
 
+    val sized =
+        section(
+            tr("尺寸与滚动", "Size and scrolling"),
+            tr(
+                "setBounds 写入浮层的宽度与高度，内容超出时由内容区滚动。",
+                "setBounds sets the width and height of the overlay; overflowing content scrolls inside " +
+                    "the content area.",
+            ),
+        )
+    val sizedOverlay = createOverlay()
+    val longContent = column(paragraph(tr("可滚动的内容：", "Scrollable content:")))
+    repeat(12) { index ->
+        longContent.append(paragraph(tr("第 ${index + 1} 行内容", "Line ${index + 1}")))
+    }
+    val sizedClose = createButton { textContent = tr("关闭", "Close") }
+    sizedClose.clickEvent.addHandler { sizedOverlay.opened = false }
+    longContent.append(sizedClose)
+    sizedOverlay.renderer = { root, _, _ -> root.append(longContent) }
+    sized.body.append(
+        example(
+            null,
+            row(
+                createButton { textContent = tr("打开固定尺寸 overlay", "Open sized overlay") }
+                    .withTheme("tertiary").apply {
+                        clickEvent.addHandler {
+                            // `setBounds` writes to the overlay's internal parts, which exist only once
+                            // the element has been upgraded and opened.
+                            sizedOverlay.setBounds(
+                                unsafeJso<vaadin.overlay.OverlayBounds> {
+                                    width = vaadin.overlay.DoubleOrString("22rem")
+                                    height = vaadin.overlay.DoubleOrString("14rem")
+                                },
+                            )
+                            sizedOverlay.opened = true
+                        }
+                    },
+                sizedOverlay,
+            ),
+        ),
+    )
+    view.body.append(sized.root)
+
     return view
 }
+
+/**
+ * A trigger for a login overlay; the overlays stay closed so they do not cover the page, and a
+ * successful submit closes the overlay again because `LoginOverlay` has no close control of its own.
+ */
+private fun openOverlayButton(label: String, overlay: vaadin.login.LoginOverlayElement): vaadin.button.ButtonElement =
+    createButton { textContent = label }.withTheme("tertiary").apply {
+        overlay.listen(LoginFormEvents.login) { overlay.opened = false }
+        clickEvent.addHandler { overlay.opened = true }
+    }
 
 private fun buildLoginPage(meta: PageMeta): PageView {
     val view = page(meta)
 
-    val form =
+    val formSection =
         section(
             tr("登录表单", "Login form"),
             tr(
@@ -783,6 +852,7 @@ private fun buildLoginPage(meta: PageMeta): PageView {
     val log = EventLog(5)
     val loginForm = createLoginForm()
     loginForm.dataset["test"] = "login-form"
+    loginForm.noAutofocus = true
     loginForm.listen(LoginFormEvents.login) { log.add("login") }
     loginForm.listen(LoginFormEvents.forgotPassword) { log.add("forgot-password") }
     // `error` starts as `false`, so only the transitions to the error state are interesting.
@@ -793,8 +863,66 @@ private fun buildLoginPage(meta: PageMeta): PageView {
     val disabledSwitch = createSwitch { label = tr("禁用表单", "Disable form") }
     disabledSwitch.listen(SwitchEvents.checkedChanged) { loginForm.disabled = disabledSwitch.checked }
 
-    form.body.append(example(null, row(loginForm, column(errorSwitch, disabledSwitch, log.root))))
-    view.body.append(form.root)
+    formSection.body.append(example(null, row(loginForm, column(errorSwitch, disabledSwitch, log.root))))
+    view.body.append(formSection.root)
+
+    val eventSection =
+        section(
+            tr("禁用与重新启用", "Disabling during submit"),
+            tr(
+                "disabled 会锁住提交按钮；真实应用可以在 login 事件里禁用，等请求返回后再放开。",
+                "disabled locks the submit button; a real application can disable it on login and re-enable " +
+                    "it after the request returns.",
+            ),
+        )
+    val slowForm = createLoginForm()
+    slowForm.noAutofocus = true
+    val slowStatus = Readout(tr("状态：可提交", "Status: ready"))
+    slowForm.listen(LoginFormEvents.login) {
+        slowForm.disabled = true
+        slowStatus.set(tr("状态：提交中…", "Status: submitting…"))
+        js("(callback, delay) => setTimeout(callback, delay)")(
+            {
+                slowForm.disabled = false
+                slowStatus.set(tr("状态：可提交", "Status: ready"))
+            },
+            1000.0,
+        )
+    }
+    eventSection.body.append(example(null, row(slowForm, column(slowStatus.root))))
+    view.body.append(eventSection.root)
+
+    val i18nSection =
+        section(
+            tr("国际化", "Localization"),
+            tr(
+                "i18n 覆盖表单里的全部文案；只提供需要的字段时会与默认值合并。",
+                "i18n replaces the texts inside the form; the object is merged into the default bundle, so " +
+                    "only the changed fields are required.",
+            ),
+        )
+    val finnishForm = createLoginForm()
+    finnishForm.noAutofocus = true
+    finnishForm.i18nProperty =
+        unsafeJso<LoginI18n> {
+            form =
+                unsafeJso<LoginI18nForm> {
+                    title = "Kirjaudu sisään"
+                    username = "Käyttäjänimi"
+                    password = "Salasana"
+                    submit = "Kirjaudu sisään"
+                    forgotPassword = "Unohtuiko salasana?"
+                }
+            errorMessage =
+                unsafeJso<LoginI18nErrorMessage> {
+                    title = "Väärä käyttäjätunnus tai salasana"
+                    message = "Tarkista että käyttäjätunnus ja salasana ovat oikein ja yritä uudestaan."
+                    username = "Käyttäjätunnus vaaditaan"
+                    password = "Salasana vaaditaan"
+                }
+        }
+    i18nSection.body.append(example(null, finnishForm))
+    view.body.append(i18nSection.root)
 
     val overlay =
         section(
@@ -804,9 +932,10 @@ private fun buildLoginPage(meta: PageMeta): PageView {
                 "LoginOverlay puts the same form into a full-screen overlay, which suits an app entry point.",
             ),
         )
-    val loginOverlay = createLoginOverlay()
+    val loginOverlay = createLoginOverlay { opened = false }
     loginOverlay.dataset["test"] = "login-overlay"
     loginOverlay.description = tr("使用任意用户名和密码体验交互", "Use any username and password to try it")
+    loginOverlay.noAutofocus = true
     loginOverlay.listen(LoginFormEvents.login) { loginOverlay.opened = false }
     overlay.body.append(
         example(
@@ -820,6 +949,134 @@ private fun buildLoginPage(meta: PageMeta): PageView {
         ),
     )
     view.body.append(overlay.root)
+
+    val overlayParts =
+        section(
+            tr("浮层插槽", "Overlay slots"),
+            tr(
+                "custom-form-area 把额外字段放进表单区域，footer 在按钮下方追加内容。",
+                "custom-form-area adds fields to the form area and footer appends content below the buttons.",
+            ),
+        )
+    val codeOverlay = createLoginOverlay { opened = false }
+    codeOverlay.noAutofocus = true
+    codeOverlay.append(
+        createIntegerField {
+            label = tr("一次性验证码", "One-time code")
+            slot = "custom-form-area"
+        },
+    )
+    val footerOverlay = createLoginOverlay { opened = false }
+    footerOverlay.noAutofocus = true
+    footerOverlay.append(
+        paragraph(tr("永远不要把密码告诉任何人", "Never tell your password to anyone")).apply {
+            slot = "footer"
+            style.setProperty("text-align", "center")
+        },
+    )
+    overlayParts.body.append(
+        example(
+            null,
+            row(
+                openOverlayButton(tr("打开验证码浮层", "Open code overlay"), codeOverlay),
+                openOverlayButton(tr("打开底部插槽浮层", "Open footer overlay"), footerOverlay),
+                codeOverlay,
+                footerOverlay,
+            ),
+        ),
+    )
+    view.body.append(overlayParts.root)
+
+    val overlayHeader =
+        section(
+            tr("浮层标题与本地化", "Overlay header and localization"),
+            tr(
+                "title / description 覆盖头部文案；i18n.header 与 additionalInformation 一并生效。",
+                "title / description override the header; i18n.header and additionalInformation join in.",
+            ),
+        )
+    val brandedOverlay = createLoginOverlay { opened = false }
+    brandedOverlay.noAutofocus = true
+    brandedOverlay.title = "TaskMob"
+    brandedOverlay.description = tr("用 ♥ 构建", "Built with ♥ by Vaadin")
+
+    val localizedOverlay = createLoginOverlay { opened = false }
+    localizedOverlay.noAutofocus = true
+    localizedOverlay.i18nProperty =
+        unsafeJso<LoginI18n> {
+            header =
+                unsafeJso<LoginI18nHeader> {
+                    title = "Sovelluksen nimi"
+                    description = "Sovelluksen kuvaus"
+                }
+            form =
+                unsafeJso<LoginI18nForm> {
+                    title = "Kirjaudu sisään"
+                    submit = "Kirjaudu sisään"
+                }
+            additionalInformation = "Jos tarvitset lisätietoja käyttäjälle."
+        }
+    overlayHeader.body.append(
+        example(
+            null,
+            row(
+                openOverlayButton(tr("打开品牌浮层", "Open branded overlay"), brandedOverlay),
+                openOverlayButton(tr("打开本地化浮层", "Open localized overlay"), localizedOverlay),
+                brandedOverlay,
+                localizedOverlay,
+            ),
+        ),
+    )
+    view.body.append(overlayHeader.root)
+
+    val states =
+        section(
+            tr("错误状态与附加信息", "Error state and extra information"),
+            tr(
+                "error 直接打开失败横幅；additionalInformation 在表单下方追加说明。",
+                "error shows the failure banner; additionalInformation adds a note below the form.",
+            ),
+        )
+    val errorOverlay = createLoginOverlay { opened = false }
+    errorOverlay.noAutofocus = true
+    errorOverlay.error = true
+    val infoOverlay = createLoginOverlay { opened = false }
+    infoOverlay.noAutofocus = true
+    infoOverlay.i18nProperty =
+        unsafeJso<LoginI18n> {
+            additionalInformation =
+                tr(
+                    "登录遇到问题时请联系 admin@company.com",
+                    "Contact admin@company.com if you're experiencing issues logging into your account",
+                )
+        }
+    states.body.append(
+        example(
+            null,
+            row(
+                openOverlayButton(tr("打开错误状态浮层", "Open error overlay"), errorOverlay),
+                openOverlayButton(tr("打开附加信息浮层", "Open extra information overlay"), infoOverlay),
+                errorOverlay,
+                infoOverlay,
+            ),
+        ),
+    )
+    view.body.append(states.root)
+
+    val rich =
+        section(
+            tr("富内容背景", "Rich background"),
+            tr(
+                "登录表单可以放在任意背景上；深色背景配合 theme=\"dark\" 保持对比度。",
+                "The login form sits on any background; a dark surface pairs with theme=\"dark\" to keep contrast.",
+            ),
+        )
+    val richForm = createLoginForm()
+    richForm.noAutofocus = true
+    richForm.withTheme("dark")
+    val richHost = div("login-rich-content", richForm)
+    rich.body.append(example(null, richHost))
+    view.body.append(rich.root)
 
     return view
 }

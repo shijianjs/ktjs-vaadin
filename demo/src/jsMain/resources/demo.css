@@ -559,3 +559,47 @@ vaadin-multi-select-combo-box-chip.orange {
 vaadin-multi-select-combo-box-chip.yellowgreen {
     background: yellowgreen;
 }
+
+/* --- Overlays ------------------------------------------------------------- */
+
+/* `resizable` dialogs need a minimum size, otherwise the resize handle disappears once the user
+   drags the dialog small; the sizes are set through CSS on the overlay part. */
+vaadin-dialog.resizable-dialog::part(overlay) {
+    min-width: 24rem;
+    min-height: 14rem;
+}
+
+/* Full-bleed background behind the login form; the form itself keeps its own surface. */
+.login-rich-content {
+    padding: var(--lumo-space-l);
+    border-radius: var(--lumo-border-radius-l);
+    background: linear-gradient(135deg, #1f4e9c, #7a3f8f);
+}
+
+/* `className` from the context menu items API lands on the item element. */
+vaadin-context-menu-item.custom {
+    color: var(--lumo-error-text-color);
+}
+
+/* Popover user menu: the avatar row and the link column of a `no-padding` popover. */
+.person-item {
+    display: flex;
+    align-items: center;
+    gap: var(--lumo-space-s);
+}
+
+.user-menu-links {
+    display: flex;
+    flex-direction: column;
+    padding: var(--lumo-space-xs) 0;
+}
+
+.user-menu-links a {
+    padding: var(--lumo-space-xs) var(--lumo-space-m);
+    color: var(--lumo-body-text-color);
+    text-decoration: none;
+}
+
+.user-menu-links a:hover {
+    background: var(--lumo-contrast-5pct);
+}
