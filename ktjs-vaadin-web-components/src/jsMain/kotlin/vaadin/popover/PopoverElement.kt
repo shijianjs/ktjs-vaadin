@@ -140,21 +140,6 @@ abstract external class PopoverElement : web.html.HTMLElement, vaadin.popover.Po
     @JsName("role")
     var roleProperty: String
     /**
-     * Sets the default focus delay to be used by all popover instances,
-     * except for those that have focus delay configured using property.
-     */
-    fun setDefaultFocusDelay(focusDelay: Double)
-    /**
-     * Sets the default hide delay to be used by all popover instances,
-     * except for those that have hide delay configured using property.
-     */
-    fun setDefaultHideDelay(hideDelay: Double)
-    /**
-     * Sets the default hover delay to be used by all popover instances,
-     * except for those that have hover delay configured using property.
-     */
-    fun setDefaultHoverDelay(hoverDelay: Double)
-    /**
      * Popover trigger mode, used to configure how the popover is opened or closed.
      * Could be set to multiple by providing an array, e.g. `trigger = ['hover', 'focus']`.
      *

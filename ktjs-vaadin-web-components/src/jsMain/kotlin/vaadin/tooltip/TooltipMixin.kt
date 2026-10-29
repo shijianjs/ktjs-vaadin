@@ -54,21 +54,6 @@ external interface TooltipMixin : vaadin.tooltip.TooltipAriaMixin, vaadin.popove
      */
     var opened: Boolean
     /**
-     * Sets the default focus delay to be used by all tooltip instances,
-     * except for those that have focus delay configured using property.
-     */
-    fun setDefaultFocusDelay(focusDelay: Double)
-    /**
-     * Sets the default hide delay to be used by all tooltip instances,
-     * except for those that have hide delay configured using property.
-     */
-    fun setDefaultHideDelay(hideDelay: Double)
-    /**
-     * Sets the default hover delay to be used by all tooltip instances,
-     * except for those that have hover delay configured using property.
-     */
-    fun setDefaultHoverDelay(hoverDelay: Double)
-    /**
      * Function used to detect whether to show the tooltip based on a condition,
      * called every time the tooltip is about to be shown on hover and focus.
      * The function takes two parameters: `target` and `context`, which contain

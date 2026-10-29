@@ -8,10 +8,6 @@ external interface AppLayoutMixin : vaadin.componentbase.I18nMixin {
      */
     var closeDrawerOn: String
     /**
-     * Helper static method that dispatches a `close-overlay-drawer` event
-     */
-    fun dispatchCloseOverlayDrawerEvent()
-    /**
      * Controls whether the drawer is opened (visible) or not.
      * Its default value depends on the viewport:
      * - `true`, for desktop size views

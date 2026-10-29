@@ -49,25 +49,4 @@ external interface NotificationMixin : vaadin.themablemixin.ThemePropertyMixin, 
      * It is not guaranteed that the update happens immediately (synchronously) after it is requested.
      */
     fun requestContentUpdate()
-    /**
-     * Shows a notification with the given content.
-     * By default, positions the notification at `bottom-start` and uses a 5 second duration.
-     * An options object can be passed to configure the notification.
-     * The options object has the following structure:
-     *
-     * ```ts
-     * {
-     *   assertive?: boolean
-     *   position?: string
-     *   duration?: number
-     *   theme?: string
-     * }
-     * ```
-     *
-     * See the individual documentation for:
-     * - [`assertive`](#/elements/vaadin-notification#property-assertive)
-     * - [`position`](#/elements/vaadin-notification#property-position)
-     * - [`duration`](#/elements/vaadin-notification#property-duration)
-     */
-    fun show(contents: kotlin.js.JsAny?, options: vaadin.notification.NotificationShowOptions? = definedExternally)
 }

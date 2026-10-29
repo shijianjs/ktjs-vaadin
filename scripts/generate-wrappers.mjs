@@ -197,6 +197,8 @@ const MEMBER_TYPES = new Map([
   // The manifest records the column alignment as an untyped `string`; upstream `.d.ts` uses the CSS
   // `text-align` subset, so the existing kotlin-wrappers value type applies.
   ['@vaadin/grid|ColumnBaseMixin|textAlign', 'web.cssom.TextAlign?'],
+  // The manifest records no return type; upstream returns the flattened child column list.
+  ['@vaadin/grid|ColumnObserver|getColumns', 'Array<web.html.HTMLElement>'],
   // The manifest has no type for these manager fields; the upstream `.d.ts` declares them.
   ['@vaadin/upload|UploadManager|target', 'String'],
   ['@vaadin/upload|UploadManager|timeout', 'Double'],
@@ -383,6 +385,8 @@ const PARAMETER_TYPES = new Map([
 // separate argument, or a parameter has no type at all). The value is the Kotlin parameter list.
 // Key format: `package|declaration|member`.
 const MEMBER_SIGNATURES = new Map([
+  // The manifest leaves the host untyped; the implementation reads `host.children`.
+  ['@vaadin/grid|ColumnObserver|getColumns', '(host: web.html.HTMLElement)'],
   [
     '@vaadin/context-menu|ContextMenuTooltipController|open',
     '(options: vaadin.contextmenu.ContextMenuTooltipOpenOptions)',
@@ -1012,7 +1016,8 @@ function removeRedundantMixins(mixins) {
 
 function ownMembers(declaration) {
   return (declaration.members || []).filter(
-    (member) => !member.inheritedFrom && (!member.privacy || member.privacy === 'public'),
+    (member) =>
+      !member.static && !member.inheritedFrom && (!member.privacy || member.privacy === 'public'),
   );
 }
 

@@ -1,5 +1,6 @@
 package vaadin.fieldhighlighter
 
+import js.objects.unsafeJso
 import js.reflect.unsafeCast
 import kotlin.js.js
 import vaadin.VaadinTagName
@@ -22,14 +23,13 @@ fun fieldHighlighterUser(
     name: String,
     colorIndex: Double,
     fieldIndex: Double? = null,
-): FieldHighlighterUser {
-    val user: FieldHighlighterUser = js("({})")
-    user.id = id
-    user.name = name
-    user.colorIndex = colorIndex
-    user.fieldIndex = fieldIndex
-    return user
-}
+): FieldHighlighterUser =
+    unsafeJso {
+        this.id = id
+        this.name = name
+        this.colorIndex = colorIndex
+        this.fieldIndex = fieldIndex
+    }
 
 /**
  * A field controller that shows a coloured outline while other users edit the same field, and an

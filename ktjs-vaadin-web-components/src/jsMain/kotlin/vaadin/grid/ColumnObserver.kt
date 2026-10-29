@@ -8,11 +8,10 @@ package vaadin.grid
 abstract external class ColumnObserver {
     fun disconnect()
     fun flush()
-    fun getColumns(host: kotlin.js.JsAny?)
 }
 
 private external interface ColumnObserverStaticMembers : js.function.ConstructorFunction<js.array.Tuple, ColumnObserver> {
-    fun getColumns(host: kotlin.js.JsAny?)
+    fun getColumns(host: web.html.HTMLElement): Array<web.html.HTMLElement>
 }
 
 @JsModule("@vaadin/grid/src/vaadin-grid-helpers.js")
@@ -21,7 +20,7 @@ private external object ColumnObserverModule {
 }
 
 object ColumnObserverStatics {
-    fun getColumns(host: kotlin.js.JsAny?) {
-        ColumnObserverModule.ColumnObserver.getColumns(host)
+    fun getColumns(host: web.html.HTMLElement): Array<web.html.HTMLElement> {
+        return ColumnObserverModule.ColumnObserver.getColumns(host)
     }
 }

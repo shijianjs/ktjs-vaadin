@@ -3,29 +3,12 @@ package vaadin.icon
 
 external interface IconsetMixin {
     /**
-     * Set of the `vaadin-icon` instances in the DOM.
-     */
-    val attachedIcons: js.collections.JsSet<vaadin.icon.IconElement>
-    /**
-     * Returns an instance of the iconset by its name.
-     */
-    fun getIconset(name: String): vaadin.icon.IconsetElement
-    /**
-     * Returns SVGTemplateResult for the `icon` ID matching `name` of the
-     * iconset, or `nothing` literal if there is no matching icon found.
-     */
-    fun getIconSvg(icon: String, name: String?): vaadin.icon.IconSvgInfo
-    /**
      * The name of the iconset. Every iconset is required to have its own unique name.
      * All the SVG icons in the iconset must have IDs conforming to its name.
      *
      * See also [`name`](#/elements/vaadin-icon#property-name) property of `vaadin-icon`.
      */
     var name: String
-    /**
-     * Register an iconset without adding to the DOM.
-     */
-    fun register(name: String, size: Double, template: web.components.HTMLTemplateElement?)
     /**
      * The size of an individual icon. Note that icons must be square.
      *
