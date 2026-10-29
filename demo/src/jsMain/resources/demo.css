@@ -260,6 +260,13 @@ body {
     color: var(--lumo-tertiary-text-color);
 }
 
+/* `vaadin-app-layout` pins its navbar with `position: fixed` and expects to fill the viewport.
+   Inside a demo card it would otherwise escape the card and stick to the browser viewport, so the
+   layout itself becomes the containing block for its navbar and drawer. */
+.example vaadin-app-layout {
+    contain: paint;
+}
+
 /* ------------------------------------------------------------------ layout helpers */
 
 .row {
@@ -694,4 +701,48 @@ vaadin-message.current-user::part(name) {
     position: absolute;
     white-space: nowrap;
     width: 1px;
+}
+
+/* --- Split Layout ----------------------------------------------------------- */
+/* Fake master list and detail form of the docs examples. */
+.split-master {
+    overflow: hidden;
+    padding: var(--lumo-space-s);
+}
+
+.split-master__row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.split-master__cell {
+    height: 12px;
+    border-radius: 2px;
+    background: var(--lumo-contrast-10pct);
+}
+
+.split-detail {
+    padding: var(--lumo-space-s);
+}
+
+.split-detail__field {
+    margin-bottom: var(--lumo-space-s);
+}
+
+.split-detail__label {
+    display: block;
+    width: 40%;
+    height: 8px;
+    margin-bottom: 4px;
+    border-radius: 2px;
+    background: var(--lumo-contrast-20pct);
+}
+
+.split-detail__input {
+    display: block;
+    height: 24px;
+    border: 1px solid var(--lumo-contrast-20pct);
+    border-radius: var(--lumo-border-radius-s);
 }

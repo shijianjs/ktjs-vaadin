@@ -101,12 +101,12 @@
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| app-layout | app-layout | 9 | TODO | |
-| horizontal-layout | horizontal-layout | 11 | TODO | |
-| vertical-layout | vertical-layout | 8 | TODO | |
-| form-layout | formlayout | 7 | TODO | |
-| split-layout | splitlayout | 7 | TODO | |
-| scroller | scroller | 3 | TODO | |
+| app-layout | app-layout | 9 | DONE | 基本用法（抽屉开关读值）/ 导航栏 / 导航栏位置（primarySection 切换）/ 滚动行为 / 小屏底部导航栏 / 次级导航；文档示例是整页应用，卡片里用 `contain: paint` 把固定定位的导航栏与抽屉限制在示例内 |
+| horizontal-layout | horizontal-layout | 11 | DONE | 基本 / spacing / padding / margin / 水平与垂直对齐 / justify-content / 嵌套 / 换行 / 伸缩 |
+| vertical-layout | vertical-layout | 8 | DONE | 基本 / 垂直与水平对齐 / 单项对齐 / spacing / padding / margin / 换行 |
+| form-layout | formlayout | 7 | DONE | 自动响应式 / 标签位置（labelsAside）/ 列宽与列数（expandColumns、expandFields）/ 跨列（data-colspan）/ 响应式断点（含 form-item 标签宽度） |
+| split-layout | splitlayout | 7 | DONE | 基本拖动 / 嵌套 / 最小尺寸 / 折叠侧栏（图标切换）/ 分隔条主题 |
+| scroller | scroller | 3 | DONE | 基本竖向滚动与滚动事件 / 双向滚动（内联 SVG 插画）/ 移动端横向滚动（图标按钮） |
 | master-detail-layout | master-detail-layout | 1 | TODO | |
 | card | card | 13 | TODO | |
 | accordion | accordion | 8 | TODO | |
