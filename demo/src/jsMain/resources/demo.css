@@ -449,6 +449,25 @@ body {
     font-weight: 500;
 }
 
+/* Badges embedded in a tab label, spaced like the docs example. */
+.example vaadin-tab vaadin-badge {
+    margin-inline-start: var(--lumo-space-xs);
+}
+
+/* Styling example: tag an external side-nav item and highlight only its link. */
+.example vaadin-side-nav-item.external::part(link) {
+    color: deepskyblue;
+}
+
+.example vaadin-side-nav-item.external::part(link):hover {
+    color: deepskyblue;
+    text-decoration: underline;
+}
+
+.example vaadin-side-nav-item.external > vaadin-icon {
+    color: deepskyblue;
+}
+
 /* ------------------------------------------------------------------ overview index */
 
 .index__toolbar {

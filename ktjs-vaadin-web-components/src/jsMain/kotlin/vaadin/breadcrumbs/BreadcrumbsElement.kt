@@ -48,7 +48,13 @@ package vaadin.breadcrumbs
  */
 
 abstract external class BreadcrumbsElement : web.html.HTMLElement, vaadin.a11ybase.KeyboardDirectionMixin, vaadin.componentbase.ResizeMixin, vaadin.componentbase.I18nMixin, vaadin.componentbase.ElementMixin, vaadin.componentbase.PolylitMixin, vaadin.themablemixin.LumoInjectionMixin {
-
+    /**
+     * The object used to localize the breadcrumbs.
+     *
+     * Maps to the `i18n` property; renamed in Kotlin because the inherited `i18n` is untyped.
+     */
+    @JsName("i18n")
+    var i18nProperty: vaadin.breadcrumbs.BreadcrumbsI18n
 }
 
 @JsModule("@vaadin/breadcrumbs/src/vaadin-breadcrumbs.js")

@@ -103,4 +103,67 @@ class LayoutsTest {
         assertTrue(page.url().endsWith("#/app-layout"), "stays on the demo route: ${page.url()}")
         assertThat(page.getByTestId("app-layout")).isVisible()
     }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `side nav intercepts same-origin navigation`(page: Page) {
+        page.navigate("/#/side-nav")
+
+        val nav = page.getByTestId("side-nav")
+        nav.locator("vaadin-side-nav-item", Locator.LocatorOptions().setHasText("Inbox")).click()
+
+        assertTrue(page.url().endsWith("#/side-nav"), "stays on the demo route: ${page.url()}")
+        assertThat(page.locator(".event-log")).containsText("onNavigate · /inbox")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `side nav highlights the item matching the current path`(page: Page) {
+        page.navigate("/#/side-nav")
+
+        val items = page.getByTestId("side-nav-current").locator("vaadin-side-nav-item")
+        assertThat(items.first()).hasJSProperty("current", true)
+        assertThat(items.first().locator("a")).hasAttribute("aria-current", "page")
+        assertThat(items.nth(1)).hasJSProperty("current", false)
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `side nav collapses a labelled list`(page: Page) {
+        page.navigate("/#/side-nav")
+
+        val nav = page.getByTestId("side-nav-collapsible")
+        nav.evaluate("el => { el.collapsed = true }")
+
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("collapsed")))
+            .containsText("collapsed = true")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `breadcrumbs mark the last item as the current page`(page: Page) {
+        page.navigate("/#/breadcrumbs")
+
+        val items = page.getByTestId("breadcrumbs").locator("vaadin-breadcrumbs-item")
+        assertThat(items.last()).hasJSProperty("current", true)
+        assertThat(items.last().locator("[part='nolink']")).hasAttribute("aria-current", "page")
+        assertThat(items.first()).hasJSProperty("current", false)
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `breadcrumbs collapse leading items into the overflow menu`(page: Page) {
+        page.navigate("/#/breadcrumbs")
+
+        val crumbs = page.getByTestId("breadcrumbs-overflow")
+        val catalog = crumbs.locator("vaadin-breadcrumbs-item", Locator.LocatorOptions().setHasText("Catalog"))
+        assertThat(crumbs).hasAttribute("has-overflow", "")
+        assertThat(catalog).isHidden()
+
+        crumbs.locator("[part='overflow-button']").click()
+        assertThat(catalog).isVisible()
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `breadcrumbs localize the overflow button label`(page: Page) {
+        page.navigate("/#/breadcrumbs")
+
+        val crumbs = page.getByTestId("breadcrumbs-i18n")
+        assertThat(crumbs.locator("[part='overflow-button']")).hasAttribute("aria-label", "Show hidden trail")
+    }
 }

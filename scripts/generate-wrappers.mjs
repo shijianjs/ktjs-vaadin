@@ -194,6 +194,7 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
   ['@vaadin/date-time-picker|DateTimePicker|i18n', 'vaadin.datetimepicker.DateTimePickerI18n'],
+  ['@vaadin/breadcrumbs|Breadcrumbs|i18n', 'vaadin.breadcrumbs.BreadcrumbsI18n'],
   ['@vaadin/upload|UploadMixin|i18n', 'vaadin.upload.UploadI18n'],
   ['@vaadin/upload|UploadFileListMixin|i18n', 'vaadin.upload.UploadFileListI18n'],
   // The manifest records the login localization object as a bare `object`; upstream `.d.ts`
@@ -367,6 +368,21 @@ const EXTRA_MEMBERS = new Map([
           'The object used to localize the field, including the accessible labels of the inner date ' +
           'and time pickers.\n\nMaps to the `i18n` property; renamed in Kotlin because the inherited ' +
           '`i18n` is untyped.',
+      },
+    ],
+  ],
+  // The manifest marks `i18n` as inherited from `I18nMixin` (`JsAny`), while upstream declares
+  // `interface BreadcrumbsI18n` (`vaadin-breadcrumbs.d.ts`). See `vaadin/breadcrumbs/BreadcrumbsTypes.kt`.
+  [
+    '@vaadin/breadcrumbs|Breadcrumbs',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the breadcrumbs.\n\nMaps to the `i18n` property; renamed in ' +
+          'Kotlin because the inherited `i18n` is untyped.',
       },
     ],
   ],

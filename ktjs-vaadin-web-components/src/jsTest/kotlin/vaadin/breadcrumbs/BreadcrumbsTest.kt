@@ -1,5 +1,6 @@
 package vaadin.breadcrumbs
 
+import js.objects.unsafeJso
 import vaadin.queryAll
 import kotlin.js.Promise
 import kotlin.js.js
@@ -169,9 +170,19 @@ class BreadcrumbsTest {
     }
 
     @Test
-    fun i18nObjectIsExposed() {
+    fun i18nIsTypedAndDefaultsToMoreItems() {
         val host = newBreadcrumbs()
 
+        assertEquals("More items", host.i18nProperty.moreItems)
+    }
+
+    @Test
+    fun i18nCanBeReplacedWithAPartialObject() {
+        val host = newBreadcrumbs()
+
+        host.i18nProperty = unsafeJso { moreItems = "More" }
+
+        assertEquals("More", host.i18nProperty.moreItems)
         assertNotNull(js("(host) => host.i18n")(host))
     }
 }

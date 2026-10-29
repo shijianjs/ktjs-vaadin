@@ -45,6 +45,8 @@ import vaadin.applayout.AppLayoutEvents
 import vaadin.applayout.AppLayoutPrimarySections
 import vaadin.applayout.createAppLayout
 import vaadin.applayout.createDrawerToggle
+import vaadin.breadcrumbs.BreadcrumbsI18n
+import vaadin.breadcrumbs.BreadcrumbsItemElement
 import vaadin.breadcrumbs.createBreadcrumbs
 import vaadin.breadcrumbs.createBreadcrumbsItem
 import vaadin.button.createButton
@@ -75,14 +77,17 @@ import vaadin.select.SelectEvents
 import vaadin.select.SelectItemData
 import vaadin.select.createSelect
 import vaadin.sidenav.SideNavElement
+import vaadin.sidenav.SideNavEvents
 import vaadin.sidenav.SideNavItemElement
 import vaadin.sidenav.createSideNav
 import vaadin.sidenav.createSideNavItem
 import vaadin.splitlayout.SplitLayoutOrientations
 import vaadin.splitlayout.createSplitLayout
+import vaadin.tabs.TabsElement
 import vaadin.tabs.TabsEvents
 import vaadin.tabs.createTab
 import vaadin.tabs.createTabs
+import vaadin.tabsheet.TabSheetElement
 import vaadin.tabsheet.TabSheetEvents
 import vaadin.tabsheet.createTabSheet
 import vaadin.textfield.createTextField
@@ -92,6 +97,7 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import web.location.location
 
 val layoutEntries: List<CatalogEntry> =
     listOf(
@@ -2673,242 +2679,797 @@ private fun membersDetails(theme: String) =
 
 private fun buildTabsPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "tab 的 value 可选；selected 是选中下标，selected-changed 在切换时触发。",
-                "tab takes an optional value; selected holds the active index and selected-changed fires on " +
-                    "every switch.",
+                "标签页把内容分组到几个可切换的小节里，适合在同一块界面里就地切换、而不必加载新页面。" +
+                    "selected 是当前下标，切换时触发 selected-changed。",
+                "Tabs group content into sections the user can switch between in place, without loading another " +
+                    "page. selected holds the active index and selected-changed fires on every switch.",
             ),
         )
     val log = EventLog(4)
-    val tabs = createTabs()
+    val tabs = tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping"))
     tabs.dataset["test"] = "tabs"
-    tabs.append(
-        createTab { textContent = tr("概览", "Overview") },
-        createTab { textContent = tr("明细", "Details") },
-        createTab { textContent = tr("设置", "Settings") },
-    )
     tabs.listen(TabsEvents.selectedChanged) { log.add("selected-changed · ${tabs.selected}") }
     basic.body.append(example(null, column(tabs, log.root)))
     view.body.append(basic.root)
 
-    val variants =
+    val states =
         section(
-            tr("方向与变体", "Orientation and variants"),
+            tr("状态", "States"),
             tr(
-                "orientation 设为 vertical 变成侧边标签，equal-width-tabs 让标签等宽。",
-                "orientation set to vertical turns the tabs sideways, and equal-width-tabs makes every tab " +
-                    "the same width.",
+                "tab 可以是选中、未选中或禁用。禁用的 tab 无法聚焦，键盘导航会跳过它；用禁用代替隐藏既能避免" +
+                    "布局跳动，也让用户知道该项存在。",
+                "A tab is selected, unselected or disabled. Disabled tabs cannot be focused and keyboard " +
+                    "navigation skips them; disabling instead of hiding keeps the layout stable and still " +
+                    "tells users that the item exists.",
             ),
         )
-    val vertical = createTabs { orientation = ListOrientations.vertical }
-    vertical.append(
-        createTab { textContent = tr("第一项", "First item") },
-        createTab { textContent = tr("第二项", "Second item") },
+    val stateTabs = tabsOf(tr("已选中", "Selected"), tr("未选中", "Unselected"))
+    stateTabs.dataset["test"] = "tabs-states"
+    stateTabs.append(
+        createTab {
+            textContent = tr("已禁用", "Disabled")
+            disabled = true
+        },
     )
-    val equal = createTabs()
-    equal.withTheme("equal-width-tabs")
-    equal.append(
-        createTab { textContent = tr("左", "Left") },
-        createTab { textContent = tr("中", "Middle") },
-        createTab { textContent = tr("右", "Right") },
+    states.body.append(example(null, stateTabs))
+    view.body.append(states.root)
+
+    val orientation =
+        section(
+            tr("方向与溢出", "Orientation and overflow"),
+            tr(
+                "横向标签适合少量条目，溢出时可以横向滚动，默认在两端显示滚动按钮；hide-scroll-buttons 去掉这些" +
+                    "按钮（非触屏设备上不建议）。纵向标签没有滚动按钮，条目多时更容易扫视，但 Tab Sheet 不支持纵向。",
+                "Horizontal tabs suit a small number of items; on overflow they scroll and show scroll buttons " +
+                    "on both ends by default, while hide-scroll-buttons removes them (not recommended on " +
+                    "non-touch devices). Vertical tabs have no scroll buttons and are easier to scan when there " +
+                    "are many items, but Tab Sheets do not support them.",
+            ),
+        )
+    val horizontalTabs =
+        tabsOf(
+            tr("分析", "Analytics"),
+            tr("客户", "Customers"),
+            tr("仪表盘", "Dashboards"),
+            tr("文档", "Documents"),
+            tr("订单", "Orders"),
+        ).apply {
+            dataset["test"] = "tabs-horizontal"
+            style.setProperty("max-width", "100%")
+            style.setProperty("width", "400px")
+        }
+    val hiddenScrollTabs =
+        tabsOf(
+            tr("分析", "Analytics"),
+            tr("客户", "Customers"),
+            tr("仪表盘", "Dashboards"),
+            tr("文档", "Documents"),
+            tr("订单", "Orders"),
+            tr("产品", "Products"),
+            tr("任务", "Tasks"),
+        ).apply {
+            withTheme("hide-scroll-buttons")
+            dataset["test"] = "tabs-hide-scroll-buttons"
+            style.setProperty("max-width", "100%")
+            style.setProperty("width", "400px")
+        }
+    val verticalTabs =
+        tabsOf(
+            tr("分析", "Analytics"),
+            tr("客户", "Customers"),
+            tr("仪表盘", "Dashboards"),
+            tr("文档", "Documents"),
+            tr("订单", "Orders"),
+            tr("产品", "Products"),
+            tr("任务", "Tasks"),
+            configure = { this.orientation = ListOrientations.vertical },
+        ).apply {
+            dataset["test"] = "tabs-vertical"
+            style.setProperty("height", "240px")
+            style.setProperty("width", "240px")
+        }
+    orientation.body.append(
+        example(tr("横向：溢出时显示滚动按钮", "Horizontal: scroll buttons appear on overflow"), horizontalTabs),
+        example(tr("隐藏滚动按钮（hide-scroll-buttons）", "Scroll buttons hidden (hide-scroll-buttons)"), hiddenScrollTabs),
+        example(tr("纵向：没有滚动按钮", "Vertical: no scroll buttons"), verticalTabs),
     )
-    equal.style.setProperty("width", "20rem")
-    variants.body.append(example(null, row(vertical, equal)))
-    view.body.append(variants.root)
+    view.body.append(orientation.root)
+
+    val icons =
+        section(
+            tr("图标与其他内容", "Icons and other content"),
+            tr(
+                "tab 里可以放图标、徽标等几乎任意元素。横向标签通常把图标放在文字上方（icon-on-top，仅 Lumo），" +
+                    "纵向标签则图标与文字并排；只有图标时要用 Tooltip 或 aria-label 补上文字说明。",
+                "A tab can hold icons, badges and almost any other element. Horizontal tabs work best with the " +
+                    "icon above the label (icon-on-top, Lumo only), vertical tabs with the icon beside it; " +
+                    "icon-only labels need a tooltip or an aria-label.",
+            ),
+        )
+    val iconTabs = createTabs()
+    iconTabs.dataset["test"] = "tabs-icons"
+    iconTabEntries().forEach { (iconName, label) ->
+        iconTabs.append(
+            createTab {
+                withTheme("icon-on-top")
+                append(createIcon { icon = iconName }, span(label))
+            },
+        )
+    }
+    val verticalIconTabs = createTabs { this.orientation = ListOrientations.vertical }
+    verticalIconTabs.dataset["test"] = "tabs-icons-vertical"
+    iconTabEntries().forEach { (iconName, label) ->
+        verticalIconTabs.append(createTab { append(createIcon { icon = iconName }, span(label)) })
+    }
+    val badgeTabs = createTabs()
+    badgeTabs.dataset["test"] = "tabs-badges"
+    listOf(
+        tr("待处理", "Open") to 24.0,
+        tr("已完成", "Completed") to 49.0,
+        tr("已取消", "Cancelled") to 5.0,
+    ).forEach { (label, count) ->
+        badgeTabs.append(
+            createTab { append(span(label), createBadge { number = count }.withTheme("filled")) },
+        )
+    }
+    icons.body.append(
+        example(tr("横向标签：图标在文字上方", "Horizontal tabs: icon above the label"), iconTabs),
+        example(tr("纵向标签：图标与文字并排", "Vertical tabs: icon beside the label"), verticalIconTabs),
+        example(tr("其他元素：徽标", "Other elements: badges"), badgeTabs),
+    )
+    view.body.append(icons.root)
+
+    val themes =
+        section(
+            tr("主题变体", "Theme variants"),
+            tr(
+                "centered 让标签居中排列，equal-width-tabs 让各标签等宽，minimal 去掉标签栏背景，small 缩小尺寸。",
+                "centered arranges the tabs in the middle, equal-width-tabs gives every tab the same width, " +
+                    "minimal drops the tab bar background and small reduces the size.",
+            ),
+        )
+    val themeVariants =
+        listOf(
+            "centered" to "centered",
+            "equal-width-tabs" to "equal-width-tabs",
+            "minimal" to "minimal",
+            "small" to "small",
+        )
+    themes.body.append(
+        *themeVariants
+            .map { (theme, label) ->
+                example(
+                    label,
+                    tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping")).apply {
+                        withTheme(theme)
+                        dataset["test"] = "tabs-theme-$theme"
+                    },
+                )
+            }
+            .toTypedArray(),
+    )
+    view.body.append(themes.root)
+
+    val focus =
+        section(
+            tr("焦点与键盘", "Focus and keyboard"),
+            tr(
+                "键盘聚焦时 tab 显示焦点环（focus-ring）。聚焦后左右方向键在 tab 之间移动焦点，Enter 或空格选中" +
+                    "当前聚焦的 tab；禁用的 tab 会被跳过。",
+                "Keyboard focus draws the focus ring (focus-ring). Arrow keys move the focus between tabs and " +
+                    "Enter or Space selects the focused tab; disabled tabs are skipped.",
+            ),
+        )
+    val focusTabs = tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping"))
+    focusTabs.dataset["test"] = "tabs-focus-ring"
+    focusTabs.firstElementChild?.setAttribute("focus-ring", "")
+    focus.body.append(example(null, focusTabs))
+    view.body.append(focus.root)
+
+    val switching =
+        section(
+            tr("不使用 Tab Sheet 切换内容", "Content switching without Tab Sheet"),
+            tr(
+                "结构上必须把标签与内容分开时，用 selected-changed 自己切换内容；能放在一起时优先用 Tab Sheet，" +
+                    "切换逻辑由组件负责。",
+                "When the tabs must be structurally separated from their content, switch the content on " +
+                    "selected-changed yourself; when they can stay together, a Tab Sheet owns that logic.",
+            ),
+        )
+    val pageNames = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
+    val contentTabs = tabsOf(*pageNames.toTypedArray())
+    contentTabs.dataset["test"] = "tabs-content"
+    val content = paragraph(tr("这是仪表盘的内容。", "This is the Dashboard content."), "tabs-content__text")
+    contentTabs.listen(TabsEvents.selectedChanged) {
+        val name = pageNames[contentTabs.selected.toInt()]
+        content.textContent = tr("这是“$name”的内容。", "This is the $name content.")
+    }
+    switching.body.append(example(null, column(contentTabs, content)))
+    view.body.append(switching.root)
 
     return view
 }
 
 private fun buildTabSheetPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "把 vaadin-tabs 放进 slot=\"tabs\"；每个面板用 tab 属性指向对应 tab 的 id，" +
-                    "selected 决定显示哪个面板（找不到匹配面板时组件进入 loading 状态）。",
-                "vaadin-tabs goes into slot=\"tabs\"; each panel points at a tab id through its tab " +
-                    "attribute, and selected decides which panel is shown (the component enters a loading " +
-                    "state when no panel matches).",
+                "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
+                    "对应 tab 的 id，切换由组件完成。选中的 tab 找不到面板时组件进入 loading 状态。",
+                "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel " +
+                    "points at a tab id through its tab attribute; the component handles the switch. When the " +
+                    "selected tab has no matching panel the component enters a loading state.",
             ),
         )
-    val sheet = createTabSheet()
+    val sheet = demoTabSheet("tabsheet-basic")
     sheet.dataset["test"] = "tab-sheet"
-    val tabs = createTabs().apply { slot = "tabs" }
-
-    val tabIds = listOf("tabsheet-demo-basic", "tabsheet-demo-contact", "tabsheet-demo-access")
-    tabs.append(
-        createTab { textContent = tr("基本信息", "Basic info") }.apply { id = ElementId(tabIds[0]) },
-        createTab { textContent = tr("联系方式", "Contact") }.apply { id = ElementId(tabIds[1]) },
-        createTab { textContent = tr("权限", "Permissions") }.apply { id = ElementId(tabIds[2]) },
-    )
-    val panels =
-        listOf(
-            column(
-                heading(3, tr("基本信息", "Basic info")),
-                paragraph(tr("这一页的内容由第一个面板提供。", "The content of this tab comes from the first panel.")),
-            ),
-            column(
-                heading(3, tr("联系方式", "Contact")),
-                paragraph(tr("第二个面板。", "The second panel.")),
-            ),
-            column(
-                heading(3, tr("权限", "Permissions")),
-                paragraph(tr("第三个面板。", "The third panel.")),
-            ),
-        )
-    sheet.append(tabs)
-    // `tab` is a tab-sheet convention rather than a DOM property, so it stays an attribute.
-    panels.forEachIndexed { index, panelView -> panelView.setAttribute("tab", tabIds[index]) }
-    panels.forEach { sheet.append(it) }
-
-    val readout = Readout("selected = 0")
-    sheet.listen(TabSheetEvents.selectedChanged) { readout.set("selected = ${sheet.selected}") }
-    basic.body.append(example(null, column(sheet, readout.root)))
+    val selected = Readout("selected = 0")
+    sheet.listen(TabSheetEvents.selectedChanged) { selected.set("selected = ${sheet.selected}") }
+    basic.body.append(example(null, column(sheet, selected.root)))
     view.body.append(basic.root)
 
-    val programmatic = section(tr("程序化切换", "Switching programmatically"), "")
-    programmatic.body.append(
-        example(
-            null,
-            row(
-                createButton { textContent = tr("第一页", "First tab") }.withTheme("tertiary").apply {
-                    clickEvent.addHandler { sheet.selected = 0.0 }
-                },
-                createButton { textContent = tr("第三页", "Third tab") }.withTheme("tertiary").apply {
-                    clickEvent.addHandler { sheet.selected = 2.0 }
-                },
+    val lazy =
+        section(
+            tr("内容懒初始化", "Lazy initialization of tab contents"),
+            tr(
+                "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
+                    "上游示例还演示了加载指示器，这里只演示按需创建。",
+                "Create a panel only when its tab is visited: prepare the tab ids up front and append the " +
+                    "matching panel the first time the tab is selected. The upstream example also shows a " +
+                    "loading indicator; this demo focuses on the on-demand creation.",
             ),
-        ),
+        )
+    val lazySheet = createTabSheet()
+    lazySheet.dataset["test"] = "tab-sheet-lazy"
+    val lazyIds = listOf("tabsheet-lazy-dashboard", "tabsheet-lazy-payment", "tabsheet-lazy-shipping")
+    val lazyTabs = createTabs { slot = "tabs" }
+    listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping")).forEachIndexed { index, label ->
+        lazyTabs.append(createTab { textContent = label }.apply { id = ElementId(lazyIds[index]) })
+    }
+    val lazyPanels =
+        listOf(
+            tr("这是仪表盘面板的内容。", "This is the Dashboard tab content"),
+            tr("这是支付面板的内容。", "This is the Payment tab content"),
+            tr("这是配送面板的内容。", "This is the Shipping tab content"),
+        ).mapIndexed { index, text ->
+            div().apply {
+                setAttribute("tab", lazyIds[index])
+                textContent = text
+            }
+        }
+    lazySheet.append(lazyTabs, lazyPanels[0])
+    // The initially selected tab counts as visited; the others materialize on first selection.
+    val visited = mutableSetOf(0)
+    val visitedReadout = Readout("visited = [0]")
+    lazySheet.listen(TabSheetEvents.selectedChanged) {
+        val index = lazySheet.selected.toInt()
+        if (index in lazyPanels.indices && visited.add(index)) lazySheet.append(lazyPanels[index])
+        visitedReadout.set("visited = ${visited.sorted().joinToString(", ", "[", "]")}")
+    }
+    lazy.body.append(example(null, column(lazySheet, visitedReadout.root)))
+    view.body.append(lazy.root)
+
+    val prefixSuffix =
+        section(
+            tr("前缀与后缀", "Prefix and suffix"),
+            tr(
+                "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
+                "A Tab Sheet exposes prefix / suffix slots for custom content at both ends of the tab bar.",
+            ),
+        )
+    val adorned = demoTabSheet("tabsheet-adorned")
+    adorned.append(createButton { textContent = tr("全部关闭", "Close all") }.apply { slot = "prefix" })
+    adorned.append(
+        createButton().apply {
+            slot = "suffix"
+            withTheme("icon")
+            setAttribute("aria-label", tr("新增标签", "Add tab"))
+            append(createIcon { icon = "vaadin:plus" })
+        },
     )
-    view.body.append(programmatic.root)
+    prefixSuffix.body.append(example(null, adorned))
+    view.body.append(prefixSuffix.root)
+
+    val bordered =
+        section(
+            tr("主题", "Theme"),
+            tr(
+                "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
+                "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
+            ),
+        )
+    bordered.body.append(example(null, demoTabSheet("tabsheet-bordered", "bordered")))
+    view.body.append(bordered.root)
 
     return view
 }
 
 private fun buildSideNavPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
+    val log = EventLog(4)
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "path 生成链接；当前路由与 pathname 匹配的项会自动标记为 current。",
-                "path generates links; the item whose pathname matches the current route is marked current " +
-                    "automatically.",
+                "Side Navigation 是带链接的纵向导航列表，通常放在 App Layout 的抽屉里。示例里的同源链接不会真的" +
+                    "跳转：onNavigate 拦截点击并把路径写进事件日志；外部链接与 _blank 目标不受影响。",
+                "Side Navigation is a vertical list of navigation links, usually placed in an App Layout " +
+                    "drawer. Same-origin links here do not navigate: onNavigate intercepts the click and writes " +
+                    "the path to the event log; external links and _blank targets are left alone.",
             ),
         )
-    val nav = createSideNav()
-    nav.dataset["test"] = "side-nav"
-    nav.append(
-        createSideNavItem {
-            path = "#/side-nav"
-            textContent = tr("当前页面", "Current page")
-        },
-        createSideNavItem {
-            path = "#/tabs"
-            textContent = tr("另一个页面", "Another page")
-        },
-        createSideNavItem {
-            textContent = tr("禁用项", "Disabled item")
-            disabled = true
-        },
-    )
-    basic.body.append(example(null, nav))
+    val basicNav =
+        navOf(
+            navItem(tr("仪表盘", "Dashboard"), "vaadin:dashboard", "/dashboard"),
+            navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox"),
+            navItem(tr("日历", "Calendar"), "vaadin:calendar", "/calendar"),
+            navItem(tr("设置", "Settings"), "vaadin:cog", "/settings"),
+            navItem(tr("Vaadin 官网", "Vaadin website"), "vaadin:vaadin-h", "https://vaadin.com").apply {
+                target = "_blank"
+            },
+            onPath = { log.add("onNavigate · $it") },
+        )
+    basicNav.dataset["test"] = "side-nav"
+    basicNav.style.setProperty("width", "100%")
+    basic.body.append(example(null, column(basicNav, log.root)))
     view.body.append(basic.root)
 
-    val nested =
+    val current =
         section(
-            tr("嵌套与折叠", "Nesting and collapsing"),
+            tr("自动高亮当前项", "Automatic highlighting of the current item"),
             tr(
-                "子项放进 slot=\"children\"；collapsible 打开右上角的折叠按钮。",
-                "Child items go into slot=\"children\"; collapsible adds the collapse button in the top corner.",
+                "path 与当前 URL 匹配的项会自动高亮，并把 aria-current 设为 page。默认只匹配完整路径，" +
+                    "matchNested 让 /parent 同时匹配 /parent/child；path 里的查询参数必须全部出现在 URL 中。" +
+                    "匹配到嵌套项时，父项会自动展开，可用 noAutoExpand 关掉。下面的第一项指向当前页面的路径。",
+                "The item whose path matches the current URL is highlighted and gets aria-current=\"page\". Only " +
+                    "the exact path matches by default; matchNested makes /parent also match /parent/child, and " +
+                    "query parameters in the path must all be present in the URL. When a nested item matches, its " +
+                    "parents expand automatically; noAutoExpand disables that. The first item below points at the " +
+                    "current page's path.",
             ),
         )
-    val parent =
-        createSideNavItem {
-            textContent = tr("分组标题", "Group title")
-            expanded = true
+    val currentNav =
+        createSideNav {
+            onNavigate = { _ -> null }
+            style.setProperty("width", "100%")
         }
-    parent.append(
-        createSideNavItem {
-            path = "#/button"
-            textContent = tr("子项一", "Child one")
-            slot = "children"
-        },
-        createSideNavItem {
-            path = "#/text-field"
-            textContent = tr("子项二", "Child two")
-            slot = "children"
-        },
+    currentNav.dataset["test"] = "side-nav-current"
+    currentNav.append(
+        navItem(tr("当前页面", "Current page"), "vaadin:dashboard", location.pathname),
+        navItem(tr("另一个页面", "Another page"), "vaadin:envelope", "/inbox"),
+        navItem(tr("嵌套路由父项", "Nested route parent"), "vaadin:folder", "/parent").apply { matchNested = true },
     )
-    val nestedNav = createSideNav { collapsible = true }
-    nestedNav.append(parent)
-    val readout = Readout("collapsed = false")
-    nestedNav.listen(vaadin.sidenav.SideNavEvents.collapsedChanged) {
-        readout.set("collapsed = ${nestedNav.collapsed}")
-    }
-    nested.body.append(example(null, column(nestedNav, readout.root)))
-    view.body.append(nested.root)
+    current.body.append(example(null, currentNav))
+    view.body.append(current.root)
+
+    val suffix =
+        section(
+            tr("前缀与后缀", "Prefix and suffix elements"),
+            tr(
+                "项上有 prefix / suffix 插槽：prefix 主要放图标，suffix 可以放通知徽标。整行都是链接，" +
+                    "所以不建议在前缀或后缀里放可交互元素。",
+                "Items expose prefix / suffix slots: the prefix is meant for icons and the suffix can hold " +
+                    "notification badges. The whole row acts as a link, so interactive prefix or suffix " +
+                    "elements are not recommended.",
+            ),
+        )
+    val suffixNav =
+        navOf(
+            navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox").apply {
+                append(
+                    createBadge { number = 12.0 }.withTheme("filled", "number-only").apply {
+                        slot = "suffix"
+                        setAttribute("aria-label", tr("未读消息", "unread messages"))
+                    },
+                )
+            },
+            navItem(tr("日历", "Calendar"), "vaadin:calendar", "/calendar").apply {
+                append(
+                    createBadge().withTheme("error", "icon-only").apply {
+                        slot = "suffix"
+                        setAttribute("aria-label", tr("即将到来的预约", "Upcoming appointment"))
+                        append(createIcon { icon = "vaadin:bell" }.apply { slot = "icon" })
+                    },
+                )
+            },
+        )
+    suffixNav.style.setProperty("width", "100%")
+    suffix.body.append(example(null, suffixNav))
+    view.body.append(suffix.root)
+
+    val hierarchy =
+        section(
+            tr("层级", "Hierarchy"),
+            tr(
+                "子项放进 slot=\"children\"，默认折叠。父项也可以带 path：点击时既导航也展开子项；" +
+                    "省略 path 的父项只负责分组。层级深度没有技术限制，但建议不超过三层。",
+                "Child items go into slot=\"children\" and start collapsed. A parent may also have a path: " +
+                    "clicking it navigates and expands its children; a parent without a path only groups them. " +
+                    "There is no technical limit on nesting depth, but three levels are recommended at most.",
+            ),
+        )
+    val messages =
+        navItem(tr("消息", "Messages"), "vaadin:envelope", "/messages").apply {
+            append(
+                navItem(tr("收件箱", "Inbox"), "vaadin:inbox", "/inbox").apply { slot = "children" },
+                navItem(tr("已发送", "Sent"), "vaadin:paperplane", "/sent").apply { slot = "children" },
+                navItem(tr("回收站", "Trash"), "vaadin:trash", "/trash").apply { slot = "children" },
+            )
+        }
+    val admin =
+        navItem(tr("管理", "Admin"), "vaadin:cog").apply {
+            append(
+                navItem(tr("用户", "Users"), "vaadin:group", "/users").apply { slot = "children" },
+                navItem(tr("权限", "Permissions"), "vaadin:key", "/permissions").apply { slot = "children" },
+            )
+        }
+    val hierarchyNav = navOf(messages, admin)
+    hierarchyNav.style.setProperty("width", "100%")
+    hierarchy.body.append(example(null, hierarchyNav))
+    view.body.append(hierarchy.root)
+
+    val labelled =
+        section(
+            tr("带标签的可折叠列表", "Labeled collapsible list"),
+            tr(
+                "label 插槽在列表顶部加标题，便于并排放多个列表；标签列表可以设为可折叠，" +
+                    "折叠后只保留标题栏。",
+                "The label slot puts a heading on top of the list, which helps when several lists sit next " +
+                    "to each other; a labeled list can also be collapsible, leaving only its heading when " +
+                    "collapsed.",
+            ),
+        )
+    val messagesNav =
+        createSideNav {
+            onNavigate = { _ -> null }
+            style.setProperty("width", "100%")
+        }
+    messagesNav.append(
+        span(tr("消息", "Messages")).apply { slot = "label" },
+        navItem(tr("收件箱", "Inbox"), "vaadin:inbox", "/inbox"),
+        navItem(tr("已发送", "Sent"), "vaadin:paperplane", "/sent"),
+        navItem(tr("回收站", "Trash"), "vaadin:trash", "/trash"),
+    )
+    val adminNav =
+        createSideNav {
+            collapsible = true
+            onNavigate = { _ -> null }
+            style.setProperty("width", "100%")
+        }
+    adminNav.dataset["test"] = "side-nav-collapsible"
+    adminNav.append(
+        span(tr("管理", "Admin")).apply { slot = "label" },
+        navItem(tr("用户", "Users"), "vaadin:group", "/users"),
+        navItem(tr("权限", "Permissions"), "vaadin:key", "/permissions"),
+    )
+    val collapsed = Readout("collapsed = false")
+    adminNav.listen(SideNavEvents.collapsedChanged) { collapsed.set("collapsed = ${adminNav.collapsed}") }
+    labelled.body.append(
+        example(null, createVerticalLayout().apply {
+            withTheme("spacing")
+            style.setProperty("width", "100%")
+            append(messagesNav, adminNav, collapsed.root)
+        }),
+    )
+    view.body.append(labelled.root)
+
+    val newTab =
+        section(
+            tr("在新标签页打开", "Open in another browser tab"),
+            tr(
+                "给项设置 target（例如 _blank）可以让链接在新的标签页或窗口中打开，行为取决于浏览器设置。",
+                "Setting target (for example _blank) on an item opens the link in a new tab or window, " +
+                    "depending on the browser's settings.",
+            ),
+        )
+    val newTabNav = navOf(navItem(tr("示例站点", "Example"), path = "https://example.com").apply { target = "_blank" })
+    newTabNav.style.setProperty("width", "100%")
+    newTab.body.append(example(null, newTabNav))
+    view.body.append(newTab.root)
+
+    val scrolling =
+        section(
+            tr("滚动", "Scrolling"),
+            tr(
+                "Side Navigation 自身没有滚动区；条目较多时把它包进 Scroller，并给 Scroller 限定高度。",
+                "Side Navigation has no scroll area of its own; when the list gets long, wrap it in a " +
+                    "Scroller and give the Scroller a height.",
+            ),
+        )
+    val longNav =
+        navOf(
+            *Array(12) { index ->
+                navItem(tr("条目 ${index + 1}", "Item ${index + 1}"), "vaadin:folder", "/item-${index + 1}")
+            },
+        )
+    longNav.style.setProperty("width", "100%")
+    val scroller = createScroller { scrollDirection = ScrollerScrollDirections.vertical }
+    scroller.dataset["test"] = "side-nav-scroller"
+    scroller.style.setProperty("height", "12rem")
+    scroller.append(longNav)
+    scrolling.body.append(example(null, scroller))
+    view.body.append(scrolling.root)
+
+    val styling =
+        section(
+            tr("样式", "Styling"),
+            tr(
+                "用 ::part(link) 定制链接本身，外部链接可以额外加类名区分（本页样式表把 .external 做成强调色）。",
+                "Style the link itself through ::part(link); an external link can be tagged with an extra class " +
+                    "(this page's stylesheet highlights .external).",
+            ),
+        )
+    val stylingNav =
+        navOf(
+            navItem(tr("仪表盘", "Dashboard"), "vaadin:dashboard", "/dashboard"),
+            navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox"),
+            navItem(tr("Vaadin 官网", "Vaadin website"), "vaadin:vaadin-h", "https://vaadin.com").apply {
+                withClass("external")
+                target = "_blank"
+            },
+        )
+    stylingNav.style.setProperty("width", "100%")
+    styling.body.append(example(null, stylingNav))
+    view.body.append(styling.root)
+
+    val keyboard =
+        section(
+            tr("键盘操作", "Keyboard usage"),
+            tr(
+                "列表项之间用 Tab 移动；有子项时 Tab 还会落到展开/折叠按钮上；Enter 或空格切换展开状态，" +
+                    "Enter 触发链接。",
+                "Tab moves between list items and, for parents, also to the expand/collapse button; Enter or " +
+                    "Space toggles the expansion and Enter follows the link.",
+            ),
+        )
+    keyboard.body.append(
+        example(
+            null,
+            bulletList(
+                listOf(
+                    tr("Tab：在列表项之间移动焦点，父项的展开按钮也是单独的焦点停靠点。", "Tab: moves the focus between items; a parent's toggle button is a separate stop."),
+                    tr("Enter / 空格：展开或折叠子项。", "Enter / Space: expands or collapses the child items."),
+                    tr("Enter：触发链接。", "Enter: follows the link."),
+                ),
+            ),
+        ),
+    )
+    view.body.append(keyboard.root)
 
     return view
 }
 
 private fun buildBreadcrumbsPage(meta: PageMeta): PageView {
     val view = page(meta)
+    registerVaadinIcons()
 
+    val log = EventLog(4)
     val basic =
         section(
             tr("基本用法", "Basic usage"),
             tr(
-                "最后一项自动标记为 current，点击前几项会导航到对应 hash 路由。",
-                "The last item is marked current automatically; clicking an earlier item navigates to its " +
-                    "hash route.",
+                "面包屑从顶层位置逐级指向当前页面：带 path 的项渲染成链接，最后一项不带 path，代表当前页且不可点击。" +
+                    "示例里的链接不会真的跳转，点击只写进事件日志。（Flow 的 ROUTER / MANUAL 模式是 Java 侧 API，" +
+                    "Web Component 始终由调用方添加项。）",
+                "Breadcrumbs lead from the top-level location to the current page: items with a path render as " +
+                    "links, and the last item has no path, represents the current page and is not clickable. The " +
+                    "links here do not navigate — clicks are written to the event log. (The Flow ROUTER / MANUAL " +
+                    "modes are Java-side APIs; with the Web Component the caller always adds the items.)",
             ),
         )
     val crumbs = createBreadcrumbs()
     crumbs.dataset["test"] = "breadcrumbs"
     crumbs.append(
-        createBreadcrumbsItem {
-            path = "#/overview"
-            textContent = tr("首页", "Home")
-        },
-        createBreadcrumbsItem {
-            path = "#/layouts"
-            textContent = tr("布局", "Layouts")
-        },
-        createBreadcrumbsItem { textContent = tr("面包屑", "Breadcrumbs") },
+        crumb(tr("首页", "Home"), "/", onPath = { log.add("clicked · $it") }),
+        crumb(tr("组件", "Components"), "/components", onPath = { log.add("clicked · $it") }),
+        crumb(tr("面包屑", "Breadcrumbs")),
     )
-    basic.body.append(example(null, crumbs))
+    basic.body.append(example(null, column(crumbs, log.root)))
     view.body.append(basic.root)
+
+    val items =
+        section(
+            tr("项与图标", "Items and icons"),
+            tr(
+                "path 决定一项是链接还是当前页；prefix 插槽可以放图标，例如层级根节点的房子图标。",
+                "path decides whether an item is a link or the current page; the prefix slot can hold an icon, " +
+                    "such as a home icon for the root of the hierarchy.",
+            ),
+        )
+    val iconCrumbs = createBreadcrumbs()
+    iconCrumbs.dataset["test"] = "breadcrumbs-icons"
+    iconCrumbs.append(
+        crumb(tr("首页", "Home"), "/", iconName = "vaadin:home"),
+        crumb(tr("订单", "Orders"), "/orders", iconName = "vaadin:package"),
+        crumb(tr("订单详情", "Order Details")),
+    )
+    items.body.append(example(null, iconCrumbs))
+    view.body.append(items.root)
 
     val overflow =
         section(
-            tr("项较多时", "Many items"),
+            tr("溢出", "Overflow"),
             tr(
-                "超出宽度时可以横向滚动，组件会保持首尾可见。",
-                "Overflowing items scroll horizontally while the first and last stay visible.",
+                "宽度不足时，前面的项会折叠进开头的溢出菜单，最后一项（当前页）始终可见。",
+                "When the trail does not fit, leading items collapse into an overflow menu at the start; the " +
+                    "last item (the current page) never collapses.",
             ),
         )
     val many = createBreadcrumbs()
-    (1..8).forEach { index ->
-        many.append(
-            createBreadcrumbsItem {
-                path = "#/breadcrumbs"
-                textContent = tr("第 $index 层", "Level $index")
-            },
-        )
-    }
+    many.dataset["test"] = "breadcrumbs-overflow"
+    many.style.setProperty("width", "300px")
+    many.append(
+        crumb(tr("首页", "Home"), "/"),
+        crumb(tr("目录", "Catalog"), "/catalog"),
+        crumb(tr("电子产品", "Electronics"), "/catalog/electronics"),
+        crumb(tr("电脑", "Computers"), "/catalog/electronics/computers"),
+        crumb(tr("笔记本", "Laptops"), "/catalog/electronics/computers/laptops"),
+        crumb(tr("Model X1", "Model X1")),
+    )
     overflow.body.append(example(null, many))
     view.body.append(overflow.root)
 
+    val i18nSection =
+        section(
+            tr("本地化", "Internationalization"),
+            tr(
+                "目前可以本地化的只有溢出菜单按钮的无障碍标签：moreItems，屏幕阅读器会朗读它。",
+                "Only the accessible label of the overflow button is localizable: moreItems, which screen " +
+                    "readers announce.",
+            ),
+        )
+    val localized = createBreadcrumbs()
+    localized.dataset["test"] = "breadcrumbs-i18n"
+    localized.style.setProperty("width", "16rem")
+    localized.i18nProperty = unsafeJso<BreadcrumbsI18n> {
+        moreItems = tr("展开折叠的层级", "Show hidden trail")
+    }
+    localized.append(
+        crumb(tr("首页", "Home"), "/"),
+        crumb(tr("目录", "Catalog"), "/catalog"),
+        crumb(tr("电子产品", "Electronics"), "/catalog/electronics"),
+        crumb(tr("电脑", "Computers"), "/catalog/electronics/computers"),
+        crumb(tr("笔记本", "Laptops"), "/catalog/electronics/computers/laptops"),
+        crumb(tr("Model X1", "Model X1")),
+    )
+    i18nSection.body.append(example(null, localized))
+    view.body.append(i18nSection.root)
+
+    val accessibility =
+        section(
+            tr("无障碍", "Accessibility"),
+            tr(
+                "组件渲染为 navigation 地标，辅助技术会把整条路径读成一个导航区域。",
+                "The component renders with the navigation landmark role, so assistive technologies announce " +
+                    "the trail as a navigation region.",
+            ),
+        )
+    accessibility.body.append(
+        example(
+            null,
+            bulletList(
+                listOf(
+                    tr(
+                        "role=navigation：整条路径是一个导航地标。",
+                        "role=navigation: the whole trail is a navigation landmark.",
+                    ),
+                    tr(
+                        "aria-current=page：最后一个没有 path 的项标记为当前页面。",
+                        "aria-current=page: the last item without a path is marked as the current page.",
+                    ),
+                    tr(
+                        "带 path 的项是可聚焦、可用键盘操作的链接。",
+                        "Items with a path are focusable links that work from the keyboard.",
+                    ),
+                    tr(
+                        "溢出按钮带有可本地化的 aria-label（i18n.moreItems）。",
+                        "The overflow button carries a localizable aria-label (i18n.moreItems).",
+                    ),
+                ),
+            ),
+        ),
+    )
+    view.body.append(accessibility.root)
+
     return view
 }
+
+/** One plain tab per label. */
+private fun tabsOf(vararg labels: String, configure: TabsElement.() -> Unit = {}): TabsElement =
+    createTabs(configure).apply {
+        labels.forEach { label -> append(createTab { textContent = label }) }
+    }
+
+/** The icon/label pairs shared by the two icon examples. */
+private fun iconTabEntries(): List<Pair<String, String>> =
+    listOf(
+        "vaadin:user" to tr("个人资料", "Profile"),
+        "vaadin:cog" to tr("设置", "Settings"),
+        "vaadin:bell" to tr("通知", "Notifications"),
+    )
+
+/** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
+private fun demoTabSheet(key: String, theme: String? = null): TabSheetElement {
+    val sheet = createTabSheet()
+    if (theme != null) sheet.withTheme(theme)
+    val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
+    val labels = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
+    val contents =
+        listOf(
+            tr("这是仪表盘面板的内容。", "This is the Dashboard tab content"),
+            tr("这是支付面板的内容。", "This is the Payment tab content"),
+            tr("这是配送面板的内容。", "This is the Shipping tab content"),
+        )
+    val tabs = createTabs { slot = "tabs" }
+    labels.forEachIndexed { index, label ->
+        tabs.append(createTab { textContent = label }.apply { id = ElementId(ids[index]) })
+    }
+    sheet.append(tabs)
+    contents.forEachIndexed { index, text ->
+        sheet.append(
+            div().apply {
+                setAttribute("tab", ids[index])
+                textContent = text
+            },
+        )
+    }
+    return sheet
+}
+
+/** A side nav item with an optional icon in the prefix slot. */
+private fun navItem(
+    label: String,
+    iconName: String? = null,
+    path: String? = null,
+    configure: SideNavItemElement.() -> Unit = {},
+): SideNavItemElement =
+    createSideNavItem {
+        textContent = label
+        if (path != null) this.path = path
+        configure()
+    }.apply {
+        if (iconName != null) append(createIcon { icon = iconName }.apply { slot = "prefix" })
+    }
+
+/** A side nav whose links never navigate; [onPath] receives the path of every intercepted click. */
+private fun navOf(vararg items: SideNavItemElement, onPath: ((String) -> Unit)? = null): SideNavElement =
+    createSideNav().apply {
+        onNavigate = { event ->
+            event.path?.let { onPath?.invoke(it) }
+            null
+        }
+        append(*items)
+    }
+
+/** A breadcrumbs item; the ones with a path navigate nowhere and report their path to [onPath]. */
+private fun crumb(
+    text: String,
+    path: String? = null,
+    iconName: String? = null,
+    onPath: ((String) -> Unit)? = null,
+): BreadcrumbsItemElement =
+    createBreadcrumbsItem { textContent = text }.apply {
+        if (path != null) {
+            this.path = path
+            clickEvent.addHandler {
+                it.preventDefault()
+                onPath?.invoke(path)
+            }
+        }
+        if (iconName != null) append(createIcon { icon = iconName }.apply { slot = "prefix" })
+    }
 
 /** A tinted placeholder box used by the layout examples. */
 private fun box(text: String, height: String? = null): HTMLElement =

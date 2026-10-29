@@ -71,9 +71,40 @@ class DataTest {
         page.navigate("/#/tabs")
 
         val tabs = page.getByTestId("tabs")
-        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Settings")).click()
+        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Shipping")).click()
         assertThat(tabs).hasJSProperty("selected", 2)
         assertThat(page.locator(".event-log")).containsText("selected-changed · 2")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `tabs keep a disabled tab out of the selection`(page: Page) {
+        page.navigate("/#/tabs")
+
+        val tabs = page.getByTestId("tabs-states")
+        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Disabled"))
+            .click(Locator.ClickOptions().setForce(true))
+        assertThat(tabs).hasJSProperty("selected", 0)
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `tabs switch the content without a tab sheet`(page: Page) {
+        page.navigate("/#/tabs")
+
+        val tabs = page.getByTestId("tabs-content")
+        val content = page.locator(".tabs-content__text")
+        assertThat(content).hasText("This is the Dashboard content.")
+
+        tabs.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Payment")).click()
+        assertThat(content).hasText("This is the Payment content.")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `tabs expose every theme variant`(page: Page) {
+        page.navigate("/#/tabs")
+
+        listOf("centered", "equal-width-tabs", "minimal", "small").forEach { theme ->
+            assertThat(page.getByTestId("tabs-theme-$theme")).hasAttribute("theme", theme)
+        }
     }
 
     @RetryingTest(maxAttempts = 2)
@@ -81,17 +112,34 @@ class DataTest {
         page.navigate("/#/tabsheet")
 
         val sheet = page.getByTestId("tab-sheet")
-        val firstPanel = sheet.getByText("The content of this tab comes from the first panel.")
-        val thirdPanel = sheet.getByText("The third panel.")
+        val firstPanel = sheet.getByText("This is the Dashboard tab content")
+        val thirdPanel = sheet.getByText("This is the Shipping tab content")
 
         assertThat(firstPanel).isVisible()
         assertThat(thirdPanel).isHidden()
 
-        sheet.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Permissions")).click()
+        sheet.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Shipping")).click()
         assertThat(thirdPanel).isVisible()
         assertThat(firstPanel).isHidden()
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("selected"))).containsText("selected = 2")
         assertThat(sheet).not().hasAttribute("loading", "")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `tab sheet creates a panel on its first visit`(page: Page) {
+        page.navigate("/#/tabsheet")
+
+        val sheet = page.getByTestId("tab-sheet-lazy")
+        assertThat(sheet.getByText("This is the Dashboard tab content")).isVisible()
+        assertThat(sheet.getByText("This is the Payment tab content")).hasCount(0)
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("visited")))
+            .containsText("visited = [0]")
+
+        sheet.locator("vaadin-tab", Locator.LocatorOptions().setHasText("Payment")).click()
+        assertThat(sheet.getByText("This is the Payment tab content")).isVisible()
+        assertThat(sheet.getByText("This is the Dashboard tab content")).isHidden()
+        assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("visited")))
+            .containsText("visited = [0, 1]")
     }
 
     @RetryingTest(maxAttempts = 2)

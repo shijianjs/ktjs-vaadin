@@ -111,10 +111,10 @@
 | card | card | 13 | DONE | 内容 / 标题与副标题（slot 与 `cardTitle` 对照）/ 头部区域 / 媒体 / 底部操作 / 样式变体 / 组合变体 / 交互式配置（插槽、主题与媒体切换，保留模式增删节点） |
 | accordion | accordion | 8 | DONE | 基本用法 / 自定义 summary 向导（完成图标 + `opened` 推进）/ 内容（链接）/ 禁用面板 / 主题变体（filled、no-padding、reverse、small） |
 | details | details | 7 | DONE | 基本用法 / 内容 / 自定义 summary（错误徽标 + 表单）/ 禁用 / 主题变体 |
-| tabs | tabs | 19 | TODO | 含 tabsheet |
-| tabsheet | tabs | — | TODO | |
-| side-nav | side-nav | 6 | TODO | |
-| breadcrumbs | breadcrumbs | 3 | TODO | |
+| tabs | tabs | 19 | DONE | 基本用法（选中下标读值）/ 状态（selected、unselected、disabled）/ 方向与溢出（horizontal、hide-scroll-buttons、vertical）/ 图标与其他内容（icon-on-top、竖向图标、徽标）/ 焦点环 / 不使用 Tab Sheet 切换内容 / 主题变体（centered、equal-width-tabs、minimal、small，来自 styling 页）；autoselect 只有 Java 示例，未复刻 |
+| tabsheet | tabs | — | DONE | 基本用法 / 内容懒初始化（首次选中时才插入面板，读值记录已访问下标）/ 前缀与后缀插槽 / 主题（bordered） |
+| side-nav | side-nav | 6 | DONE | 基本用法（onNavigate 拦截跳转 + 事件日志）/ 自动高亮当前项（`location.pathname` + matchNested）/ 前缀与后缀（徽标）/ 层级（嵌套 children）/ 带标签的可折叠列表（collapsed 读值）/ 新标签页打开 / 滚动 / 样式（::part(link)）/ 键盘操作 |
+| breadcrumbs | breadcrumbs | 3 | DONE | 基本用法（点击拦截 + 事件日志）/ 项与图标（prefix 图标）/ 溢出菜单（宽度受限、overflow-button 展开）/ 本地化（i18n.moreItems）/ 无障碍说明 |
 
 ### 基础展示（`Display.kt`）
 
@@ -155,6 +155,7 @@
 | 2026-10-29 | upload | `UploadMixin.i18n` / `UploadFileListMixin.i18n` 在 manifest 里是 `Object`（生成成 `JsAny`）；`emitMixin` 不把已继承成员传给 `renderMembers`，导致 mixin 里重复声明的成员既没有 `override` 也不会加 `@JsName` 改名 | 手写 `UploadI18n` / `UploadFileListI18n`（按上游 `.d.ts`）；生成器 `EXTRA_MEMBERS` 为两个 mixin 补 `@JsName("i18n") i18nProperty`，`emitMixin` 改为传入 `inheritedMembers`；`I18nTest` / `UploadManagerTest` 补类型化 i18n 用例 |
 | 2026-10-29 | upload | `UploadFile` 缺 `error` 字段：上游 `.d.ts` 只声明 `errorKey`，但文件列表渲染 `file.error`，官方示例直接给 `File` 实例赋值 | 手写 `UploadFile.error: String?` 并在 KDoc 注明来源 |
 | 2026-10-29 | upload | `UploadManager` 是纯 JS 类，manifest 没有构造函数签名，也不导出构造参数类型，无法在 Kotlin 里 `new` 一个 manager（模块化上传必需） | 手写 `UploadManagerOptions`（含 `disabled`）+ `createUploadManager(options)`；`unsafeCast` 而非 `as`，避免外部类没有运行时绑定时 `instanceof` 抛 `ReferenceError`；`UploadManagerTest` 覆盖全部选项与文件跟踪 |
+| 2026-10-29 | breadcrumbs | `i18n` 在 manifest 里只记成继承自 `I18nMixin` 的 `object`，生成成 `JsAny`，上游 `.d.ts` 是 `BreadcrumbsI18n`（`moreItems`） | 手写 `vaadin/breadcrumbs/BreadcrumbsTypes.kt`，生成器 `EXTRA_MEMBERS` + `MEMBER_TYPES` 给元素补 `@JsName("i18n") i18nProperty`；`BreadcrumbsTest` 补默认值与替换用例；demo 用类型化访问器 |
 | 2026-10-29 | 选择控件 | 复核查过一遍：`TooltipMixin.text`、`MultiSelectComboBox.i18n`、`ListBoxEdge` 等成员 manifest 与 `.d.ts` 一致，本轮无新增缺口；`multi-select-combo-box` 的 `i18n` 仍是 `JsAny`（见已知限制） | 未改生成器 |
 
 ### 已知限制（不修）
