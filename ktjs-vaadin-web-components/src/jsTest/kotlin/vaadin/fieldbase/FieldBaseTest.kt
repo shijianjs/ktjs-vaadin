@@ -20,6 +20,8 @@ import vaadin.textfield.TextFieldElement
 import vaadin.textfield.createTextField
 import vaadin.textfield.registerTextField
 import vaadin.typeInto
+import kotlin.js.unsafeCast
+import web.html.HTMLInputElement
 import web.html.HTMLElement
 
 /**
@@ -174,6 +176,20 @@ class FieldBaseTest {
             field.clearButtonVisible = true
             nextUpdate(field)
             assertTrue(field.clearButtonVisible)
+        }
+    }
+
+    // InputMixin
+
+    @Test
+    fun inputMixinExposesTheControlledInput(): Promise<Unit> {
+        val field = attach(createTextField { value = "Hello" })
+
+        return nextRender(field).then {
+            val input = field.inputElement.unsafeCast<HTMLInputElement>()
+            assertEquals("INPUT", input.tagName)
+            assertEquals("Hello", input.value)
+            assertTrue(input === query(field, "input"), "inputElement is the light-DOM input")
         }
     }
 

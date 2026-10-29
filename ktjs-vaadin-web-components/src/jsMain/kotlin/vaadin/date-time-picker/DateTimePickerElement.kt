@@ -94,7 +94,13 @@ package vaadin.datetimepicker
  */
 
 abstract external class DateTimePickerElement : web.html.HTMLElement, vaadin.datetimepicker.DateTimePickerMixin, vaadin.themablemixin.ThemableMixin, vaadin.componentbase.ElementMixin, vaadin.componentbase.PolylitMixin, vaadin.themablemixin.LumoInjectionMixin {
-
+    /**
+     * The object used to localize the field, including the accessible labels of the inner date and time pickers.
+     *
+     * Maps to the `i18n` property; renamed in Kotlin because the inherited `i18n` is untyped.
+     */
+    @JsName("i18n")
+    var i18nProperty: vaadin.datetimepicker.DateTimePickerI18n
 }
 
 @JsModule("@vaadin/date-time-picker/src/vaadin-date-time-picker.js")

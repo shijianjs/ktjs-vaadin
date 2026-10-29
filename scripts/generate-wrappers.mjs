@@ -193,6 +193,7 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualListMixin|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/virtual-list|VirtualList|itemAccessibleNameGenerator', '((kotlin.js.JsAny?) -> String)?'],
   ['@vaadin/date-picker|DateMetadataController|provider', 'vaadin.datepicker.DatePickerDateMetadataProvider?'],
+  ['@vaadin/date-time-picker|DateTimePicker|i18n', 'vaadin.datetimepicker.DateTimePickerI18n'],
   ['@vaadin/date-picker|MonthCalendarMixin|isDateDisabled', '((vaadin.datepicker.DatePickerDate) -> Boolean)?'],
   // The manifest records the column alignment as an untyped `string`; upstream `.d.ts` uses the CSS
   // `text-align` subset, so the existing kotlin-wrappers value type applies.
@@ -298,6 +299,42 @@ const MEMBER_TYPES = new Map([
   ['@vaadin/virtual-list|VirtualListMixin|lastVisibleIndex', 'Double'],
 ]);
 
+// Public members that the manifest omits entirely but the upstream `.d.ts` declares. Key format:
+// `package|declaration`; the members are appended to the ones read from the manifest.
+const EXTRA_MEMBERS = new Map([
+  // `input-mixin.d.ts` exposes the controlled `<input>` (set by `InputController`) as a public
+  // readonly field, but the manifest only records it as a protected internal.
+  [
+    '@vaadin/field-base|InputMixin',
+    [
+      {
+        kind: 'field',
+        name: 'inputElement',
+        readonly: true,
+        type: { text: 'HTMLElement' },
+        description:
+          'A reference to the input element controlled by the mixin, set by `InputController`.',
+      },
+    ],
+  ],
+  // The manifest marks `i18n` as inherited from `I18nMixin` (`JsAny`), while upstream types it
+  // with the wider `DateTimePickerI18n` that adds `dateLabel` / `timeLabel`.
+  [
+    '@vaadin/date-time-picker|DateTimePicker',
+    [
+      {
+        kind: 'field',
+        name: 'i18n',
+        type: { text: 'object' },
+        description:
+          'The object used to localize the field, including the accessible labels of the inner date ' +
+          'and time pickers.\n\nMaps to the `i18n` property; renamed in Kotlin because the inherited ' +
+          '`i18n` is untyped.',
+      },
+    ],
+  ],
+]);
+
 // Module-level functions whose manifest signature is too vague (a bare `Function`), typed after
 // the upstream implementation and `.d.ts`. The value is the Kotlin signature after the name.
 const MODULE_SIGNATURES = new Map([
@@ -326,6 +363,13 @@ const MODULE_SIGNATURES = new Map([
     '(element: web.html.HTMLElement, effects: Array<vaadin.masterdetaillayout.AnimationEffect>, progress: Double): kotlin.js.Promise<Unit>',
   ],
   ['@vaadin/date-picker|extractDateParts', '(date: kotlin.js.Date): vaadin.datepicker.DatePickerDate'],
+  // Upstream `parseDate` returns `Date | undefined`; the manifest drops the undefined half.
+  ['@vaadin/date-picker|parseDate', '(str: String): kotlin.js.Date?'],
+  // Upstream `dateEquals` accepts `Date | null` on both sides and an optional normaliser.
+  [
+    '@vaadin/date-picker|dateEquals',
+    '(date1: kotlin.js.Date?, date2: kotlin.js.Date?, normalizer: ((kotlin.js.Date) -> kotlin.js.Date)? = definedExternally): Boolean',
+  ],
   [
     '@vaadin/time-picker|formatISOTime',
     '(time: vaadin.timepicker.TimePickerTime?): String',
@@ -855,6 +899,8 @@ for (const entry of packages) {
             ? declaration.name
             : `${declaration.name}Statics`
           : null;
+      const extra = EXTRA_MEMBERS.get(`${pkg}|${declaration.name}`);
+      if (extra) record.members = [...(declaration.members || []), ...extra];
       const key = `${pkg}|${module.path}|${declaration.name}`;
       registry.set(key, record);
       declarations.push(record);
@@ -1030,7 +1076,7 @@ function memberType(member, pkg) {
 
 function resolveName(name, type, inherited) {
   let kotlin = name;
-  while (inherited !== undefined && inherited.has(name) && inherited.get(name) !== type) {
+  while (inherited !== undefined && inherited.has(kotlin) && inherited.get(kotlin) !== type) {
     kotlin = `${kotlin}Property`;
   }
   return kotlin;
@@ -1078,7 +1124,9 @@ function renderMember(member, pkg, spaces, inherited, declaration = null) {
     : member.description;
   const doc = kdoc(description, spaces);
   const pad = ' '.repeat(spaces);
-  const annotation = renamed ? `${pad}@JsName("${member.name}")\n` : '';
+  // `resolveName` can also append `Property` when an inherited member of the same JS name has a
+  // different type; the annotation has to follow the name, not the DOM-only `rename` flag.
+  const annotation = name !== member.name ? `${pad}@JsName("${member.name}")\n` : '';
   const override = inherited && inherited.get(name) === type ? `${pad}override ` : pad;
   if (member.kind === 'field') {
     const keyword = member.readonly ? 'val' : 'var';

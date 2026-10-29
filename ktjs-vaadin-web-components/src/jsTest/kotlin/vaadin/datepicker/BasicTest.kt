@@ -2,6 +2,7 @@ package vaadin.datepicker
 
 import kotlin.js.Promise
 import kotlin.js.js
+import kotlin.js.unsafeCast
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -14,6 +15,7 @@ import vaadin.detachAll
 import vaadin.nextRender
 import vaadin.on
 import vaadin.shadowQuery
+import web.html.HTMLInputElement
 import web.html.HTMLElement
 
 /**
@@ -44,7 +46,7 @@ class BasicTest {
     private fun newDatePicker(): DatePickerElement = attach(createDatePicker())
 
     private fun inputValue(picker: DatePickerElement): String =
-        js("(picker) => picker.inputElement.value")(picker) as String
+        picker.inputElement.unsafeCast<HTMLInputElement>().value
 
     // parseDate
 
@@ -65,12 +67,12 @@ class BasicTest {
 
     @Test
     fun doesNotParseADateThatDoesNotExist() {
-        assertTrue(js("(value) => value === undefined")(parseDate("2026-02-30")) as Boolean)
-        assertTrue(js("(value) => value === undefined")(parseDate("2023-02-29")) as Boolean)
-        assertTrue(js("(value) => value === undefined")(parseDate("2026-13-01")) as Boolean)
-        assertTrue(js("(value) => value === undefined")(parseDate("2026-00-01")) as Boolean)
-        assertTrue(js("(value) => value === undefined")(parseDate("2026-01-32")) as Boolean)
-        assertTrue(js("(value) => value === undefined")(parseDate("2026-01-00")) as Boolean)
+        assertEquals(null, parseDate("2026-02-30"))
+        assertEquals(null, parseDate("2023-02-29"))
+        assertEquals(null, parseDate("2026-13-01"))
+        assertEquals(null, parseDate("2026-00-01"))
+        assertEquals(null, parseDate("2026-01-32"))
+        assertEquals(null, parseDate("2026-01-00"))
         assertTrue(dateEquals(parseDate("2024-02-29"), createDate(2024.0, 1.0, 29.0)))
     }
 

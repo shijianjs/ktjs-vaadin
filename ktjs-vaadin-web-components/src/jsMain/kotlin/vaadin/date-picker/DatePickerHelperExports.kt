@@ -70,7 +70,7 @@ external fun normalizeUTCDate(date: kotlin.js.Date): kotlin.js.Date
  * Check if two dates are equal.
  */
 
-external fun dateEquals(date1: kotlin.js.Date, date2: kotlin.js.Date, normalizer: (kotlin.js.Date) -> kotlin.js.Date = definedExternally): Boolean
+external fun dateEquals(date1: kotlin.js.Date?, date2: kotlin.js.Date?, normalizer: ((kotlin.js.Date) -> kotlin.js.Date)? = definedExternally): Boolean
 
 /**
  * Extracts the basic component parts of a date (day, month and year)
@@ -121,7 +121,7 @@ external fun getAdjustedYear(referenceDate: kotlin.js.Date, year: Double, month:
  * surplus into the next month or year and answer with a date that was never asked for.
  */
 
-external fun parseDate(str: String): kotlin.js.Date
+external fun parseDate(str: String): kotlin.js.Date?
 
 /**
  * Parse date string of one of the following date formats:

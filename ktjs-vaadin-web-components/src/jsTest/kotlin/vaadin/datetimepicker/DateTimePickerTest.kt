@@ -1,5 +1,6 @@
 package vaadin.datetimepicker
 
+import js.objects.unsafeJso
 import kotlin.js.Promise
 import kotlin.js.js
 import kotlin.test.AfterTest
@@ -48,6 +49,23 @@ class DateTimePickerTest {
 
         assertEquals("vaadin-date-time-picker", picker.tagName.lowercase())
         assertEquals("vaadin-date-time-picker", js("(ctor) => ctor.is")(ctor) as String)
+    }
+
+    @Test
+    fun exposesTheTypedI18n(): Promise<Unit> {
+        val picker = newPicker()
+
+        return nextRender(picker).then {
+            picker.i18nProperty =
+                unsafeJso<DateTimePickerI18n> {
+                    dateLabel = "Date"
+                    timeLabel = "Time"
+                }
+            assertEquals("Date", picker.i18nProperty.dateLabel)
+            assertEquals("Time", picker.i18nProperty.timeLabel)
+            // `i18nProperty` maps to `i18n`, the property the component merges defaults into.
+            assertEquals("Date", js("(picker) => picker.i18n.dateLabel")(picker) as String)
+        }
     }
 
     @Test

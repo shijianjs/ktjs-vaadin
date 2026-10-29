@@ -10,4 +10,8 @@ external interface InputMixin {
      * The value of the field.
      */
     var value: String
+    /**
+     * A reference to the input element controlled by the mixin, set by `InputController`.
+     */
+    val inputElement: web.html.HTMLElement
 }
