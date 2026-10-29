@@ -58,3 +58,12 @@ external interface SubMenuItem : MenuBarItem {
     /** Whether the item is checked. */
     var checked: Boolean?
 }
+
+/**
+ * Localisation texts of `<vaadin-menu-bar>`, declared as `MenuBarI18n` in the upstream `.d.ts`.
+ * The manifest only records the `i18n` property as `object`, so the interface is maintained here.
+ */
+external interface MenuBarI18n {
+    /** Accessible label of the overflow button, shown when items no longer fit. */
+    var moreOptions: String?
+}
