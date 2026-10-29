@@ -481,6 +481,12 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
     应用，避免闪白。
   - `ui/`：DOM 构建辅助（`div` / `paragraph` / `anchor` …）、页面骨架（`page` / `section` /
     `example`）、`Readout`（就地更新的读值）与 `EventLog`（滚动事件流）。
+- 示例用到的图片、头像与 SVG 图标是官方文档站点同款，复制自 `S:\workspace\github\vaadin\docs`
+  的 `frontend/demo` 目录，放在 `demo/src/jsMain/resources/images` 与 `icons` 下；Kotlin 侧只通过
+  `demo.ui.Images` 的常量按相对 `index.html` 的路径引用（`images/...`、`icons/...`），运行时不请求
+  任何外部地址。每个资源目录里的 `ATTRIBUTION.md` 记录来源仓库、提交、许可证（文档内容 CC BY-ND
+  4.0，图标为 Font Awesome Free 6.4.2 的 CC BY 4.0）与各文件用途；新增示例优先复用这些资源，不要
+  再退回内联 base64 的占位图形，复制新资源时同步补 `ATTRIBUTION.md`。
 - 每个页面必须提供三条链接：Vaadin 官方文档（中文模式 `https://vaadin.com/docs/latest/zh/components/<slug>`，
   英文模式自动改为 `/latest/components/`；没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）、
   GitHub 上的 Kotlin 源码（`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）与 Dokka 的组件包页。

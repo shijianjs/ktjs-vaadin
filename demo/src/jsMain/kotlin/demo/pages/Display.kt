@@ -5,6 +5,7 @@ import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
 import demo.tr
+import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
@@ -157,68 +158,6 @@ val displayEntries: List<CatalogEntry> =
         ),
     )
 
-// ---------------------------------------------------------------------------------------------
-// Inline artwork
-//
-// The docs examples load SVGs and photos from their own resources. The demo ships no binary assets
-// and must not request anything from the network (the end-to-end suite walks every page and fails on
-// console errors), so every picture below is a data URI built from a snippet of SVG at page-build
-// time. Strings are only used as image/icon sources, never as DOM markup.
-// ---------------------------------------------------------------------------------------------
-
-/** Turns an SVG snippet into a `data:` URI that both `<img src>` and `<vaadin-icon src>` accept. */
-private fun svgDataUri(markup: String): String =
-    "data:image/svg+xml," +
-        markup
-            .replace("\"", "'")
-            .replace("%", "%25")
-            .replace("<", "%3C")
-            .replace(">", "%3E")
-            .replace("#", "%23")
-            .replace(" ", "%20")
-
-/** A simple illustrated portrait, used where the docs examples show a person's photo. */
-private fun avatarDataUri(fill: String): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'>" +
-            "<rect width='80' height='80' fill='#$fill'/>" +
-            "<circle cx='40' cy='30' r='14' fill='#ffffff'/>" +
-            "<path d='M12 80c0-16 12-26 28-26s28 10 28 26z' fill='#ffffff'/>" +
-            "</svg>",
-    )
-
-/** A square logo used by the "avatar with an image" example. */
-private fun companyLogoDataUri(): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>" +
-            "<rect width='120' height='120' rx='16' fill='#1f4e9c'/>" +
-            "<text x='60' y='78' font-family='sans-serif' font-size='44' fill='#ffffff' " +
-            "text-anchor='middle'>V</text>" +
-            "</svg>",
-    )
-
-/**
- * Standalone icon file (`icons/code-branch.svg` in the docs). Stroke and fill use `currentColor`,
- * so the colour examples can tint it.
- */
-private const val CODE_BRANCH_SVG =
-    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' " +
-        "stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>" +
-        "<circle cx='6' cy='5' r='2.5'/><circle cx='6' cy='19' r='2.5'/><circle cx='18' cy='7' r='2.5'/>" +
-        "<path d='M6 7.5v9M18 9.5c0 4.5-6 2.5-9.5 6'/></svg>"
-
-/** Sprite file (`icons/solid.svg` in the docs): two icons wrapped in `<symbol>` elements. */
-private const val SOLID_SPRITE_SVG =
-    "<svg xmlns='http://www.w3.org/2000/svg'><defs>" +
-        "<symbol id='code-branch' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' " +
-        "stroke-linecap='round' stroke-linejoin='round'>" +
-        "<circle cx='6' cy='5' r='2.5'/><circle cx='6' cy='19' r='2.5'/><circle cx='18' cy='7' r='2.5'/>" +
-        "<path d='M6 7.5v9M18 9.5c0 4.5-6 2.5-9.5 6'/></symbol>" +
-        "<symbol id='user' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' " +
-        "stroke-linecap='round' stroke-linejoin='round'>" +
-        "<circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5'/></symbol>" +
-        "</defs></svg>"
-
 /** A single star, passed to [unsafeSvgLiteral] by the SVG literal example. */
 private const val STAR_SVG_FRAGMENT =
     "<path d='M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z' " +
@@ -248,10 +187,10 @@ private fun buildAvatarPage(meta: PageMeta): PageView {
             tr("基本用法", "Basic usage"),
             tr(
                 "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
-                    "getPeople() 取人像，演示站在本地用固定数据模拟。",
+                    "getPeople() 取人像，演示站使用固定的本地人物，照片与文档示例相同。",
                 "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +
                     "the tooltip text. The official example loads a person with getPeople(); the demo uses " +
-                    "fixed local data instead.",
+                    "fixed local people with the same portraits as the docs.",
             ),
         )
     val anonymous = createAvatar()
@@ -264,7 +203,7 @@ private fun buildAvatarPage(meta: PageMeta): PageView {
                 createAvatar { name = "Ada Lovelace" },
                 createAvatar {
                     name = "Grace Hopper"
-                    img = avatarDataUri("4c6ef5")
+                    img = Images.portrait(3)
                 },
             ),
         ),
@@ -305,9 +244,9 @@ private fun buildAvatarPage(meta: PageMeta): PageView {
         section(
             tr("图片", "Image"),
             tr(
-                "img 接受任何图片地址；官方示例同时展示人物照片与公司标志，这里用内联 SVG 代替。",
+                "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
                 "img accepts any image source; the official example shows a person photo and a company logo, " +
-                    "replaced by inline SVGs here.",
+                    "and the demo uses the same pictures copied from the official documentation.",
             ),
         )
     image.body.append(
@@ -316,11 +255,11 @@ private fun buildAvatarPage(meta: PageMeta): PageView {
             row(
                 createAvatar {
                     name = "Ada Lovelace"
-                    img = avatarDataUri("5b8def")
+                    img = Images.portrait(1)
                 },
                 createAvatar {
                     name = "Company Inc."
-                    img = companyLogoDataUri()
+                    img = Images.companyLogo
                 },
             ),
         ),
@@ -1036,7 +975,7 @@ private fun buildIconPage(meta: PageMeta): PageView {
             ),
         )
     fun sizedIcon(size: String): HTMLElement =
-        createIcon { src = svgDataUri(CODE_BRANCH_SVG) }.apply {
+        createIcon { src = Images.codeBranchIcon }.apply {
             style.setProperty("--vaadin-icon-size", size)
         }
     sizing.body.append(
@@ -1056,7 +995,7 @@ private fun buildIconPage(meta: PageMeta): PageView {
                     "FontAwesome class, replaced by a Lumo font icon here.",
             ),
         )
-    val redSvg = createIcon { src = svgDataUri(CODE_BRANCH_SVG) }.apply { style.color = "red" }
+    val redSvg = createIcon { src = Images.codeBranchIcon }.apply { style.color = "red" }
     val redFont =
         createIcon {
             fontFamily = "lumo-icons"
@@ -1242,13 +1181,12 @@ private fun buildIconsPage(meta: PageMeta): PageView {
         section(
             tr("独立 SVG 文件", "Standalone SVG images"),
             tr(
-                "src 接受任意 URL，图标被内联成 SVG，因此可以用 CSS 改颜色。官方示例引用 resources 里的文件，" +
-                    "这里用内联的 data URI，效果相同。",
-                "src accepts any URL and the graphic is inlined as SVG, so CSS can tint it. The official example " +
-                    "references a file from its resources, an inline data URI is used here with the same effect.",
+                "src 可以是任何 URL，图标会被内联成 SVG，因此可以用 CSS 着色；demo 使用从官方文档复制来的同一份 SVG 文件。",
+                "src accepts any URL and the graphic is inlined as SVG, so CSS can tint it; the demo uses the " +
+                    "same SVG file copied from the official documentation.",
             ),
         )
-    standalone.body.append(example(null, createIcon { src = svgDataUri(CODE_BRANCH_SVG) }))
+    standalone.body.append(example(null, createIcon { src = Images.codeBranchIcon }))
     view.body.append(standalone.root)
 
     // --- SVG sprites (icons/svg-sprites.ts) -------------------------------------------------
@@ -1256,12 +1194,9 @@ private fun buildIconsPage(meta: PageMeta): PageView {
         section(
             tr("SVG sprite", "SVG sprites"),
             tr(
-                "sprite 是包含多个 <symbol> 的 SVG 文件：src 指向文件，symbol 指定要用的 id。官方示例的地址是 " +
-                    "file.svg#symbol，演示站把 sprite 内联成 data URI，因此只设置 symbol（组件会引用同文档里的 " +
-                    "id）。",
+                "sprite 是包含多个 <symbol> 的 SVG 文件：src 指向文件，symbol 指定要用的 id。demo 使用与官方示例相同的 sprite 文件。",
                 "A sprite is an SVG file holding several <symbol> elements: src points at the file and symbol " +
-                    "names the id to use. The official example uses file.svg#symbol; the demo inlines the sprite " +
-                    "as a data URI, so only symbol is set (the component references the id in the same document).",
+                    "names the id to use. The demo uses the same sprite file as the official example.",
             ),
         )
     sprites.body.append(
@@ -1269,11 +1204,11 @@ private fun buildIconsPage(meta: PageMeta): PageView {
             null,
             row(
                 createIcon {
-                    src = svgDataUri(SOLID_SPRITE_SVG)
+                    src = Images.solidSprite
                     symbol = "code-branch"
                 },
                 createIcon {
-                    src = svgDataUri(SOLID_SPRITE_SVG)
+                    src = Images.solidSprite
                     symbol = "user"
                 },
             ),
@@ -1293,7 +1228,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
             ),
         )
     fun paddedIcon(visualSize: String?): HTMLElement =
-        createIcon { src = svgDataUri(CODE_BRANCH_SVG) }.apply {
+        createIcon { src = Images.codeBranchIcon }.apply {
             style.setProperty("--vaadin-icon-size", "3rem")
             if (visualSize != null) style.setProperty("--vaadin-icon-visual-size", visualSize)
         }

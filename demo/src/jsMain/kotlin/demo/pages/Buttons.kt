@@ -6,6 +6,7 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.EventLog
+import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
@@ -92,14 +93,6 @@ val buttonEntries: List<CatalogEntry> =
             builder = ::buildMenuBarPage,
         ),
     )
-
-/** Inline logo used by the "buttons with images" example; a data URI keeps the demo self-contained. */
-private const val BUTTON_DEMO_IMAGE =
-    "data:image/svg+xml;base64," +
-        "PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMjAnIGhlaWdodD0nNDAnPjxyZWN0" +
-        "IHdpZHRoPScxMjAnIGhlaWdodD0nNDAnIHJ4PSc4JyBmaWxsPScjMDA2NmYwJy8+PHRleHQgeD0nNjAnIHk9JzI2JyBm" +
-        "b250LWZhbWlseT0nc2Fucy1zZXJpZicgZm9udC1zaXplPScxNicgZmlsbD0nI2ZmZmZmZicgdGV4dC1hbmNob3I9J21p" +
-        "ZGRsZSc+VmFhZGluPC90ZXh0Pjwvc3ZnPg=="
 
 /**
  * Repeating timer used by the long-running example. kotlin-browser has no timer wrapper, so the
@@ -193,7 +186,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
         )
     val logoButton = createButton()
     val logo = document.createElement(HtmlTagName.img)
-    logo.src = BUTTON_DEMO_IMAGE
+    logo.src = Images.vaadinLogo
     logo.width = 100
     logo.alt = tr("Vaadin 标志", "Vaadin logo")
     logoButton.append(logo)

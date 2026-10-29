@@ -15,6 +15,9 @@
   → 修 wrapper → 提交（一次提交覆盖一个或几个相邻组件）。
 - docs 示例里的 Lit 写法（`@state`、`repeat()`、`unsafeHTML`）在 demo 中一律换成保留模式 DOM 操作，
   不引入任何 UI runtime。
+- 示例图片 / 头像 / 图标直接从 docs 仓库复制到 `demo/src/jsMain/resources/images|icons`，通过
+  `demo.ui.Images` 的常量引用，每个目录的 `ATTRIBUTION.md` 记录来源、提交与许可证；不要再用内联
+  base64 占位图形。
 
 ## 页面清单
 
@@ -30,7 +33,7 @@
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| button | button | 16 | DONE | 全部示例已覆盖；图片用内联 SVG data URI |
+| button | button | 16 | DONE | 全部示例已覆盖；图片用官方 `vaadin-logo-dark.png` |
 | menu-bar | menubar | 17 | DONE | 全部示例已覆盖；openOnHover 并入「行为开关」 |
 
 ### 输入字段（`TextFields.kt`、`NumberFields.kt`）
@@ -106,7 +109,7 @@
 | vertical-layout | vertical-layout | 8 | DONE | 基本 / 垂直与水平对齐 / 单项对齐 / spacing / padding / margin / 换行 |
 | form-layout | formlayout | 7 | DONE | 自动响应式 / 标签位置（labelsAside）/ 列宽与列数（expandColumns、expandFields）/ 跨列（data-colspan）/ 响应式断点（含 form-item 标签宽度） |
 | split-layout | splitlayout | 7 | DONE | 基本拖动 / 嵌套 / 最小尺寸 / 折叠侧栏（图标切换）/ 分隔条主题 |
-| scroller | scroller | 3 | DONE | 基本竖向滚动与滚动事件 / 双向滚动（内联 SVG 插画）/ 移动端横向滚动（图标按钮） |
+| scroller | scroller | 3 | DONE | 基本竖向滚动与滚动事件 / 双向滚动（官方 reindeer 照片）/ 移动端横向滚动（图标按钮） |
 | master-detail-layout | master-detail-layout | 1 | DONE | 基本用法（人员列表选中同步详情）/ 尺寸与扩展 / 方向 / 浮层（forceOverlay、overlaySize、containment）/ 详情占位（插槽增删 + `recalculateLayout`）/ 嵌套；全高示例在小屏容器里用固定高度复现 |
 | card | card | 13 | DONE | 内容 / 标题与副标题（slot 与 `cardTitle` 对照）/ 头部区域 / 媒体 / 底部操作 / 样式变体 / 组合变体 / 交互式配置（插槽、主题与媒体切换，保留模式增删节点） |
 | accordion | accordion | 8 | DONE | 基本用法 / 自定义 summary 向导（完成图标 + `opened` 推进）/ 内容（链接）/ 禁用面板 / 主题变体（filled、no-padding、reverse、small） |
@@ -120,11 +123,11 @@
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
-| avatar | avatar | 9 | DONE | 基本 / 姓名缩写 / 图片 / 尺寸 / 颜色索引 |
+| avatar | avatar | 9 | DONE | 基本 / 姓名缩写 / 图片（官方头像与人像）/ 尺寸 / 颜色索引 |
 | avatar-group | avatar | — | DONE | 基本 / 最大数量 / 背景色 / 本地化 |
 | badge | badge | 11 | DONE | 全部示例（标签、颜色、图标、数字、圆点、动态更新等） |
-| icon | icons | 12 | DONE | 基本 / 尺寸 / 颜色 / 字体图标 / SVG 字面量 |
-| icons | icons | — | DONE | 两套图标集、无障碍、独立 SVG、sprite、生成器 |
+| icon | icons | 12 | DONE | 基本 / 尺寸 / 颜色 / 字体图标 / SVG 字面量；SVG 文件用官方图标 |
+| icons | icons | — | DONE | 两套图标集、无障碍、独立 SVG、sprite（官方 `solid.svg`）、生成器 |
 | progress-bar | progressbar | 6 | DONE | 含标签与估计完成时间 |
 | input-container | — | — | DONE | 内部元素，文档并入 text-field |
 

@@ -6,6 +6,7 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.EventLog
+import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
@@ -266,7 +267,7 @@ internal class Person(
         get() = "${firstName.lowercase()}.${lastName.lowercase()}@example.com"
 
     val pictureUrl: String
-        get() = portrait(PORTRAIT_FILLS[id % PORTRAIT_FILLS.size])
+        get() = Images.portrait(id)
 
     // The grid examples need the remaining fields of the upstream `Person` DTO; they are derived
     // from the id so that every example shows the same person on every visit.
@@ -310,8 +311,6 @@ private val CITIES = listOf("Boston", "Austin", "Denver", "Portland", "Chicago",
 
 private val STATES = listOf("MA", "TX", "CO", "OR", "IL", "WA")
 
-private val PORTRAIT_FILLS = listOf("1f4e9c", "b05a2c", "2f7d5b", "7a3f8f", "b07d1f", "3f607d")
-
 internal fun people(count: Int = 6): List<Person> {
     val firstNames = listOf("Ada", "Grace", "Katherine", "Alan", "Barbara", "Edsger", "Margaret", "Dennis")
     val lastNames = listOf("Lovelace", "Hopper", "Johnson", "Turing", "Liskov", "Dijkstra", "Hamilton", "Ritchie")
@@ -352,26 +351,6 @@ internal fun personItems(list: List<Person>, withDisplayName: Boolean = false): 
         }
     return jsArray("[${entries.joinToString(", ")}]")
 }
-
-/** Builds a local portrait as a `data:` URI; the demo ships no binary assets. */
-internal fun portrait(fill: String): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'>" +
-            "<rect width='80' height='80' fill='#$fill'/>" +
-            "<circle cx='40' cy='30' r='14' fill='#ffffff'/>" +
-            "<path d='M12 80c0-16 12-26 28-26s28 10 28 26z' fill='#ffffff'/>" +
-            "</svg>",
-    )
-
-private fun svgDataUri(markup: String): String =
-    "data:image/svg+xml," +
-        markup
-            .replace("\"", "'")
-            .replace("%", "%25")
-            .replace("<", "%3C")
-            .replace(">", "%3E")
-            .replace("#", "%23")
-            .replace(" ", "%20")
 
 private fun buildCheckboxPage(meta: PageMeta): PageView {
     val view = page(meta)

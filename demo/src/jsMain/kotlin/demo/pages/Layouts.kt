@@ -6,6 +6,7 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.EventLog
+import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
@@ -1463,9 +1464,11 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
     bothScroller.dataset["test"] = "scroller-both"
     bothScroller.style.setProperty("height", "18rem")
     bothScroller.style.setProperty("width", "100%")
+    // The photo is 800px wide, so cap the scroller to make a horizontal scrollbar appear as well.
+    bothScroller.style.setProperty("max-width", "40rem")
     val illustration = element(HtmlTagName.img)
-    illustration.src = scrollerIllustration()
-    illustration.alt = tr("示例插图", "Sample illustration")
+    illustration.src = Images.reindeer
+    illustration.alt = tr("漫步在黄昏雪湖岸边的驯鹿", "A reindeer walking on a snowy lake shore at dusk")
     illustration.style.setProperty("display", "block")
     bothScroller.append(illustration)
     both.body.append(example(null, bothScroller))
@@ -1582,18 +1585,6 @@ private const val SCROLLER_EVENT_EN =
 
     Questions? Email us at events@techconf.example.
     """
-
-/** A wide, tall illustration so the scroller needs both scrollbars. */
-private fun scrollerIllustration(): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='720'>" +
-            "<rect width='1200' height='720' fill='#e8f1fb'/>" +
-            "<circle cx='940' cy='150' r='90' fill='#ffd166'/>" +
-            "<path d='M0 500 L280 280 L540 500 L780 240 L1200 540 L1200 720 L0 720 Z' fill='#90b4d6'/>" +
-            "<path d='M0 590 L320 420 L660 590 L960 400 L1200 580 L1200 720 L0 720 Z' fill='#5d8fb8'/>" +
-            "<path d='M0 660 L380 520 L760 660 L1200 540 L1200 720 L0 720 Z' fill='#3c6d94'/>" +
-            "</svg>",
-    )
 
 /** Action button of the horizontal mobile scroller example. */
 private fun scrollerAction(label: String, icon: String): HTMLElement {
@@ -2087,7 +2078,7 @@ private fun cardPlayground(): HTMLElement {
     playground.dataset["test"] = "card-playground"
     playground.withTheme("outlined", "elevated", "cover-media")
 
-    val mediaNodes = arrayOf(cardMediaImage(), cardMediaIcon(), cardMediaAvatar("L"), cardMediaSvg())
+    val mediaNodes = arrayOf(cardMediaImage(), cardMediaIcon(), cardMediaAvatar("L"))
     val contentNodes = arrayOf(cardContentText(), cardContentScroller(), cardContentImage())
     var mediaNode = mediaNodes[0]
     var contentNode = contentNodes[0]
@@ -2120,7 +2111,7 @@ private fun cardPlayground(): HTMLElement {
     val mediaSelect =
         createSelect {
             label = tr("媒体内容", "Media")
-            items = selectOptions("Image", "Icon", "Avatar", "Custom SVG")
+            items = selectOptions("Image", "Icon", "Avatar")
             value = "0"
         }
     val contentSelect =
@@ -2235,11 +2226,11 @@ private fun cardHeaderBlock(): HTMLElement =
         )
     }
 
-/** An image in the media slot; the SVG is inlined so the demo never touches the network. */
+/** The official Lapland photo in the media slot. */
 private fun cardMediaImage(): HTMLElement =
     element(HtmlTagName.img).apply {
         slot = "media"
-        src = laplandIllustration()
+        src = Images.lapland
         alt = ""
         width = 100
     }
@@ -2252,22 +2243,6 @@ private fun cardMediaIcon(): HTMLElement =
     }
 
 private fun cardMediaAvatar(abbr: String): HTMLElement = createAvatar { this.abbr = abbr }.withTheme("large").apply { slot = "media" }
-
-private fun cardMediaSvg(): HTMLElement =
-    element(HtmlTagName.img).apply {
-        slot = "media"
-        src =
-            svgDataUri(
-                "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'>" +
-                    "<rect width='80' height='80' fill='#eef2f7'/>" +
-                    "<path d='M40 12 L62 62 L18 62 Z' fill='#4a76a8'/>" +
-                    "<path d='M40 30 L53 62 L27 62 Z' fill='#e8f1fb'/>" +
-                    "</svg>",
-            )
-        alt = ""
-        width = 80
-        height = 80
-    }
 
 private fun cardContentText(): HTMLElement = div().apply { textContent = laplandShortText() }
 
@@ -2282,7 +2257,7 @@ private fun cardContentImage(): HTMLElement =
     div().apply {
         append(
             element(HtmlTagName.img).apply {
-                src = laplandIllustration()
+            src = Images.lapland
                 alt = ""
                 style.setProperty("max-width", "100%")
                 style.setProperty("border-radius", "var(--lumo-border-radius-m)")
@@ -2290,18 +2265,6 @@ private fun cardContentImage(): HTMLElement =
             div().apply { textContent = laplandShortText() },
         )
     }
-
-/** A compact aurora landscape used wherever the docs examples show the Lapland photo. */
-private fun laplandIllustration(): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='400' height='260'>" +
-            "<rect width='400' height='260' fill='#0b1d3a'/>" +
-            "<circle cx='320' cy='58' r='26' fill='#f6e6a8'/>" +
-            "<path d='M30 46 Q120 6 200 54 T370 34' stroke='#6fe3c1' stroke-width='6' fill='none' opacity='0.7'/>" +
-            "<path d='M0 200 L90 120 L160 200 L240 100 L320 190 L400 130 L400 260 L0 260 Z' fill='#2b5d8c'/>" +
-            "<path d='M0 230 L120 170 L220 240 L330 180 L400 220 L400 260 L0 260 Z' fill='#16375a'/>" +
-            "</svg>",
-    )
 
 private fun buildAccordionPage(meta: PageMeta): PageView {
     val view = page(meta)
@@ -3540,14 +3503,3 @@ private fun formItem(label: String, field: HTMLElement): HTMLElement {
     item.append(labelNode, field)
     return item
 }
-
-/** Encodes [markup] as an SVG data URI, so demo images never touch the network. */
-private fun svgDataUri(markup: String): String =
-    "data:image/svg+xml," +
-        markup
-            .replace("\"", "'")
-            .replace("%", "%25")
-            .replace("<", "%3C")
-            .replace(">", "%3E")
-            .replace("#", "%23")
-            .replace(" ", "%20")

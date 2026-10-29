@@ -6,6 +6,7 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.EventLog
+import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
@@ -119,20 +120,20 @@ val dataEntries: List<CatalogEntry> =
 //       plus a scrollToIndex example that the docs describe in prose only.
 // ---------------------------------------------------------------------------------------------
 
-/** One person of the virtual list; [fill] selects the illustrated portrait generated below. */
+/** One person of the virtual list; [photoIndex] selects the official demo portrait. */
 private class PersonCard(
     val firstName: String,
     val lastName: String,
     val profession: String,
     val email: String,
     val phone: String,
-    val fill: String,
+    val photoIndex: Int,
 ) {
     val fullName: String
         get() = "$firstName $lastName"
 
     val photo: String
-        get() = portrait(fill)
+        get() = Images.portrait(photoIndex)
 }
 
 private fun buildVirtualListPage(meta: PageMeta): PageView {
@@ -156,7 +157,7 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                 tr("数学家", "Mathematician"),
                 "ada.lovelace@example.com",
                 "+44 20 7946 0101",
-                "7c9cbf",
+                0,
             ),
             PersonCard(
                 "Grace",
@@ -164,7 +165,7 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                 tr("计算机科学家", "Computer scientist"),
                 "grace.hopper@example.com",
                 "+1 202 555 0142",
-                "8f7ab8",
+                1,
             ),
             PersonCard(
                 "Alan",
@@ -172,7 +173,7 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                 tr("密码学家", "Cryptanalyst"),
                 "alan.turing@example.com",
                 "+44 20 7946 0193",
-                "6aa38d",
+                2,
             ),
             PersonCard(
                 "Katherine",
@@ -180,7 +181,7 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                 tr("航空航天工程师", "Aerospace engineer"),
                 "katherine.johnson@example.com",
                 "+1 202 555 0177",
-                "b08a6d",
+                3,
             ),
             PersonCard(
                 "Edsger",
@@ -188,7 +189,7 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                 tr("计算机科学家", "Computer scientist"),
                 "edsger.dijkstra@example.com",
                 "+31 20 555 0124",
-                "9d7f92",
+                4,
             ),
         )
     // The docs load a hundred people; repeating the fixed set is enough to show row reuse.
@@ -313,7 +314,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
                     ),
                 time = tr("刚刚", "right now"),
                 userName = "Linsey Listy",
-                userImg = portrait("c98f7c"),
+                userImg = Images.portrait(8),
                 userColorIndex = 2,
             ),
         )
@@ -404,7 +405,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
                 time = tr("50 分钟前", "50 minutes ago"),
                 userName = "Linsey Listy",
                 userColorIndex = 2,
-                attachments = arrayOf(attachment("landscape.jpg", landscapeDataUri(), "image/jpeg")),
+                attachments = arrayOf(attachment("landscape.jpg", Images.reindeer, "image/jpeg")),
             ),
         )
     val attachmentReadout = Readout(tr("点击附件查看文件名。", "Click an attachment to see its name here."))
@@ -888,32 +889,3 @@ private fun streamReply(reply: MessageListItem, onChunk: (Boolean) -> Unit) {
             120,
         ) as Int
 }
-
-// ---------------------------------------------------------------------------------------------
-// Inline artwork
-//
-// The docs examples load photos from their own resources. The demo ships no binary assets and must
-// not request anything from the network, so both pictures below are data URIs built from a snippet
-// of SVG at page-build time. Strings are only used as image sources, never as DOM markup.
-// ---------------------------------------------------------------------------------------------
-
-/** Turns an SVG snippet into a `data:` URI that `<img src>` and `<vaadin-avatar img>` accept. */
-private fun svgDataUri(markup: String): String =
-    "data:image/svg+xml," +
-        markup
-            .replace("\"", "'")
-            .replace("%", "%25")
-            .replace("<", "%3C")
-            .replace(">", "%3E")
-            .replace("#", "%23")
-            .replace(" ", "%20")
-
-/** A landscape picture for the image attachment of the message list. */
-private fun landscapeDataUri(): String =
-    svgDataUri(
-        "<svg xmlns='http://www.w3.org/2000/svg' width='160' height='100'>" +
-            "<rect width='160' height='100' fill='#cfe3f3'/>" +
-            "<path d='M0 74l38-30 26 20 30-26 66 48H0z' fill='#6f9b71'/>" +
-            "<circle cx='128' cy='24' r='12' fill='#f6d365'/>" +
-            "</svg>",
-    )
