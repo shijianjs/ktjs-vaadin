@@ -1,18 +1,16 @@
 package demo
 
-import demo.pages.buttonEntries
-import demo.pages.dataEntries
-import demo.pages.gridEntries
-import demo.pages.displayEntries
-import demo.pages.layoutEntries
-import demo.pages.numberFieldEntries
-import demo.pages.overlayEntries
-import demo.pages.overviewEntries
-import demo.pages.pickerEntries
-import demo.pages.selectionEntries
-import demo.pages.textFieldEntries
-import demo.pages.themingEntries
-import demo.pages.uploadEntries
+import demo.pages.buttons.buttonsEntries
+import demo.pages.data.dataEntries
+import demo.pages.display.displayEntries
+import demo.pages.fields.fieldsEntries
+import demo.pages.layout.layoutEntries
+import demo.pages.overlays.overlaysEntries
+import demo.pages.overview.overviewEntries
+import demo.pages.pickers.pickersEntries
+import demo.pages.selection.selectionEntries
+import demo.pages.theming.themingEntries
+import demo.pages.upload.uploadEntries
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.anchor
@@ -98,14 +96,12 @@ fun componentApiUrl(id: String): String =
 val catalog: List<CatalogEntry> =
     listOf(
         overviewEntries,
-        buttonEntries,
-        textFieldEntries,
-        numberFieldEntries,
+        buttonsEntries,
+        fieldsEntries,
         selectionEntries,
-        pickerEntries,
-        overlayEntries,
+        pickersEntries,
+        overlaysEntries,
         dataEntries,
-        gridEntries,
         uploadEntries,
         layoutEntries,
         displayEntries,

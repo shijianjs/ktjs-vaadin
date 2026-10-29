@@ -466,8 +466,14 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   `ktjs-vaadin-` 前缀过滤子模块，新增非发布模块时沿用该约定。
 - 演示页是一个组件展示应用（单页、hash 路由），代码在 `demo/src/jsMain/kotlin/demo/`：
   - `Catalog.kt`：路由 id → 分组 / 页面元信息（标题、官方文档 URL、源码路径）。每个组件一个
-    `CatalogEntry`，条目定义写在对应页面文件里（如 `pages/Buttons.kt` 的 `buttonEntries`），
-    `catalog` 按分组顺序聚合。新增组件页 = 新增页面文件里的条目，侧边栏与索引页自动收录。
+    `CatalogEntry`，`catalog` 按分组顺序聚合各分组导出的 `<分组>Entries`，侧边栏与索引页自动收录。
+  - `pages/<分组>/`：页面代码按 URL 分组分包（`overview`、`buttons`、`fields`、`selection`、
+    `pickers`、`overlays`、`data`、`upload`、`layout`、`display`、`theming`），**一页一个文件**：
+    `XxxPage.kt` 里是这个页面的 `CatalogEntry`（`xxxEntry`）与 `private fun buildXxxPage`，帮助函数
+    放在同分组的 `Support.kt`（跨页共享的用 `internal`，同包内直接调用）。`Entries.kt` 按导航顺序
+    列出该分组的条目。多个页面共用的示例数据在 `pages/fixtures/People.kt`，跨包引用靠普通
+    `import demo.pages.<分组>.<名字>`。新增组件页 = 在对应分组里加一个 `XxxPage.kt` 并把它的条目加
+    进该分组 `Entries.kt`。
   - `AppShell.kt`：侧边栏 + 顶栏 + 内容区，只构建一次；导航只替换 `.content__host` 的单个子节点，
     已经构建过的页面按路由缓存，因此来回切换不会丢组件状态。
   - `Router.kt`：`#/<route>` hash 路由，`hashchange` 驱动前进 / 后退。

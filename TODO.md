@@ -18,6 +18,9 @@
 - 示例图片 / 头像 / 图标直接从 docs 仓库复制到 `demo/src/jsMain/resources/images|icons`，通过
   `demo.ui.Images` 的常量引用，每个目录的 `ATTRIBUTION.md` 记录来源、提交与许可证；不要再用内联
   base64 占位图形。
+- 页面代码按 URL 分组分包到 `demo/src/jsMain/kotlin/demo/pages/<分组>/`，一页一个 `XxxPage.kt`
+  （条目 + private builder），同分组共用帮助函数放 `Support.kt`，跨页共用的示例数据放
+  `pages/fixtures/People.kt`；下表的「备注」按此结构描述代码位置。
 
 ## 页面清单
 
@@ -29,14 +32,14 @@
 | --- | --- | --- | --- | --- |
 | overview | — | — | DONE | 索引页由 catalog 自动生成 |
 
-### 按钮与操作（`Buttons.kt`）
+### 按钮与操作（`pages/buttons/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
 | button | button | 16 | DONE | 全部示例已覆盖；图片用官方 `vaadin-logo-dark.png` |
 | menu-bar | menubar | 17 | DONE | 全部示例已覆盖；openOnHover 并入「行为开关」 |
 
-### 输入字段（`TextFields.kt`、`NumberFields.kt`）
+### 输入字段（`pages/fields/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -49,7 +52,7 @@
 | custom-field | custom-field | 3 | DONE | 全部覆盖（报名周期、原生输入、样式）＋ 组合值格式化 |
 | field-highlighter | — | — | DONE | 官方文档无示例，按手写包 API 覆盖用户指示与 AI 标记 |
 
-### 选择控件（`Selection.kt`）
+### 选择控件（`pages/selection/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -64,7 +67,7 @@
 | item | listbox | — | DONE | 文档并入 list-box / select |
 | slider | slider | 10 | DONE | 含区间滑块、区间校验（Flow 的值变更模式改为 input/change 对照） |
 
-### 日期与时间（`Pickers.kt`）
+### 日期与时间（`pages/pickers/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -72,7 +75,7 @@
 | time-picker | timepicker | 10 | DONE | 自定义解析器用 `i18n.parseTime` / `formatTime` 复现 |
 | date-time-picker | datetimepicker | 15 | DONE | 校验示例区分语法错误 / 缺失 / 超范围 |
 
-### 浮层与反馈（`Overlays.kt`、`OverlayPopups.kt`）
+### 浮层与反馈（`pages/overlays/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -89,7 +92,7 @@
 `OverlayPopups.kt` 放 notification / popover / tooltip / context-menu），条目的 `sourcePath` 分别指向对应文件。
 登录浮层默认全部关闭，由各自的按钮打开（提交成功后自动关闭），避免多个浮层在页面加载时互相遮挡。
 
-### 数据展示（`Grid.kt`、`Data.kt`）
+### 数据展示（`pages/data/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -98,9 +101,9 @@
 | message-list | messages | 8 | DONE | 基本 / Markdown / 附件（attachment-click 读值）/ 气泡与 self 主题 / one-to-one + full-width / 单条 className 样式 / AI 对话（本地模拟逐词流式输出 + aria-live 公告）；打字指示器为 Flow 专属，页面文案说明 |
 | message-input | messages | 1 | DONE | 基本用法（submit 弹 Notification）＋ 与 Message List 组合追加消息 ＋ 禁用 |
 | markdown | markdown | 2 | DONE | 富文本（标题 / 粗斜体 / 行内代码 / 删除线 / 嵌套有序无序列表 / 引用 / 链接）＋ lineBreaks 对照 |
-| upload | upload | 17 | DONE | 拆出独立 `pages/Upload.kt`：文件选择 / 拖放 / 自动上传与进度 / 数量与类型限制 / 文件操作 / i18n / 自定义按钮与拖放标签 / 事件监听 / 错误消息 / 模块化（manager + button + file list + drop zone）/ 禁用。无后端，用本地 XHR mock 驱动真实的开始、重试与进度流程 |
+| upload | upload | 17 | DONE | 拆出独立 `pages/upload/UploadPage.kt`：文件选择 / 拖放 / 自动上传与进度 / 数量与类型限制 / 文件操作 / i18n / 自定义按钮与拖放标签 / 事件监听 / 错误消息 / 模块化（manager + button + file list + drop zone）/ 禁用。无后端，用本地 XHR mock 驱动真实的开始、重试与进度流程 |
 
-### 布局与导航（`Layouts.kt`）
+### 布局与导航（`pages/layout/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -119,7 +122,7 @@
 | side-nav | side-nav | 6 | DONE | 基本用法（onNavigate 拦截跳转 + 事件日志）/ 自动高亮当前项（`location.pathname` + matchNested）/ 前缀与后缀（徽标）/ 层级（嵌套 children）/ 带标签的可折叠列表（collapsed 读值）/ 新标签页打开 / 滚动 / 样式（::part(link)）/ 键盘操作 |
 | breadcrumbs | breadcrumbs | 3 | DONE | 基本用法（点击拦截 + 事件日志）/ 项与图标（prefix 图标）/ 溢出菜单（宽度受限、overflow-button 展开）/ 本地化（i18n.moreItems）/ 无障碍说明 |
 
-### 基础展示（`Display.kt`）
+### 基础展示（`pages/display/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
@@ -131,7 +134,7 @@
 | progress-bar | progressbar | 6 | DONE | 含标签与估计完成时间 |
 | input-container | — | — | DONE | 内部元素，文档并入 text-field |
 
-### 主题与样式（`Theming.kt`）
+### 主题与样式（`pages/theming/`）
 
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
