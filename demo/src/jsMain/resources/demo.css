@@ -666,3 +666,32 @@ vaadin-grid::part(rating-footer) {
     justify-content: center;
     gap: var(--lumo-space-s);
 }
+
+/* --- Message List ---------------------------------------------------------- */
+/* Chosen className of a single message; messages sit in the light DOM of the list. */
+vaadin-message.current-user {
+    --vaadin-message-name-color: #fff;
+    --vaadin-message-text-color: #fff;
+    --vaadin-message-time-color: #fff;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 9px;
+    font-weight: 900;
+}
+
+vaadin-message.current-user::part(name) {
+    font-weight: 900;
+}
+
+/* Live region that only assistive technologies read (docs screen-reader-only.css). */
+.screen-reader-only {
+    border-width: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}

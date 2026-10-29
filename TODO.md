@@ -91,10 +91,10 @@
 | 页面 | docs 目录 | 示例数 | 状态 | 备注 |
 | --- | --- | --- | --- | --- |
 | grid | grid | 39 | DONE | 拆成 `Grid.kt`（夹具、基本、列、数据绑定、排序）与 `GridFeatures.kt`（行详情、空状态、菜单与 tooltip、焦点与滚动、拖放、选择、样式、懒列）；inline-editing 的 buffered / unbuffered 只有 Flow 示例，改在数据绑定一节说明 `dataProvider` 的写法；tree-grid 的拖放过滤示例用普通 grid 的 `dragFilter` / `dropFilter` 等价演示 |
-| virtual-list | virtuallist | 1 | TODO | |
-| message-list | messages | 8 | TODO | |
-| message-input | messages | 1 | TODO | |
-| markdown | markdown | 2 | TODO | |
+| virtual-list | virtuallist | 1 | DONE | 人员卡片 renderer（头像、姓名、职业、可展开的联系方式，展开状态跨滚动保留）＋ scrollToIndex 定位 |
+| message-list | messages | 8 | DONE | 基本 / Markdown / 附件（attachment-click 读值）/ 气泡与 self 主题 / one-to-one + full-width / 单条 className 样式 / AI 对话（本地模拟逐词流式输出 + aria-live 公告）；打字指示器为 Flow 专属，页面文案说明 |
+| message-input | messages | 1 | DONE | 基本用法（submit 弹 Notification）＋ 与 Message List 组合追加消息 ＋ 禁用 |
+| markdown | markdown | 2 | DONE | 富文本（标题 / 粗斜体 / 行内代码 / 删除线 / 嵌套有序无序列表 / 引用 / 链接）＋ lineBreaks 对照 |
 | upload | upload | 17 | DONE | 拆出独立 `pages/Upload.kt`：文件选择 / 拖放 / 自动上传与进度 / 数量与类型限制 / 文件操作 / i18n / 自定义按钮与拖放标签 / 事件监听 / 错误消息 / 模块化（manager + button + file list + drop zone）/ 禁用。无后端，用本地 XHR mock 驱动真实的开始、重试与进度流程 |
 
 ### 布局与导航（`Layouts.kt`）

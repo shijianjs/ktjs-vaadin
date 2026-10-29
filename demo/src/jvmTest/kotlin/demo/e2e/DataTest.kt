@@ -126,20 +126,37 @@ class DataTest {
         page.navigate("/#/markdown")
 
         val markdown = page.getByTestId("markdown")
-        assertThat(markdown.locator("h1")).hasText("Title")
-        assertThat(markdown.locator("strong")).hasText("bold")
-        assertThat(markdown.locator("li")).hasCount(2)
+        assertThat(markdown.locator("h2").first()).hasText("Rich Text Formatting")
+        assertThat(markdown.locator("strong").first()).hasText("bold text")
+        assertThat(markdown.locator("li")).hasCount(10)
+        assertThat(markdown.getByText("Visit Vaadin website")).isVisible()
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `virtual list renders visible rows and can jump`(page: Page) {
+    fun `virtual list renders person cards and can jump`(page: Page) {
         page.navigate("/#/virtual-list")
 
         val lists = page.locator("vaadin-virtual-list")
-        assertThat(lists.first()).containsText("Row 1")
+        val basic = page.getByTestId("virtual-list")
+        assertThat(basic).containsText("Ada Lovelace")
+        assertThat(basic).containsText("Mathematician")
+
+        val email = basic.getByText("ada.lovelace@example.com").first()
+        assertThat(email).isHidden()
+        basic.getByText("Contact information").first().click()
+        assertThat(email).isVisible()
 
         page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Go to row 300")).click()
         assertThat(lists.nth(1)).containsText("Row 300")
+    }
+
+    @RetryingTest(maxAttempts = 2)
+    fun `message list reports the clicked attachment`(page: Page) {
+        page.navigate("/#/message-list")
+
+        val readout = page.locator(".readout", Page.LocatorOptions().setHasText("Clicked"))
+        page.getByText("project-proposal.pdf").click()
+        assertThat(readout).containsText("project-proposal.pdf")
     }
 
     @RetryingTest(maxAttempts = 2)
