@@ -28,7 +28,7 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
-            api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.10.4")
+            api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.10.5")
             // Every @vaadin/* entry in the root package.json is installed; package.json is the
             // single source of truth for upstream versions, so a Dependabot bump reaches all
             // packages that release together.
