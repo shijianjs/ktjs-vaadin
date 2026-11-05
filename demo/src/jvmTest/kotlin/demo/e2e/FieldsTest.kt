@@ -192,7 +192,18 @@ class FieldsTest {
 
         // Locale-independent interaction: pick "today" from the overlay and compare with the value the
         // page read back. The context pins the time zone, so both sides agree.
-        page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Today").setExact(true)).click()
+        val todayButton =
+            page.getByRole(AriaRole.BUTTON, Page.GetByRoleOptions().setName("Today").setExact(true))
+        todayButton.click()
+
+        // Vaadin's today button only selects when the calendar already sits on the current month;
+        // otherwise the first tap scrolls there and the overlay stays open. The demo pins the initial
+        // value to 2026-10-25, so from November on the selection needs that second tap.
+        if (overlay.isVisible()) {
+            // Taps are ignored right after a scroll while the overlay settles, so wait it out.
+            page.waitForTimeout(500.0)
+            todayButton.click()
+        }
 
         val today = LocalDate.now(ZoneOffset.UTC).toString()
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("value ="))).containsText(today)
