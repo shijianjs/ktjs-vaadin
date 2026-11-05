@@ -17,7 +17,7 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
-            implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.10.5")
+            implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.0")
             // Wrapper modules used by the demo.
             implementation(project(":ktjs-vaadin-web-components"))
         }
