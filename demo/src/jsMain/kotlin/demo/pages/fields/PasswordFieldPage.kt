@@ -20,11 +20,11 @@ import demo.ui.section
 import demo.ui.setHidden
 import demo.ui.span
 import demo.ui.withTheme
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.passwordfield.PasswordFieldEvents
-import vaadin.passwordfield.createPasswordField
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldEvents
+import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

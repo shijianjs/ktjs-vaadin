@@ -15,14 +15,14 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.tabs.createTab
-import vaadin.tabs.createTabs
-import vaadin.tabsheet.TabSheetElement
-import vaadin.tabsheet.TabSheetEvents
-import vaadin.tabsheet.createTabSheet
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.tabs.createTab
+import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
+import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetElement
+import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetEvents
+import io.github.shijianjs.ktjs.vaadin.tabsheet.createTabSheet
 import web.dom.ElementId
 
 val tabsheetEntry: CatalogEntry =

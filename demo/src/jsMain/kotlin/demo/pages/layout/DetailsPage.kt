@@ -18,17 +18,17 @@ import demo.ui.span
 import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.JsAny
-import vaadin.badge.createBadge
-import vaadin.combobox.createComboBox
-import vaadin.details.createDetails
-import vaadin.details.createDetailsSummary
-import vaadin.formlayout.FormLayoutResponsiveStep
-import vaadin.formlayout.StringOrDouble
-import vaadin.formlayout.createFormLayout
-import vaadin.horizontallayout.createHorizontalLayout
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.combobox.createComboBox
+import io.github.shijianjs.ktjs.vaadin.details.createDetails
+import io.github.shijianjs.ktjs.vaadin.details.createDetailsSummary
+import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
+import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
 
 val detailsEntry: CatalogEntry =

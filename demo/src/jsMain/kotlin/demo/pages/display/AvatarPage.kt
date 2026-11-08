@@ -13,7 +13,7 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 
 val avatarEntry: CatalogEntry =
     CatalogEntry(

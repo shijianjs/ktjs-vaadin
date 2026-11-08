@@ -15,8 +15,8 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
 import js.objects.unsafeJso
-import vaadin.button.createButton
-import vaadin.overlay.createOverlay
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.overlay.createOverlay
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -140,9 +140,9 @@ private fun buildOverlayPage(meta: PageMeta): PageView {
                             // `setBounds` writes to the overlay's internal parts, which exist only once
                             // the element has been upgraded and opened.
                             sizedOverlay.setBounds(
-                                unsafeJso<vaadin.overlay.OverlayBounds> {
-                                    width = vaadin.overlay.DoubleOrString("22rem")
-                                    height = vaadin.overlay.DoubleOrString("14rem")
+                                unsafeJso<io.github.shijianjs.ktjs.vaadin.overlay.OverlayBounds> {
+                                    width = io.github.shijianjs.ktjs.vaadin.overlay.DoubleOrString("22rem")
+                                    height = io.github.shijianjs.ktjs.vaadin.overlay.DoubleOrString("14rem")
                                 },
                             )
                             sizedOverlay.opened = true

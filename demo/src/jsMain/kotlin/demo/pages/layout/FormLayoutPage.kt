@@ -14,16 +14,16 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import js.objects.unsafeJso
-import vaadin.emailfield.createEmailField
-import vaadin.formlayout.FormLayoutLabelsPositions
-import vaadin.formlayout.FormLayoutResponsiveStep
-import vaadin.formlayout.StringOrDouble
-import vaadin.formlayout.createFormItem
-import vaadin.formlayout.createFormLayout
-import vaadin.formlayout.createFormRow
-import vaadin.passwordfield.createPasswordField
-import vaadin.splitlayout.createSplitLayout
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutLabelsPositions
+import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
+import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormItem
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormRow
+import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
+import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
 import web.html.HtmlTagName
 

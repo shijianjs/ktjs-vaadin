@@ -18,17 +18,17 @@ import demo.ui.section
 import demo.ui.span
 import demo.ui.withClass
 import demo.ui.withTheme
-import vaadin.badge.createBadge
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.scroller.ScrollerScrollDirections
-import vaadin.scroller.createScroller
-import vaadin.sidenav.SideNavElement
-import vaadin.sidenav.SideNavEvents
-import vaadin.sidenav.SideNavItemElement
-import vaadin.sidenav.createSideNav
-import vaadin.sidenav.createSideNavItem
-import vaadin.verticallayout.createVerticalLayout
+import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
+import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
+import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
+import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavEvents
+import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
+import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
+import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
+import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import web.location.location
 
 val sideNavEntry: CatalogEntry =

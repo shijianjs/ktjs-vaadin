@@ -19,9 +19,9 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.confirmdialog.ConfirmDialogEvents
-import vaadin.confirmdialog.createConfirmDialog
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.confirmdialog.ConfirmDialogEvents
+import io.github.shijianjs.ktjs.vaadin.confirmdialog.createConfirmDialog
 import web.dom.clickEvent
 import web.events.addHandler
 

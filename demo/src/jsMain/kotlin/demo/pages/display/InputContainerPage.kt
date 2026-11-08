@@ -15,8 +15,8 @@ import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import vaadin.icon.createIcon
-import vaadin.inputcontainer.createInputContainer
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.inputcontainer.createInputContainer
 import web.html.HTMLElement
 import web.html.HtmlTagName
 

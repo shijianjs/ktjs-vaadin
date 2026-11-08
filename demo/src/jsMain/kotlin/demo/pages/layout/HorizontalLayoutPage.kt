@@ -12,7 +12,7 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 
 val horizontalLayoutEntry: CatalogEntry =
     CatalogEntry(

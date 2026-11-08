@@ -10,10 +10,10 @@ import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.fieldbase.InputMixin
-import vaadin.select.SelectEvents
-import vaadin.select.SelectItemData
-import vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.fieldbase.InputMixin
+import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
+import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
+import io.github.shijianjs.ktjs.vaadin.select.createSelect
 import web.events.Event
 import web.events.EventType
 import web.html.HTMLElement
@@ -32,7 +32,7 @@ private const val VALUE_CHANGE_TIMEOUT = "timeout"
  * Reads the native validity state behind a field.
  *
  * The validation examples of the documentation map the individual `validity` flags to their own
- * error messages. `inputElement` is part of `vaadin.fieldbase.InputMixin`; the upstream type is
+ * error messages. `inputElement` is part of `io.github.shijianjs.ktjs.vaadin.fieldbase.InputMixin`; the upstream type is
  * `HTMLElement`, so it is narrowed to the `<input>` that actually backs a text field.
  */
 internal fun validityOf(field: InputMixin): ValidityState =

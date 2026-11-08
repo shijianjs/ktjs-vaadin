@@ -14,10 +14,10 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import vaadin.button.createButton
-import vaadin.switch.SwitchEvents
-import vaadin.switch.createSwitch
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
+import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

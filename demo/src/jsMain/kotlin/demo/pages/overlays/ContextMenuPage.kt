@@ -27,19 +27,19 @@ import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.contextmenu.ContextMenuEvents
-import vaadin.contextmenu.ContextMenuItemData
-import vaadin.contextmenu.HTMLElementOrString
-import vaadin.contextmenu.createContextMenu
-import vaadin.contextmenu.createContextMenuItem
-import vaadin.grid.createGrid
-import vaadin.grid.createGridColumn
-import vaadin.icon.createIcon
-import vaadin.menubar.MenuBarItem
-import vaadin.menubar.createMenuBar
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuEvents
+import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuItemData
+import io.github.shijianjs.ktjs.vaadin.contextmenu.HTMLElementOrString
+import io.github.shijianjs.ktjs.vaadin.contextmenu.createContextMenu
+import io.github.shijianjs.ktjs.vaadin.contextmenu.createContextMenuItem
+import io.github.shijianjs.ktjs.vaadin.grid.createGrid
+import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItem
+import io.github.shijianjs.ktjs.vaadin.menubar.createMenuBar
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 
 val contextMenuEntry: CatalogEntry =
     CatalogEntry(

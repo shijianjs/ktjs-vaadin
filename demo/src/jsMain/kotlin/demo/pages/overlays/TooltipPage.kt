@@ -21,10 +21,10 @@ import kotlin.js.JsAny
 import kotlin.js.JsString
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.textfield.createTextField
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
@@ -69,7 +69,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
         createTooltip { text = tr("这是按钮上的提示", "Hint on the button") }.apply { slot = "tooltip" },
     )
     val fieldWithTooltip =
-        vaadin.textfield.createTextField {
+        io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
             label = tr("字段的提示", "Field hint")
             placeholder = tr("聚焦后显示", "Shown on focus")
         }
@@ -77,7 +77,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
         createTooltip { text = tr("字段级的提示文本", "Field-level hint text") }.apply { slot = "tooltip" },
     )
     val searchField =
-        vaadin.textfield.createTextField {
+        io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
             placeholder = tr("搜索", "Search")
         }
     searchField.append(
@@ -117,7 +117,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
                 "manual turns off the automatic behaviour and leaves it to opened; the suffix icon button toggles it.",
             ),
         )
-    val manualField = vaadin.textfield.createTextField {
+    val manualField = io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
         placeholder = tr("搜索", "Search")
     }
     val manualTooltip = createTooltip {

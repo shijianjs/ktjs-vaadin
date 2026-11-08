@@ -2,9 +2,9 @@ package demo.pages.display
 
 import demo.tr
 import demo.ui.withTheme
-import vaadin.badge.BadgeElement
-import vaadin.badge.createBadge
-import vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
+import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.dom.document
 
 /** A permissions row of `badge-icons-only-table.ts`: one boolean per guarded action. */

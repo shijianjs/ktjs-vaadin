@@ -1,6 +1,6 @@
 package demo
 
-import vaadin.lumostyles.registerLumoIcons
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
 import web.dom.document
 
 /**

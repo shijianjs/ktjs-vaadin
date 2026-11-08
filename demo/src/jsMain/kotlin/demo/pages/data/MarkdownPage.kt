@@ -11,7 +11,7 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import vaadin.markdown.createMarkdown
+import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 
 val markdownEntry: CatalogEntry =
     CatalogEntry(

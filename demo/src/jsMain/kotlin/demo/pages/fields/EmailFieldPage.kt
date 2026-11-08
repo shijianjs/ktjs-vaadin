@@ -17,11 +17,11 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.emailfield.EmailFieldEvents
-import vaadin.emailfield.createEmailField
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldEvents
+import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 
 val emailFieldEntry: CatalogEntry =
     CatalogEntry(

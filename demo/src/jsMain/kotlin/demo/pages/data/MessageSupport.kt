@@ -4,8 +4,8 @@ import demo.tr
 import demo.ui.Images
 import js.objects.unsafeJso
 import kotlin.js.js
-import vaadin.messagelist.MessageAttachment
-import vaadin.messagelist.MessageListItem
+import io.github.shijianjs.ktjs.vaadin.messagelist.MessageAttachment
+import io.github.shijianjs.ktjs.vaadin.messagelist.MessageListItem
 import web.events.Event
 
 // ---------------------------------------------------------------------------------------------

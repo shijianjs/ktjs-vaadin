@@ -19,13 +19,13 @@ import demo.ui.setHidden
 import demo.ui.span
 import demo.ui.withClass
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.checkbox.createCheckbox
-import vaadin.radiogroup.RadioGroupEvents
-import vaadin.radiogroup.createRadioButton
-import vaadin.radiogroup.createRadioGroup
-import vaadin.textfield.createTextField
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.radiogroup.RadioGroupEvents
+import io.github.shijianjs.ktjs.vaadin.radiogroup.createRadioButton
+import io.github.shijianjs.ktjs.vaadin.radiogroup.createRadioGroup
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

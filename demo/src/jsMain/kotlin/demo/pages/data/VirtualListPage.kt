@@ -19,13 +19,13 @@ import demo.ui.span
 import demo.ui.strong
 import demo.ui.withTheme
 import kotlin.js.JsAny
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.details.DetailsEvents
-import vaadin.details.createDetails
-import vaadin.horizontallayout.createHorizontalLayout
-import vaadin.verticallayout.createVerticalLayout
-import vaadin.virtuallist.createVirtualList
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.details.DetailsEvents
+import io.github.shijianjs.ktjs.vaadin.details.createDetails
+import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
+import io.github.shijianjs.ktjs.vaadin.virtuallist.createVirtualList
 import web.dom.clickEvent
 import web.events.addHandler
 

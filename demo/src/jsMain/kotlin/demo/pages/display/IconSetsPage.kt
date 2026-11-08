@@ -17,11 +17,11 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.icon.createIconset
-import vaadin.icons.registerVaadinIcons
-import vaadin.lumostyles.registerLumoIcons
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icon.createIconset
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
 import web.dom.document
 import web.html.HTMLElement
 import web.svg.SVGGElement

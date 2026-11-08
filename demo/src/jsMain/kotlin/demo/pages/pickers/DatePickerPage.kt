@@ -21,23 +21,23 @@ import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
-import vaadin.button.createButton
-import vaadin.combobox.ComboBoxEvents
-import vaadin.combobox.createComboBox
-import vaadin.datepicker.DatePickerDate
-import vaadin.datepicker.DatePickerDateMetadata
-import vaadin.datepicker.DatePickerDateMetadataArrayOrPromise
-import vaadin.datepicker.DatePickerDateMetadataProvider
-import vaadin.datepicker.DatePickerEvents
-import vaadin.datepicker.DatePickerI18n
-import vaadin.datepicker.createDate
-import vaadin.datepicker.createDatePicker
-import vaadin.datepicker.extractDateParts
-import vaadin.datepicker.formatISODate
-import vaadin.datepicker.parseDate
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxEvents
+import io.github.shijianjs.ktjs.vaadin.combobox.createComboBox
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDate
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadata
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataArrayOrPromise
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataProvider
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerEvents
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerI18n
+import io.github.shijianjs.ktjs.vaadin.datepicker.createDate
+import io.github.shijianjs.ktjs.vaadin.datepicker.createDatePicker
+import io.github.shijianjs.ktjs.vaadin.datepicker.extractDateParts
+import io.github.shijianjs.ktjs.vaadin.datepicker.formatISODate
+import io.github.shijianjs.ktjs.vaadin.datepicker.parseDate
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -614,7 +614,7 @@ private fun buildDatePickerPage(meta: PageMeta): PageView {
                 unsafeJso<DatePickerI18n> {
                     formatDate = { parts -> isoOf(parts) }
                     // Fully qualified: `parseDate` also names the property being assigned here.
-                    parseDate = { text -> vaadin.datepicker.parseDate(text)?.let(::extractDateParts) }
+                    parseDate = { text -> io.github.shijianjs.ktjs.vaadin.datepicker.parseDate(text)?.let(::extractDateParts) }
                 }
         }
     val customFunctionsText = Readout(tr("输入框文本：", "Input text: "))

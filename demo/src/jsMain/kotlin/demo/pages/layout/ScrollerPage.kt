@@ -15,13 +15,13 @@ import demo.ui.heading
 import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.card.createCard
-import vaadin.horizontallayout.createHorizontalLayout
-import vaadin.icon.createIcon
-import vaadin.markdown.createMarkdown
-import vaadin.scroller.ScrollerScrollDirections
-import vaadin.scroller.createScroller
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.card.createCard
+import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
+import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
+import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 import web.html.HTMLElement
 import web.html.HtmlTagName
 

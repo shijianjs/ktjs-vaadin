@@ -14,12 +14,12 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.section
 import js.objects.unsafeJso
-import vaadin.breadcrumbs.BreadcrumbsI18n
-import vaadin.breadcrumbs.BreadcrumbsItemElement
-import vaadin.breadcrumbs.createBreadcrumbs
-import vaadin.breadcrumbs.createBreadcrumbsItem
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.breadcrumbs.BreadcrumbsI18n
+import io.github.shijianjs.ktjs.vaadin.breadcrumbs.BreadcrumbsItemElement
+import io.github.shijianjs.ktjs.vaadin.breadcrumbs.createBreadcrumbs
+import io.github.shijianjs.ktjs.vaadin.breadcrumbs.createBreadcrumbsItem
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import web.dom.clickEvent
 import web.events.addHandler
 

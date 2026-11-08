@@ -19,11 +19,11 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withClass
-import vaadin.a11ybase.ListOrientations
-import vaadin.avatar.createAvatar
-import vaadin.item.createItem
-import vaadin.listbox.ListBoxEvents
-import vaadin.listbox.createListBox
+import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.item.createItem
+import io.github.shijianjs.ktjs.vaadin.listbox.ListBoxEvents
+import io.github.shijianjs.ktjs.vaadin.listbox.createListBox
 import web.html.HtmlTagName
 
 val listBoxEntry: CatalogEntry =

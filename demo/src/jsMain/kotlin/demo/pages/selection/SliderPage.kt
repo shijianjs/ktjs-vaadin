@@ -15,10 +15,10 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import vaadin.slider.RangeSliderEvents
-import vaadin.slider.SliderEvents
-import vaadin.slider.createRangeSlider
-import vaadin.slider.createSlider
+import io.github.shijianjs.ktjs.vaadin.slider.RangeSliderEvents
+import io.github.shijianjs.ktjs.vaadin.slider.SliderEvents
+import io.github.shijianjs.ktjs.vaadin.slider.createRangeSlider
+import io.github.shijianjs.ktjs.vaadin.slider.createSlider
 
 val sliderEntry: CatalogEntry =
     CatalogEntry(

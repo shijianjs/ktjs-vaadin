@@ -13,10 +13,10 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.splitlayout.SplitLayoutOrientations
-import vaadin.splitlayout.createSplitLayout
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.splitlayout.SplitLayoutOrientations
+import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement

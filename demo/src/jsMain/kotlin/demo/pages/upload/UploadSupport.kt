@@ -6,11 +6,11 @@ import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.notification.Notification
-import vaadin.notification.NotificationShowOptions
-import vaadin.upload.UploadElement
-import vaadin.upload.UploadFile
-import vaadin.upload.createUpload
+import io.github.shijianjs.ktjs.vaadin.notification.Notification
+import io.github.shijianjs.ktjs.vaadin.notification.NotificationShowOptions
+import io.github.shijianjs.ktjs.vaadin.upload.UploadElement
+import io.github.shijianjs.ktjs.vaadin.upload.UploadFile
+import io.github.shijianjs.ktjs.vaadin.upload.createUpload
 import web.events.Event
 
 /**

@@ -10,12 +10,12 @@ import demo.ui.withTheme
 import kotlin.js.Date
 import kotlin.js.JsAny
 import kotlin.js.js
-import vaadin.avatar.createAvatar
-import vaadin.grid.GridElement
-import vaadin.grid.GridSorterDirection
-import vaadin.grid.GridSorterDirections
-import vaadin.grid.createGrid
-import vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.grid.GridElement
+import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirection
+import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirections
+import io.github.shijianjs.ktjs.vaadin.grid.createGrid
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.html.HTMLElement
 
 // region Fixture

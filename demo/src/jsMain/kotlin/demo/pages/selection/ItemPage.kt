@@ -13,8 +13,8 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import vaadin.button.createButton
-import vaadin.item.createItem
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.item.createItem
 import web.dom.clickEvent
 import web.events.addHandler
 

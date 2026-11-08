@@ -18,16 +18,16 @@ import demo.ui.paragraph
 import demo.ui.section
 import demo.ui.withClass
 import demo.ui.withTheme
-import vaadin.avatar.createAvatar
-import vaadin.badge.createBadge
-import vaadin.button.createButton
-import vaadin.card.createCard
-import vaadin.checkboxgroup.CheckboxGroupEvents
-import vaadin.checkboxgroup.createCheckboxGroup
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.select.SelectEvents
-import vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.card.createCard
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
+import io.github.shijianjs.ktjs.vaadin.select.createSelect
 import web.html.HTMLElement
 import web.html.HtmlTagName
 

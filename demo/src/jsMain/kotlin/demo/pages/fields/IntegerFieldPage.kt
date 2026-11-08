@@ -16,10 +16,10 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.formlayout.createFormLayout
-import vaadin.integerfield.IntegerFieldEvents
-import vaadin.integerfield.createIntegerField
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.integerfield.IntegerFieldEvents
+import io.github.shijianjs.ktjs.vaadin.integerfield.createIntegerField
 import web.dom.clickEvent
 import web.events.addHandler
 

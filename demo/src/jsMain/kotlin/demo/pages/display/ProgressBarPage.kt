@@ -17,10 +17,10 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.progressbar.createProgressBar
-import vaadin.switch.SwitchEvents
-import vaadin.switch.createSwitch
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
+import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
+import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName

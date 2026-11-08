@@ -23,15 +23,15 @@ import demo.ui.withClass
 import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.select.SelectEvents
-import vaadin.select.SelectItemData
-import vaadin.select.createSelect
-import vaadin.select.createSelectItem
-import vaadin.select.createSelectListBox
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
+import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
+import io.github.shijianjs.ktjs.vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.select.createSelectItem
+import io.github.shijianjs.ktjs.vaadin.select.createSelectListBox
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -280,7 +280,7 @@ private fun buildSelectPage(meta: PageMeta): PageView {
             createSelectItem { value = "${person.id}" }.apply {
                 append(
                     row(
-                        vaadin.avatar.createAvatar {
+                        io.github.shijianjs.ktjs.vaadin.avatar.createAvatar {
                             name = person.displayName
                             img = person.pictureUrl
                         },

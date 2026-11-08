@@ -76,7 +76,7 @@ class CatalogEntry(
  * Dokka package page of the component behind [id].
  *
  * Wrapper packages mirror the npm package names with the hyphens removed (`text-field` →
- * `vaadin.textfield`), so the route id is enough to locate the package. `overview` and `theming`
+ * `io.github.shijianjs.ktjs.vaadin.textfield`), so the route id is enough to locate the package. `overview` and `theming`
  * cover several packages and link to the module index / Lumo package instead.
  */
 fun componentApiUrl(id: String): String =

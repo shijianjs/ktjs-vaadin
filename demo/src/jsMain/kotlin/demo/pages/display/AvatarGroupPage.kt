@@ -16,11 +16,11 @@ import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
 import js.objects.unsafeJso
-import vaadin.avatargroup.AvatarGroupItem
-import vaadin.avatargroup.createAvatarGroup
-import vaadin.button.createButton
-import vaadin.slider.SliderEvents
-import vaadin.slider.createSlider
+import io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupItem
+import io.github.shijianjs.ktjs.vaadin.avatargroup.createAvatarGroup
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.slider.SliderEvents
+import io.github.shijianjs.ktjs.vaadin.slider.createSlider
 import web.dom.clickEvent
 import web.events.addHandler
 

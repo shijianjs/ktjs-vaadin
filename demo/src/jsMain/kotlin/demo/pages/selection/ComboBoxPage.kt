@@ -26,14 +26,14 @@ import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.combobox.ComboBoxEvents
-import vaadin.combobox.ComboBoxItemModel
-import vaadin.combobox.ComboBoxPartialMatchModes
-import vaadin.combobox.createComboBox
-import vaadin.icon.createIcon
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxEvents
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxItemModel
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxPartialMatchModes
+import io.github.shijianjs.ktjs.vaadin.combobox.createComboBox
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -417,7 +417,7 @@ private fun renderPersonItem(container: HTMLElement, model: ComboBoxItemModel, p
     val person = peopleList.getOrNull(index) ?: return
     container.replaceChildren(
         row(
-            vaadin.avatar.createAvatar {
+            io.github.shijianjs.ktjs.vaadin.avatar.createAvatar {
                 name = person.displayName
                 img = person.pictureUrl
             },

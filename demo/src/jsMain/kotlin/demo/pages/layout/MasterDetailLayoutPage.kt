@@ -22,17 +22,17 @@ import demo.ui.span
 import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.emailfield.createEmailField
-import vaadin.formlayout.createFormLayout
-import vaadin.masterdetaillayout.MasterDetailLayoutOrientations
-import vaadin.masterdetaillayout.MasterDetailLayoutOverlayContainments
-import vaadin.masterdetaillayout.createMasterDetailLayout
-import vaadin.select.SelectEvents
-import vaadin.select.SelectItemData
-import vaadin.select.createSelect
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.masterdetaillayout.MasterDetailLayoutOrientations
+import io.github.shijianjs.ktjs.vaadin.masterdetaillayout.MasterDetailLayoutOverlayContainments
+import io.github.shijianjs.ktjs.vaadin.masterdetaillayout.createMasterDetailLayout
+import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
+import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
+import io.github.shijianjs.ktjs.vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -146,17 +146,17 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
             textContent = tr("detail · 16rem", "detail · 16rem")
         },
     )
-    val expandMasterSwitch = vaadin.switch.createSwitch { label = "expandMaster" }
-    val expandDetailSwitch = vaadin.switch.createSwitch { label = "expandDetail" }
+    val expandMasterSwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "expandMaster" }
+    val expandDetailSwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "expandDetail" }
     val sizeReadout = Readout("expandMaster = false · expandDetail = false")
     fun describeSizes() {
         sizeReadout.set("expandMaster = ${sized.expandMaster} · expandDetail = ${sized.expandDetail}")
     }
-    expandMasterSwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+    expandMasterSwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
         sized.expandMaster = expandMasterSwitch.checked
         describeSizes()
     }
-    expandDetailSwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+    expandDetailSwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
         sized.expandDetail = expandDetailSwitch.checked
         describeSizes()
     }
@@ -226,8 +226,8 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
             textContent = tr("detail", "detail")
         },
     )
-    val forceOverlaySwitch = vaadin.switch.createSwitch { label = "forceOverlay" }
-    val fullOverlaySwitch = vaadin.switch.createSwitch { label = "overlaySize = 100%" }
+    val forceOverlaySwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "forceOverlay" }
+    val fullOverlaySwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "overlaySize = 100%" }
     val containmentSelect =
         createSelect {
             label = "overlayContainment"
@@ -244,11 +244,11 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
                 )
             value = "layout"
         }
-    forceOverlaySwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+    forceOverlaySwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
         overlayLayout.forceOverlay = forceOverlaySwitch.checked
         overlayLayout.recalculateLayout()
     }
-    fullOverlaySwitch.listen(vaadin.switch.SwitchEvents.checkedChanged) {
+    fullOverlaySwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
         overlayLayout.overlaySize = if (fullOverlaySwitch.checked) "100%" else ""
         overlayLayout.recalculateLayout()
     }

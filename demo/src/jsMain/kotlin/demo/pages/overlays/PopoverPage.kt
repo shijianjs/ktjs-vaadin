@@ -28,30 +28,30 @@ import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
-import vaadin.avatar.createAvatar
-import vaadin.button.createButton
-import vaadin.checkbox.createCheckbox
-import vaadin.checkboxgroup.CheckboxGroupEvents
-import vaadin.checkboxgroup.createCheckboxGroup
-import vaadin.datepicker.DatePickerEvents
-import vaadin.datepicker.createDatePicker
-import vaadin.grid.createGrid
-import vaadin.grid.createGridColumn
-import vaadin.horizontallayout.createHorizontalLayout
-import vaadin.icon.createIcon
-import vaadin.integerfield.createIntegerField
-import vaadin.messagelist.MessageListItem
-import vaadin.messagelist.createMessageList
-import vaadin.popover.PopoverEvents
-import vaadin.popover.PopoverTriggers
-import vaadin.popover.createPopover
-import vaadin.select.SelectEvents
-import vaadin.select.SelectItemData
-import vaadin.select.createSelect
-import vaadin.tabs.createTab
-import vaadin.tabs.createTabs
-import vaadin.tabsheet.createTabSheet
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerEvents
+import io.github.shijianjs.ktjs.vaadin.datepicker.createDatePicker
+import io.github.shijianjs.ktjs.vaadin.grid.createGrid
+import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
+import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.integerfield.createIntegerField
+import io.github.shijianjs.ktjs.vaadin.messagelist.MessageListItem
+import io.github.shijianjs.ktjs.vaadin.messagelist.createMessageList
+import io.github.shijianjs.ktjs.vaadin.popover.PopoverEvents
+import io.github.shijianjs.ktjs.vaadin.popover.PopoverTriggers
+import io.github.shijianjs.ktjs.vaadin.popover.createPopover
+import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
+import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
+import io.github.shijianjs.ktjs.vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.tabs.createTab
+import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
+import io.github.shijianjs.ktjs.vaadin.tabsheet.createTabSheet
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
@@ -431,7 +431,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
             "email" to tr("邮箱", "Email"),
             "profession" to tr("职务", "Profession"),
         )
-    val columnElements = mutableListOf<Pair<String, vaadin.grid.GridColumnElement>>()
+    val columnElements = mutableListOf<Pair<String, io.github.shijianjs.ktjs.vaadin.grid.GridColumnElement>>()
     columnDefs.forEach { (path, label) ->
         val column = createGridColumn {
             header = label

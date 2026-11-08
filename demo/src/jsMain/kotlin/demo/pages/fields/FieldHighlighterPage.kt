@@ -14,12 +14,12 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.fieldhighlighter.AiFieldMarkerConfidences
-import vaadin.fieldhighlighter.FieldHighlighter
-import vaadin.fieldhighlighter.createAiFieldMarker
-import vaadin.fieldhighlighter.fieldHighlighterUser
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerConfidences
+import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighter
+import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.createAiFieldMarker
+import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.fieldHighlighterUser
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 

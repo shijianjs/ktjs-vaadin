@@ -16,10 +16,10 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.messageinput.MessageInputEvents
-import vaadin.messageinput.createMessageInput
-import vaadin.messagelist.MessageListEvents
-import vaadin.messagelist.createMessageList
+import io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputEvents
+import io.github.shijianjs.ktjs.vaadin.messageinput.createMessageInput
+import io.github.shijianjs.ktjs.vaadin.messagelist.MessageListEvents
+import io.github.shijianjs.ktjs.vaadin.messagelist.createMessageList
 
 val messageListEntry: CatalogEntry =
     CatalogEntry(

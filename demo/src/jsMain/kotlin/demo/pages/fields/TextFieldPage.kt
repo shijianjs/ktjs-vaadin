@@ -18,14 +18,14 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.switch.SwitchEvents
-import vaadin.switch.createSwitch
-import vaadin.textfield.TextFieldEvents
-import vaadin.textfield.createTextField
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
+import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
+import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

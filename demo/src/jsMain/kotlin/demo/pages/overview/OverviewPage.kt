@@ -23,8 +23,8 @@ import demo.ui.section
 import demo.ui.setHidden
 import demo.ui.span
 import demo.ui.withClass
-import vaadin.textfield.TextFieldEvents
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
 
 val overviewEntry: CatalogEntry =

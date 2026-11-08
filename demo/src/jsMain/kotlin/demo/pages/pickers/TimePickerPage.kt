@@ -16,16 +16,16 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
 import js.objects.unsafeJso
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.timepicker.TimePickerEvents
-import vaadin.timepicker.TimePickerI18n
-import vaadin.timepicker.TimePickerTime
-import vaadin.timepicker.createTimePicker
-import vaadin.timepicker.formatISOTime
-import vaadin.timepicker.parseISOTime
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerEvents
+import io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerI18n
+import io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerTime
+import io.github.shijianjs.ktjs.vaadin.timepicker.createTimePicker
+import io.github.shijianjs.ktjs.vaadin.timepicker.formatISOTime
+import io.github.shijianjs.ktjs.vaadin.timepicker.parseISOTime
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

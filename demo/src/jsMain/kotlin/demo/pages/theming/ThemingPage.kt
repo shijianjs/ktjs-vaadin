@@ -19,12 +19,12 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
-import vaadin.aura.Aura
-import vaadin.button.createButton
-import vaadin.card.createCard
-import vaadin.icon.createIcon
-import vaadin.lumostyles.LumoThemes
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.aura.Aura
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.card.createCard
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoThemes
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.cssom.ClassName
 import web.dom.clickEvent
 import web.events.addHandler
@@ -333,16 +333,16 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                     "small",
                 ),
                 entryPoint(
-                    "vaadin.componentbase.ElementMixin",
+                    "io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin",
                     tr("所有 Element 的基类", "Base class of every Element"),
                 ),
                 entryPoint(
-                    "vaadin.fieldbase.InputControlMixin",
+                    "io.github.shijianjs.ktjs.vaadin.fieldbase.InputControlMixin",
                     tr("TextField / ComboBox / Select 等字段", "Fields such as TextField / ComboBox / Select"),
                 ),
-                entryPoint("vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
+                entryPoint("io.github.shijianjs.ktjs.vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
                 entryPoint(
-                    "vaadin.VaadinTagName",
+                    "io.github.shijianjs.ktjs.vaadin.VaadinTagName",
                     tr("createXxx 内部使用的标签名常量", "Tag name constants used inside createXxx"),
                 ),
             ),

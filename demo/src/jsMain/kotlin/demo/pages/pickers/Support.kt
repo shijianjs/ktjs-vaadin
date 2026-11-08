@@ -2,10 +2,10 @@ package demo.pages.pickers
 
 import kotlin.js.Date
 import kotlin.js.unsafeCast
-import vaadin.datepicker.DatePickerDate
-import vaadin.datepicker.createDate
-import vaadin.datepicker.extractDateParts
-import vaadin.fieldbase.InputMixin
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDate
+import io.github.shijianjs.ktjs.vaadin.datepicker.createDate
+import io.github.shijianjs.ktjs.vaadin.datepicker.extractDateParts
+import io.github.shijianjs.ktjs.vaadin.fieldbase.InputMixin
 import web.html.HTMLInputElement
 
 // ---------------------------------------------------------------------------------------------

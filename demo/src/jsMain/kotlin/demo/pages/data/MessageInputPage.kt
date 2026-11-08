@@ -15,11 +15,11 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
 import js.objects.unsafeJso
-import vaadin.messageinput.MessageInputEvents
-import vaadin.messageinput.createMessageInput
-import vaadin.messagelist.createMessageList
-import vaadin.notification.Notification
-import vaadin.notification.NotificationShowOptions
+import io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputEvents
+import io.github.shijianjs.ktjs.vaadin.messageinput.createMessageInput
+import io.github.shijianjs.ktjs.vaadin.messagelist.createMessageList
+import io.github.shijianjs.ktjs.vaadin.notification.Notification
+import io.github.shijianjs.ktjs.vaadin.notification.NotificationShowOptions
 
 val messageInputEntry: CatalogEntry =
     CatalogEntry(

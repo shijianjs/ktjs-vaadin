@@ -17,12 +17,12 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.textarea.TextAreaEvents
-import vaadin.textarea.createTextArea
-import vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.textarea.TextAreaEvents
+import io.github.shijianjs.ktjs.vaadin.textarea.createTextArea
+import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 

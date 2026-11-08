@@ -19,11 +19,11 @@ import demo.ui.section
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import vaadin.checkbox.CheckboxEvents
-import vaadin.checkbox.createCheckbox
-import vaadin.multiselectcombobox.MultiSelectComboBoxEvents
-import vaadin.multiselectcombobox.createMultiSelectComboBox
-import vaadin.textarea.createTextArea
+import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
+import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.multiselectcombobox.MultiSelectComboBoxEvents
+import io.github.shijianjs.ktjs.vaadin.multiselectcombobox.createMultiSelectComboBox
+import io.github.shijianjs.ktjs.vaadin.textarea.createTextArea
 
 val multiSelectComboBoxEntry: CatalogEntry =
     CatalogEntry(

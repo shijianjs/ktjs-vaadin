@@ -18,14 +18,14 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withClass
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.dialog.DialogEvents
-import vaadin.dialog.createDialog
-import vaadin.emailfield.createEmailField
-import vaadin.formlayout.createFormLayout
-import vaadin.icon.createIcon
-import vaadin.textarea.createTextArea
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.dialog.DialogEvents
+import io.github.shijianjs.ktjs.vaadin.dialog.createDialog
+import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.textarea.createTextArea
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 

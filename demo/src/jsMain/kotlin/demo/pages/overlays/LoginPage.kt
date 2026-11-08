@@ -21,17 +21,17 @@ import demo.ui.section
 import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.js
-import vaadin.button.createButton
-import vaadin.integerfield.createIntegerField
-import vaadin.login.LoginFormEvents
-import vaadin.login.LoginI18n
-import vaadin.login.LoginI18nErrorMessage
-import vaadin.login.LoginI18nForm
-import vaadin.login.LoginI18nHeader
-import vaadin.login.createLoginForm
-import vaadin.login.createLoginOverlay
-import vaadin.switch.SwitchEvents
-import vaadin.switch.createSwitch
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.integerfield.createIntegerField
+import io.github.shijianjs.ktjs.vaadin.login.LoginFormEvents
+import io.github.shijianjs.ktjs.vaadin.login.LoginI18n
+import io.github.shijianjs.ktjs.vaadin.login.LoginI18nErrorMessage
+import io.github.shijianjs.ktjs.vaadin.login.LoginI18nForm
+import io.github.shijianjs.ktjs.vaadin.login.LoginI18nHeader
+import io.github.shijianjs.ktjs.vaadin.login.createLoginForm
+import io.github.shijianjs.ktjs.vaadin.login.createLoginOverlay
+import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
+import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -58,7 +58,7 @@ val loginEntry: CatalogEntry =
  * A trigger for a login overlay; the overlays stay closed so they do not cover the page, and a
  * successful submit closes the overlay again because `LoginOverlay` has no close control of its own.
  */
-private fun openOverlayButton(label: String, overlay: vaadin.login.LoginOverlayElement): vaadin.button.ButtonElement =
+private fun openOverlayButton(label: String, overlay: io.github.shijianjs.ktjs.vaadin.login.LoginOverlayElement): io.github.shijianjs.ktjs.vaadin.button.ButtonElement =
     createButton { textContent = label }.withTheme("tertiary").apply {
         overlay.listen(LoginFormEvents.login) { overlay.opened = false }
         clickEvent.addHandler { overlay.opened = true }

@@ -32,25 +32,25 @@ Every npm package maps to one Kotlin package, so imports stay close to the upstr
 
 | npm package | Kotlin package |
 | --- | --- |
-| `@vaadin/button` | `vaadin.button` |
-| `@vaadin/combo-box` | `vaadin.combobox` |
-| `@vaadin/field-base` | `vaadin.fieldbase` |
-| `@vaadin/vaadin-lumo-styles` | `vaadin.lumostyles` |
-| `@vaadin/vaadin-themable-mixin` | `vaadin.themablemixin` |
+| `@vaadin/button` | `io.github.shijianjs.ktjs.vaadin.button` |
+| `@vaadin/combo-box` | `io.github.shijianjs.ktjs.vaadin.combobox` |
+| `@vaadin/field-base` | `io.github.shijianjs.ktjs.vaadin.fieldbase` |
+| `@vaadin/vaadin-lumo-styles` | `io.github.shijianjs.ktjs.vaadin.lumostyles` |
+| `@vaadin/vaadin-themable-mixin` | `io.github.shijianjs.ktjs.vaadin.themablemixin` |
 
 Each element package provides an element type (`ButtonElement`), a registration function
 (`registerButton()`), a factory (`createButton {}`), attribute names (`ButtonAttributes`) and, when
 the upstream manifest declares events, typed event names (`NotificationEvents.closed`). Every tag
-name is collected in one place, `vaadin.VaadinTagName`.
+name is collected in one place, `io.github.shijianjs.ktjs.vaadin.VaadinTagName`.
 
 ## Usage
 
 Factories register the element on first use:
 
 ```kotlin
-import vaadin.button.createButton
-import vaadin.notification.Notification
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.notification.Notification
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.document
 
 fun main() {
@@ -71,8 +71,8 @@ example from a server-rendered page), call the matching `registerXxx()` function
 element is defined:
 
 ```kotlin
-import vaadin.VaadinTagName
-import vaadin.dialog.registerDialog
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
+import io.github.shijianjs.ktjs.vaadin.dialog.registerDialog
 import web.dom.document
 
 registerDialog()
@@ -102,9 +102,9 @@ they apply. A component instance can therefore be used through the capability it
 provides, the same way a Kotlin class implements several interfaces:
 
 ```kotlin
-import vaadin.fieldbase.DisabledMixin
-import vaadin.fieldbase.InputFieldMixin
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.fieldbase.DisabledMixin
+import io.github.shijianjs.ktjs.vaadin.fieldbase.InputFieldMixin
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 
 val field = createTextField { label = "Name" }
 
@@ -135,8 +135,8 @@ receives the container element to fill, so content is built with DOM APIs and th
 across calls:
 
 ```kotlin
-import vaadin.grid.createGrid
-import vaadin.grid.createGridColumn
+import io.github.shijianjs.ktjs.vaadin.grid.createGrid
+import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import web.dom.document
 
 val grid = createGrid()
@@ -160,9 +160,9 @@ The only Lit value left in the public API is the SVG literal accepted by `<vaadi
 modelled as the opaque `IconSvgLiteral`, and `unsafeSvgLiteral()` turns SVG markup into one:
 
 ```kotlin
-import vaadin.icon.Iconset
-import vaadin.icon.createIcon
-import vaadin.icon.unsafeSvgLiteral
+import io.github.shijianjs.ktjs.vaadin.icon.Iconset
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icon.unsafeSvgLiteral
 
 val icon = createIcon()
 icon.svg = unsafeSvgLiteral("""<path d="M12 2 2 22h20z"></path>""")
@@ -179,8 +179,8 @@ Lumo and Aura are CSS-first design systems; the supported path is importing thei
 application stylesheet pipeline:
 
 ```kotlin
-import vaadin.aura.Aura
-import vaadin.lumostyles.LumoThemes
+import io.github.shijianjs.ktjs.vaadin.aura.Aura
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoThemes
 
 // Pass these paths to your bundler / stylesheet @import:
 val aura = Aura.CSS                                   // @vaadin/aura/aura.css
@@ -192,9 +192,9 @@ Registering the Lumo icon set and the legacy Lumo style mixins is available for 
 them:
 
 ```kotlin
-import vaadin.lumostyles.LumoStyles
-import vaadin.lumostyles.registerLumoIcons
-import vaadin.lumostyles.registerLumoStyles
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoStyles
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoStyles
 
 registerLumoIcons()
 registerLumoStyles()
@@ -205,8 +205,8 @@ Custom styles are registered with `registerStyles`; `unsafeCSS` wraps a CSS stri
 `CSSResult`:
 
 ```kotlin
-import vaadin.themablemixin.registerStyles
-import vaadin.themablemixin.unsafeCSS
+import io.github.shijianjs.ktjs.vaadin.themablemixin.registerStyles
+import io.github.shijianjs.ktjs.vaadin.themablemixin.unsafeCSS
 
 registerStyles(
     "vaadin-button",
@@ -217,8 +217,8 @@ registerStyles(
 The `@vaadin/icons` package only registers the icon set; load it before using `vaadin:` icon names:
 
 ```kotlin
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 
 registerVaadinIcons()
 val icon = createIcon { this.icon = "vaadin:home" }

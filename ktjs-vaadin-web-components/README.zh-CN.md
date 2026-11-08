@@ -27,24 +27,24 @@ dependencies {
 
 | npm 包 | Kotlin 包 |
 | --- | --- |
-| `@vaadin/button` | `vaadin.button` |
-| `@vaadin/combo-box` | `vaadin.combobox` |
-| `@vaadin/field-base` | `vaadin.fieldbase` |
-| `@vaadin/vaadin-lumo-styles` | `vaadin.lumostyles` |
-| `@vaadin/vaadin-themable-mixin` | `vaadin.themablemixin` |
+| `@vaadin/button` | `io.github.shijianjs.ktjs.vaadin.button` |
+| `@vaadin/combo-box` | `io.github.shijianjs.ktjs.vaadin.combobox` |
+| `@vaadin/field-base` | `io.github.shijianjs.ktjs.vaadin.fieldbase` |
+| `@vaadin/vaadin-lumo-styles` | `io.github.shijianjs.ktjs.vaadin.lumostyles` |
+| `@vaadin/vaadin-themable-mixin` | `io.github.shijianjs.ktjs.vaadin.themablemixin` |
 
 每个元素包都提供元素类型（`ButtonElement`）、注册函数（`registerButton()`）、工厂函数
 （`createButton {}`）、属性名常量（`ButtonAttributes`），以及上游 manifest 声明了事件时的带类型事件名
-（`NotificationEvents.closed`）。所有标签名集中在 `vaadin.VaadinTagName` 一个对象里。
+（`NotificationEvents.closed`）。所有标签名集中在 `io.github.shijianjs.ktjs.vaadin.VaadinTagName` 一个对象里。
 
 ## 用法
 
 工厂函数会在首次使用时注册元素：
 
 ```kotlin
-import vaadin.button.createButton
-import vaadin.notification.Notification
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.notification.Notification
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.document
 
 fun main() {
@@ -63,8 +63,8 @@ fun main() {
 通过工厂创建是常规路径。如果自己创建元素（例如页面由服务端渲染），先调用对应的 `registerXxx()` 注册：
 
 ```kotlin
-import vaadin.VaadinTagName
-import vaadin.dialog.registerDialog
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
+import io.github.shijianjs.ktjs.vaadin.dialog.registerDialog
 import web.dom.document
 
 registerDialog()
@@ -91,9 +91,9 @@ button.clickEvent.addHandler { Notification.show("Clicked") }
 具备的能力来使用，与 Kotlin 类实现多个接口的用法一致：
 
 ```kotlin
-import vaadin.fieldbase.DisabledMixin
-import vaadin.fieldbase.InputFieldMixin
-import vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.vaadin.fieldbase.DisabledMixin
+import io.github.shijianjs.ktjs.vaadin.fieldbase.InputFieldMixin
+import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 
 val field = createTextField { label = "Name" }
 
@@ -121,8 +121,8 @@ input.autocapitalizeProperty = "words"    // 写入 element.autocapitalize
 API 构建，节点在多次调用之间复用：
 
 ```kotlin
-import vaadin.grid.createGrid
-import vaadin.grid.createGridColumn
+import io.github.shijianjs.ktjs.vaadin.grid.createGrid
+import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import web.dom.document
 
 val grid = createGrid()
@@ -144,9 +144,9 @@ grid.requestContentUpdate() // 数据变化后重新执行 renderer
 `unsafeSvgLiteral()` 可以把 SVG 标记转成这种值：
 
 ```kotlin
-import vaadin.icon.Iconset
-import vaadin.icon.createIcon
-import vaadin.icon.unsafeSvgLiteral
+import io.github.shijianjs.ktjs.vaadin.icon.Iconset
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icon.unsafeSvgLiteral
 
 val icon = createIcon()
 icon.svg = unsafeSvgLiteral("""<path d="M12 2 2 22h20z"></path>""")
@@ -162,8 +162,8 @@ icon.svg = check.svg
 Lumo 与 Aura 都是 CSS 优先的设计系统，推荐在应用样式管线里引入对应样式表：
 
 ```kotlin
-import vaadin.aura.Aura
-import vaadin.lumostyles.LumoThemes
+import io.github.shijianjs.ktjs.vaadin.aura.Aura
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoThemes
 
 // 把路径交给打包器或样式表 @import：
 val aura = Aura.CSS                                   // @vaadin/aura/aura.css
@@ -174,9 +174,9 @@ val compact = LumoThemes.COMPACT_CSS                  // @vaadin/vaadin-lumo-sty
 需要时也可以注册 Lumo 图标集与旧版 Lumo 样式 mixin：
 
 ```kotlin
-import vaadin.lumostyles.LumoStyles
-import vaadin.lumostyles.registerLumoIcons
-import vaadin.lumostyles.registerLumoStyles
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoStyles
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
+import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoStyles
 
 registerLumoIcons()
 registerLumoStyles()
@@ -186,8 +186,8 @@ val overlayStyles = LumoStyles.overlay
 自定义样式通过 `registerStyles` 注册；`unsafeCSS` 把 CSS 字符串包装成 Lit 的 `CSSResult`：
 
 ```kotlin
-import vaadin.themablemixin.registerStyles
-import vaadin.themablemixin.unsafeCSS
+import io.github.shijianjs.ktjs.vaadin.themablemixin.registerStyles
+import io.github.shijianjs.ktjs.vaadin.themablemixin.unsafeCSS
 
 registerStyles(
     "vaadin-button",
@@ -198,8 +198,8 @@ registerStyles(
 `@vaadin/icons` 只负责注册图标集；使用 `vaadin:` 前缀的图标前要先加载：
 
 ```kotlin
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 
 registerVaadinIcons()
 val icon = createIcon { this.icon = "vaadin:home" }

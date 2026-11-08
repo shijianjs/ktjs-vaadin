@@ -16,14 +16,14 @@ import demo.ui.paragraph
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
-import vaadin.a11ybase.ListOrientations
-import vaadin.badge.createBadge
-import vaadin.icon.createIcon
-import vaadin.icons.registerVaadinIcons
-import vaadin.tabs.TabsElement
-import vaadin.tabs.TabsEvents
-import vaadin.tabs.createTab
-import vaadin.tabs.createTabs
+import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
+import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.tabs.TabsElement
+import io.github.shijianjs.ktjs.vaadin.tabs.TabsEvents
+import io.github.shijianjs.ktjs.vaadin.tabs.createTab
+import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
 
 val tabsEntry: CatalogEntry =
     CatalogEntry(

@@ -19,11 +19,11 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.withClass
 import demo.ui.withTheme
-import vaadin.button.createButton
-import vaadin.checkbox.CheckboxEvents
-import vaadin.checkbox.createCheckbox
-import vaadin.checkboxgroup.CheckboxGroupEvents
-import vaadin.checkboxgroup.createCheckboxGroup
+import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
+import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
 import web.dom.clickEvent
 import web.events.addHandler
 

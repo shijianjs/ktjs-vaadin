@@ -7,20 +7,20 @@ import demo.ui.element
 import demo.ui.span
 import demo.ui.withTheme
 import js.objects.unsafeJso
-import vaadin.accordion.createAccordionPanel
-import vaadin.avatar.createAvatar
-import vaadin.checkbox.createCheckbox
-import vaadin.emailfield.createEmailField
-import vaadin.formlayout.FormLayoutResponsiveStep
-import vaadin.formlayout.StringOrDouble
-import vaadin.formlayout.createFormLayout
-import vaadin.icon.createIcon
-import vaadin.scroller.createScroller
-import vaadin.select.SelectItemData
-import vaadin.sidenav.SideNavElement
-import vaadin.sidenav.SideNavItemElement
-import vaadin.sidenav.createSideNav
-import vaadin.sidenav.createSideNavItem
+import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
+import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
+import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
+import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
+import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
+import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
+import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
+import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -112,7 +112,7 @@ internal fun box(text: String, height: String? = null): HTMLElement =
 internal fun emailField(label: String): HTMLElement = createEmailField { this.label = label }
 
 /** An accordion panel with a summary and one content child. */
-internal fun accordionPanel(summary: String): vaadin.accordion.AccordionPanelElement =
+internal fun accordionPanel(summary: String): io.github.shijianjs.ktjs.vaadin.accordion.AccordionPanelElement =
     createAccordionPanel { this.summary = summary }
 
 internal fun laplandShortText(): String =

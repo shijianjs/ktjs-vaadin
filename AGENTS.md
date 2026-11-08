@@ -32,8 +32,8 @@ Kotlin/JS wrapper。
 ### Wrapper 生成约定
 
 `scripts/generate-wrappers.mjs` 读取已安装 npm 包里的 `custom-elements.json`，写入
-`src/jsMain/kotlin/vaadin/<包名>/`；每个 npm 包对应一个同名 Kotlin 包（去掉 `@vaadin/` 与
-`vaadin-` 前缀、去掉连字符，如 `@vaadin/combo-box` → `vaadin.combobox`）。
+`src/jsMain/kotlin/io/github/shijianjs/ktjs/vaadin/<包名>/`；每个 npm 包对应一个同名 Kotlin 包（去掉 `@vaadin/` 与
+`vaadin-` 前缀、去掉连字符，如 `@vaadin/combo-box` → `io.github.shijianjs.ktjs.vaadin.combobox`）。
 
 - mixin 生成 `external interface`，继承关系与 manifest 一致；元素类生成
   `abstract external class XxxElement : web.html.HTMLElement, ...`，实现它引用的全部 mixin，类体只重复
@@ -121,7 +121,7 @@ Kotlin/JS wrapper。
 - DOM 元素：`web.html.HTMLElement`
 - 全局 document：`web.dom.document`
 - 创建元素：`document.createElement(VaadinTagName.xxx)`，无需 `unsafeCast`
-- 所有自定义元素标签名集中在根包 `vaadin.VaadinTagName`：每个元素一个
+- 所有自定义元素标签名集中在根包 `io.github.shijianjs.ktjs.vaadin.VaadinTagName`：每个元素一个
   `inline val xxx: TagName<XxxElement>`，由生成器统一写出。不要在组件包里另建 `XxxTagName` 之类的对象，
   同一标签名只能有一处声明。
 
@@ -166,9 +166,9 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
 目标是「除明确不做的功能外，覆盖全部 wrapper 代码」。上游源码树固定放在
 `S:\workspace\github\vaadin\web-components`，`packages/<包>/test/*.test.js` 是首选用例来源。
 
-- **先翻译上游测试**：Kotlin 测试目录与子模块、包名对齐（`src/jsTest/kotlin/vaadin/<包>/`），文件名与
+- **先翻译上游测试**：Kotlin 测试目录与子模块、包名对齐（`src/jsTest/kotlin/io/github/shijianjs/ktjs/vaadin/<包>/`），文件名与
   上游 `test/*.test.js` 对应（`tabs.test.js` → `TabsTest.kt`），测试函数名对应上游 `it(...)`，KDoc 注明
-  上游文件路径。上游用 `@vaadin/testing-helpers` 的地方用 `vaadin.TestSupport` 的等价辅助函数
+  上游文件路径。上游用 `@vaadin/testing-helpers` 的地方用 `io.github.shijianjs.ktjs.vaadin.TestSupport` 的等价辅助函数
   （`attach`、`fixture`、`nextRender`、`nextFrame`、`nextUpdate`、`nextResize`、`timeout`、`keyDown`、
   `on`、`typeInto`、`click`、`shadowQuery`、`computedStyle` 等），不要在用例里重复造。
 - **上游源码树先切到锁定版本的 tag**：`S:\workspace\github\vaadin\web-components` 默认停在 `main`（比锁定的
@@ -497,8 +497,8 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   英文模式自动改为 `/latest/components/`；没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）、
   GitHub 上的 Kotlin 源码（`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）与 Dokka 的组件包页。
   API 深链由 `Catalog.kt` 的 `componentApiUrl` 按路由 id 推导为
-  `api/ktjs-vaadin-web-components/vaadin.<去掉连字符的 id>/index.html`（`overview` 指向模块索引、
-  `theming` 指向 `vaadin.lumostyles`），必须是 `api/` 开头的相对路径。端到端用例会逐页校验三条链接。
+  `api/ktjs-vaadin-web-components/io.github.shijianjs.ktjs.vaadin.<去掉连字符的 id>/index.html`（`overview` 指向模块索引、
+  `theming` 指向 `io.github.shijianjs.ktjs.vaadin.lumostyles`），必须是 `api/` 开头的相对路径。端到端用例会逐页校验三条链接。
 - 所有演示文案（导航、标题、摘要、分区说明、示例标签、读值、事件日志）都要走 `tr` / `bi`；新增页面或
   组件时不要留下硬编码的中文或英文。`PageMeta.title` / `summary` 在创建时传入 `bi(...)`，页面内部的
   文案在 builder 里调用 `tr(...)`，这样切换语言时重建页面即可整体更新。
@@ -535,7 +535,7 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   overlay 元素上再链式查找，Playwright 不会从它继续深入 shadow root），或用 `[part="number"]`
   之类的内部 part；勾选类控件要点内部 `input`（宿主的可点区域很大，点中心常常落空）。
 - `./gradlew pagesSite` 把 demo 与 `build/dokka/html` 组装到 `build/pages`：演示页在根目录，API 文档在
-  `api/`。演示页内部链接使用相对路径。Dokka 的包目录名带点（`vaadin.textfield`），拼 API 链接时不要
+  `api/`。演示页内部链接使用相对路径。Dokka 的包目录名带点（`io.github.shijianjs.ktjs.vaadin.textfield`），拼 API 链接时不要
   写成 `vaadintextfield` 这类形式；新增组件页后可用 `pagesSite` 产物核对包目录是否存在。
 - Dokka 2.2.0 同时应用到根项目和所有 wrapper 子模块；聚合入口是根项目的 `dependencies { dokka(...) }`，
   任务为 `dokkaGeneratePublicationHtml`（2.x 已移除旧的 `dokkaHtmlMultiModule`）。
