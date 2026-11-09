@@ -85,6 +85,13 @@ subprojects {
                     // whole public API: a library cannot know whether it runs as part of a bundle.
                     // Bundling still shakes the unused parts. See AGENTS.md.
                     freeCompilerArgs.add("-Xir-dce=false")
+
+                    // ES2015 is the first target whose output can express a real class; below it
+                    // Kotlin emits `function X() { HTMLElement.call(this) }`, which a DOM
+                    // constructor rejects with "Please use the 'new' operator". (Kotlin/JS accepts
+                    // es5/es2015 only — es2020 is not a valid value.) It has to be set on the js
+                    // target; `-target` through freeCompilerArgs does nothing.
+                    target = "es2015"
                 }
             }
         }
