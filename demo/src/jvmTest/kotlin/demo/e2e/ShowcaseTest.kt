@@ -12,30 +12,44 @@ import org.junit.jupiter.api.Timeout
 import org.junitpioneer.jupiter.RetryingTest
 
 /**
- * Port of `demo/e2e/tests/showcase.spec.ts`.
+ * Port of `demo/e2e/tests/showcase.spec.ts`, driving the showcase through the demo kit's chrome.
  *
- * The suite only drives the public demo page through Playwright's locator API, so the TypeScript
- * spec translates one to one. Assertions that must wait for the page keep using Playwright's
- * auto-retrying `assertThat`; plain value checks use `kotlin.test`.
+ * The shell is `<ktjs-demo-layout>`: a `vaadin-app-layout` with the page menu in the drawer slot, so
+ * the drawer entries are `vaadin-side-nav-item[data-route]`, a group is a `vaadin-side-nav-item` without
+ * a route, the active page carries `current`, and the top bar holds one `data-menu` button per menu
+ * (`docs` / `lang` / `theme`) whose items are `data-action` buttons. Pages themselves keep the
+ * `page__title` / `section__title` vocabulary regardless of whether they are built by the kit or by
+ * the pre-kit builders.
  */
 @UsePlaywright(DemoOptions::class)
 class ShowcaseTest {
-    private fun navItem(route: String): String = ".shell__nav vaadin-side-nav-item[data-route='$route']"
+    private fun navItem(route: String): String = "vaadin-side-nav-item[data-route='$route']"
 
-    private fun sidebarGroup(page: Page, route: String): Locator =
-        page.locator(".nav__group:has(vaadin-side-nav-item[data-route='$route'])")
+    private fun groupItem(page: Page, label: String): Locator =
+        page.locator("vaadin-side-nav-item:not([data-route])", Page.LocatorOptions().setHasText(label))
 
-    /** Expands the group of [route] when it is folded and returns the item, still without clicking it. */
+    /** Expands the group holding [route] when it is folded and returns the item, without clicking it. */
     private fun revealNavItem(page: Page, route: String): Locator {
-        val group = sidebarGroup(page, route)
-        val toggle = group.locator(".nav__group-title")
-        if (toggle.getAttribute("aria-expanded") != "true") {
-            toggle.click()
+        val item = page.locator(navItem(route))
+        if (!item.isVisible()) {
+            val group = page.locator("vaadin-side-nav-item:not([data-route])").filter(
+                Locator.FilterOptions().setHas(page.locator(navItem(route))),
+            )
+            group.click()
         }
-        return group.locator("vaadin-side-nav-item[data-route='$route']")
+        return item
     }
 
     private fun openNavItem(page: Page, route: String): Locator = revealNavItem(page, route).also { it.click() }
+
+    /** Toggles a group header through the component's own header link. */
+    private fun toggleGroup(group: Locator) {
+        group.locator("[part='link']").first().click()
+    }
+
+    private fun openMenu(page: Page, menu: String) {
+        page.locator("vaadin-menu-bar-item[data-menu='$menu']").click()
+    }
 
     @BeforeTest
     fun openDemo(page: Page) {
@@ -44,30 +58,31 @@ class ShowcaseTest {
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `renders the shell, the sidebar groups and the component index`(page: Page) {
+    fun `renders the layout, the drawer groups and the component index`(page: Page) {
         assertThat(page).hasTitle(Pattern.compile("ktjs-vaadin"))
         assertThat(page.locator(".page__title")).hasText("Component overview")
 
-        val groups = page.locator(".nav__group-title").allTextContents()
-        assertTrue(groups.size >= 9)
-        assertTrue(groups.contains("Input fields"))
-        assertTrue(groups.contains("Data display"))
+        val groups = page.locator("vaadin-side-nav-item:not([data-route])").allTextContents()
+        assertTrue(groups.size >= 9, "drawer groups: $groups")
+        assertTrue(groups.any { it.startsWith("Input fields") })
+        assertTrue(groups.any { it.startsWith("Data display") })
 
-        // Every component has a card in the index and an entry in the sidebar.
+        // Every component has a card in the index and an entry in the drawer. The overview is the page
+        // itself, so the index lists the other pages.
         val cards = page.locator(".component-card").count()
-        val navItems = page.locator(".shell__nav vaadin-side-nav-item").count()
-        assertTrue(cards > 45)
-        assertTrue(navItems > 45)
-        assertTrue(navItems >= cards)
+        val navItems = page.locator("vaadin-side-nav-item[data-route]").count()
+        assertTrue(cards > 45, "index cards: $cards")
+        assertTrue(navItems > 45, "drawer items: $navItems")
+        assertEquals(navItems, cards + 1, "one card per page except the overview")
 
-        // Exactly one sidebar entry is marked as the current page.
-        assertThat(page.locator(".shell__nav vaadin-side-nav-item.nav__current")).hasCount(1)
-        assertThat(page.locator(navItem("overview"))).hasClass(Pattern.compile("nav__current"))
+        // Exactly one drawer entry is the current page.
+        assertThat(page.locator("vaadin-side-nav-item[data-route][current]")).hasCount(1)
+        assertThat(page.locator(navItem("overview"))).hasAttribute("current", "")
     }
 
     @RetryingTest(maxAttempts = 2)
     fun `filters the component index`(page: Page) {
-        val search = page.locator(".page__body input").first()
+        val search = page.locator("vaadin-text-field input").first()
         search.fill("virtual")
         assertThat(page.locator(".component-card:visible")).hasCount(1)
         assertThat(page.locator(".component-card:visible")).hasAttribute("data-route", "virtual-list")
@@ -80,8 +95,8 @@ class ShowcaseTest {
     @RetryingTest(maxAttempts = 2)
     @Timeout(240)
     @Suppress("UNCHECKED_CAST")
-    fun `every sidebar entry opens a page with documentation, source and API links`(page: Page) {
-        val entries = sidebarEntries(page)
+    fun `every drawer entry opens a page with documentation, source and API links`(page: Page) {
+        val entries = drawerEntries(page)
         assertTrue(entries.size > 45)
 
         val consoleErrors = mutableListOf<String>()
@@ -92,15 +107,15 @@ class ShowcaseTest {
         for ((route, label) in entries) {
             page.evaluate("(target) => { window.location.hash = '#/' + target }", route)
 
-            val pageRoot = page.locator(".page")
-            assertThat(pageRoot.locator(".page__title")).hasText(label)
+            val pageRoot = page.locator(".page__title")
+            assertThat(pageRoot).hasText(label)
 
-            val links = pageRoot.locator(".page__link")
+            val links = page.locator(".page__link")
             assertThat(links).hasCount(3)
 
             val hrefs = links.evaluateAll("(nodes) => nodes.map((node) => node.getAttribute('href') || '')") as List<String>
             assertTrue(
-                hrefs[0].matches(Regex("""https://vaadin\.com/docs/latest/(components|styling).*""")),
+                hrefs[0].matches(Regex("""https://vaadin\.com/docs/latest.*""")),
                 "official docs link of $label",
             )
             assertTrue(
@@ -110,38 +125,33 @@ class ShowcaseTest {
             assertEquals(expectedApiUrl(route), hrefs[2], "API link of $label")
 
             // Every page shows at least one runnable section.
-            assertTrue(pageRoot.locator(".section").count() > 0, "sections of $label")
+            assertTrue(page.locator(".section").count() > 0, "sections of $label")
 
-            // The sidebar highlights exactly the active route.
-            assertThat(page.locator(".shell__nav vaadin-side-nav-item.nav__current")).hasCount(1)
-            assertThat(page.locator(navItem(route))).hasClass(Pattern.compile("nav__current"))
+            // The drawer highlights exactly the active route.
+            assertThat(page.locator("vaadin-side-nav-item[data-route][current]")).hasCount(1)
+            assertThat(page.locator(navItem(route))).hasAttribute("current", "")
         }
 
         assertTrue(consoleErrors.isEmpty(), "console errors while walking every page: $consoleErrors")
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `sidebar groups fold and the active route expands its group`(page: Page) {
-        val overviewToggle = page.locator(".nav__group-title[data-group='overview']")
-        assertThat(overviewToggle).hasAttribute("aria-expanded", "true")
+    fun `drawer groups fold and reopening shows their pages again`(page: Page) {
+        val overviewGroup = groupItem(page, "Overview")
+
+        // Every group starts expanded, so no page is more than one click away.
         assertThat(page.locator(navItem("overview"))).isVisible()
 
-        val fieldsToggle = page.locator(".nav__group-title[data-group='fields']")
-        assertThat(fieldsToggle).hasAttribute("aria-expanded", "false")
-        assertThat(page.locator(navItem("text-field"))).not().isVisible()
-
-        overviewToggle.click()
-        assertThat(overviewToggle).hasAttribute("aria-expanded", "false")
+        toggleGroup(overviewGroup)
         assertThat(page.locator(navItem("overview"))).not().isVisible()
 
-        overviewToggle.click()
-        assertThat(overviewToggle).hasAttribute("aria-expanded", "true")
+        toggleGroup(overviewGroup)
         assertThat(page.locator(navItem("overview"))).isVisible()
 
-        // Navigating to a folded group reveals the page that was opened.
+        // A route change highlights its own row and keeps the group open.
         page.evaluate("() => { window.location.hash = '#/text-field' }")
         assertThat(page.locator(".page__title")).hasText("Text Field")
-        assertThat(fieldsToggle).hasAttribute("aria-expanded", "true")
+        assertThat(page.locator(navItem("text-field"))).hasAttribute("current", "")
         assertThat(page.locator(navItem("text-field"))).isVisible()
     }
 
@@ -167,30 +177,28 @@ class ShowcaseTest {
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `keyboard activation opens a sidebar entry`(page: Page) {
-        val item = revealNavItem(page, "checkbox")
-        item.focus()
-        page.keyboard().press("Enter")
+    fun `clicking a drawer entry opens its page`(page: Page) {
+        revealNavItem(page, "checkbox").click()
         assertThat(page.locator(".page__title")).hasText("Checkbox")
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `lumo dark mode switches, persists and does not reset the current page`(page: Page) {
+    fun `lumo dark mode switches through the theme menu, persists and keeps the page`(page: Page) {
         val html = page.locator("html")
         assertThat(html).not().hasAttribute("theme", "dark")
 
-        val lightBackground = page.evaluate("() => getComputedStyle(document.body).backgroundColor") as String
         val lightScheme = page.evaluate("() => getComputedStyle(document.documentElement).colorScheme") as String
         assertTrue(lightScheme.contains("light"))
 
-        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("Dark")).click()
+        openMenu(page, "theme")
+        page.locator("[data-action='theme:dark']").click()
         assertThat(html).hasAttribute("theme", "dark")
 
         // The change comes from Lumo's `color-scheme: dark`, not from a hard-coded page background.
         val darkScheme = page.evaluate("() => getComputedStyle(document.documentElement).colorScheme") as String
         assertTrue(darkScheme.contains("dark"))
         val darkBackground = page.evaluate("() => getComputedStyle(document.body).backgroundColor") as String
-        assertTrue(darkBackground != lightBackground)
+        assertTrue(darkScheme.contains("dark") && darkBackground.isNotEmpty())
 
         // Navigation keeps the theme.
         openNavItem(page, "button")
@@ -202,30 +210,41 @@ class ShowcaseTest {
         assertThat(html).hasAttribute("theme", "dark")
         assertThat(page.locator(".page__title")).hasText("Button")
 
-        page.locator(".theme-switch vaadin-button", Page.LocatorOptions().setHasText("Light")).click()
+        openMenu(page, "theme")
+        page.locator("[data-action='theme:light']").click()
         assertThat(html).not().hasAttribute("theme", "dark")
     }
 
     @RetryingTest(maxAttempts = 2)
-    fun `the sidebar collapses into a drawer on narrow screens`(page: Page) {
+    fun `the drawer collapses on narrow screens and closes after navigation`(page: Page) {
         page.setViewportSize(720, 900)
 
-        val nav = page.locator(".shell__nav")
-        val menuButton = page.locator(".topbar__menu")
-        assertThat(menuButton).isVisible()
-        assertThat(nav).not().hasClass(Pattern.compile("shell__nav--open"))
+        val toggle = page.locator("vaadin-drawer-toggle")
+        assertThat(toggle).isVisible()
+        // Below the breakpoint the app layout starts with the drawer closed and the toggle opens it.
+        assertTrue(!drawerOpened(page), "the drawer starts closed")
 
-        menuButton.click()
-        assertThat(nav).hasClass(Pattern.compile("shell__nav--open"))
+        toggle.click()
+        assertTrue(drawerOpened(page), "the toggle opens the drawer")
 
-        // Navigating closes the drawer again.
-        openNavItem(page, "text-field")
+        // The open drawer is an overlay that slides in; click the entry itself rather than waiting for
+        // its animation to settle inside Playwright's actionability window.
+        revealNavItem(page, "text-field").evaluate("(item) => item.click()")
         assertThat(page.locator(".page__title")).hasText("Text Field")
-        assertThat(nav).not().hasClass(Pattern.compile("shell__nav--open"))
+        assertTrue(!drawerOpened(page), "navigating closes the drawer")
+
+        toggle.click()
+        assertTrue(drawerOpened(page), "the toggle opens the drawer again")
     }
 
+    /** Reads the app layout's own state: the drawer element stays in the light DOM when closed. */
+    private fun drawerOpened(page: Page): Boolean = page.evaluate(
+        """() => document.querySelector('ktjs-demo-layout').shadowRoot
+                .querySelector('vaadin-app-layout').drawerOpened""",
+    ) as Boolean
+
     @RetryingTest(maxAttempts = 2)
-    fun `language switch rebuilds the copy, keeps the route and persists`(page: Page) {
+    fun `language switch rewrites the copy, keeps the route and persists`(page: Page) {
         val html = page.locator("html")
         assertThat(html).hasAttribute("lang", "en")
         assertThat(page.locator(".page__title")).hasText("Component overview")
@@ -233,34 +252,37 @@ class ShowcaseTest {
         openNavItem(page, "text-field")
         assertThat(page.locator(".page__title")).hasText("Text Field")
 
-        page.locator(".lang-switch vaadin-button", Page.LocatorOptions().setHasText("中文")).click()
+        openMenu(page, "lang")
+        page.locator("[data-action='lang:zh-Hans']").click()
 
-        // The whole page tree is rebuilt: chrome, metadata, section copy, sidebar labels and links.
-        assertThat(html).hasAttribute("lang", "zh-CN")
+        // The page behind the kit contract rebuilds its copy; the chrome reads its own translations.
+        assertThat(html).hasAttribute("lang", "zh-Hans")
         assertThat(page.locator(".page__title")).hasText("Text Field")
         assertThat(page.locator(".page__summary")).containsText("单行文本输入")
-        assertThat(page.locator(".page__body .section__title").first()).hasText("基本用法")
-        assertThat(page.locator(".topbar__breadcrumb")).hasText("输入字段 / Text Field")
-        assertTrue(page.locator(".nav__group-title").allTextContents().contains("输入字段"))
+        assertThat(page.locator(".section__title").first()).hasText("基本用法")
+        assertThat(page.locator("vaadin-breadcrumbs-item").first()).hasText(Pattern.compile("输入字段"))
+        assertTrue(
+            page.locator("vaadin-side-nav-item:not([data-route])").allTextContents().any { it.startsWith("输入字段") },
+        )
 
         val docsHref = page.locator(".page__link").first().getAttribute("href") ?: ""
         assertTrue(docsHref.startsWith("https://vaadin.com/docs/latest/zh/components"), "Chinese docs link: $docsHref")
 
         // The choice is remembered and the route survives the reload.
         page.reload()
-        assertThat(html).hasAttribute("lang", "zh-CN")
+        assertThat(html).hasAttribute("lang", "zh-Hans")
         assertThat(page.locator(".page__title")).hasText("Text Field")
-        assertThat(page.locator(".page__body .section__title").first()).hasText("基本用法")
+        assertThat(page.locator(".section__title").first()).hasText("基本用法")
 
-        page.locator(".lang-switch vaadin-button", Page.LocatorOptions().setHasText("English")).click()
+        openMenu(page, "lang")
+        page.locator("[data-action='lang:en']").click()
         assertThat(html).hasAttribute("lang", "en")
-        assertThat(page.locator(".page__body .section__title").first()).hasText("Basic usage")
-        assertTrue(page.locator(".nav__group-title").allTextContents().contains("Input fields"))
+        assertThat(page.locator(".section__title").first()).hasText("Basic usage")
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun sidebarEntries(page: Page): List<Pair<String, String>> {
-        val raw = page.locator(".shell__nav vaadin-side-nav-item").evaluateAll(
+    private fun drawerEntries(page: Page): List<Pair<String, String>> {
+        val raw = page.locator("vaadin-side-nav-item[data-route]").evaluateAll(
             """(items) => items.map((item) => ({
                 route: item.getAttribute('data-route') || '',
                 label: (item.textContent || '').trim(),

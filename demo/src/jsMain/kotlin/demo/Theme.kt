@@ -18,9 +18,9 @@ object Theme {
     private const val STORAGE_KEY = "ktjs-vaadin-theme"
     private const val DARK = "dark"
 
-    /** Whether the dark token set is active. */
+    /** Whether the dark token set is active; `light-dark` (follow the browser) is not "dark". */
     val isDark: Boolean
-        get() = document.documentElement.hasAttribute("theme")
+        get() = document.documentElement.getAttribute("theme") == DARK
 
     /** Re-applies the theme stored by a previous visit. Called once by [main]. */
     fun applyStored() {

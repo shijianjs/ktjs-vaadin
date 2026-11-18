@@ -1,10 +1,13 @@
 package demo.page.overview
 
 import demo.CatalogEntry
+import demo.DOCS_BASE
 import demo.Groups
 import demo.Language
 import demo.LanguageState
+import demo.API_DOCS_URL
 import demo.catalog
+import demo.ui.REPO_SOURCE_ROOT
 import demo.catalogEntriesOf
 import demo.catalogGroups
 import demo.ui.listen
@@ -40,20 +43,25 @@ import web.html.HtmlTagName
 private class OverviewTexts(
     val title: String,
     val summary: String,
+    val docsLink: String,
+    val sourceLink: String,
+    val apiLink: String,
     val whatHeading: String,
     val whatBody: String,
     val indexHeading: String,
     val indexHint: String,
     val findLabel: String,
     val findPlaceholder: String,
-    val countAll: String,
-    val showing: (Int) -> String,
+    val showing: (Int, Int) -> String,
 )
 
 private val overviewEnglish: OverviewTexts = OverviewTexts(
     title = "Component overview",
     summary = "Kotlin/JS wrappers for the free Vaadin Web Components, demonstrating properties, " +
         "variants and interactions component by component.",
+    docsLink = "Vaadin documentation",
+    sourceLink = "Kotlin source",
+    apiLink = "Kotlin API reference",
     whatHeading = "What this is",
     whatBody = "Every wrapped component has its own page; all examples are interactive and run in both " +
         "the light and dark Lumo themes. The showcase itself is Kotlin/JS too: every node is created " +
@@ -63,13 +71,15 @@ private val overviewEnglish: OverviewTexts = OverviewTexts(
     indexHint = "Filter by name, then open a card to visit its page.",
     findLabel = "Find a component",
     findPlaceholder = "e.g. grid, dialog, text",
-    countAll = "${catalog.size} pages",
-    showing = { visible -> "Showing $visible of ${catalog.size} pages" },
+    showing = { visible, total -> "Showing $visible of $total pages" },
 )
 
 private val overviewChinese: OverviewTexts = OverviewTexts(
     title = "组件总览",
     summary = "免费版 Vaadin Web Components 的 Kotlin/JS 封装，逐组件演示属性、变体与交互。",
+    docsLink = "Vaadin 官方文档",
+    sourceLink = "查看 Kotlin 源码",
+    apiLink = "Kotlin API 文档",
     whatHeading = "这是什么",
     whatBody = "每个已封装的组件都有独立页面，示例全部可交互，并且可以在亮色与暗色 Lumo 主题下运行。" +
         "页面本身也是 Kotlin/JS：所有节点通过 wrapper 工厂创建，属性用 Kotlin 类型直接赋值，" +
@@ -78,8 +88,7 @@ private val overviewChinese: OverviewTexts = OverviewTexts(
     indexHint = "输入名称过滤，点击卡片进入对应页面。",
     findLabel = "查找组件",
     findPlaceholder = "例如 grid、dialog、text",
-    countAll = "共 ${catalog.size} 个页面",
-    showing = { visible -> "显示 $visible / ${catalog.size} 个页面" },
+    showing = { visible, total -> "显示 $visible / $total 个页面" },
 )
 
 private val overviewTexts: Translations<OverviewTexts> = texts(
@@ -120,6 +129,10 @@ internal class OverviewPage : Page {
     override val node get() = page
 
     init {
+        page.addLink(texts.bind(anchor("", DOCS_BASE, external = true), { it.docsLink }))
+        page.addLink(texts.bind(anchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt", external = true), { it.sourceLink }))
+        page.addLink(texts.bind(anchor("", API_DOCS_URL, external = true), { it.apiLink }))
+
         val what = sectionBlock()
         texts.bind(what.title, { it.whatHeading })
         what.body.append(texts.bind(paragraph(), { it.whatBody }))
@@ -174,6 +187,7 @@ internal class OverviewPage : Page {
             }
         }
         val link = anchor("", "#/${entry.id}")
+        link.classList.add(web.cssom.ClassName("component-card"))
         link.inlineStyle.apply {
             display = Display.flex
             flexDirection = FlexDirection.column
@@ -182,6 +196,9 @@ internal class OverviewPage : Page {
             borderRadius = 10.px
             border = Border(1.px, LineStyle.solid, Palette.border)
         }
+        // The card is a link, so the browser underlines its whole text — name and summary alike.
+        // Only the name is a label; the box itself is the affordance.
+        link.style.textDecoration = "none"
         link.dataset["route"] = entry.id
         link.append(name, summary)
         return Card(entry, link, name, summary)
@@ -194,13 +211,16 @@ internal class OverviewPage : Page {
                 card.entry.meta.titleFor(language).lowercase().contains(needle) ||
                 card.entry.id.contains(needle) ||
                 card.entry.meta.summaryFor(language).lowercase().contains(needle)
-            card.link.toggleAttribute("hidden", !matches)
+            // `hidden` would lose to the card's inline `display: flex`, so filtering flips the display
+            // value itself: the cards stay in the DOM and only their visibility changes.
+            card.link.style.display = if (matches) "flex" else "none"
         }
         groups.forEach { (groupTitle, groupCards) ->
-            groupTitle.toggleAttribute("hidden", groupCards.all { it.link.hasAttribute("hidden") })
+            val anyVisible = groupCards.any { it.link.style.display != "none" }
+            groupTitle.toggleAttribute("hidden", !anyVisible)
         }
-        val visible = cards.count { !it.link.hasAttribute("hidden") }
-        counter.set(overviewTexts[langOf(language)].showing(visible))
+        val visible = cards.count { it.link.style.display != "none" }
+        counter.set(overviewTexts[langOf(language)].showing(visible, cards.size))
     }
 
     override fun applyTranslation(lang: Lang) {

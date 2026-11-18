@@ -1,0 +1,60 @@
+package demo.site
+
+import demo.catalog
+import demo.page.overview.OverviewPage
+import io.github.shijianjs.ktjs.demo.nav.DemoMenu
+import io.github.shijianjs.ktjs.demo.nav.Entry
+import io.github.shijianjs.ktjs.demo.nav.Group
+
+/** One icon per catalog group; the drawer shows it on the group row and on every page under it. */
+private val GROUP_ICONS: Map<String, String> = mapOf(
+    "overview" to "lucide:layers",
+    "buttons" to "lucide:mouse-pointer-click",
+    "fields" to "lucide:text-cursor-input",
+    "selection" to "lucide:check-square",
+    "pickers" to "lucide:calendar",
+    "overlays" to "lucide:panels-top-left",
+    "data" to "lucide:table",
+    "upload" to "lucide:upload",
+    "layout" to "lucide:layout-dashboard",
+    "display" to "lucide:image",
+    "theming" to "lucide:palette",
+)
+
+/** The wrapper's version, shown under the site name: the npm packages it wraps. */
+const val SITE_VERSION: String = "Vaadin 25"
+
+/** The documentation site the demo is published under; the link menu opens it in a new tab. */
+const val DOCS_URL: String = "https://shijianjs.github.io/ktjs-vaadin/"
+
+/** Dokka reference assembled by `pagesSite` next to the demo. */
+const val API_URL: String = "https://shijianjs.github.io/ktjs-vaadin/api/index.html"
+
+/** Source repository of the wrappers and of this demo. */
+const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
+
+/**
+ * The site, derived from [catalog]: one drawer group per catalog group and one entry per page.
+ *
+ * The catalog already carries the declarations (route id, group, bilingual title, builder), so the
+ * menu is a projection of it rather than a second list that can drift. Icons are the only thing the
+ * catalog does not know about, and they are per group, not per page.
+ *
+ * The same [Group] instance has to be reused across its entries: groups are derived from the entry
+ * list by identity, so a fresh instance per entry would split one group into sixty.
+ */
+fun siteMenu(): DemoMenu {
+    val groups: Map<String, Group> = catalog.map { it.group.id }.distinct()
+        .associateWith { id -> Group(id, GROUP_ICONS[id]) }
+
+    return DemoMenu(
+        catalog.map { entry ->
+            val group = groups.getValue(entry.group.id)
+            Entry(entry.id, group, group.icon) {
+                // The overview is the first page converted to kit blocks; it carries its own
+                // `Translations` table and rewrites copy in place, so it does not need the legacy host.
+                if (entry.id == "overview") OverviewPage() else LegacyPage(entry)
+            }
+        },
+    )
+}

@@ -3,10 +3,15 @@ package demo
 import kotlin.js.js
 import web.dom.document
 
-/** Languages the showcase is available in. */
-enum class Language(val code: String, val htmlLang: String, val label: String) {
-    ZH("zh", "zh-CN", "中文"),
-    EN("en", "en", "English"),
+/**
+ * Languages the showcase is available in.
+ *
+ * [code] is both the value persisted in `localStorage` and the BCP 47 tag written to `<html lang>`, so
+ * the demo's own state and the demo kit's `Lang` accept and publish the same strings.
+ */
+enum class Language(val code: String, val label: String) {
+    ZH("zh-Hans", "中文"),
+    EN("en", "English"),
 }
 
 /** A pair of translations, resolved against [LanguageState.current] when the page is built. */
@@ -49,7 +54,7 @@ object LanguageState {
 
     /** Applies the active language to `<html lang>`; called once by [main]. */
     fun init() {
-        document.documentElement.lang = active.htmlLang
+        document.documentElement.lang = active.code
     }
 
     /** Switches the language, remembers the choice and notifies the shell. */
@@ -57,7 +62,7 @@ object LanguageState {
         if (language == active) return
         active = language
         store(language.code)
-        document.documentElement.lang = language.htmlLang
+        document.documentElement.lang = language.code
         listeners.toList().forEach { it(language) }
     }
 
