@@ -16,13 +16,13 @@ fun BadgeVariant(value: String): BadgeVariant = unsafeCast(value)
 
 /** All variants of [BadgeVariant]. */
 object BadgeVariants {
-    inline val contrast: BadgeVariant get() = BadgeVariant("contrast")
-    inline val dot: BadgeVariant get() = BadgeVariant("dot")
-    inline val error: BadgeVariant get() = BadgeVariant("error")
-    inline val filled: BadgeVariant get() = BadgeVariant("filled")
-    inline val iconOnly: BadgeVariant get() = BadgeVariant("icon-only")
-    inline val numberOnly: BadgeVariant get() = BadgeVariant("number-only")
-    inline val success: BadgeVariant get() = BadgeVariant("success")
-    inline val warning: BadgeVariant get() = BadgeVariant("warning")
-    inline val small: BadgeVariant get() = BadgeVariant("small")
+    val contrast: BadgeVariant = BadgeVariant("contrast")
+    val dot: BadgeVariant = BadgeVariant("dot")
+    val error: BadgeVariant = BadgeVariant("error")
+    val filled: BadgeVariant = BadgeVariant("filled")
+    val iconOnly: BadgeVariant = BadgeVariant("icon-only")
+    val numberOnly: BadgeVariant = BadgeVariant("number-only")
+    val success: BadgeVariant = BadgeVariant("success")
+    val warning: BadgeVariant = BadgeVariant("warning")
+    val small: BadgeVariant = BadgeVariant("small")
 }

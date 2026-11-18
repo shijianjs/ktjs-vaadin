@@ -16,6 +16,6 @@ fun SliderVariant(value: String): SliderVariant = unsafeCast(value)
 
 /** All variants of [SliderVariant]. */
 object SliderVariants {
-    inline val helperAbove: SliderVariant get() = SliderVariant("helper-above-field")
-    inline val labelAside: SliderVariant get() = SliderVariant("label-aside")
+    val helperAbove: SliderVariant = SliderVariant("helper-above-field")
+    val labelAside: SliderVariant = SliderVariant("label-aside")
 }

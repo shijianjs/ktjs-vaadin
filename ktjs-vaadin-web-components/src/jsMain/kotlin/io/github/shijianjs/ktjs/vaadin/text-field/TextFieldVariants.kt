@@ -16,12 +16,12 @@ fun TextFieldVariant(value: String): TextFieldVariant = unsafeCast(value)
 
 /** All variants of [TextFieldVariant]. */
 object TextFieldVariants {
-    inline val small: TextFieldVariant get() = TextFieldVariant("small")
-    inline val alignCenter: TextFieldVariant get() = TextFieldVariant("align-center")
-    inline val alignRight: TextFieldVariant get() = TextFieldVariant("align-right")
-    inline val helperAbove: TextFieldVariant get() = TextFieldVariant("helper-above-field")
-    inline val alignLeft: TextFieldVariant get() = TextFieldVariant("align-left")
-    inline val alignStart: TextFieldVariant get() = TextFieldVariant("align-start")
-    inline val alignEnd: TextFieldVariant get() = TextFieldVariant("align-end")
-    inline val labelAside: TextFieldVariant get() = TextFieldVariant("label-aside")
+    val small: TextFieldVariant = TextFieldVariant("small")
+    val alignCenter: TextFieldVariant = TextFieldVariant("align-center")
+    val alignRight: TextFieldVariant = TextFieldVariant("align-right")
+    val helperAbove: TextFieldVariant = TextFieldVariant("helper-above-field")
+    val alignLeft: TextFieldVariant = TextFieldVariant("align-left")
+    val alignStart: TextFieldVariant = TextFieldVariant("align-start")
+    val alignEnd: TextFieldVariant = TextFieldVariant("align-end")
+    val labelAside: TextFieldVariant = TextFieldVariant("label-aside")
 }

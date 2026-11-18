@@ -16,10 +16,10 @@ fun GridVariant(value: String): GridVariant = unsafeCast(value)
 
 /** All variants of [GridVariant]. */
 object GridVariants {
-    inline val noBorder: GridVariant get() = GridVariant("no-border")
-    inline val noRowBorders: GridVariant get() = GridVariant("no-row-borders")
-    inline val columnBorders: GridVariant get() = GridVariant("column-borders")
-    inline val rowStripes: GridVariant get() = GridVariant("row-stripes")
-    inline val compact: GridVariant get() = GridVariant("compact")
-    inline val wrapCellContent: GridVariant get() = GridVariant("wrap-cell-content")
+    val noBorder: GridVariant = GridVariant("no-border")
+    val noRowBorders: GridVariant = GridVariant("no-row-borders")
+    val columnBorders: GridVariant = GridVariant("column-borders")
+    val rowStripes: GridVariant = GridVariant("row-stripes")
+    val compact: GridVariant = GridVariant("compact")
+    val wrapCellContent: GridVariant = GridVariant("wrap-cell-content")
 }

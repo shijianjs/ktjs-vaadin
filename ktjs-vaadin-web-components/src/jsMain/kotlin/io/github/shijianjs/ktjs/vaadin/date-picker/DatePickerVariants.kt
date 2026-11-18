@@ -16,12 +16,12 @@ fun DatePickerVariant(value: String): DatePickerVariant = unsafeCast(value)
 
 /** All variants of [DatePickerVariant]. */
 object DatePickerVariants {
-    inline val small: DatePickerVariant get() = DatePickerVariant("small")
-    inline val alignLeft: DatePickerVariant get() = DatePickerVariant("align-left")
-    inline val alignCenter: DatePickerVariant get() = DatePickerVariant("align-center")
-    inline val alignRight: DatePickerVariant get() = DatePickerVariant("align-right")
-    inline val helperAbove: DatePickerVariant get() = DatePickerVariant("helper-above-field")
-    inline val alignStart: DatePickerVariant get() = DatePickerVariant("align-start")
-    inline val alignEnd: DatePickerVariant get() = DatePickerVariant("align-end")
-    inline val labelAside: DatePickerVariant get() = DatePickerVariant("label-aside")
+    val small: DatePickerVariant = DatePickerVariant("small")
+    val alignLeft: DatePickerVariant = DatePickerVariant("align-left")
+    val alignCenter: DatePickerVariant = DatePickerVariant("align-center")
+    val alignRight: DatePickerVariant = DatePickerVariant("align-right")
+    val helperAbove: DatePickerVariant = DatePickerVariant("helper-above-field")
+    val alignStart: DatePickerVariant = DatePickerVariant("align-start")
+    val alignEnd: DatePickerVariant = DatePickerVariant("align-end")
+    val labelAside: DatePickerVariant = DatePickerVariant("label-aside")
 }

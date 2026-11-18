@@ -16,6 +16,6 @@ fun PopoverVariant(value: String): PopoverVariant = unsafeCast(value)
 
 /** All variants of [PopoverVariant]. */
 object PopoverVariants {
-    inline val noPadding: PopoverVariant get() = PopoverVariant("no-padding")
-    inline val arrow: PopoverVariant get() = PopoverVariant("arrow")
+    val noPadding: PopoverVariant = PopoverVariant("no-padding")
+    val arrow: PopoverVariant = PopoverVariant("arrow")
 }

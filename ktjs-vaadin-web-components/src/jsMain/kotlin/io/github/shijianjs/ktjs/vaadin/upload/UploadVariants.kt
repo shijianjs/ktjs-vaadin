@@ -16,5 +16,5 @@ fun UploadVariant(value: String): UploadVariant = unsafeCast(value)
 
 /** All variants of [UploadVariant]. */
 object UploadVariants {
-    inline val noBorder: UploadVariant get() = UploadVariant("no-border")
+    val noBorder: UploadVariant = UploadVariant("no-border")
 }

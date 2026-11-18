@@ -16,5 +16,5 @@ fun DialogVariant(value: String): DialogVariant = unsafeCast(value)
 
 /** All variants of [DialogVariant]. */
 object DialogVariants {
-    inline val noPadding: DialogVariant get() = DialogVariant("no-padding")
+    val noPadding: DialogVariant = DialogVariant("no-padding")
 }

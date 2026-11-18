@@ -16,13 +16,13 @@ fun SelectVariant(value: String): SelectVariant = unsafeCast(value)
 
 /** All variants of [SelectVariant]. */
 object SelectVariants {
-    inline val small: SelectVariant get() = SelectVariant("small")
-    inline val alignLeft: SelectVariant get() = SelectVariant("align-left")
-    inline val alignCenter: SelectVariant get() = SelectVariant("align-center")
-    inline val alignRight: SelectVariant get() = SelectVariant("align-right")
-    inline val helperAbove: SelectVariant get() = SelectVariant("helper-above-field")
-    inline val filled: SelectVariant get() = SelectVariant("filled")
-    inline val alignStart: SelectVariant get() = SelectVariant("align-start")
-    inline val alignEnd: SelectVariant get() = SelectVariant("align-end")
-    inline val labelAside: SelectVariant get() = SelectVariant("label-aside")
+    val small: SelectVariant = SelectVariant("small")
+    val alignLeft: SelectVariant = SelectVariant("align-left")
+    val alignCenter: SelectVariant = SelectVariant("align-center")
+    val alignRight: SelectVariant = SelectVariant("align-right")
+    val helperAbove: SelectVariant = SelectVariant("helper-above-field")
+    val filled: SelectVariant = SelectVariant("filled")
+    val alignStart: SelectVariant = SelectVariant("align-start")
+    val alignEnd: SelectVariant = SelectVariant("align-end")
+    val labelAside: SelectVariant = SelectVariant("label-aside")
 }

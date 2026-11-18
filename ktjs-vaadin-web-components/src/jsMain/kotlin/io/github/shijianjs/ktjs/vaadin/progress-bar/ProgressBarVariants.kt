@@ -16,7 +16,7 @@ fun ProgressBarVariant(value: String): ProgressBarVariant = unsafeCast(value)
 
 /** All variants of [ProgressBarVariant]. */
 object ProgressBarVariants {
-    inline val contrast: ProgressBarVariant get() = ProgressBarVariant("contrast")
-    inline val error: ProgressBarVariant get() = ProgressBarVariant("error")
-    inline val success: ProgressBarVariant get() = ProgressBarVariant("success")
+    val contrast: ProgressBarVariant = ProgressBarVariant("contrast")
+    val error: ProgressBarVariant = ProgressBarVariant("error")
+    val success: ProgressBarVariant = ProgressBarVariant("success")
 }

@@ -16,13 +16,13 @@ fun MultiSelectComboBoxVariant(value: String): MultiSelectComboBoxVariant = unsa
 
 /** All variants of [MultiSelectComboBoxVariant]. */
 object MultiSelectComboBoxVariants {
-    inline val small: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("small")
-    inline val alignLeft: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("align-left")
-    inline val alignCenter: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("align-center")
-    inline val alignRight: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("align-right")
-    inline val helperAbove: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("helper-above-field")
-    inline val filled: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("filled")
-    inline val alignStart: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("align-start")
-    inline val alignEnd: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("align-end")
-    inline val labelAside: MultiSelectComboBoxVariant get() = MultiSelectComboBoxVariant("label-aside")
+    val small: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("small")
+    val alignLeft: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("align-left")
+    val alignCenter: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("align-center")
+    val alignRight: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("align-right")
+    val helperAbove: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("helper-above-field")
+    val filled: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("filled")
+    val alignStart: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("align-start")
+    val alignEnd: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("align-end")
+    val labelAside: MultiSelectComboBoxVariant = MultiSelectComboBoxVariant("label-aside")
 }

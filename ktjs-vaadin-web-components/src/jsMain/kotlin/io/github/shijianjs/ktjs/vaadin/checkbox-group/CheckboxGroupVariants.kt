@@ -16,8 +16,8 @@ fun CheckboxGroupVariant(value: String): CheckboxGroupVariant = unsafeCast(value
 
 /** All variants of [CheckboxGroupVariant]. */
 object CheckboxGroupVariants {
-    inline val vertical: CheckboxGroupVariant get() = CheckboxGroupVariant("vertical")
-    inline val helperAbove: CheckboxGroupVariant get() = CheckboxGroupVariant("helper-above-field")
-    inline val horizontal: CheckboxGroupVariant get() = CheckboxGroupVariant("horizontal")
-    inline val labelAside: CheckboxGroupVariant get() = CheckboxGroupVariant("label-aside")
+    val vertical: CheckboxGroupVariant = CheckboxGroupVariant("vertical")
+    val helperAbove: CheckboxGroupVariant = CheckboxGroupVariant("helper-above-field")
+    val horizontal: CheckboxGroupVariant = CheckboxGroupVariant("horizontal")
+    val labelAside: CheckboxGroupVariant = CheckboxGroupVariant("label-aside")
 }

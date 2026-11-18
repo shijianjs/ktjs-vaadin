@@ -16,12 +16,12 @@ fun VerticalLayoutVariant(value: String): VerticalLayoutVariant = unsafeCast(val
 
 /** All variants of [VerticalLayoutVariant]. */
 object VerticalLayoutVariants {
-    inline val margin: VerticalLayoutVariant get() = VerticalLayoutVariant("margin")
-    inline val padding: VerticalLayoutVariant get() = VerticalLayoutVariant("padding")
-    inline val spacingXs: VerticalLayoutVariant get() = VerticalLayoutVariant("spacing-xs")
-    inline val spacingS: VerticalLayoutVariant get() = VerticalLayoutVariant("spacing-s")
-    inline val spacing: VerticalLayoutVariant get() = VerticalLayoutVariant("spacing")
-    inline val spacingL: VerticalLayoutVariant get() = VerticalLayoutVariant("spacing-l")
-    inline val spacingXl: VerticalLayoutVariant get() = VerticalLayoutVariant("spacing-xl")
-    inline val wrap: VerticalLayoutVariant get() = VerticalLayoutVariant("wrap")
+    val margin: VerticalLayoutVariant = VerticalLayoutVariant("margin")
+    val padding: VerticalLayoutVariant = VerticalLayoutVariant("padding")
+    val spacingXs: VerticalLayoutVariant = VerticalLayoutVariant("spacing-xs")
+    val spacingS: VerticalLayoutVariant = VerticalLayoutVariant("spacing-s")
+    val spacing: VerticalLayoutVariant = VerticalLayoutVariant("spacing")
+    val spacingL: VerticalLayoutVariant = VerticalLayoutVariant("spacing-l")
+    val spacingXl: VerticalLayoutVariant = VerticalLayoutVariant("spacing-xl")
+    val wrap: VerticalLayoutVariant = VerticalLayoutVariant("wrap")
 }

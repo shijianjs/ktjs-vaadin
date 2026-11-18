@@ -16,11 +16,11 @@ fun TabsVariant(value: String): TabsVariant = unsafeCast(value)
 
 /** All variants of [TabsVariant]. */
 object TabsVariants {
-    inline val centered: TabsVariant get() = TabsVariant("centered")
-    inline val small: TabsVariant get() = TabsVariant("small")
-    inline val minimal: TabsVariant get() = TabsVariant("minimal")
-    inline val hideScrollButtons: TabsVariant get() = TabsVariant("hide-scroll-buttons")
-    inline val equalWidthTabs: TabsVariant get() = TabsVariant("equal-width-tabs")
-    inline val showScrollButtons: TabsVariant get() = TabsVariant("show-scroll-buttons")
-    inline val filled: TabsVariant get() = TabsVariant("filled")
+    val centered: TabsVariant = TabsVariant("centered")
+    val small: TabsVariant = TabsVariant("small")
+    val minimal: TabsVariant = TabsVariant("minimal")
+    val hideScrollButtons: TabsVariant = TabsVariant("hide-scroll-buttons")
+    val equalWidthTabs: TabsVariant = TabsVariant("equal-width-tabs")
+    val showScrollButtons: TabsVariant = TabsVariant("show-scroll-buttons")
+    val filled: TabsVariant = TabsVariant("filled")
 }

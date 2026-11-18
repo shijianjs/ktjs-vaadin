@@ -16,10 +16,10 @@ fun NotificationVariant(value: String): NotificationVariant = unsafeCast(value)
 
 /** All variants of [NotificationVariant]. */
 object NotificationVariants {
-    inline val primary: NotificationVariant get() = NotificationVariant("primary")
-    inline val contrast: NotificationVariant get() = NotificationVariant("contrast")
-    inline val success: NotificationVariant get() = NotificationVariant("success")
-    inline val error: NotificationVariant get() = NotificationVariant("error")
-    inline val warning: NotificationVariant get() = NotificationVariant("warning")
-    inline val info: NotificationVariant get() = NotificationVariant("info")
+    val primary: NotificationVariant = NotificationVariant("primary")
+    val contrast: NotificationVariant = NotificationVariant("contrast")
+    val success: NotificationVariant = NotificationVariant("success")
+    val error: NotificationVariant = NotificationVariant("error")
+    val warning: NotificationVariant = NotificationVariant("warning")
+    val info: NotificationVariant = NotificationVariant("info")
 }

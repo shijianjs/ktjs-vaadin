@@ -174,7 +174,9 @@ def render(cls: VariantClass) -> str:
         f"object {object_name} {{",
     ]
     for variant in cls.variants:
-        lines.append(f'    inline val {variant.kotlin_name}: {interface} get() = {interface}("{variant.value}")')
+        # `val x = X("x")`, not `inline val x get() = X("x")`: the token is a static literal, so there is
+        # nothing to compute on each access — the constant is built once when the object initialises.
+        lines.append(f'    val {variant.kotlin_name}: {interface} = {interface}("{variant.value}")')
     lines += ["}", ""]
     return "\n".join(lines)
 

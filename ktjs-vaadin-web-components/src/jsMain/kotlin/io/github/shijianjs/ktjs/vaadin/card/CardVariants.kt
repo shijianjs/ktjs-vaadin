@@ -16,9 +16,9 @@ fun CardVariant(value: String): CardVariant = unsafeCast(value)
 
 /** All variants of [CardVariant]. */
 object CardVariants {
-    inline val elevated: CardVariant get() = CardVariant("elevated")
-    inline val outlined: CardVariant get() = CardVariant("outlined")
-    inline val horizontal: CardVariant get() = CardVariant("horizontal")
-    inline val stretchMedia: CardVariant get() = CardVariant("stretch-media")
-    inline val coverMedia: CardVariant get() = CardVariant("cover-media")
+    val elevated: CardVariant = CardVariant("elevated")
+    val outlined: CardVariant = CardVariant("outlined")
+    val horizontal: CardVariant = CardVariant("horizontal")
+    val stretchMedia: CardVariant = CardVariant("stretch-media")
+    val coverMedia: CardVariant = CardVariant("cover-media")
 }

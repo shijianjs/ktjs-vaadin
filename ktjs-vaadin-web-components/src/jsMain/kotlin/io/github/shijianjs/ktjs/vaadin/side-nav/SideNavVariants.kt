@@ -16,5 +16,5 @@ fun SideNavVariant(value: String): SideNavVariant = unsafeCast(value)
 
 /** All variants of [SideNavVariant]. */
 object SideNavVariants {
-    inline val filled: SideNavVariant get() = SideNavVariant("filled")
+    val filled: SideNavVariant = SideNavVariant("filled")
 }

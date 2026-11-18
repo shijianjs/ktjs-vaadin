@@ -16,9 +16,9 @@ fun AvatarVariant(value: String): AvatarVariant = unsafeCast(value)
 
 /** All variants of [AvatarVariant]. */
 object AvatarVariants {
-    inline val xlarge: AvatarVariant get() = AvatarVariant("xlarge")
-    inline val large: AvatarVariant get() = AvatarVariant("large")
-    inline val small: AvatarVariant get() = AvatarVariant("small")
-    inline val xsmall: AvatarVariant get() = AvatarVariant("xsmall")
-    inline val filled: AvatarVariant get() = AvatarVariant("filled")
+    val xlarge: AvatarVariant = AvatarVariant("xlarge")
+    val large: AvatarVariant = AvatarVariant("large")
+    val small: AvatarVariant = AvatarVariant("small")
+    val xsmall: AvatarVariant = AvatarVariant("xsmall")
+    val filled: AvatarVariant = AvatarVariant("filled")
 }

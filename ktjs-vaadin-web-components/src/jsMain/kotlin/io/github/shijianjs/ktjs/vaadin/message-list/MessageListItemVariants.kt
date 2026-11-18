@@ -16,6 +16,6 @@ fun MessageListItemVariant(value: String): MessageListItemVariant = unsafeCast(v
 
 /** All variants of [MessageListItemVariant]. */
 object MessageListItemVariants {
-    inline val self: MessageListItemVariant get() = MessageListItemVariant("self")
-    inline val fullWidth: MessageListItemVariant get() = MessageListItemVariant("full-width")
+    val self: MessageListItemVariant = MessageListItemVariant("self")
+    val fullWidth: MessageListItemVariant = MessageListItemVariant("full-width")
 }

@@ -16,5 +16,5 @@ fun MessageInputVariant(value: String): MessageInputVariant = unsafeCast(value)
 
 /** All variants of [MessageInputVariant]. */
 object MessageInputVariants {
-    inline val iconButton: MessageInputVariant get() = MessageInputVariant("icon-button")
+    val iconButton: MessageInputVariant = MessageInputVariant("icon-button")
 }

@@ -16,12 +16,12 @@ fun HorizontalLayoutVariant(value: String): HorizontalLayoutVariant = unsafeCast
 
 /** All variants of [HorizontalLayoutVariant]. */
 object HorizontalLayoutVariants {
-    inline val margin: HorizontalLayoutVariant get() = HorizontalLayoutVariant("margin")
-    inline val padding: HorizontalLayoutVariant get() = HorizontalLayoutVariant("padding")
-    inline val spacingXs: HorizontalLayoutVariant get() = HorizontalLayoutVariant("spacing-xs")
-    inline val spacingS: HorizontalLayoutVariant get() = HorizontalLayoutVariant("spacing-s")
-    inline val spacing: HorizontalLayoutVariant get() = HorizontalLayoutVariant("spacing")
-    inline val spacingL: HorizontalLayoutVariant get() = HorizontalLayoutVariant("spacing-l")
-    inline val spacingXl: HorizontalLayoutVariant get() = HorizontalLayoutVariant("spacing-xl")
-    inline val wrap: HorizontalLayoutVariant get() = HorizontalLayoutVariant("wrap")
+    val margin: HorizontalLayoutVariant = HorizontalLayoutVariant("margin")
+    val padding: HorizontalLayoutVariant = HorizontalLayoutVariant("padding")
+    val spacingXs: HorizontalLayoutVariant = HorizontalLayoutVariant("spacing-xs")
+    val spacingS: HorizontalLayoutVariant = HorizontalLayoutVariant("spacing-s")
+    val spacing: HorizontalLayoutVariant = HorizontalLayoutVariant("spacing")
+    val spacingL: HorizontalLayoutVariant = HorizontalLayoutVariant("spacing-l")
+    val spacingXl: HorizontalLayoutVariant = HorizontalLayoutVariant("spacing-xl")
+    val wrap: HorizontalLayoutVariant = HorizontalLayoutVariant("wrap")
 }

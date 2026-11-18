@@ -16,10 +16,10 @@ fun AvatarGroupVariant(value: String): AvatarGroupVariant = unsafeCast(value)
 
 /** All variants of [AvatarGroupVariant]. */
 object AvatarGroupVariants {
-    inline val xlarge: AvatarGroupVariant get() = AvatarGroupVariant("xlarge")
-    inline val large: AvatarGroupVariant get() = AvatarGroupVariant("large")
-    inline val small: AvatarGroupVariant get() = AvatarGroupVariant("small")
-    inline val xsmall: AvatarGroupVariant get() = AvatarGroupVariant("xsmall")
-    inline val reverse: AvatarGroupVariant get() = AvatarGroupVariant("reverse")
-    inline val filled: AvatarGroupVariant get() = AvatarGroupVariant("filled")
+    val xlarge: AvatarGroupVariant = AvatarGroupVariant("xlarge")
+    val large: AvatarGroupVariant = AvatarGroupVariant("large")
+    val small: AvatarGroupVariant = AvatarGroupVariant("small")
+    val xsmall: AvatarGroupVariant = AvatarGroupVariant("xsmall")
+    val reverse: AvatarGroupVariant = AvatarGroupVariant("reverse")
+    val filled: AvatarGroupVariant = AvatarGroupVariant("filled")
 }

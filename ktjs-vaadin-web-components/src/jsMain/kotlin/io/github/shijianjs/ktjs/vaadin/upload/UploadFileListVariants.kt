@@ -16,5 +16,5 @@ fun UploadFileListVariant(value: String): UploadFileListVariant = unsafeCast(val
 
 /** All variants of [UploadFileListVariant]. */
 object UploadFileListVariants {
-    inline val thumbnails: UploadFileListVariant get() = UploadFileListVariant("thumbnails")
+    val thumbnails: UploadFileListVariant = UploadFileListVariant("thumbnails")
 }

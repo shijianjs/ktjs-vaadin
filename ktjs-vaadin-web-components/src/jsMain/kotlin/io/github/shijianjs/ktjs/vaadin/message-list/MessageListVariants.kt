@@ -16,6 +16,6 @@ fun MessageListVariant(value: String): MessageListVariant = unsafeCast(value)
 
 /** All variants of [MessageListVariant]. */
 object MessageListVariants {
-    inline val bubble: MessageListVariant get() = MessageListVariant("bubble")
-    inline val oneToOne: MessageListVariant get() = MessageListVariant("one-to-one")
+    val bubble: MessageListVariant = MessageListVariant("bubble")
+    val oneToOne: MessageListVariant = MessageListVariant("one-to-one")
 }

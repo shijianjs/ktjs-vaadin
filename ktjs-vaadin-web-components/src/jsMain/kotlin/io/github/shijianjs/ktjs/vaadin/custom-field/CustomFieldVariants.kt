@@ -16,7 +16,7 @@ fun CustomFieldVariant(value: String): CustomFieldVariant = unsafeCast(value)
 
 /** All variants of [CustomFieldVariant]. */
 object CustomFieldVariants {
-    inline val small: CustomFieldVariant get() = CustomFieldVariant("small")
-    inline val helperAbove: CustomFieldVariant get() = CustomFieldVariant("helper-above-field")
-    inline val labelAside: CustomFieldVariant get() = CustomFieldVariant("label-aside")
+    val small: CustomFieldVariant = CustomFieldVariant("small")
+    val helperAbove: CustomFieldVariant = CustomFieldVariant("helper-above-field")
+    val labelAside: CustomFieldVariant = CustomFieldVariant("label-aside")
 }

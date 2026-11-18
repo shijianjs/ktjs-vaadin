@@ -16,6 +16,6 @@ fun SplitLayoutVariant(value: String): SplitLayoutVariant = unsafeCast(value)
 
 /** All variants of [SplitLayoutVariant]. */
 object SplitLayoutVariants {
-    inline val small: SplitLayoutVariant get() = SplitLayoutVariant("small")
-    inline val minimal: SplitLayoutVariant get() = SplitLayoutVariant("minimal")
+    val small: SplitLayoutVariant = SplitLayoutVariant("small")
+    val minimal: SplitLayoutVariant = SplitLayoutVariant("minimal")
 }

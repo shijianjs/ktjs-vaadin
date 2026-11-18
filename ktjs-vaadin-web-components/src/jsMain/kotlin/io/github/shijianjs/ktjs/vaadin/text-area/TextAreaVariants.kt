@@ -16,12 +16,12 @@ fun TextAreaVariant(value: String): TextAreaVariant = unsafeCast(value)
 
 /** All variants of [TextAreaVariant]. */
 object TextAreaVariants {
-    inline val small: TextAreaVariant get() = TextAreaVariant("small")
-    inline val alignCenter: TextAreaVariant get() = TextAreaVariant("align-center")
-    inline val alignRight: TextAreaVariant get() = TextAreaVariant("align-right")
-    inline val helperAbove: TextAreaVariant get() = TextAreaVariant("helper-above-field")
-    inline val alignLeft: TextAreaVariant get() = TextAreaVariant("align-left")
-    inline val alignStart: TextAreaVariant get() = TextAreaVariant("align-start")
-    inline val alignEnd: TextAreaVariant get() = TextAreaVariant("align-end")
-    inline val labelAside: TextAreaVariant get() = TextAreaVariant("label-aside")
+    val small: TextAreaVariant = TextAreaVariant("small")
+    val alignCenter: TextAreaVariant = TextAreaVariant("align-center")
+    val alignRight: TextAreaVariant = TextAreaVariant("align-right")
+    val helperAbove: TextAreaVariant = TextAreaVariant("helper-above-field")
+    val alignLeft: TextAreaVariant = TextAreaVariant("align-left")
+    val alignStart: TextAreaVariant = TextAreaVariant("align-start")
+    val alignEnd: TextAreaVariant = TextAreaVariant("align-end")
+    val labelAside: TextAreaVariant = TextAreaVariant("label-aside")
 }

@@ -16,7 +16,7 @@ fun BreadcrumbsVariant(value: String): BreadcrumbsVariant = unsafeCast(value)
 
 /** All variants of [BreadcrumbsVariant]. */
 object BreadcrumbsVariants {
-    inline val slash: BreadcrumbsVariant get() = BreadcrumbsVariant("slash")
-    inline val primary: BreadcrumbsVariant get() = BreadcrumbsVariant("primary")
-    inline val accent: BreadcrumbsVariant get() = BreadcrumbsVariant("accent")
+    val slash: BreadcrumbsVariant = BreadcrumbsVariant("slash")
+    val primary: BreadcrumbsVariant = BreadcrumbsVariant("primary")
+    val accent: BreadcrumbsVariant = BreadcrumbsVariant("accent")
 }

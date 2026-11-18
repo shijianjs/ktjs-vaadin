@@ -16,6 +16,6 @@ fun CheckboxVariant(value: String): CheckboxVariant = unsafeCast(value)
 
 /** All variants of [CheckboxVariant]. */
 object CheckboxVariants {
-    inline val reverse: CheckboxVariant get() = CheckboxVariant("reverse")
-    inline val small: CheckboxVariant get() = CheckboxVariant("small")
+    val reverse: CheckboxVariant = CheckboxVariant("reverse")
+    val small: CheckboxVariant = CheckboxVariant("small")
 }

@@ -16,8 +16,8 @@ fun DetailsVariant(value: String): DetailsVariant = unsafeCast(value)
 
 /** All variants of [DetailsVariant]. */
 object DetailsVariants {
-    inline val filled: DetailsVariant get() = DetailsVariant("filled")
-    inline val reverse: DetailsVariant get() = DetailsVariant("reverse")
-    inline val small: DetailsVariant get() = DetailsVariant("small")
-    inline val noPadding: DetailsVariant get() = DetailsVariant("no-padding")
+    val filled: DetailsVariant = DetailsVariant("filled")
+    val reverse: DetailsVariant = DetailsVariant("reverse")
+    val small: DetailsVariant = DetailsVariant("small")
+    val noPadding: DetailsVariant = DetailsVariant("no-padding")
 }

@@ -16,12 +16,12 @@ fun DateTimePickerVariant(value: String): DateTimePickerVariant = unsafeCast(val
 
 /** All variants of [DateTimePickerVariant]. */
 object DateTimePickerVariants {
-    inline val small: DateTimePickerVariant get() = DateTimePickerVariant("small")
-    inline val alignLeft: DateTimePickerVariant get() = DateTimePickerVariant("align-left")
-    inline val alignCenter: DateTimePickerVariant get() = DateTimePickerVariant("align-center")
-    inline val alignRight: DateTimePickerVariant get() = DateTimePickerVariant("align-right")
-    inline val helperAbove: DateTimePickerVariant get() = DateTimePickerVariant("helper-above-field")
-    inline val alignStart: DateTimePickerVariant get() = DateTimePickerVariant("align-start")
-    inline val alignEnd: DateTimePickerVariant get() = DateTimePickerVariant("align-end")
-    inline val labelAside: DateTimePickerVariant get() = DateTimePickerVariant("label-aside")
+    val small: DateTimePickerVariant = DateTimePickerVariant("small")
+    val alignLeft: DateTimePickerVariant = DateTimePickerVariant("align-left")
+    val alignCenter: DateTimePickerVariant = DateTimePickerVariant("align-center")
+    val alignRight: DateTimePickerVariant = DateTimePickerVariant("align-right")
+    val helperAbove: DateTimePickerVariant = DateTimePickerVariant("helper-above-field")
+    val alignStart: DateTimePickerVariant = DateTimePickerVariant("align-start")
+    val alignEnd: DateTimePickerVariant = DateTimePickerVariant("align-end")
+    val labelAside: DateTimePickerVariant = DateTimePickerVariant("label-aside")
 }

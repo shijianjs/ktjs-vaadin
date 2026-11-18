@@ -74,6 +74,8 @@ Java API 里有定义**。所以照 Flow 的 `*Variant` 枚举生成，落点是
   写在 `button/`、`badge/`、`grid/` 里）。变体属于组件，找 `ButtonVariant` 不该跳到另一个包。
 - 每个组件旁边一个常量对象 `ButtonVariants` / `GridVariants` …，常量名取枚举名去掉 `LUMO_` / `AURA_`
   前缀后转小驼峰（`LUMO_TERTIARY_INLINE` → `tertiaryInline`），值是 Flow 里的 `getVariantName()`。
+  常量声明成带初始化的 `val`（`val small: MenuBarVariant = MenuBarVariant("small")`），不是
+  `inline val … get()`：token 是静态字面量，重复访问时没有任何东西要算，对象初始化时建一次就够。
 - 运行时变体**就是**那串文本（`ThemeVariant.name`），所以它能和任意自定义 token 混用：
   `addTheme(ButtonVariants.primary)` 与 `addTheme("my-token")` 写进同一个属性。
 - `ThemeVariant` 本身**不是** `sealed`：Kotlin 要求 sealed 类型的子类型与它同模块同包，而变体分散在

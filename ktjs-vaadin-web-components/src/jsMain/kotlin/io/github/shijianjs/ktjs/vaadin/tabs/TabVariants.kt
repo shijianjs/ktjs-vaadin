@@ -16,5 +16,5 @@ fun TabVariant(value: String): TabVariant = unsafeCast(value)
 
 /** All variants of [TabVariant]. */
 object TabVariants {
-    inline val iconOnTop: TabVariant get() = TabVariant("icon-on-top")
+    val iconOnTop: TabVariant = TabVariant("icon-on-top")
 }

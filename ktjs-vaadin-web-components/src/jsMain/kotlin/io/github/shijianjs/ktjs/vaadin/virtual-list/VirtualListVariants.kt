@@ -16,7 +16,7 @@ fun VirtualListVariant(value: String): VirtualListVariant = unsafeCast(value)
 
 /** All variants of [VirtualListVariant]. */
 object VirtualListVariants {
-    inline val overflowIndicators: VirtualListVariant get() = VirtualListVariant("overflow-indicators")
-    inline val overflowIndicatorTop: VirtualListVariant get() = VirtualListVariant("overflow-indicator-top")
-    inline val overflowIndicatorBottom: VirtualListVariant get() = VirtualListVariant("overflow-indicator-bottom")
+    val overflowIndicators: VirtualListVariant = VirtualListVariant("overflow-indicators")
+    val overflowIndicatorTop: VirtualListVariant = VirtualListVariant("overflow-indicator-top")
+    val overflowIndicatorBottom: VirtualListVariant = VirtualListVariant("overflow-indicator-bottom")
 }

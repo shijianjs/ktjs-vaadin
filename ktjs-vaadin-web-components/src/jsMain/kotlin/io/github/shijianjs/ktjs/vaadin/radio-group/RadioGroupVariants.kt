@@ -16,8 +16,8 @@ fun RadioGroupVariant(value: String): RadioGroupVariant = unsafeCast(value)
 
 /** All variants of [RadioGroupVariant]. */
 object RadioGroupVariants {
-    inline val vertical: RadioGroupVariant get() = RadioGroupVariant("vertical")
-    inline val helperAbove: RadioGroupVariant get() = RadioGroupVariant("helper-above-field")
-    inline val horizontal: RadioGroupVariant get() = RadioGroupVariant("horizontal")
-    inline val labelAside: RadioGroupVariant get() = RadioGroupVariant("label-aside")
+    val vertical: RadioGroupVariant = RadioGroupVariant("vertical")
+    val helperAbove: RadioGroupVariant = RadioGroupVariant("helper-above-field")
+    val horizontal: RadioGroupVariant = RadioGroupVariant("horizontal")
+    val labelAside: RadioGroupVariant = RadioGroupVariant("label-aside")
 }

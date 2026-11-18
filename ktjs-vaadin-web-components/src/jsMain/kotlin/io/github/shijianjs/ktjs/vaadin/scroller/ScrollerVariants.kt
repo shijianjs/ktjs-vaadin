@@ -16,7 +16,7 @@ fun ScrollerVariant(value: String): ScrollerVariant = unsafeCast(value)
 
 /** All variants of [ScrollerVariant]. */
 object ScrollerVariants {
-    inline val overflowIndicators: ScrollerVariant get() = ScrollerVariant("overflow-indicators")
-    inline val overflowIndicatorTop: ScrollerVariant get() = ScrollerVariant("overflow-indicator-top")
-    inline val overflowIndicatorBottom: ScrollerVariant get() = ScrollerVariant("overflow-indicator-bottom")
+    val overflowIndicators: ScrollerVariant = ScrollerVariant("overflow-indicators")
+    val overflowIndicatorTop: ScrollerVariant = ScrollerVariant("overflow-indicator-top")
+    val overflowIndicatorBottom: ScrollerVariant = ScrollerVariant("overflow-indicator-bottom")
 }

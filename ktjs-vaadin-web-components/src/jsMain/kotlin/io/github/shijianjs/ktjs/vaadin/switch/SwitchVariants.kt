@@ -16,7 +16,7 @@ fun SwitchVariant(value: String): SwitchVariant = unsafeCast(value)
 
 /** All variants of [SwitchVariant]. */
 object SwitchVariants {
-    inline val reverse: SwitchVariant get() = SwitchVariant("reverse")
-    inline val small: SwitchVariant get() = SwitchVariant("small")
-    inline val icon: SwitchVariant get() = SwitchVariant("icon")
+    val reverse: SwitchVariant = SwitchVariant("reverse")
+    val small: SwitchVariant = SwitchVariant("small")
+    val icon: SwitchVariant = SwitchVariant("icon")
 }

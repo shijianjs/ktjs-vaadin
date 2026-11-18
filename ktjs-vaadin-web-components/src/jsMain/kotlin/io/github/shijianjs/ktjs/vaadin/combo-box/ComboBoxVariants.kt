@@ -16,13 +16,13 @@ fun ComboBoxVariant(value: String): ComboBoxVariant = unsafeCast(value)
 
 /** All variants of [ComboBoxVariant]. */
 object ComboBoxVariants {
-    inline val small: ComboBoxVariant get() = ComboBoxVariant("small")
-    inline val alignLeft: ComboBoxVariant get() = ComboBoxVariant("align-left")
-    inline val alignCenter: ComboBoxVariant get() = ComboBoxVariant("align-center")
-    inline val alignRight: ComboBoxVariant get() = ComboBoxVariant("align-right")
-    inline val helperAbove: ComboBoxVariant get() = ComboBoxVariant("helper-above-field")
-    inline val filled: ComboBoxVariant get() = ComboBoxVariant("filled")
-    inline val alignStart: ComboBoxVariant get() = ComboBoxVariant("align-start")
-    inline val alignEnd: ComboBoxVariant get() = ComboBoxVariant("align-end")
-    inline val labelAside: ComboBoxVariant get() = ComboBoxVariant("label-aside")
+    val small: ComboBoxVariant = ComboBoxVariant("small")
+    val alignLeft: ComboBoxVariant = ComboBoxVariant("align-left")
+    val alignCenter: ComboBoxVariant = ComboBoxVariant("align-center")
+    val alignRight: ComboBoxVariant = ComboBoxVariant("align-right")
+    val helperAbove: ComboBoxVariant = ComboBoxVariant("helper-above-field")
+    val filled: ComboBoxVariant = ComboBoxVariant("filled")
+    val alignStart: ComboBoxVariant = ComboBoxVariant("align-start")
+    val alignEnd: ComboBoxVariant = ComboBoxVariant("align-end")
+    val labelAside: ComboBoxVariant = ComboBoxVariant("label-aside")
 }
