@@ -29,6 +29,7 @@ import io.github.shijianjs.ktjs.docusaurus.theme.MermaidThemeConfig
 import io.github.shijianjs.ktjs.docusaurus.theme.NavbarItem
 import io.github.shijianjs.ktjs.docusaurus.theme.NavbarItemPositions
 import io.github.shijianjs.ktjs.docusaurus.theme.NavbarItemTypes
+import io.github.shijianjs.ktjs.docusaurus.theme.NavbarLogo
 import io.github.shijianjs.ktjs.docusaurus.theme.PrismThemes
 import io.github.shijianjs.ktjs.docusaurus.theme.SimpleFooter
 import io.github.shijianjs.ktjs.docusaurus.theme.ThemeConfig
@@ -70,6 +71,10 @@ fun docusaurusConfig(): Config = unsafeJso {
     tagline = "Kotlin/JS wrappers for the free Vaadin web components"
     url = SITE_URL
     baseUrl = SITE_BASE_URL
+    // The same file the landing page and the navbar use, so the browser tab costs no extra download.
+    // `ktjs-vaadin-logo.png` is the shared ktjs mark the template ships; replace it in place when the
+    // kit gets a logo of its own.
+    favicon = "img/ktjs-vaadin-logo.png"
     trailingSlash = true
     // A broken internal link fails the build instead of shipping a 404 to the Pages site.
     onBrokenLinks = ReportingSeverities.`throw`
@@ -137,6 +142,13 @@ fun docusaurusConfig(): Config = unsafeJso {
     themeConfig = unsafeJso<ThemeConfig> {
         navbar = unsafeJso {
             title = "ktjs-vaadin"
+            // The same file the favicon and the hero use; `alt` is left out because the title next to
+            // it already names the site.
+            logo = unsafeJso<NavbarLogo> {
+                src = "img/ktjs-vaadin-logo.png"
+                width = StringOrDouble(32.0)
+                height = StringOrDouble(32.0)
+            }
             hideOnScroll = true
             items = arrayOf(
                 unsafeJso<NavbarItem> {

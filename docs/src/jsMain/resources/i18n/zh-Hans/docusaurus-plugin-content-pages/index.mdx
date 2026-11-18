@@ -4,37 +4,46 @@ description: 免费版 Vaadin Web Components 的 Kotlin/JS wrapper
 hide_table_of_contents: true
 ---
 
-# ktjs-vaadin
+import logo from '@site/static/img/ktjs-vaadin-logo.png';
 
-免费版 [Vaadin Web Components](https://github.com/vaadin/web-components) 的 Kotlin/JS wrapper——
-65 个 npm 包、92 个自定义元素，合成一个 Gradle 模块，属性与主题变体都带类型。
+{/* `<ktjs-…>` 段落来自 ktjs-docusaurus kit：Gradle 插件把它的 bundle 放到 `static/ktjs-client/`，
+    `ClientModule.kt` 在页面 hydration 之后加载它。`href` 保持相对，这样两种 locale 前缀下都能用；
+    `logo` 用 import 取，URL 会带上本站实际的 `baseUrl`。 */}
 
-[**快速开始**](/guide/getting-started) ·
-[**在线演示**](https://shijianjs.github.io/ktjs-vaadin/demo/) ·
-[**API 文档**](https://shijianjs.github.io/ktjs-vaadin/api/) ·
-[**GitHub**](https://github.com/shijianjs/ktjs-vaadin)
+<ktjs-hero logo-src={logo} title="ktjs-vaadin" tagline="免费版 Vaadin Web Components 的 Kotlin/JS wrapper">
 
-```kotlin
-dependencies {
-    implementation("io.github.shijianjs:ktjs-vaadin-web-components:25.3.5-kt.8")
-}
-```
+<ktjs-action kind="primary" href="guide/getting-started">快速开始</ktjs-action>
 
-## 它给了什么
+<ktjs-action kind="secondary" href="https://github.com/shijianjs/ktjs-vaadin" icon="simple-icons:github">GitHub</ktjs-action>
 
-| | |
-| --- | --- |
-| **元素有类型** | `createButton { }` 返回 `ButtonElement`，不是 `HTMLElement`。 |
-| **属性有类型** | `cardTitleAttr` 是 `Attribute<String>`，`titleHeadingLevelAttr` 是 `Attribute<Int>`。 |
-| **主题变体有类型** | 写 `ButtonVariants.primary`，而不是 `theme="primary"`。 |
-| **按能力使用** | 上游 mixin 是 `external interface`，函数可以直接收 `FieldMixin`。 |
-| **Lumo 工具类** | `LumoUtility.Padding.MEDIUM` 与 Flow 的 `LumoUtility` 逐项对应。 |
-| **有 demo 兜底** | 每个组件都有页面，这些页面本身就是集成测试。 |
+</ktjs-hero>
 
-## 往下读
+<ktjs-features section-title="它给了什么" tinted>
 
-- [介绍](/intro)——包了哪些东西、模块怎么定版本。
-- [快速开始](/guide/getting-started)——依赖、ES2015、Lumo、第一个组件。
-- [组件与能力](/guide/components)——mixin、属性、变体。
-- [演示站点](/guide/demo)——在线 demo 怎么搭、怎么跑。
-- [API 文档与源码](/guide/api-overview)——生成与手写的边界、重新生成。
+<ktjs-feature icon="lucide:component" title="元素有类型">`createButton { }` 返回 `ButtonElement`，不是 `HTMLElement`——标签告诉编译器这个节点是什么。</ktjs-feature>
+
+<ktjs-feature icon="lucide:tag" title="属性有类型">`cardTitleAttr` 是 `Attribute<String>`，`titleHeadingLevelAttr` 是 `Attribute<Int>`——读写的是 HTML 属性，解码交给 codec。</ktjs-feature>
+
+<ktjs-feature icon="lucide:palette" title="主题变体有类型">写 `ButtonVariants.primary`，而不是 `theme="primary"`；每个组件拥有自己的合法 token，`addTheme` 保留已设置的那些。</ktjs-feature>
+
+<ktjs-feature icon="lucide:layers" title="按能力使用">上游 mixin 是 `external interface`，函数可以直接收 `FieldMixin`，从而接受所有真的带字段的组件。</ktjs-feature>
+
+<ktjs-feature icon="lucide:wrench" title="Lumo 工具类">`LumoUtility.Padding.MEDIUM` 与 Flow 的 `LumoUtility` 逐项对应，并与 `utility.css` 核对过。</ktjs-feature>
+
+<ktjs-feature icon="lucide:flask-conical" title="有 demo 兜底">每个组件都有对应上游文档的页面，这些页面本身就是集成测试。</ktjs-feature>
+
+</ktjs-features>
+
+<ktjs-next-steps section-title="往下读">
+
+<ktjs-step href="intro" title="介绍">包了哪些东西、模块怎么定版本、仓库其余部分在哪。</ktjs-step>
+
+<ktjs-step href="guide/getting-started" title="快速开始">依赖、ES2015 目标、Lumo 样式、第一个组件。</ktjs-step>
+
+<ktjs-step href="guide/components" title="组件与能力">mixin、类型化属性、变体、工具类。</ktjs-step>
+
+<ktjs-step href="https://shijianjs.github.io/ktjs-vaadin/demo/" title="在线演示">所有组件页面运行的那个站点。</ktjs-step>
+
+<ktjs-step href="https://shijianjs.github.io/ktjs-vaadin/api/" title="API 文档">发布模块的 Dokka 产物。</ktjs-step>
+
+</ktjs-next-steps>

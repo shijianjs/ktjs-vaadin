@@ -4,37 +4,47 @@ description: Kotlin/JS wrappers for the free Vaadin web components
 hide_table_of_contents: true
 ---
 
-# ktjs-vaadin
+import logo from '@site/static/img/ktjs-vaadin-logo.png';
 
-Kotlin/JS wrappers for the **free** [Vaadin web components](https://github.com/vaadin/web-components) —
-65 npm packages, 92 custom elements, one Gradle module, typed attributes and typed theme variants.
+{/* The `<ktjs-…>` sections come from the ktjs-docusaurus kit: the Gradle plugin publishes its bundle
+    under `static/ktjs-client/`, and `ClientModule.kt` loads it once the page is hydrated. `href`s stay
+    relative so the same page works under both locale prefixes; `logo` is imported so the URL carries
+    whatever `baseUrl` this site is deployed under. */}
 
-[**Getting started**](/guide/getting-started) ·
-[**Live demo**](https://shijianjs.github.io/ktjs-vaadin/demo/) ·
-[**API reference**](https://shijianjs.github.io/ktjs-vaadin/api/) ·
-[**GitHub**](https://github.com/shijianjs/ktjs-vaadin)
+<ktjs-hero logo-src={logo} title="ktjs-vaadin" tagline="Kotlin/JS wrappers for the free Vaadin web components">
 
-```kotlin
-dependencies {
-    implementation("io.github.shijianjs:ktjs-vaadin-web-components:25.3.5-kt.8")
-}
-```
+<ktjs-action kind="primary" href="guide/getting-started">Get started</ktjs-action>
 
-## What it gives you
+<ktjs-action kind="secondary" href="https://github.com/shijianjs/ktjs-vaadin" icon="simple-icons:github">GitHub</ktjs-action>
 
-| | |
-| --- | --- |
-| **Typed elements** | `createButton { }` returns `ButtonElement`, not `HTMLElement`. |
-| **Typed attributes** | `cardTitleAttr` is an `Attribute<String>`; `titleHeadingLevelAttr` an `Attribute<Int>`. |
-| **Typed theme variants** | `ButtonVariants.primary` instead of `theme="primary"`. |
-| **Capabilities, not just classes** | upstream mixins are `external interface`s, so a function can take `FieldMixin`. |
-| **Lumo utility classes** | `LumoUtility.Padding.MEDIUM` mirrors Flow's `LumoUtility`. |
-| **Covered by a demo** | every component has a page, and the pages double as the integration tests. |
+</ktjs-hero>
 
-## Where to go next
+<ktjs-features section-title="What it gives you" tinted>
 
-- [Introduction](/intro) — what is wrapped, how the module is versioned.
-- [Getting started](/guide/getting-started) — dependency, ES2015, Lumo, first component.
-- [Components and capabilities](/guide/components) — mixins, attributes, variants.
-- [The demo site](/guide/demo) — how the live demo is built and run.
-- [API reference and sources](/guide/api-overview) — generated vs hand-written, regenerating.
+<ktjs-feature icon="lucide:component" title="Typed elements">`createButton { }` returns `ButtonElement`, not `HTMLElement`; the tag tells the compiler what the node is.</ktjs-feature>
+
+<ktjs-feature icon="lucide:tag" title="Typed attributes">`cardTitleAttr` is an `Attribute<String>`, `titleHeadingLevelAttr` an `Attribute<Int>` — read and written through the HTML attribute, decoded by a codec.</ktjs-feature>
+
+<ktjs-feature icon="lucide:palette" title="Typed theme variants">`ButtonVariants.primary` instead of `theme="primary"`; each component owns its legal tokens, and `addTheme` keeps the ones already set.</ktjs-feature>
+
+<ktjs-feature icon="lucide:layers" title="Capabilities, not just classes">Upstream mixins are `external interface`s, so a function can take a `FieldMixin` and accept every component that really has a field.</ktjs-feature>
+
+<ktjs-feature icon="lucide:wrench" title="Lumo utility classes">`LumoUtility.Padding.MEDIUM` mirrors Flow's `LumoUtility` class one to one, checked against `utility.css`.</ktjs-feature>
+
+<ktjs-feature icon="lucide:flask-conical" title="Covered by a demo">Every component has a page that mirrors the upstream documentation — those pages double as the integration tests.</ktjs-feature>
+
+</ktjs-features>
+
+<ktjs-next-steps section-title="Where to go next">
+
+<ktjs-step href="intro" title="Introduction">What is wrapped, how the module is versioned, where the rest of the repository is.</ktjs-step>
+
+<ktjs-step href="guide/getting-started" title="Getting started">Dependency, ES2015 target, Lumo styles, the first component.</ktjs-step>
+
+<ktjs-step href="guide/components" title="Components and capabilities">Mixins, typed attributes, variants, utility classes.</ktjs-step>
+
+<ktjs-step href="https://shijianjs.github.io/ktjs-vaadin/demo/" title="Live demo">The site every component page runs on.</ktjs-step>
+
+<ktjs-step href="https://shijianjs.github.io/ktjs-vaadin/api/" title="API reference">Dokka output for the published module.</ktjs-step>
+
+</ktjs-next-steps>
