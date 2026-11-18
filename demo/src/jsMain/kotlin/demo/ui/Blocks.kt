@@ -31,6 +31,12 @@ class PageMeta(
     val summary: String
         get() = summaryText.resolve()
 
+    /** The page's name in [lang]; the site's translation table is declared before anything is built. */
+    fun titleFor(lang: Language): String = titleText.resolve(lang)
+
+    /** The page's one-line summary in [lang]. */
+    fun summaryFor(lang: Language): String = summaryText.resolve(lang)
+
     /** The official documentation page in the active language. */
     val docsUrl: String
         get() =

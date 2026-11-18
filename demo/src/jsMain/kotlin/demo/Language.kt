@@ -11,7 +11,16 @@ enum class Language(val code: String, val htmlLang: String, val label: String) {
 
 /** A pair of translations, resolved against [LanguageState.current] when the page is built. */
 class Bilingual(private val zh: String, private val en: String) {
-    fun resolve(): String = tr(zh, en)
+    fun resolve(): String = resolve(LanguageState.current)
+
+    /**
+     * Resolves against [lang] rather than the active language.
+     *
+     * The site's translation table is declared once, before anything is built: it needs every
+     * language's copy in the same breath, so it cannot depend on the language that happens to be
+     * active at that moment.
+     */
+    fun resolve(lang: Language): String = if (lang == Language.EN) en else zh
 }
 
 /** Chinese/English metadata for a catalog entry. */

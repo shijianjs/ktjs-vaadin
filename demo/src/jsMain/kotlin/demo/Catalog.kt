@@ -31,6 +31,9 @@ const val API_DOCS_URL = "$API_ROOT/index.html"
 class Group(val id: String, private val zh: String, private val en: String) {
     val label: String
         get() = tr(zh, en)
+
+    /** The group's name in [lang], for the site's translation table. */
+    fun labelFor(lang: Language): String = if (lang == Language.EN) en else zh
 }
 
 /** Sidebar groups, in navigation order. */

@@ -20,6 +20,10 @@ kotlin {
             implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.0")
             // Wrapper modules used by the demo.
             implementation(project(":ktjs-vaadin-web-components"))
+            // The demo shell: layout, drawer, menus, router and i18n are one package, shared with every
+            // other `ktjs-*` demo. It is not released yet — the working tree in `ktjs-dom-kit` publishes
+            // `0.1.0-SNAPSHOT` to `mavenLocal`.
+            implementation("io.github.shijianjs:ktjs-demo-kit-js:${providers.gradleProperty("ktjs-demo-kit.version").get()}")
         }
 
         jvmTest.dependencies {
