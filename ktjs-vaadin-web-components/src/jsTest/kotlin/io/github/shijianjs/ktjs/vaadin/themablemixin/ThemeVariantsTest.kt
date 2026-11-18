@@ -3,6 +3,8 @@ package io.github.shijianjs.ktjs.vaadin.themablemixin
 import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.detachAll
+import io.github.shijianjs.ktjs.vaadin.theme.ButtonVariants
+import io.github.shijianjs.ktjs.vaadin.theme.VerticalLayoutVariants
 import io.github.shijianjs.ktjs.vaadin.verticallayout.VerticalLayoutElement
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import kotlin.test.AfterTest
@@ -102,5 +104,27 @@ class ThemeVariantsTest {
         assertEquals("padding spacing", layout.getAttribute("theme"))
         layout.removeTheme("padding")
         assertEquals("spacing", layout.getAttribute("theme"))
+    }
+
+    @Test
+    fun `a typed variant is the same token as the string`() {
+        val button = newButton()
+        button.addTheme(ButtonVariants.primary, ButtonVariants.small)
+        assertEquals("primary small", button.getAttribute("theme"))
+        assertTrue(button.hasTheme(ButtonVariants.primary))
+        assertFalse(button.hasTheme(ButtonVariants.tertiaryInline))
+        button.removeTheme(ButtonVariants.primary)
+        assertEquals("small", button.getAttribute("theme"))
+        button.setTheme(ButtonVariants.tertiaryInline)
+        assertEquals("tertiary-inline", button.getAttribute("theme"))
+    }
+
+    @Test
+    fun `a typed variant and a custom token can be layered`() {
+        val layout = newLayout()
+        layout.addTheme(VerticalLayoutVariants.padding)
+        layout.addTheme("my-own-token")
+        assertEquals("padding my-own-token", layout.getAttribute("theme"))
+        assertEquals(listOf("padding", "my-own-token"), layout.themes)
     }
 }

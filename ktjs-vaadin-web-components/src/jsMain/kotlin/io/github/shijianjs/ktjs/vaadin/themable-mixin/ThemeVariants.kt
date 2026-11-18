@@ -1,6 +1,8 @@
 package io.github.shijianjs.ktjs.vaadin.themablemixin
 
-import kotlin.js.unsafeCast
+import io.github.shijianjs.ktjs.vaadin.theme.ThemeVariant
+import io.github.shijianjs.ktjs.vaadin.theme.name
+import js.reflect.unsafeCast
 import web.html.HTMLElement
 
 /**
@@ -12,6 +14,10 @@ import web.html.HTMLElement
  * not on `HTMLElement`: a plain element has no `theme`, only the components that mix the interface
  * in do (buttons, layouts, cards, fields, overlays…). The attribute is a space-separated list of
  * variants (`theme="primary small"`), and every function below keeps it normalised to single spaces.
+ *
+ * Two ways in: a plain `String` for anything (custom tokens, third-party themes) and a typed
+ * [ThemeVariant] from `io.github.shijianjs.ktjs.vaadin.theme` for the tokens Vaadin documents. Both
+ * end up as the same attribute text, so the store never needs to keep them apart.
  */
 private const val THEME = "theme"
 
@@ -33,9 +39,18 @@ var ThemePropertyMixin.themes: List<String>
 /** Whether [variant] is part of the current theme. */
 fun ThemePropertyMixin.hasTheme(variant: String): Boolean = variant in themes
 
+/** Whether a typed [variant] is part of the current theme. */
+fun ThemePropertyMixin.hasTheme(variant: ThemeVariant): Boolean = variant.name in themes
+
 /** Replaces the whole theme with [variants]; calling it without variants removes the attribute. */
 fun <T : ThemePropertyMixin> T.setTheme(vararg variants: String): T {
     themes = variants.toList()
+    return this
+}
+
+/** Replaces the whole theme with the typed [variant] and [variants]. */
+fun <T : ThemePropertyMixin> T.setTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
+    themes = arrayOf(variant, *variants).map { it.name }
     return this
 }
 
@@ -47,6 +62,14 @@ fun <T : ThemePropertyMixin> T.addTheme(vararg variants: String): T {
     return this
 }
 
+/** Adds the missing of the typed [variant] and [variants], keeping the existing tokens. */
+fun <T : ThemePropertyMixin> T.addTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
+    val current = themes
+    val missing = arrayOf(variant, *variants).map { it.name }.filter { it !in current }
+    if (missing.isNotEmpty()) themes = current + missing
+    return this
+}
+
 /** Removes [variants]; variants that are not set are ignored. */
 fun <T : ThemePropertyMixin> T.removeTheme(vararg variants: String): T {
     val current = themes
@@ -54,4 +77,10 @@ fun <T : ThemePropertyMixin> T.removeTheme(vararg variants: String): T {
     val kept = current.filterNot { it in removed }
     if (kept.size != current.size) themes = kept
     return this
+}
+
+/** Removes the typed [variant] and [variants]; tokens that are not set are ignored. */
+fun <T : ThemePropertyMixin> T.removeTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
+    val removed = arrayOf(variant, *variants).map { it.name }
+    return removeTheme(*removed.toTypedArray())
 }

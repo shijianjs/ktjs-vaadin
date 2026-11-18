@@ -1,0 +1,20 @@
+package io.github.shijianjs.ktjs.vaadin.theme
+
+import js.reflect.unsafeCast
+
+/**
+ * Theme variants of the component: mirrors Vaadin Flow's `PopoverVariant`.
+ *
+ * Deprecated upstream aliases are dropped — they only exist there for binary compatibility, and
+ * several of them repeat a token that already has a current name.
+ */
+sealed external interface PopoverVariant : ThemeVariant
+
+/** Wraps a variant name from JavaScript. Prefer the constants in [PopoverVariants]. */
+fun PopoverVariant(value: String): PopoverVariant = unsafeCast(value)
+
+/** All variants of [PopoverVariant]. */
+object PopoverVariants {
+    inline val noPadding: PopoverVariant get() = PopoverVariant("no-padding")
+    inline val arrow: PopoverVariant get() = PopoverVariant("arrow")
+}
