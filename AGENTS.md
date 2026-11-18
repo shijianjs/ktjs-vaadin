@@ -22,8 +22,11 @@ Kotlin/JS wrapper。
   `version = {上游 npm 版本}-kt.{修订号}`。上游 `packages/` 下的 76 个包中，收费组件（Board、
   Charts、CRUD、Dashboard、Grid Pro、Map、Rich Text Editor）、React 绑定（`react-components`、
   `react-components-pro`）与元包（`vaadin`、`vaadin-core`）不包装。
-- `demo`：GitHub Pages 演示站点，不发布、也不进入 Dokka。
+- `demo`：演示站点（GitHub Pages 的 `/demo/`），基于共享的 `ktjs-demo-kit`；不发布、也不进入 Dokka。
+- `docs`：文档站（GitHub Pages 根），`ktjs-docusaurus` 插件 + Kotlin 配置 + 双语文档。
 - `scaffold/module`：新增模块时复制的骨架，不参与构建。
+
+GitHub Pages 一棵树三块：根是 `docs`，`/demo/` 是 demo，`/api/` 是 Dokka；由 `pagesSite` 组装。
 
 按「上游发版节奏」而不是「npm 包数量」划分子模块：上游版本号相同、总是一起发版的包放在同一个 Gradle
 模块里，避免每个包都产生一个 Maven 版本和一次 Central 发布。终端应用打包时本来就会摇树，模块内多出的

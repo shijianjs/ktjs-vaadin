@@ -1,0 +1,40 @@
+---
+title: ktjs-vaadin
+description: 免费版 Vaadin Web Components 的 Kotlin/JS wrapper
+hide_table_of_contents: true
+---
+
+# ktjs-vaadin
+
+免费版 [Vaadin Web Components](https://github.com/vaadin/web-components) 的 Kotlin/JS wrapper——
+65 个 npm 包、92 个自定义元素，合成一个 Gradle 模块，属性与主题变体都带类型。
+
+[**快速开始**](/guide/getting-started) ·
+[**在线演示**](https://shijianjs.github.io/ktjs-vaadin/demo/) ·
+[**API 文档**](https://shijianjs.github.io/ktjs-vaadin/api/) ·
+[**GitHub**](https://github.com/shijianjs/ktjs-vaadin)
+
+```kotlin
+dependencies {
+    implementation("io.github.shijianjs:ktjs-vaadin-web-components:25.3.5-kt.8")
+}
+```
+
+## 它给了什么
+
+| | |
+| --- | --- |
+| **元素有类型** | `createButton { }` 返回 `ButtonElement`，不是 `HTMLElement`。 |
+| **属性有类型** | `cardTitleAttr` 是 `Attribute<String>`，`titleHeadingLevelAttr` 是 `Attribute<Int>`。 |
+| **主题变体有类型** | 写 `ButtonVariants.primary`，而不是 `theme="primary"`。 |
+| **按能力使用** | 上游 mixin 是 `external interface`，函数可以直接收 `FieldMixin`。 |
+| **Lumo 工具类** | `LumoUtility.Padding.MEDIUM` 与 Flow 的 `LumoUtility` 逐项对应。 |
+| **有 demo 兜底** | 每个组件都有页面，这些页面本身就是集成测试。 |
+
+## 往下读
+
+- [介绍](/intro)——包了哪些东西、模块怎么定版本。
+- [快速开始](/guide/getting-started)——依赖、ES2015、Lumo、第一个组件。
+- [组件与能力](/guide/components)——mixin、属性、变体。
+- [演示站点](/guide/demo)——在线 demo 怎么搭、怎么跑。
+- [API 文档与源码](/guide/api-overview)——生成与手写的边界、重新生成。

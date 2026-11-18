@@ -1,0 +1,40 @@
+---
+title: ktjs-vaadin
+description: Kotlin/JS wrappers for the free Vaadin web components
+hide_table_of_contents: true
+---
+
+# ktjs-vaadin
+
+Kotlin/JS wrappers for the **free** [Vaadin web components](https://github.com/vaadin/web-components) —
+65 npm packages, 92 custom elements, one Gradle module, typed attributes and typed theme variants.
+
+[**Getting started**](/guide/getting-started) ·
+[**Live demo**](https://shijianjs.github.io/ktjs-vaadin/demo/) ·
+[**API reference**](https://shijianjs.github.io/ktjs-vaadin/api/) ·
+[**GitHub**](https://github.com/shijianjs/ktjs-vaadin)
+
+```kotlin
+dependencies {
+    implementation("io.github.shijianjs:ktjs-vaadin-web-components:25.3.5-kt.8")
+}
+```
+
+## What it gives you
+
+| | |
+| --- | --- |
+| **Typed elements** | `createButton { }` returns `ButtonElement`, not `HTMLElement`. |
+| **Typed attributes** | `cardTitleAttr` is an `Attribute<String>`; `titleHeadingLevelAttr` an `Attribute<Int>`. |
+| **Typed theme variants** | `ButtonVariants.primary` instead of `theme="primary"`. |
+| **Capabilities, not just classes** | upstream mixins are `external interface`s, so a function can take `FieldMixin`. |
+| **Lumo utility classes** | `LumoUtility.Padding.MEDIUM` mirrors Flow's `LumoUtility`. |
+| **Covered by a demo** | every component has a page, and the pages double as the integration tests. |
+
+## Where to go next
+
+- [Introduction](/intro) — what is wrapped, how the module is versioned.
+- [Getting started](/guide/getting-started) — dependency, ES2015, Lumo, first component.
+- [Components and capabilities](/guide/components) — mixins, attributes, variants.
+- [The demo site](/guide/demo) — how the live demo is built and run.
+- [API reference and sources](/guide/api-overview) — generated vs hand-written, regenerating.

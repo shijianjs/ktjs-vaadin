@@ -1,7 +1,22 @@
 pluginManagement {
     repositories {
+        // The docs site is built with the ktjs-docusaurus Gradle plugin. Released versions come from
+        // Central; `mavenLocal` is what serves a SNAPSHOT one, which is how the site is developed
+        // against an unreleased wrapper. An empty local repository falls through to the next
+        // repository, so the order costs nothing in CI.
+        mavenLocal()
         gradlePluginPortal()
         mavenCentral()
+    }
+
+    // The plugin's version lives in gradle.properties next to the wrapper's: both come from
+    // ktjs-docusaurus, but each of its modules carries its own `-kt.N` revision.
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "io.github.shijianjs.ktjs.docusaurus") {
+                useVersion(providers.gradleProperty("ktjs-docusaurus-gradle-plugin.version").get())
+            }
+        }
     }
 }
 
@@ -38,6 +53,10 @@ rootProject.name = "ktjs-vaadin"
 
 // The demo is the GitHub Pages site, not a published module.
 include(":demo")
+
+// The documentation site: Kotlin configuration plus Markdown, assembled by the ktjs-docusaurus
+// Gradle plugin into a static site that `pagesSite` publishes at the Pages root.
+include(":docs")
 
 // One Gradle project per published wrapper module.
 include(":ktjs-vaadin-web-components")

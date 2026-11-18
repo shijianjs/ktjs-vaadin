@@ -4,7 +4,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-**[在线演示](https://shijianjs.github.io/ktjs-vaadin/)** ·
+**[使用文档](https://shijianjs.github.io/ktjs-vaadin/)** ·
+**[在线演示](https://shijianjs.github.io/ktjs-vaadin/demo/)** ·
 **[API 文档](https://shijianjs.github.io/ktjs-vaadin/api/)**
 
 所有免费的 `@vaadin/*` 包同步发版、共享同一个上游版本，因此合并为单个
@@ -51,7 +52,7 @@ Gradle 从这两份文件推导基础版本和 `npm(...)` 依赖：
 # demo 打包页面的端到端测试（JVM 上的 Playwright + JUnit 5）
 ./gradlew :demo:e2eTest
 
-# GitHub Pages 站点（根目录是 demo，API 文档在 /api/）
+# GitHub Pages 站点（根目录是文档，demo 在 /demo/，API 文档在 /api/）
 ./gradlew pagesSite
 ```
 

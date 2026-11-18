@@ -4,7 +4,8 @@ Kotlin/JS wrappers for the free [Vaadin Web Components](https://github.com/vaadi
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-**[Live demo](https://shijianjs.github.io/ktjs-vaadin/)** ·
+**[Documentation](https://shijianjs.github.io/ktjs-vaadin/)** ·
+**[Live demo](https://shijianjs.github.io/ktjs-vaadin/demo/)** ·
 **[API reference](https://shijianjs.github.io/ktjs-vaadin/api/)**
 
 All free `@vaadin/*` packages release in lockstep and share one upstream version, so they are
@@ -56,7 +57,7 @@ the `npm(...)` dependency from these two files:
 # End-to-end suite for the bundled demo (Playwright + JUnit 5 on the JVM)
 ./gradlew :demo:e2eTest
 
-# GitHub Pages site (demo at the root, Dokka output under /api/)
+# GitHub Pages site (docs at the root, demo under /demo/, Dokka under /api/)
 ./gradlew pagesSite
 ```
 

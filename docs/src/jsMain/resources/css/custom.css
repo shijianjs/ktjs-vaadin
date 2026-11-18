@@ -1,0 +1,10 @@
+/* Site-wide overrides. Docusaurus injects the theme's own CSS before this file. */
+:root {
+    /* Vaadin's own accent: the wrapper's demo and docs share one blue. */
+    --ifm-color-primary: #1676f3;
+    --ifm-code-font-size: 95%;
+}
+
+[data-theme='dark'] {
+    --ifm-color-primary: #6cb6ff;
+}

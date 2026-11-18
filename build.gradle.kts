@@ -219,11 +219,17 @@ tasks.register("printPublishedVersions") {
     }
 }
 
-// Assembles the GitHub Pages site: the demo at the root and the API reference under /api/.
+// Assembles the GitHub Pages site: the documentation at the root, the demo under /demo/ and the API
+// reference under /api/. The demo sits one level down because its assets are addressed relative to
+// its own page, and `/demo/` keeps its hash routes out of the documentation's route space.
 tasks.register<Sync>("pagesSite") {
-    dependsOn(":demo:jsBrowserDistribution", "dokkaGeneratePublicationHtml")
+    dependsOn(":docs:docusaurusBuild", ":demo:jsBrowserDistribution", "dokkaGeneratePublicationHtml")
     into(layout.buildDirectory.dir("pages"))
-    from(project(":demo").layout.buildDirectory.dir("dist/js/productionExecutable"))
+    // `docusaurusBuild` writes each locale next to the site, with the default locale at the top.
+    from(project(":docs").layout.buildDirectory.dir("js/docusaurus/docs/build"))
+    from(project(":demo").layout.buildDirectory.dir("dist/js/productionExecutable")) {
+        into("demo")
+    }
     from(layout.buildDirectory.dir("dokka/html")) {
         into("api")
     }
