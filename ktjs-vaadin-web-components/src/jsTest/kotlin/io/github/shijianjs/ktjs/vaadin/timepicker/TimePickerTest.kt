@@ -144,10 +144,10 @@ class TimePickerTest {
             "vaadin-time-picker",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.timePicker).tagName.lowercase(),
         )
-        assertEquals("min", TimePickerAttributes.min)
-        assertEquals("max", TimePickerAttributes.max)
-        assertEquals("step", TimePickerAttributes.step)
-        assertEquals("opened", TimePickerAttributes.opened)
+        assertEquals("min", createTimePicker().minAttr.name)
+        assertEquals("max", createTimePicker().maxAttr.name)
+        assertEquals("step", createTimePicker().stepAttr.name)
+        assertEquals("opened", createTimePicker().openedAttr.name)
     }
 
     @Test

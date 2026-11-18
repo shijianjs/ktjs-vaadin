@@ -255,7 +255,6 @@ class ScrollerTest {
     fun tagNameAndAttributeConstantsAreExposed() {
         val scroller = document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.scroller)
         assertEquals("vaadin-scroller", scroller.tagName.lowercase())
-        assertEquals("scroll-direction", ScrollerAttributes.scrollDirection)
-        assertEquals("theme", ScrollerAttributes.theme)
+        assertEquals("scroll-direction", createScroller().scrollDirectionAttr.name)
     }
 }

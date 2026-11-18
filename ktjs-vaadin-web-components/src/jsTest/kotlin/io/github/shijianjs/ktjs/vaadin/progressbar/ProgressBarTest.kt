@@ -232,11 +232,10 @@ class ProgressBarTest {
     fun tagNameAndAttributeConstantsAreExposed() {
         val progress = document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.progressBar)
         assertEquals("vaadin-progress-bar", progress.tagName.lowercase())
-        assertEquals("value", ProgressBarAttributes.value)
-        assertEquals("min", ProgressBarAttributes.min)
-        assertEquals("max", ProgressBarAttributes.max)
-        assertEquals("indeterminate", ProgressBarAttributes.indeterminate)
-        assertEquals("theme", ProgressBarAttributes.theme)
+        assertEquals("value", createProgressBar().valueAttr.name)
+        assertEquals("min", createProgressBar().minAttr.name)
+        assertEquals("max", createProgressBar().maxAttr.name)
+        assertEquals("indeterminate", createProgressBar().indeterminateAttr.name)
     }
 
     @Test

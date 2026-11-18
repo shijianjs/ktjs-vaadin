@@ -239,13 +239,13 @@ class FormLayoutTest {
 
     @Test
     fun attributeConstantsAreExposed() {
-        assertEquals("auto-responsive", FormLayoutAttributes.autoResponsive)
-        assertEquals("auto-rows", FormLayoutAttributes.autoRows)
-        assertEquals("column-width", FormLayoutAttributes.columnWidth)
-        assertEquals("expand-columns", FormLayoutAttributes.expandColumns)
-        assertEquals("expand-fields", FormLayoutAttributes.expandFields)
-        assertEquals("labels-aside", FormLayoutAttributes.labelsAside)
-        assertEquals("max-columns", FormLayoutAttributes.maxColumns)
-        assertEquals("min-columns", FormLayoutAttributes.minColumns)
+        assertEquals("auto-responsive", createFormLayout().autoResponsiveAttr.name)
+        assertEquals("auto-rows", createFormLayout().autoRowsAttr.name)
+        assertEquals("column-width", createFormLayout().columnWidthAttr.name)
+        assertEquals("expand-columns", createFormLayout().expandColumnsAttr.name)
+        assertEquals("expand-fields", createFormLayout().expandFieldsAttr.name)
+        assertEquals("labels-aside", createFormLayout().labelsAsideAttr.name)
+        assertEquals("max-columns", createFormLayout().maxColumnsAttr.name)
+        assertEquals("min-columns", createFormLayout().minColumnsAttr.name)
     }
 }

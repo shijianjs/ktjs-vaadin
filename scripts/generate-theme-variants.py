@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the typed theme-variant declarations in `io.github.shijianjs.ktjs.vaadin.theme`.
+"""Generates the typed theme-variant declarations next to the components they belong to.
 
 The source of truth is Vaadin Flow's Java API, not the web components: the components only know a
 space-separated `theme` attribute, and Flow is where each token gets a name, a doc line and a type
@@ -10,8 +10,12 @@ Usage:
 
 - `--check` only reports what would change; it writes nothing.
 - Deprecated constants are dropped (they are aliases kept for binary compatibility upstream).
+- Each Flow variant class is written into the Kotlin package of the component it applies to
+  (`ButtonVariant` → `io.github.shijianjs.ktjs.vaadin.button`), because that is where a reader looks
+  for it. The base `ThemeVariant` stays in `…vaadin.theme`, which is also where the skipped list is
+  documented.
 - Components this module does not wrap are skipped; the skip list is printed and also written into
-  the package KDoc so nobody wonders where `ChartVariant` went.
+  the base KDoc so nobody wonders where `ChartVariant` went.
 """
 
 from __future__ import annotations
@@ -23,11 +27,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 DEFAULT_UPSTREAM = Path("S:/workspace/github/vaadin/flow-components")
-DEFAULT_TARGET = Path(
-    "ktjs-vaadin-web-components/src/jsMain/kotlin/io/github/shijianjs/ktjs/vaadin/theme"
-)
-DEFAULT_TEST = Path(
-    "ktjs-vaadin-web-components/src/jsTest/kotlin/io/github/shijianjs/ktjs/vaadin/theme"
+
+# Kotlin sources of the published module: variant files are written next to their component, so the
+# generator has to know which package declared which element.
+SOURCE = Path("ktjs-vaadin-web-components/src/jsMain/kotlin/io/github/shijianjs/ktjs/vaadin")
+THEME_PACKAGE = "io.github.shijianjs.ktjs.vaadin.theme"
+TEST_FILE = Path(
+    "ktjs-vaadin-web-components/src/jsTest/kotlin/io/github/shijianjs/ktjs/vaadin"
+    "/themablemixin/ThemeVariantsTest.kt"
 )
 
 # Flow classes whose component the wrapper module does not ship (no npm package wrapped here).
@@ -43,6 +50,12 @@ NOT_WRAPPED = {
 ENTRY = re.compile(r'([A-Z][A-Z0-9_]*)\s*\(\s*"([^"]+)"\s*\)')
 APPLIES = re.compile(r"applicable for\s+(?:the\s+)?(?:(?:{@code|`)\s*([^`}]+)\s*[}`])", re.IGNORECASE)
 PREFIXES = ("LUMO_", "AURA_")
+PACKAGE = re.compile(r"^package\s+(\S+)", re.MULTILINE)
+ELEMENT_CLASS = re.compile(r"^abstract external class (\w+Element)\b", re.MULTILINE)
+
+# Flow names its message component `MessageListItem`, while the web component is
+# `<vaadin-message>` and this module calls it `MessageElement`.
+COMPONENT_ALIASES = {"MessageListItem": "Message"}
 
 
 @dataclass
@@ -59,6 +72,8 @@ class VariantClass:
     applies_to: str
     doc: str
     variants: list[Variant]
+    package: str
+    directory: Path
 
 
 def lower_camel(java_name: str) -> str:
@@ -119,7 +134,19 @@ def parse(path: Path) -> VariantClass:
         name = plain_name(best[value])
         variants.append(Variant(best[value], lower_camel(name), value, ""))
 
-    return VariantClass(class_name, applies_to, doc, variants)
+    return VariantClass(class_name, applies_to, doc, variants, "", Path())
+
+
+def component_index() -> dict[str, tuple[str, Path]]:
+    """`ButtonElement` → (`io.github.shijianjs.ktjs.vaadin.button`, that file's directory)."""
+    index: dict[str, tuple[str, Path]] = {}
+    for path in sorted(SOURCE.rglob("*.kt")):
+        text = path.read_text(encoding="utf-8")
+        package = PACKAGE.search(text)
+        for element in ELEMENT_CLASS.findall(text):
+            if package:
+                index[element] = (package.group(1), path.parent)
+    return index
 
 
 def render(cls: VariantClass) -> str:
@@ -127,8 +154,9 @@ def render(cls: VariantClass) -> str:
     object_name = f"{interface}s"
     applies = f"`{cls.applies_to}`" if cls.applies_to else "the component"
     lines = [
-        "package io.github.shijianjs.ktjs.vaadin.theme",
+        f"package {cls.package}",
         "",
+        f"import {THEME_PACKAGE}.ThemeVariant",
         "import js.reflect.unsafeCast",
         "",
         "/**",
@@ -155,7 +183,7 @@ def render_base(included: list[VariantClass], skipped: dict[str, str]) -> str:
     skipped_lines = "\n".join(
         f" * - `{name}` — {reason}" for name, reason in sorted(skipped.items())
     )
-    return f"""package io.github.shijianjs.ktjs.vaadin.theme
+    return f"""package {THEME_PACKAGE}
 
 import js.reflect.unsafeCast
 
@@ -163,8 +191,9 @@ import js.reflect.unsafeCast
  * Base definition of a typed theme variant, mirroring Vaadin Flow's `ThemeVariant`.
  *
  * At runtime a variant *is* its attribute token — a plain string — so the type only exists in Kotlin
- * and in the docs. Every component declares its own subtype (`ButtonVariant`, `BadgeVariant`, …) and
- * a [constants object][ButtonVariants] next to it, which is what makes a variant list read as
+ * and in the docs. Every component declares its own subtype (`ButtonVariant`, `BadgeVariant`, …) in
+ * its own package, next to the element it applies to, plus a constants object next to it, which is
+ * what makes a variant list read as
  * [addTheme(ButtonVariants.primary)][io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme]
  * instead of a bare `"primary"`.
  *
@@ -176,10 +205,16 @@ import js.reflect.unsafeCast
  * Variants of these Flow classes are **not** generated here, because this module does not wrap the
  * corresponding component:
 {skipped_lines}
+ *
+ * Not `sealed`: a subtype has to live in the same module *and package* as a sealed parent, and each
+ * component keeps its variants in its own package (`…vaadin.button.ButtonVariant`). Closure comes from
+ * the constants objects instead — a component's vocabulary is the one its `XxxVariants` lists, and
+ * anything else is a custom token, which the attribute has always allowed.
  */
-sealed external interface ThemeVariant
+external interface ThemeVariant
 
-/** Wraps a variant token from JavaScript. Prefer a constants object, e.g. [ButtonVariants]. */
+/** Wraps a variant token from JavaScript. Prefer a constants object, e.g.
+ * [io.github.shijianjs.ktjs.vaadin.button.ButtonVariants]. */
 fun ThemeVariant(value: String): ThemeVariant = unsafeCast(value)
 
 /** The attribute token of this variant, e.g. `primary` or `tertiary-inline`. */
@@ -189,8 +224,14 @@ val ThemeVariant.name: String get() = unsafeCast<String>()
 
 def render_tests(included: list[VariantClass]) -> str:
     lines = [
-        "package io.github.shijianjs.ktjs.vaadin.theme",
+        "package io.github.shijianjs.ktjs.vaadin.themablemixin",
         "",
+    ]
+    for cls in sorted(included, key=lambda item: item.package):
+        lines.append(f"import {cls.package}.{cls.name}s")
+    lines += [
+        f"import {THEME_PACKAGE}.name",
+        "import io.github.shijianjs.ktjs.vaadin.button.createButton",
         "import kotlin.test.Test",
         "import kotlin.test.assertEquals",
         "",
@@ -199,6 +240,11 @@ def render_tests(included: list[VariantClass]) -> str:
         " * check — a typo in either side shows up here instead of in a browser.",
         " */",
         "class ThemeVariantsTest {",
+        "",
+        "    @Test",
+        "    fun `theMixinAttributeIsTheThemeAttribute`() {",
+        '        assertEquals("theme", createButton().themeAttr.name)',
+        "    }",
     ]
     for cls in included:
         object_name = f"{cls.name}s"
@@ -228,16 +274,21 @@ def render_tests(included: list[VariantClass]) -> str:
 
 
 def main() -> int:
+    global SOURCE
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--upstream", type=Path, default=DEFAULT_UPSTREAM)
-    parser.add_argument("--target", type=Path, default=DEFAULT_TARGET)
-    parser.add_argument("--test", type=Path, default=DEFAULT_TEST)
+    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--test", type=Path, default=TEST_FILE)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
 
     if not args.upstream.is_dir():
         print(f"upstream clone not found: {args.upstream}", file=sys.stderr)
         return 2
+
+    SOURCE = args.source
+    index = component_index()
 
     included: list[VariantClass] = []
     skipped: dict[str, str] = dict(NOT_WRAPPED)
@@ -252,15 +303,22 @@ def main() -> int:
         if not parsed.variants:
             skipped[parsed.name] = "no constants"
             continue
+        component = parsed.name.removesuffix("Variant")
+        component = COMPONENT_ALIASES.get(component, component)
+        entry = index.get(f"{component}Element")
+        if entry is None:
+            skipped[parsed.name] = f"no `{component}Element` in this module"
+            continue
+        parsed.package, parsed.directory = entry
         included.append(parsed)
 
-    files = {"ThemeVariant.kt": render_base(included, skipped)}
+    files: list[tuple[Path, str]] = [(SOURCE / "theme" / "ThemeVariant.kt", render_base(included, skipped))]
     for cls in included:
-        files[f"{cls.name}s.kt"] = render(cls)
+        files.append((cls.directory / f"{cls.name}s.kt", render(cls)))
+    files.append((args.test, render_tests(included)))
 
     changed = 0
-    for name, content in files.items():
-        path = args.target / name
+    for path, content in files:
         if path.exists() and path.read_text(encoding="utf-8") == content:
             continue
         changed += 1
@@ -269,16 +327,20 @@ def main() -> int:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(content, encoding="utf-8", newline="\n")
 
-    test_path = args.test / "ThemeVariantsTest.kt"
-    test_content = render_tests(included)
-    if not test_path.exists() or test_path.read_text(encoding="utf-8") != test_content:
+    # Variant files used to live in one `theme` package; drop the ones this run did not write so a
+    # later component move cannot leave a second copy behind.
+    written = {path.resolve() for path, _ in files}
+    for stale in sorted((SOURCE / "theme").glob("*Variant*.kt")):
+        if stale.resolve() in written:
+            continue
         changed += 1
-        print(f"{'would write' if args.check else 'write'} {test_path}")
+        print(f"{'would remove' if args.check else 'remove'} {stale}")
         if not args.check:
-            test_path.parent.mkdir(parents=True, exist_ok=True)
-            test_path.write_text(test_content, encoding="utf-8", newline="\n")
+            stale.unlink()
 
     print(f"{len(included)} variant classes, {changed} file(s) changed, skipped {len(skipped)}")
+    for name, reason in sorted(skipped.items()):
+        print(f"  skipped {name}: {reason}")
     return 0
 
 

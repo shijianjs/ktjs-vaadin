@@ -162,11 +162,9 @@ class BreadcrumbsTest {
             "vaadin-breadcrumbs-item",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.breadcrumbsItem).tagName.lowercase(),
         )
-        assertEquals("current", BreadcrumbsItemAttributes.current)
-        assertEquals("path", BreadcrumbsItemAttributes.path)
-        assertEquals("disabled", BreadcrumbsItemAttributes.disabled)
-        assertEquals("theme", BreadcrumbsItemAttributes.theme)
-        assertEquals("i18n", BreadcrumbsAttributes.i18n)
+        assertEquals("current", createBreadcrumbsItem().currentAttr.name)
+        assertEquals("path", createBreadcrumbsItem().pathAttr.name)
+        assertEquals("disabled", createBreadcrumbsItem().disabledAttr.name)
     }
 
     @Test

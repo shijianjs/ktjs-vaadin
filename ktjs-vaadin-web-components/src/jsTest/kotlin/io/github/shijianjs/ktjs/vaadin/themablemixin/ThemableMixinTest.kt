@@ -1,5 +1,6 @@
 package io.github.shijianjs.ktjs.vaadin.themablemixin
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.themeAttr
 import kotlin.js.unsafeCast
 import kotlin.test.Test
 import kotlin.test.assertEquals

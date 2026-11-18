@@ -157,11 +157,11 @@ class NotificationTest {
             "vaadin-notification",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.notification).tagName.lowercase(),
         )
-        assertEquals("position", NotificationAttributes.position)
-        assertEquals("duration", NotificationAttributes.duration)
-        assertEquals("opened", NotificationAttributes.opened)
-        assertEquals("assertive", NotificationAttributes.assertive)
-        assertEquals("overlay-class", NotificationAttributes.overlayClass)
+        assertEquals("position", createNotification().positionAttr.name)
+        assertEquals("duration", createNotification().durationAttr.name)
+        assertEquals("opened", createNotification().openedAttr.name)
+        assertEquals("assertive", createNotification().assertiveAttr.name)
+        assertEquals("overlay-class", createNotification().overlayClassAttr.name)
     }
 
     @Test

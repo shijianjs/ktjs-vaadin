@@ -204,13 +204,13 @@ class ConfirmDialogTest {
             "vaadin-confirm-dialog",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.confirmDialog).tagName.lowercase(),
         )
-        assertEquals("header", ConfirmDialogAttributes.header)
-        assertEquals("message", ConfirmDialogAttributes.message)
-        assertEquals("confirm-text", ConfirmDialogAttributes.confirmText)
-        assertEquals("cancel-text", ConfirmDialogAttributes.cancelText)
-        assertEquals("reject-text", ConfirmDialogAttributes.rejectText)
-        assertEquals("cancel-button-visible", ConfirmDialogAttributes.cancelButtonVisible)
-        assertEquals("reject-button-visible", ConfirmDialogAttributes.rejectButtonVisible)
+        assertEquals("header", createConfirmDialog().headerAttr.name)
+        assertEquals("message", createConfirmDialog().messageAttr.name)
+        assertEquals("confirm-text", createConfirmDialog().confirmTextAttr.name)
+        assertEquals("cancel-text", createConfirmDialog().cancelTextAttr.name)
+        assertEquals("reject-text", createConfirmDialog().rejectTextAttr.name)
+        assertEquals("cancel-button-visible", createConfirmDialog().cancelButtonVisibleAttr.name)
+        assertEquals("reject-button-visible", createConfirmDialog().rejectButtonVisibleAttr.name)
     }
 
     @Test

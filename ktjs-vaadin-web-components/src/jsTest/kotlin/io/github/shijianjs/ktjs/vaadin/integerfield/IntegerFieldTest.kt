@@ -143,10 +143,10 @@ class IntegerFieldTest {
             "vaadin-integer-field",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.integerField).tagName.lowercase(),
         )
-        assertEquals("step", IntegerFieldAttributes.step)
-        assertEquals("min", IntegerFieldAttributes.min)
-        assertEquals("max", IntegerFieldAttributes.max)
-        assertEquals("value", IntegerFieldAttributes.value)
+        assertEquals("step", createIntegerField().stepAttr.name)
+        assertEquals("min", createIntegerField().minAttr.name)
+        assertEquals("max", createIntegerField().maxAttr.name)
+        assertEquals("value", createIntegerField().valueAttr.name)
     }
 
     @Test

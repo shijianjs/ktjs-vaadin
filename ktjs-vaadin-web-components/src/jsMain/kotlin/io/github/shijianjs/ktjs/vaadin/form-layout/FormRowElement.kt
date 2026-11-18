@@ -27,11 +27,3 @@ fun createFormRow(configure: FormRowElement.() -> Unit = {}): FormRowElement {
     registerFormRow()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.formRow).apply(configure)
 }
-
-/** Attribute names of `<vaadin-form-row>`, for use with `setAttribute`. */
-object FormRowAttributes {
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

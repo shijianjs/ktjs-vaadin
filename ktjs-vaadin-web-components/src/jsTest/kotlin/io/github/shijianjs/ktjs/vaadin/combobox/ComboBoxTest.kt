@@ -191,11 +191,11 @@ class ComboBoxTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-combo-box", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.comboBox).tagName.lowercase())
-        assertEquals("allow-custom-value", ComboBoxAttributes.allowCustomValue)
-        assertEquals("auto-open-disabled", ComboBoxAttributes.autoOpenDisabled)
-        assertEquals("opened", ComboBoxAttributes.opened)
-        assertEquals("page-size", ComboBoxAttributes.pageSize)
-        assertEquals("filter", ComboBoxAttributes.filter)
+        assertEquals("allow-custom-value", createComboBox().allowCustomValueAttr.name)
+        assertEquals("auto-open-disabled", createComboBox().autoOpenDisabledAttr.name)
+        assertEquals("opened", createComboBox().openedAttr.name)
+        assertEquals("page-size", createComboBox().pageSizeAttr.name)
+        assertEquals("filter", createComboBox().filterAttr.name)
     }
 
     @Test

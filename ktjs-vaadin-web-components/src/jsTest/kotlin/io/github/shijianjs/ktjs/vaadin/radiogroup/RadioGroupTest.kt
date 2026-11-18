@@ -259,14 +259,14 @@ class RadioGroupTest {
             "vaadin-radio-button",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.radioButton).tagName.lowercase(),
         )
-        assertEquals("value", RadioGroupAttributes.value)
-        assertEquals("name", RadioGroupAttributes.name)
-        assertEquals("readonly", RadioGroupAttributes.readonly)
-        assertEquals("required", RadioGroupAttributes.required)
-        assertEquals("value", RadioButtonAttributes.value)
-        assertEquals("checked", RadioButtonAttributes.checked)
-        assertEquals("label", RadioButtonAttributes.label)
-        assertEquals("name", RadioButtonAttributes.name)
+        assertEquals("value", createRadioGroup().valueAttr.name)
+        assertEquals("name", createRadioGroup().nameAttr.name)
+        assertEquals("readonly", createRadioGroup().readonlyAttr.name)
+        assertEquals("required", createRadioGroup().requiredAttr.name)
+        assertEquals("value", createRadioButton().valueAttr.name)
+        assertEquals("checked", createRadioButton().checkedAttr.name)
+        assertEquals("label", createRadioButton().labelAttr.name)
+        assertEquals("name", createRadioButton().nameAttr.name)
     }
 
     @Test

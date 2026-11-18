@@ -153,10 +153,10 @@ class TextAreaTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-text-area", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.textArea).tagName.lowercase())
-        assertEquals("min-rows", TextAreaAttributes.minRows)
-        assertEquals("max-rows", TextAreaAttributes.maxRows)
-        assertEquals("value", TextAreaAttributes.value)
-        assertEquals("placeholder", TextAreaAttributes.placeholder)
+        assertEquals("min-rows", createTextArea().minRowsAttr.name)
+        assertEquals("max-rows", createTextArea().maxRowsAttr.name)
+        assertEquals("value", createTextArea().valueAttr.name)
+        assertEquals("placeholder", createTextArea().placeholderAttr.name)
     }
 
     @Test

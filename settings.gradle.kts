@@ -19,6 +19,16 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        // The wrapper kit (typed `Attribute` API) is developed in the ktjs-dom-kit repository and is
+        // published locally while this refactor is in flight. The group filter is load-bearing:
+        // mavenLocal is searched first, so an unfiltered repository here would let a stale local POM
+        // shadow every other dependency (a POM-only `kotlin-stdlib` once removed its JS variant and
+        // produced hundreds of "unresolved reference" errors).
+        mavenLocal {
+            content {
+                includeGroupByRegex("io\\.github\\.shijianjs(\\..*)?")
+            }
+        }
     }
 }
 

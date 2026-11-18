@@ -200,12 +200,12 @@ class SliderTest {
             "vaadin-range-slider",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.rangeSlider).tagName.lowercase(),
         )
-        assertEquals("min", SliderAttributes.min)
-        assertEquals("max", SliderAttributes.max)
-        assertEquals("step", SliderAttributes.step)
-        assertEquals("value", SliderAttributes.value)
-        assertEquals("accessible-name-start", RangeSliderAttributes.accessibleNameStart)
-        assertEquals("accessible-name-end", RangeSliderAttributes.accessibleNameEnd)
+        assertEquals("min", createSlider().minAttr.name)
+        assertEquals("max", createSlider().maxAttr.name)
+        assertEquals("step", createSlider().stepAttr.name)
+        assertEquals("value", createSlider().valueAttr.name)
+        assertEquals("accessible-name-start", createRangeSlider().accessibleNameStartAttr.name)
+        assertEquals("accessible-name-end", createRangeSlider().accessibleNameEndAttr.name)
     }
 
     @Test

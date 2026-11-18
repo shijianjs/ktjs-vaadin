@@ -898,8 +898,7 @@ class TabSheetTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-tabsheet", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.tabsheet).tagName.lowercase())
-        assertEquals("selected", TabSheetAttributes.selected)
-        assertEquals("theme", TabSheetAttributes.theme)
+        assertEquals("selected", createTabSheet().selectedAttr.name)
     }
 
     @Test

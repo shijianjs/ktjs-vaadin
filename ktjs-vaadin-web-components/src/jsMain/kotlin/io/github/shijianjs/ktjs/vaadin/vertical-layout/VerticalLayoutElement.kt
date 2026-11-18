@@ -52,11 +52,3 @@ fun createVerticalLayout(configure: VerticalLayoutElement.() -> Unit = {}): Vert
     registerVerticalLayout()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.verticalLayout).apply(configure)
 }
-
-/** Attribute names of `<vaadin-vertical-layout>`, for use with `setAttribute`. */
-object VerticalLayoutAttributes {
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

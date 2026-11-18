@@ -243,14 +243,14 @@ class LoginFormTest {
             "vaadin-login-overlay",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.loginOverlay).tagName.lowercase(),
         )
-        assertEquals("action", LoginFormAttributes.action)
-        assertEquals("error", LoginFormAttributes.error)
-        assertEquals("disabled", LoginFormAttributes.disabled)
-        assertEquals("no-forgot-password", LoginFormAttributes.noForgotPassword)
-        assertEquals("no-autofocus", LoginFormAttributes.noAutofocus)
-        assertEquals("heading-level", LoginFormAttributes.headingLevel)
-        assertEquals("description", LoginOverlayAttributes.description)
-        assertEquals("opened", LoginOverlayAttributes.opened)
+        assertEquals("action", createLoginForm().actionAttr.name)
+        assertEquals("error", createLoginForm().errorAttr.name)
+        assertEquals("disabled", createLoginForm().disabledAttr.name)
+        assertEquals("no-forgot-password", createLoginForm().noForgotPasswordAttr.name)
+        assertEquals("no-autofocus", createLoginForm().noAutofocusAttr.name)
+        assertEquals("heading-level", createLoginForm().headingLevelAttr.name)
+        assertEquals("description", createLoginOverlay().descriptionAttr.name)
+        assertEquals("opened", createLoginOverlay().openedAttr.name)
     }
 
     @Test

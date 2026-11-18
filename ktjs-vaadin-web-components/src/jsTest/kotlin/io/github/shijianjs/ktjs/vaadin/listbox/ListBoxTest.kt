@@ -193,11 +193,10 @@ class ListBoxTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-list-box", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.listBox).tagName.lowercase())
-        assertEquals("multiple", ListBoxAttributes.multiple)
-        assertEquals("selected", ListBoxAttributes.selected)
-        assertEquals("selected-values", ListBoxAttributes.selectedValues)
-        assertEquals("orientation", ListBoxAttributes.orientation)
-        assertEquals("disabled", ListBoxAttributes.disabled)
+        assertEquals("multiple", createListBox().multipleAttr.name)
+        assertEquals("selected", createListBox().selectedAttr.name)
+        assertEquals("orientation", createListBox().orientationAttr.name)
+        assertEquals("disabled", createListBox().disabledAttr.name)
     }
 
     @Test

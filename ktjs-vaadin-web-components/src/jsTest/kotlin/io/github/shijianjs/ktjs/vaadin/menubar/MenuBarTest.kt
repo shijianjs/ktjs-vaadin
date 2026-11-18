@@ -178,12 +178,10 @@ class MenuBarTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-menu-bar", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.menuBar).tagName.lowercase())
-        assertEquals("disabled", MenuBarAttributes.disabled)
-        assertEquals("open-on-hover", MenuBarAttributes.openOnHover)
-        assertEquals("reverse-collapse", MenuBarAttributes.reverseCollapse)
-        assertEquals("tab-navigation", MenuBarAttributes.tabNavigation)
-        assertEquals("i18n", MenuBarAttributes.i18n)
-        assertEquals("theme", MenuBarAttributes.theme)
+        assertEquals("disabled", createMenuBar().disabledAttr.name)
+        assertEquals("open-on-hover", createMenuBar().openOnHoverAttr.name)
+        assertEquals("reverse-collapse", createMenuBar().reverseCollapseAttr.name)
+        assertEquals("tab-navigation", createMenuBar().tabNavigationAttr.name)
     }
 
     @Test

@@ -208,10 +208,10 @@ class SelectTest {
             "vaadin-select-list-box",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.selectListBox).tagName.lowercase(),
         )
-        assertEquals("placeholder", SelectAttributes.placeholder)
-        assertEquals("opened", SelectAttributes.opened)
-        assertEquals("readonly", SelectAttributes.readonly)
-        assertEquals("value", SelectAttributes.value)
+        assertEquals("placeholder", createSelect().placeholderAttr.name)
+        assertEquals("opened", createSelect().openedAttr.name)
+        assertEquals("readonly", createSelect().readonlyAttr.name)
+        assertEquals("value", createSelect().valueAttr.name)
     }
 
     @Test

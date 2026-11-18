@@ -161,9 +161,8 @@ class ItemTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-item", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.item).tagName.lowercase())
-        assertEquals("disabled", ItemAttributes.disabled)
-        assertEquals("selected", ItemAttributes.selected)
-        assertEquals("theme", ItemAttributes.theme)
+        assertEquals("disabled", createItem().disabledAttr.name)
+        assertEquals("selected", createItem().selectedAttr.name)
     }
 
     @Test

@@ -249,14 +249,12 @@ class DetailsTest {
             "vaadin-details-summary",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.detailsSummary).tagName.lowercase(),
         )
-        assertEquals("opened", DetailsAttributes.opened)
-        assertEquals("summary", DetailsAttributes.summary)
-        assertEquals("disabled", DetailsAttributes.disabled)
-        assertEquals("autofocus", DetailsAttributes.autofocus)
-        assertEquals("theme", DetailsAttributes.theme)
-        assertEquals("opened", DetailsSummaryAttributes.opened)
-        assertEquals("disabled", DetailsSummaryAttributes.disabled)
-        assertEquals("theme", DetailsSummaryAttributes.theme)
+        assertEquals("opened", createDetails().openedAttr.name)
+        assertEquals("summary", createDetails().summaryAttr.name)
+        assertEquals("disabled", createDetails().disabledAttr.name)
+        assertEquals("autofocus", createDetails().autofocusAttr.name)
+        assertEquals("opened", createDetailsSummary().openedAttr.name)
+        assertEquals("disabled", createDetailsSummary().disabledAttr.name)
     }
 
     @Test

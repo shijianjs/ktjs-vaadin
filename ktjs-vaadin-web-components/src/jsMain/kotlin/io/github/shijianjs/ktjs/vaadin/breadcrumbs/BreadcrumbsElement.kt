@@ -70,20 +70,3 @@ fun createBreadcrumbs(configure: BreadcrumbsElement.() -> Unit = {}): Breadcrumb
     registerBreadcrumbs()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.breadcrumbs).apply(configure)
 }
-
-/** Attribute names of `<vaadin-breadcrumbs>`, for use with `setAttribute`. */
-object BreadcrumbsAttributes {
-    /**
-     * The object used to localize this component. To change the default
-     * localization, replace this with an object that provides all properties, or
-     * just the individual properties you want to change.
-     *
-     * Should be overridden by subclasses to provide a custom JSDoc with the
-     * default I18N properties.
-     */
-    const val i18n: String = "i18n"
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

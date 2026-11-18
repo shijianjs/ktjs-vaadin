@@ -62,11 +62,3 @@ fun createHorizontalLayout(configure: HorizontalLayoutElement.() -> Unit = {}): 
     registerHorizontalLayout()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.horizontalLayout).apply(configure)
 }
-
-/** Attribute names of `<vaadin-horizontal-layout>`, for use with `setAttribute`. */
-object HorizontalLayoutAttributes {
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

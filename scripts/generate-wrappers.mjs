@@ -1299,6 +1299,78 @@ function collectAttributes(declaration) {
   return [...result.values()];
 }
 
+// The `theme` attribute is not a per-component attribute: it exists only on `ThemePropertyMixin`
+// implementations, and `themable-mixin/ThemeVariants.kt` owns it already (typed variant CRUD plus
+// `themeAttr`). Emitting it on every themable component would duplicate that object ~80 times.
+const SHARED_ATTRIBUTES = new Set(['theme']);
+
+// The manifest's `number` covers both fractional and integral attributes. These are counts, indexes
+// and levels, where callers want an `Int`; everything else stays `Double`.
+const INTEGRAL_ATTRIBUTES = new Set([
+  'heading-level',
+  'title-heading-level',
+  'level',
+  'index',
+  'focused-index',
+  'selected',
+  'size',
+  'page-size',
+  'maxlength',
+  'minlength',
+  'max-rows',
+  'min-rows',
+  'max-columns',
+  'min-columns',
+  'max-items-visible',
+  'max-files',
+  'max-concurrent-uploads',
+  'color-index',
+  'user-color-index',
+]);
+
+/**
+ * How a manifest attribute becomes a typed accessor, or `null` when it is not a declarative
+ * attribute at all.
+ *
+ * The manifests list properties next to attributes: `renderer`, `data-provider`, `i18n`, `items`,
+ * `manager` and the `HTMLElement`-valued ones are objects, callbacks or arrays that only exist on the
+ * element object. The DOM stores text, so an accessor is only honest for `string`, `boolean` and
+ * `number`.
+ */
+function typedAttribute(attribute) {
+  if (SHARED_ATTRIBUTES.has(attribute.name)) return null;
+  const type = (attribute.type && attribute.type.text) || '';
+  if (type === 'boolean') return { kotlinType: 'Boolean', factory: 'booleanAttribute' };
+  if (type === 'number') {
+    return INTEGRAL_ATTRIBUTES.has(attribute.name)
+      ? { kotlinType: 'Int', factory: 'intAttribute' }
+      : { kotlinType: 'Double', factory: 'doubleAttribute' };
+  }
+  // `string`, plus the handful of entries the manifest leaves untyped: text is what the DOM stores.
+  if (type === 'string' || type === '' || type === '(none)') {
+    return { kotlinType: 'String', factory: 'attribute' };
+  }
+  return null;
+}
+
+function typedAttributes(declaration) {
+  return uniqueNames(
+    collectAttributes(declaration)
+      .map((attribute) => ({ ...attribute, typed: typedAttribute(attribute) }))
+      .filter((attribute) => attribute.typed !== null),
+    (attribute) => `${camel(attribute.name)}Attr`,
+  );
+}
+
+function attributeImports(attributes) {
+  if (attributes.length === 0) return [];
+  const factories = [...new Set(attributes.map((attribute) => attribute.typed.factory))].sort();
+  return [
+    'io.github.shijianjs.ktjs.dom.attribute.Attribute',
+    ...factories.map((factory) => `io.github.shijianjs.ktjs.dom.attribute.${factory}`),
+  ];
+}
+
 function uniqueNames(items, baseName) {
   const used = new Set();
   return items.map((item) => {
@@ -1352,7 +1424,14 @@ function emitClass(declaration) {
   const body = renderMembers(declaration, 4, inherited);
   const doc = kdoc(declaration.description);
   const extendsClause = superTypes.length > 0 ? ` : ${[...new Set(superTypes)].join(', ')}` : '';
-  const lines = [header(declaration.pkg), doc, `abstract external class ${declaration.kotlinName}${extendsClause} {`, body, '}'];
+  const attributes = typedAttributes(declaration);
+  const lines = [
+    header(declaration.pkg, attributeImports(attributes)),
+    doc,
+    `abstract external class ${declaration.kotlinName}${extendsClause} {`,
+    body,
+    '}',
+  ];
 
   const moduleName = `${declaration.kotlinName}Module`;
   const statics = collectStatics(declaration, declaration.pkg);
@@ -1446,19 +1525,20 @@ function emitClass(declaration) {
       '}',
     );
 
-    const attributes = uniqueNames(collectAttributes(declaration), (attribute) => camel(attribute.name));
+    const attributes = typedAttributes(declaration);
     if (attributes.length > 0) {
+      // Top-level extension properties, not members of an object: an extension declared inside an
+      // `object` is only callable with that object as the implicit receiver, so `ButtonAttributes`
+      // would be a container nobody can reach through `button.disabledAttr`.
       lines.push(
         '',
-        `/** Attribute names of \`<${declaration.tagName}>\`, for use with \`setAttribute\`. */`,
-        `object ${declaration.facadeName}Attributes {`,
+        `/** Typed attributes of \`<${declaration.tagName}>\`: read and write them through an \`Attribute\` instead of a name string. */`,
         attributes
           .map(
             (attribute) =>
-              `${kdoc(attribute.description, 4)}    const val ${id(attribute.kotlinProperty)}: String = "${attribute.name}"`,
+              `${kdoc(attribute.description)}\nval ${declaration.kotlinName}.${id(attribute.kotlinProperty)}: Attribute<${attribute.typed.kotlinType}>\n    get() = ${attribute.typed.factory}("${attribute.name}")`,
           )
-          .join('\n'),
-        '}',
+          .join('\n\n'),
       );
     }
 
@@ -1568,7 +1648,7 @@ function emitVaadinTagName() {
   entries.sort((a, b) => a.property.localeCompare(b.property));
 
   const lines = [
-    'package vaadin',
+    'package io.github.shijianjs.ktjs.vaadin',
     '',
     '/**',
     ' * Tag names of the wrapped Vaadin custom elements.',

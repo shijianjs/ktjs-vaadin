@@ -139,11 +139,11 @@ class MasterDetailLayoutTest {
             "vaadin-master-detail-layout",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.masterDetailLayout).tagName.lowercase(),
         )
-        assertEquals("master-size", MasterDetailLayoutAttributes.masterSize)
-        assertEquals("detail-size", MasterDetailLayoutAttributes.detailSize)
-        assertEquals("expand-master", MasterDetailLayoutAttributes.expandMaster)
-        assertEquals("expand-detail", MasterDetailLayoutAttributes.expandDetail)
-        assertEquals("force-overlay", MasterDetailLayoutAttributes.forceOverlay)
-        assertEquals("overlay-size", MasterDetailLayoutAttributes.overlaySize)
+        assertEquals("master-size", createMasterDetailLayout().masterSizeAttr.name)
+        assertEquals("detail-size", createMasterDetailLayout().detailSizeAttr.name)
+        assertEquals("expand-master", createMasterDetailLayout().expandMasterAttr.name)
+        assertEquals("expand-detail", createMasterDetailLayout().expandDetailAttr.name)
+        assertEquals("force-overlay", createMasterDetailLayout().forceOverlayAttr.name)
+        assertEquals("overlay-size", createMasterDetailLayout().overlaySizeAttr.name)
     }
 }

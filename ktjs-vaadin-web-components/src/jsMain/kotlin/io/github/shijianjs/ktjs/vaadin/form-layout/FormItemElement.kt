@@ -94,11 +94,3 @@ fun createFormItem(configure: FormItemElement.() -> Unit = {}): FormItemElement 
     registerFormItem()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.formItem).apply(configure)
 }
-
-/** Attribute names of `<vaadin-form-item>`, for use with `setAttribute`. */
-object FormItemAttributes {
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

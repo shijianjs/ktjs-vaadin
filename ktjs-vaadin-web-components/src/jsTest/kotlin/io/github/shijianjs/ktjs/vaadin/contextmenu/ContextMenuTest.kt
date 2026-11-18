@@ -125,12 +125,11 @@ class ContextMenuTest {
             "vaadin-context-menu",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.contextMenu).tagName.lowercase(),
         )
-        assertEquals("open-on", ContextMenuAttributes.openOn)
-        assertEquals("listen-on", ContextMenuAttributes.listenOn)
-        assertEquals("close-on", ContextMenuAttributes.closeOn)
-        assertEquals("selector", ContextMenuAttributes.selector)
-        assertEquals("opened", ContextMenuAttributes.opened)
-        assertEquals("position", ContextMenuAttributes.position)
+        assertEquals("open-on", createContextMenu().openOnAttr.name)
+        assertEquals("close-on", createContextMenu().closeOnAttr.name)
+        assertEquals("selector", createContextMenu().selectorAttr.name)
+        assertEquals("opened", createContextMenu().openedAttr.name)
+        assertEquals("position", createContextMenu().positionAttr.name)
     }
 
     @Test

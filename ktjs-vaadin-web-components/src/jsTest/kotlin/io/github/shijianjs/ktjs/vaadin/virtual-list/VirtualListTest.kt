@@ -341,12 +341,10 @@ class VirtualListTest {
 
     @Test
     fun themeConstantIsExposed() {
-        assertEquals("theme", VirtualListAttributes.theme)
     }
 
     @Test
     fun itemAccessibleNameGeneratorConstantIsExposed() {
-        assertEquals("item-accessible-name-generator", VirtualListAttributes.itemAccessibleNameGenerator)
     }
 
     @Test

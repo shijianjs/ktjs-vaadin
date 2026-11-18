@@ -56,31 +56,60 @@ Kotlin/JS wrapper。
 
 `theme` 属性只有实现了 `ThemePropertyMixin` 的组件才渲染（button、layout、card、field、overlay…），
 所以读写不挂在 `HTMLElement` 上，而是挂在标记接口本身：`themable-mixin/ThemeVariants.kt` 提供
-`themes`（读 / 整体替换）、`hasTheme`、`setTheme(vararg)`、`addTheme(vararg)`、`removeTheme(vararg)`。
+`themes`（读 / 整体替换）、`hasTheme`、`setTheme(vararg)`、`addTheme(vararg)`、`removeTheme(vararg)`，
+外加 `themeAttr`（`TokenListAttribute`，需要直接操作属性对象时用）。
 上游 `ThemePropertyMixin` 只**观察** `theme` 属性、把它传进 shadow DOM 的私有 `_theme`，没有公开属性
 可赋值 —— 所以这里操作的是属性：空格分隔、去重、空值即 `removeAttribute`。
 
 后续加同类"外挂"API 时按同一判据：能力属于哪个上游接口，就挂在那条接口上，不要挂在 `HTMLElement`
 上——那样每个元素都凭空多出它并不渲染的能力。
 
-### 类型化变体：`theme/`
+### 类型化变体：跟着组件走
 
 Web 组件只知道 `theme` 这个空格分隔的字符串属性，**变体的名字、含义和适用组件只在 Vaadin Flow 的
-Java API 里有定义**。所以 `theme/` 包照 Flow 的 `*Variant` 枚举生成：
+Java API 里有定义**。所以照 Flow 的 `*Variant` 枚举生成，落点是**组件自己的包**：
 
-- 两层：`ThemeVariant`（基类型，对应 Flow 的 `ThemeVariant` 接口）与每个组件的
-  `ButtonVariant` / `BadgeVariant` / `GridVariant` …（`sealed external interface : ThemeVariant`）。
+- 两层：`ThemeVariant`（基类型，对应 Flow 的 `ThemeVariant` 接口，留在 `theme/`）与每个组件的
+  `ButtonVariant` / `BadgeVariant` / `GridVariant` …（`sealed external interface : ThemeVariant`，
+  写在 `button/`、`badge/`、`grid/` 里）。变体属于组件，找 `ButtonVariant` 不该跳到另一个包。
 - 每个组件旁边一个常量对象 `ButtonVariants` / `GridVariants` …，常量名取枚举名去掉 `LUMO_` / `AURA_`
   前缀后转小驼峰（`LUMO_TERTIARY_INLINE` → `tertiaryInline`），值是 Flow 里的 `getVariantName()`。
 - 运行时变体**就是**那串文本（`ThemeVariant.name`），所以它能和任意自定义 token 混用：
   `addTheme(ButtonVariants.primary)` 与 `addTheme("my-token")` 写进同一个属性。
+- `ThemeVariant` 本身**不是** `sealed`：Kotlin 要求 sealed 类型的子类型与它同模块同包，而变体分散在
+  各组件的包里。闭包性由常量对象提供——一个组件的词汇表就是它那份 `XxxVariants`。
 - 上游 `@Deprecated` 的别名不生成（它们只为二进制兼容存在，且多个别名重复了同一个 token）。
   没有对应 wrapper 的组件（charts / crud / dashboard / grid-pro / map / rich-text-editor）也不生成，
   清单写在 `theme/ThemeVariant.kt` 的 KDoc 里。
 - 生成器：`python scripts/generate-theme-variants.py`，读上游克隆
-  `S:/workspace/github/vaadin/flow-components`（`--upstream` 可覆盖），`--check` 只报告差异。它同时
-  生成 `jsTest` 下的转写测试：每个常量断言一次 token，拼错会在这里挂而不是在浏览器里。
+  `S:/workspace/github/vaadin/flow-components`（`--upstream` 可覆盖），`--check` 只报告差异。它按
+  `abstract external class XxxElement` 建「元素 → 包」索引，找不到元素的变体跳过并打印理由
+  （Flow 的 `MessageListItem` 映射到这里的 `MessageElement`）。它同时生成
+  `jsTest/.../themablemixin/ThemeVariantsTest.kt`：每个常量断言一次 token，拼错会在这里挂而不是在浏览器里。
 - 手写文件不带生成标记（`generate-wrappers.mjs` 只删带标记的文件），所以新加组件变体后重跑两个脚本即可。
+
+### 类型化属性：`Attribute<T>` 扩展属性
+
+每个元素的属性不再是一串 `const val` 字符串，而是元素旁边的**顶层扩展属性**：
+
+```kotlin
+val CardElement.cardTitleAttr: Attribute<String>
+    get() = attribute("card-title")
+
+val CardElement.titleHeadingLevelAttr: Attribute<Int>
+    get() = intAttribute("title-heading-level")
+```
+
+- 用法：`card.cardTitleAttr.value = "x"`、`card.titleHeadingLevelAttr.valueOrNull`、
+  `button.disabledAttr.setOrClear(true)`、`layout.themeAttr.add("spacing")`。类型、断言、默认值都在
+  `ktjs-wrapper-kit` 的 `Attribute` 家族里，这里只声明「哪个元素、哪个名字、哪种类型」。
+- **不要包成 `object XxxAttributes`**：object 里的扩展属性只能在该 object 作用域内调用，
+  `ButtonAttributes.disabledAttr` 这种形式对外根本调不到。顶层属性可以直接 `import` 后用、
+  同名不同接收者（`AccordionPanelElement.disabledAttr` 与 `AccordionHeadingElement.disabledAttr`）也互不冲突。
+- 只有 `string` / `boolean` / `number`（整数字义）与空类型会生成；`Object`、数组、`HTMLElement`、
+  回调不是属性，不生成。整数语义的名字（`headingLevel`、`maxRows`、`columnWidth` …）走 `intAttribute`，
+  其余 `number` 走 `doubleAttribute`。
+- `theme` 是共享属性，不逐组件生成，统一用 `themable-mixin` 的 `themeAttr`。
 
 ### 类型映射与 `dynamic`
 
@@ -234,8 +263,9 @@ Gradle 9 / JDK 25。升级时注意 2.0 的插件 ID 是 `dev.detekt`，规则�
   会生成 `instanceof` 检查，而 Kotlin 类名在产物里被重命名，运行时报
   `ReferenceError: XxxElement is not defined`。拿到 JS 对象后要转成元素类时用 `unsafeCast<XxxElement>()`。
 - **上游没覆盖、或 wrapper 独有的部分必须补测**：`registerXxx()`、`createXxx {}`、`VaadinTagName`、
-  `XxxAttributes` / `XxxEvents` 常量、静态入口对象、mixin 类型归属、`...Property` 改名映射、
-  `JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
+  typed attribute 扩展属性（`createXxx().yyyAttr.name` 为 token 转写断言；不是属性的
+  `Object` / 回调成员没有对应断言，不要硬造）、`XxxEvents` 常量、静态入口对象、mixin 类型归属、
+  `...Property` 改名映射、`JsAny` / 联合类型边界、模块级导出与手写包。数量不少于上游同类用例。
 - **`js(...)` 的边界**：能用 Kotlin 类型安全表达的写法一律用类型安全写法；确实没有类型包装的（私有成员
   `_observer` / `$` / `__*`、内部的 debouncer / virtualizer、需要绕过组件内部流程的等待）该用 `js(...)`
   就用，不要为了「不碰私有状态」把用例整组丢掉——覆盖率的优先级高于形式洁癖。这类代码集中放在包内的

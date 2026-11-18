@@ -257,7 +257,6 @@ class BadgeTest {
     fun tagNameAndAttributeConstantsAreExposed() {
         val badge = document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.badge)
         assertEquals("vaadin-badge", badge.tagName.lowercase())
-        assertEquals("number", BadgeAttributes.number)
-        assertEquals("theme", BadgeAttributes.theme)
+        assertEquals("number", createBadge().numberAttr.name)
     }
 }

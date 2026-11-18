@@ -9,6 +9,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import io.github.shijianjs.ktjs.vaadin.attach
 import io.github.shijianjs.ktjs.vaadin.detachAll
+import io.github.shijianjs.ktjs.vaadin.themablemixin.themeAttr
 import io.github.shijianjs.ktjs.vaadin.nextFrame
 import web.dom.document
 import web.html.HTMLElement
@@ -275,9 +276,10 @@ class HorizontalLayoutTest {
     }
 
     @Test
-    fun themeAttributeIsExposedAsAConstant() {
+    fun themeAttributeIsATokenListOfTheMixin() {
         val layout = attach(createHorizontalLayout())
-        layout.setAttribute(HorizontalLayoutAttributes.theme, "spacing")
+        layout.themeAttr.add("spacing")
         assertEquals("spacing", layout.getAttribute("theme"))
+        assertTrue(layout.themeAttr.contains("spacing"))
     }
 }

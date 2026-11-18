@@ -108,7 +108,7 @@ class AppShell {
             navItems.forEach { (id, item) ->
                 val active = id == entry.id
                 item.classList.toggle(ClassName("nav__current"), active)
-                item.ariaCurrent = if (active) "page" else null
+                if (active) item.setAttribute("aria-current", "page") else item.removeAttribute("aria-current")
             }
             // Reveal the active route even when the user left its group collapsed.
             setGroupExpanded(entry.group.id, true)
@@ -160,22 +160,22 @@ class AppShell {
         val dark = Theme.isDark
         lightButton.withTheme(if (dark) "tertiary" else "primary")
         darkButton.withTheme(if (dark) "primary" else "tertiary")
-        lightButton.ariaPressed = if (dark) "false" else "true"
-        darkButton.ariaPressed = if (dark) "true" else "false"
+        lightButton.setAttribute("aria-pressed", if (dark) "false" else "true")
+        darkButton.setAttribute("aria-pressed", if (dark) "true" else "false")
     }
 
     private fun syncLanguageButtons() {
         val chinese = LanguageState.current == Language.ZH
         zhButton.withTheme(if (chinese) "primary" else "tertiary")
         enButton.withTheme(if (chinese) "tertiary" else "primary")
-        zhButton.ariaPressed = if (chinese) "true" else "false"
-        enButton.ariaPressed = if (chinese) "false" else "true"
+        zhButton.setAttribute("aria-pressed", if (chinese) "true" else "false")
+        enButton.setAttribute("aria-pressed", if (chinese) "false" else "true")
     }
 
     private fun setGroupExpanded(groupId: String, expanded: Boolean) {
         val navGroup = navGroups[groupId] ?: return
         navGroup.expanded = expanded
-        navGroup.toggle.ariaExpanded = if (expanded) "true" else "false"
+        navGroup.toggle.setAttribute("aria-expanded", if (expanded) "true" else "false")
         navGroup.list.setHidden(!expanded)
     }
 
@@ -200,7 +200,7 @@ class AppShell {
                 // `document.location.pathname` with the resolved path. A hash route always resolves
                 // to the same pathname, so every item would be "current". The shell therefore keeps
                 // navigation in its own hands and marks the active item with `nav__current`.
-                item.role = "link"
+                item.setAttribute("role", "link")
                 item.tabIndex = 0
                 item.clickEvent.addHandler { open(entry.id) }
                 item.listen(KEY_DOWN) { event ->

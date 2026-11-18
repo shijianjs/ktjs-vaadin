@@ -151,11 +151,10 @@ class OverlayTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-overlay", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.overlay).tagName.lowercase())
-        assertEquals("opened", OverlayAttributes.opened)
-        assertEquals("modeless", OverlayAttributes.modeless)
-        assertEquals("with-backdrop", OverlayAttributes.withBackdrop)
-        assertEquals("owner", OverlayAttributes.owner)
-        assertEquals("focus-trap", OverlayAttributes.focusTrap)
+        assertEquals("opened", createOverlay().openedAttr.name)
+        assertEquals("modeless", createOverlay().modelessAttr.name)
+        assertEquals("with-backdrop", createOverlay().withBackdropAttr.name)
+        assertEquals("focus-trap", createOverlay().focusTrapAttr.name)
     }
 
     @Test

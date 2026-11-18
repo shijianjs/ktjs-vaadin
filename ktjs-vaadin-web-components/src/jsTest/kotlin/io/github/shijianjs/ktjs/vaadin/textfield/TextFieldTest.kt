@@ -281,14 +281,13 @@ class TextFieldTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-text-field", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.textField).tagName.lowercase())
-        assertEquals("value", TextFieldAttributes.value)
-        assertEquals("label", TextFieldAttributes.label)
-        assertEquals("placeholder", TextFieldAttributes.placeholder)
-        assertEquals("pattern", TextFieldAttributes.pattern)
-        assertEquals("minlength", TextFieldAttributes.minlength)
-        assertEquals("maxlength", TextFieldAttributes.maxlength)
-        assertEquals("clear-button-visible", TextFieldAttributes.clearButtonVisible)
-        assertEquals("theme", TextFieldAttributes.theme)
+        assertEquals("value", createTextField().valueAttr.name)
+        assertEquals("label", createTextField().labelAttr.name)
+        assertEquals("placeholder", createTextField().placeholderAttr.name)
+        assertEquals("pattern", createTextField().patternAttr.name)
+        assertEquals("minlength", createTextField().minlengthAttr.name)
+        assertEquals("maxlength", createTextField().maxlengthAttr.name)
+        assertEquals("clear-button-visible", createTextField().clearButtonVisibleAttr.name)
     }
 
     @Test

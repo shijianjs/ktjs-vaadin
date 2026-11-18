@@ -648,10 +648,8 @@ class MessageInputTest {
             "vaadin-message-input",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.messageInput).tagName.lowercase(),
         )
-        assertEquals("value", MessageInputAttributes.value)
-        assertEquals("disabled", MessageInputAttributes.disabled)
-        assertEquals("i18n", MessageInputAttributes.i18n)
-        assertEquals("theme", MessageInputAttributes.theme)
+        assertEquals("value", createMessageInput().valueAttr.name)
+        assertEquals("disabled", createMessageInput().disabledAttr.name)
     }
 
     @Test

@@ -236,12 +236,10 @@ class CheckboxGroupTest {
             "vaadin-checkbox-group",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.checkboxGroup).tagName.lowercase(),
         )
-        assertEquals("label", CheckboxGroupAttributes.label)
-        assertEquals("value", CheckboxGroupAttributes.value)
-        assertEquals("disabled", CheckboxGroupAttributes.disabled)
-        assertEquals("readonly", CheckboxGroupAttributes.readonly)
-        assertEquals("required", CheckboxGroupAttributes.required)
-        assertEquals("theme", CheckboxGroupAttributes.theme)
+        assertEquals("label", createCheckboxGroup().labelAttr.name)
+        assertEquals("disabled", createCheckboxGroup().disabledAttr.name)
+        assertEquals("readonly", createCheckboxGroup().readonlyAttr.name)
+        assertEquals("required", createCheckboxGroup().requiredAttr.name)
     }
 
     @Test

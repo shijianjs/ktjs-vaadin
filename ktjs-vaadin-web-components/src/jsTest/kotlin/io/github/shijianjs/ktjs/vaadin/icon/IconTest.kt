@@ -191,13 +191,13 @@ class IconTest {
             "vaadin-iconset",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.iconset).tagName.lowercase(),
         )
-        assertEquals("icon", IconAttributes.icon)
-        assertEquals("src", IconAttributes.src)
-        assertEquals("symbol", IconAttributes.symbol)
-        assertEquals("char", IconAttributes.char)
-        assertEquals("font-family", IconAttributes.fontFamily)
-        assertEquals("ligature", IconAttributes.ligature)
-        assertEquals("size", IconAttributes.size)
+        assertEquals("icon", createIcon().iconAttr.name)
+        assertEquals("src", createIcon().srcAttr.name)
+        assertEquals("symbol", createIcon().symbolAttr.name)
+        assertEquals("char", createIcon().charAttr.name)
+        assertEquals("font-family", createIcon().fontFamilyAttr.name)
+        assertEquals("ligature", createIcon().ligatureAttr.name)
+        assertEquals("size", createIcon().sizeAttr.name)
     }
 
     @Test

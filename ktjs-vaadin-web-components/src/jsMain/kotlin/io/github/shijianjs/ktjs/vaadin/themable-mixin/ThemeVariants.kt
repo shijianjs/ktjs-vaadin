@@ -1,5 +1,7 @@
 package io.github.shijianjs.ktjs.vaadin.themablemixin
 
+import io.github.shijianjs.ktjs.dom.attribute.TokenListAttribute
+import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
 import io.github.shijianjs.ktjs.vaadin.theme.ThemeVariant
 import io.github.shijianjs.ktjs.vaadin.theme.name
 import js.reflect.unsafeCast
@@ -38,6 +40,18 @@ var ThemePropertyMixin.themes: List<String>
 
 /** Whether [variant] is part of the current theme. */
 fun ThemePropertyMixin.hasTheme(variant: String): Boolean = variant in themes
+
+/**
+ * The `theme` attribute as a [TokenListAttribute]: the same space-separated list [themes] reads, with
+ * `add` / `remove` / `toggle` / `contains` on the attribute itself.
+ *
+ * The functions below are the shorthand for the common cases; this is the raw accessor for code that
+ * wants the attribute object — one `observe` subscription, a generic shell writing theme tokens, or
+ * passing it to a helper that takes an `Attribute`. It is declared on the mixin, not on `HTMLElement`,
+ * because only implementations render the attribute.
+ */
+val ThemePropertyMixin.themeAttr: TokenListAttribute
+    get() = host.tokenListAttribute(THEME)
 
 /** Whether a typed [variant] is part of the current theme. */
 fun ThemePropertyMixin.hasTheme(variant: ThemeVariant): Boolean = variant.name in themes

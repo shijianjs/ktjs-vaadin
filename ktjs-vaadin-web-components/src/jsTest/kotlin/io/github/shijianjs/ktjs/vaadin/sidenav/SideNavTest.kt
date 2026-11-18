@@ -215,16 +215,15 @@ class SideNavTest {
             "vaadin-side-nav-item",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.sideNavItem).tagName.lowercase(),
         )
-        assertEquals("collapsed", SideNavAttributes.collapsed)
-        assertEquals("collapsible", SideNavAttributes.collapsible)
-        assertEquals("no-auto-expand", SideNavAttributes.noAutoExpand)
-        assertEquals("location", SideNavAttributes.location)
-        assertEquals("path", SideNavItemAttributes.path)
-        assertEquals("expanded", SideNavItemAttributes.expanded)
-        assertEquals("current", SideNavItemAttributes.current)
-        assertEquals("match-nested", SideNavItemAttributes.matchNested)
-        assertEquals("router-ignore", SideNavItemAttributes.routerIgnore)
-        assertEquals("target", SideNavItemAttributes.target)
+        assertEquals("collapsed", createSideNav().collapsedAttr.name)
+        assertEquals("collapsible", createSideNav().collapsibleAttr.name)
+        assertEquals("no-auto-expand", createSideNav().noAutoExpandAttr.name)
+        assertEquals("path", createSideNavItem().pathAttr.name)
+        assertEquals("expanded", createSideNavItem().expandedAttr.name)
+        assertEquals("current", createSideNavItem().currentAttr.name)
+        assertEquals("match-nested", createSideNavItem().matchNestedAttr.name)
+        assertEquals("router-ignore", createSideNavItem().routerIgnoreAttr.name)
+        assertEquals("target", createSideNavItem().targetAttr.name)
     }
 
     @Test

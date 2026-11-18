@@ -151,11 +151,11 @@ class DatePickerTest {
             "vaadin-date-picker",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.datePicker).tagName.lowercase(),
         )
-        assertEquals("min", DatePickerAttributes.min)
-        assertEquals("max", DatePickerAttributes.max)
-        assertEquals("opened", DatePickerAttributes.opened)
-        assertEquals("auto-open-disabled", DatePickerAttributes.autoOpenDisabled)
-        assertEquals("initial-position", DatePickerAttributes.initialPosition)
+        assertEquals("min", createDatePicker().minAttr.name)
+        assertEquals("max", createDatePicker().maxAttr.name)
+        assertEquals("opened", createDatePicker().openedAttr.name)
+        assertEquals("auto-open-disabled", createDatePicker().autoOpenDisabledAttr.name)
+        assertEquals("initial-position", createDatePicker().initialPositionAttr.name)
     }
 
     @Test

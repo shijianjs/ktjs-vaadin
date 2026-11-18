@@ -220,13 +220,11 @@ class AvatarTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-avatar", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.avatar).tagName.lowercase())
-        assertEquals("abbr", AvatarAttributes.abbr)
-        assertEquals("img", AvatarAttributes.img)
-        assertEquals("name", AvatarAttributes.name)
-        assertEquals("color-index", AvatarAttributes.colorIndex)
-        assertEquals("with-tooltip", AvatarAttributes.withTooltip)
-        assertEquals("i18n", AvatarAttributes.i18n)
-        assertEquals("theme", AvatarAttributes.theme)
+        assertEquals("abbr", createAvatar().abbrAttr.name)
+        assertEquals("img", createAvatar().imgAttr.name)
+        assertEquals("name", createAvatar().nameAttr.name)
+        assertEquals("color-index", createAvatar().colorIndexAttr.name)
+        assertEquals("with-tooltip", createAvatar().withTooltipAttr.name)
     }
 
     @Test

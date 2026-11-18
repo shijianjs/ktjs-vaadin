@@ -108,10 +108,10 @@ class EmailFieldTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-email-field", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.emailField).tagName.lowercase())
-        assertEquals("value", EmailFieldAttributes.value)
-        assertEquals("label", EmailFieldAttributes.label)
-        assertEquals("pattern", EmailFieldAttributes.pattern)
-        assertEquals("inputmode", EmailFieldAttributes.inputmode)
+        assertEquals("value", createEmailField().valueAttr.name)
+        assertEquals("label", createEmailField().labelAttr.name)
+        assertEquals("pattern", createEmailField().patternAttr.name)
+        assertEquals("inputmode", createEmailField().inputmodeAttr.name)
     }
 
     @Test

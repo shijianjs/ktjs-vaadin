@@ -157,9 +157,9 @@ class PasswordFieldTest {
             "vaadin-password-field",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.passwordField).tagName.lowercase(),
         )
-        assertEquals("password-visible", PasswordFieldAttributes.passwordVisible)
-        assertEquals("reveal-button-hidden", PasswordFieldAttributes.revealButtonHidden)
-        assertEquals("value", PasswordFieldAttributes.value)
+        assertEquals("password-visible", createPasswordField().passwordVisibleAttr.name)
+        assertEquals("reveal-button-hidden", createPasswordField().revealButtonHiddenAttr.name)
+        assertEquals("value", createPasswordField().valueAttr.name)
     }
 
     @Test

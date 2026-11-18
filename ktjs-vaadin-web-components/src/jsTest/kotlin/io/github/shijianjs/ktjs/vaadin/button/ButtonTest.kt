@@ -134,8 +134,7 @@ class ButtonTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-button", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.button).tagName.lowercase())
-        assertEquals("disabled", ButtonAttributes.disabled)
-        assertEquals("theme", ButtonAttributes.theme)
+        assertEquals("disabled", createButton().disabledAttr.name)
     }
 
     @Test

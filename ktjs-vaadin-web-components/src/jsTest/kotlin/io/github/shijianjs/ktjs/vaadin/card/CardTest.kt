@@ -202,9 +202,8 @@ class CardTest {
     fun tagNameAndAttributeConstantsAreExposed() {
         val card = document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.card)
         assertEquals("vaadin-card", card.tagName.lowercase())
-        assertEquals("card-title", CardAttributes.cardTitle)
-        assertEquals("title-heading-level", CardAttributes.titleHeadingLevel)
-        assertEquals("theme", CardAttributes.theme)
+        assertEquals("card-title", createCard().cardTitleAttr.name)
+        assertEquals("title-heading-level", createCard().titleHeadingLevelAttr.name)
     }
 
     @Test

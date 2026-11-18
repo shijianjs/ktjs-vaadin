@@ -209,9 +209,8 @@ class MarkdownTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-markdown", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.markdown).tagName.lowercase())
-        assertEquals("content", MarkdownAttributes.content)
-        assertEquals("line-breaks", MarkdownAttributes.lineBreaks)
-        assertEquals("theme", MarkdownAttributes.theme)
+        assertEquals("content", createMarkdown().contentAttr.name)
+        assertEquals("line-breaks", createMarkdown().lineBreaksAttr.name)
     }
 
     @Test

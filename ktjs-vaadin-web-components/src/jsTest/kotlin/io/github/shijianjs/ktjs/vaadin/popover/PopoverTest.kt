@@ -151,13 +151,12 @@ class PopoverTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-popover", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.popover).tagName.lowercase())
-        assertEquals("opened", PopoverAttributes.opened)
-        assertEquals("position", PopoverAttributes.position)
-        assertEquals("trigger", PopoverAttributes.trigger)
-        assertEquals("modal", PopoverAttributes.modal)
-        assertEquals("for", PopoverAttributes.`for`)
-        assertEquals("no-close-on-esc", PopoverAttributes.noCloseOnEsc)
-        assertEquals("no-close-on-outside-click", PopoverAttributes.noCloseOnOutsideClick)
+        assertEquals("opened", createPopover().openedAttr.name)
+        assertEquals("position", createPopover().positionAttr.name)
+        assertEquals("modal", createPopover().modalAttr.name)
+        assertEquals("for", createPopover().forAttr.name)
+        assertEquals("no-close-on-esc", createPopover().noCloseOnEscAttr.name)
+        assertEquals("no-close-on-outside-click", createPopover().noCloseOnOutsideClickAttr.name)
     }
 
     @Test

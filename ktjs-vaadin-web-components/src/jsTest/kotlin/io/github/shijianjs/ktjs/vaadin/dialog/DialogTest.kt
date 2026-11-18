@@ -215,15 +215,13 @@ class DialogTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-dialog", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.dialog).tagName.lowercase())
-        assertEquals("opened", DialogAttributes.opened)
-        assertEquals("header-title", DialogAttributes.headerTitle)
-        assertEquals("header-renderer", DialogAttributes.headerRenderer)
-        assertEquals("footer-renderer", DialogAttributes.footerRenderer)
-        assertEquals("modeless", DialogAttributes.modeless)
-        assertEquals("draggable", DialogAttributes.draggable)
-        assertEquals("resizable", DialogAttributes.resizable)
-        assertEquals("no-close-on-esc", DialogAttributes.noCloseOnEsc)
-        assertEquals("no-close-on-outside-click", DialogAttributes.noCloseOnOutsideClick)
+        assertEquals("opened", createDialog().openedAttr.name)
+        assertEquals("header-title", createDialog().headerTitleAttr.name)
+        assertEquals("modeless", createDialog().modelessAttr.name)
+        assertEquals("draggable", createDialog().draggableAttr.name)
+        assertEquals("resizable", createDialog().resizableAttr.name)
+        assertEquals("no-close-on-esc", createDialog().noCloseOnEscAttr.name)
+        assertEquals("no-close-on-outside-click", createDialog().noCloseOnOutsideClickAttr.name)
     }
 
     @Test

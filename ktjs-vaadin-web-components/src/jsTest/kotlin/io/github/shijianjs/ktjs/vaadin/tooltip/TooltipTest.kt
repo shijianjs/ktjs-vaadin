@@ -154,15 +154,15 @@ class TooltipTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-tooltip", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.tooltip).tagName.lowercase())
-        assertEquals("for", TooltipAttributes.`for`)
-        assertEquals("text", TooltipAttributes.text)
-        assertEquals("opened", TooltipAttributes.opened)
-        assertEquals("position", TooltipAttributes.position)
-        assertEquals("manual", TooltipAttributes.manual)
-        assertEquals("markdown", TooltipAttributes.markdown)
-        assertEquals("hover-delay", TooltipAttributes.hoverDelay)
-        assertEquals("focus-delay", TooltipAttributes.focusDelay)
-        assertEquals("hide-delay", TooltipAttributes.hideDelay)
+        assertEquals("for", createTooltip().forAttr.name)
+        assertEquals("text", createTooltip().textAttr.name)
+        assertEquals("opened", createTooltip().openedAttr.name)
+        assertEquals("position", createTooltip().positionAttr.name)
+        assertEquals("manual", createTooltip().manualAttr.name)
+        assertEquals("markdown", createTooltip().markdownAttr.name)
+        assertEquals("hover-delay", createTooltip().hoverDelayAttr.name)
+        assertEquals("focus-delay", createTooltip().focusDelayAttr.name)
+        assertEquals("hide-delay", createTooltip().hideDelayAttr.name)
     }
 
     @Test

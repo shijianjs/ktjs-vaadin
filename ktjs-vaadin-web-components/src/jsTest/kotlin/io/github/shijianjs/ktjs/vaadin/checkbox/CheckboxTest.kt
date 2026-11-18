@@ -208,13 +208,12 @@ class CheckboxTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-checkbox", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.checkbox).tagName.lowercase())
-        assertEquals("checked", CheckboxAttributes.checked)
-        assertEquals("indeterminate", CheckboxAttributes.indeterminate)
-        assertEquals("label", CheckboxAttributes.label)
-        assertEquals("name", CheckboxAttributes.name)
-        assertEquals("readonly", CheckboxAttributes.readonly)
-        assertEquals("required", CheckboxAttributes.required)
-        assertEquals("theme", CheckboxAttributes.theme)
+        assertEquals("checked", createCheckbox().checkedAttr.name)
+        assertEquals("indeterminate", createCheckbox().indeterminateAttr.name)
+        assertEquals("label", createCheckbox().labelAttr.name)
+        assertEquals("name", createCheckbox().nameAttr.name)
+        assertEquals("readonly", createCheckbox().readonlyAttr.name)
+        assertEquals("required", createCheckbox().requiredAttr.name)
     }
 
     @Test

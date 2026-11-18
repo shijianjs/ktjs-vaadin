@@ -171,11 +171,11 @@ class DateTimePickerTest {
             "vaadin-date-time-picker",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.dateTimePicker).tagName.lowercase(),
         )
-        assertEquals("date-placeholder", DateTimePickerAttributes.datePlaceholder)
-        assertEquals("time-placeholder", DateTimePickerAttributes.timePlaceholder)
-        assertEquals("default-time", DateTimePickerAttributes.defaultTime)
-        assertEquals("min", DateTimePickerAttributes.min)
-        assertEquals("max", DateTimePickerAttributes.max)
+        assertEquals("date-placeholder", createDateTimePicker().datePlaceholderAttr.name)
+        assertEquals("time-placeholder", createDateTimePicker().timePlaceholderAttr.name)
+        assertEquals("default-time", createDateTimePicker().defaultTimeAttr.name)
+        assertEquals("min", createDateTimePicker().minAttr.name)
+        assertEquals("max", createDateTimePicker().maxAttr.name)
     }
 
     @Test

@@ -134,10 +134,9 @@ class MultiSelectComboBoxTest {
             "vaadin-multi-select-combo-box",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.multiSelectComboBox).tagName.lowercase(),
         )
-        assertEquals("selected-items", MultiSelectComboBoxAttributes.selectedItems)
-        assertEquals("selected-items-on-top", MultiSelectComboBoxAttributes.selectedItemsOnTop)
-        assertEquals("collapse-chips", MultiSelectComboBoxAttributes.collapseChips)
-        assertEquals("opened", MultiSelectComboBoxAttributes.opened)
+        assertEquals("selected-items-on-top", createMultiSelectComboBox().selectedItemsOnTopAttr.name)
+        assertEquals("collapse-chips", createMultiSelectComboBox().collapseChipsAttr.name)
+        assertEquals("opened", createMultiSelectComboBox().openedAttr.name)
     }
 
     @Test

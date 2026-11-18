@@ -65,31 +65,3 @@ fun createVirtualList(configure: VirtualListElement.() -> Unit = {}): VirtualLis
     registerVirtualList()
     return web.dom.document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.virtualList).apply(configure)
 }
-
-/** Attribute names of `<vaadin-virtual-list>`, for use with `setAttribute`. */
-object VirtualListAttributes {
-    /**
-     * A function that generates accessible names for virtual list items.
-     * The function gets the item as an argument and the
-     * return value should be a string representing that item. The
-     * result gets applied to the corresponding virtual list child element
-     * as an `aria-label` attribute.
-     */
-    const val itemAccessibleNameGenerator: String = "item-accessible-name-generator"
-    /**
-     * Custom function for rendering the content of every item.
-     * Receives three arguments:
-     *
-     * - `root` The render target element representing one item at a time.
-     * - `virtualList` The reference to the `<vaadin-virtual-list>` element.
-     * - `model` The object with the properties related with the rendered
-     *   item, contains:
-     *   - `model.index` The index of the rendered item.
-     *   - `model.item` The item.
-     */
-    const val renderer: String = "renderer"
-    /**
-     * The theme variants to apply to the component.
-     */
-    const val theme: String = "theme"
-}

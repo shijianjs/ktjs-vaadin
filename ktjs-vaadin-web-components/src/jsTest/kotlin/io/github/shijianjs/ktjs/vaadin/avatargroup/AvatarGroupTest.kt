@@ -680,9 +680,7 @@ class AvatarGroupTest {
             "vaadin-avatar-group",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.avatarGroup).tagName.lowercase(),
         )
-        assertEquals("max-items-visible", AvatarGroupAttributes.maxItemsVisible)
-        assertEquals("i18n", AvatarGroupAttributes.i18n)
-        assertEquals("theme", AvatarGroupAttributes.theme)
+        assertEquals("max-items-visible", createAvatarGroup().maxItemsVisibleAttr.name)
     }
 
     @Test

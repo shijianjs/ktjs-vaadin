@@ -148,10 +148,10 @@ class UploadTest {
             "vaadin-upload-drop-zone",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.uploadDropZone).tagName.lowercase(),
         )
-        assertEquals("accept", UploadAttributes.accept)
-        assertEquals("max-files", UploadAttributes.maxFiles)
-        assertEquals("max-files-reached", UploadAttributes.maxFilesReached)
-        assertEquals("capture", UploadAttributes.capture)
+        assertEquals("accept", createUpload().acceptAttr.name)
+        assertEquals("max-files", createUpload().maxFilesAttr.name)
+        assertEquals("max-files-reached", createUpload().maxFilesReachedAttr.name)
+        assertEquals("capture", createUpload().captureAttr.name)
     }
 
     @Test

@@ -116,9 +116,8 @@ class SwitchTest {
     fun tagNameAndAttributeConstantsAreExposed() {
         val switch = document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.switch)
         assertEquals("vaadin-switch", switch.tagName.lowercase())
-        assertEquals("checked", SwitchAttributes.checked)
-        assertEquals("label", SwitchAttributes.label)
-        assertEquals("theme", SwitchAttributes.theme)
+        assertEquals("checked", createSwitch().checkedAttr.name)
+        assertEquals("label", createSwitch().labelAttr.name)
     }
 
     @Test

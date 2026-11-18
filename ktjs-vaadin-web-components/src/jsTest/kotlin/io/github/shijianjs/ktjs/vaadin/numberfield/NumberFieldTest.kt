@@ -161,11 +161,11 @@ class NumberFieldTest {
     @Test
     fun tagNameAndAttributeConstantsAreExposed() {
         assertEquals("vaadin-number-field", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.numberField).tagName.lowercase())
-        assertEquals("min", NumberFieldAttributes.min)
-        assertEquals("max", NumberFieldAttributes.max)
-        assertEquals("step", NumberFieldAttributes.step)
-        assertEquals("step-buttons-visible", NumberFieldAttributes.stepButtonsVisible)
-        assertEquals("value", NumberFieldAttributes.value)
+        assertEquals("min", createNumberField().minAttr.name)
+        assertEquals("max", createNumberField().maxAttr.name)
+        assertEquals("step", createNumberField().stepAttr.name)
+        assertEquals("step-buttons-visible", createNumberField().stepButtonsVisibleAttr.name)
+        assertEquals("value", createNumberField().valueAttr.name)
     }
 
     @Test

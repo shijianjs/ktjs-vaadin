@@ -154,14 +154,13 @@ class MessageListTest {
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.messageList).tagName.lowercase(),
         )
         assertEquals("vaadin-message", document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.message).tagName.lowercase())
-        assertEquals("user-name", MessageAttributes.userName)
-        assertEquals("user-abbr", MessageAttributes.userAbbr)
-        assertEquals("user-img", MessageAttributes.userImg)
-        assertEquals("user-color-index", MessageAttributes.userColorIndex)
-        assertEquals("time", MessageAttributes.time)
-        assertEquals("items", MessageListAttributes.items)
-        assertEquals("markdown", MessageListAttributes.markdown)
-        assertEquals("announce-messages", MessageListAttributes.announceMessages)
+        assertEquals("user-name", createMessage().userNameAttr.name)
+        assertEquals("user-abbr", createMessage().userAbbrAttr.name)
+        assertEquals("user-img", createMessage().userImgAttr.name)
+        assertEquals("user-color-index", createMessage().userColorIndexAttr.name)
+        assertEquals("time", createMessage().timeAttr.name)
+        assertEquals("markdown", createMessageList().markdownAttr.name)
+        assertEquals("announce-messages", createMessageList().announceMessagesAttr.name)
     }
 
     @Test

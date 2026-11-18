@@ -271,15 +271,14 @@ class AccordionTest {
             "vaadin-accordion-heading",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.accordionHeading).tagName.lowercase(),
         )
-        assertEquals("heading-level", AccordionAttributes.headingLevel)
-        assertEquals("opened", AccordionAttributes.opened)
-        assertEquals("theme", AccordionAttributes.theme)
-        assertEquals("summary", AccordionPanelAttributes.summary)
-        assertEquals("opened", AccordionPanelAttributes.opened)
-        assertEquals("disabled", AccordionPanelAttributes.disabled)
-        assertEquals("autofocus", AccordionPanelAttributes.autofocus)
-        assertEquals("opened", AccordionHeadingAttributes.opened)
-        assertEquals("disabled", AccordionHeadingAttributes.disabled)
+        assertEquals("heading-level", createAccordion().headingLevelAttr.name)
+        assertEquals("opened", createAccordion().openedAttr.name)
+        assertEquals("summary", createAccordionPanel().summaryAttr.name)
+        assertEquals("opened", createAccordionPanel().openedAttr.name)
+        assertEquals("disabled", createAccordionPanel().disabledAttr.name)
+        assertEquals("autofocus", createAccordionPanel().autofocusAttr.name)
+        assertEquals("opened", createAccordionHeading().openedAttr.name)
+        assertEquals("disabled", createAccordionHeading().disabledAttr.name)
     }
 
     @Test

@@ -241,11 +241,11 @@ class AppLayoutTest {
             "vaadin-drawer-toggle",
             document.createElement(io.github.shijianjs.ktjs.vaadin.VaadinTagName.drawerToggle).tagName.lowercase(),
         )
-        assertEquals("drawer-opened", AppLayoutAttributes.drawerOpened)
-        assertEquals("primary-section", AppLayoutAttributes.primarySection)
-        assertEquals("close-drawer-on", AppLayoutAttributes.closeDrawerOn)
-        assertEquals("overlay", AppLayoutAttributes.overlay)
-        assertEquals("aria-label", DrawerToggleAttributes.ariaLabel)
+        assertEquals("drawer-opened", createAppLayout().drawerOpenedAttr.name)
+        assertEquals("primary-section", createAppLayout().primarySectionAttr.name)
+        assertEquals("close-drawer-on", createAppLayout().closeDrawerOnAttr.name)
+        assertEquals("overlay", createAppLayout().overlayAttr.name)
+        assertEquals("aria-label", createDrawerToggle().ariaLabelAttr.name)
     }
 
     @Test
