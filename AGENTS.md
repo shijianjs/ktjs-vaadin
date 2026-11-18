@@ -51,6 +51,17 @@ Kotlin/JS wrapper。
 - 修改生成器后执行 `node scripts/generate-wrappers.mjs`，然后编译并跑 `jsBrowserTest`；升级上游版本时
   先 `./gradlew kotlinNpmInstall` 让 manifest 更新到 `build/js/node_modules`。
 
+### 手写扩展：`theme` 的增删改查
+
+`theme` 属性只有实现了 `ThemePropertyMixin` 的组件才渲染（button、layout、card、field、overlay…），
+所以读写不挂在 `HTMLElement` 上，而是挂在标记接口本身：`themable-mixin/ThemeVariants.kt` 提供
+`themes`（读 / 整体替换）、`hasTheme`、`setTheme(vararg)`、`addTheme(vararg)`、`removeTheme(vararg)`。
+上游 `ThemePropertyMixin` 只**观察** `theme` 属性、把它传进 shadow DOM 的私有 `_theme`，没有公开属性
+可赋值 —— 所以这里操作的是属性：空格分隔、去重、空值即 `removeAttribute`。
+
+后续加同类"外挂"API 时按同一判据：能力属于哪个上游接口，就挂在那条接口上，不要挂在 `HTMLElement`
+上——那样每个元素都凭空多出它并不渲染的能力。
+
 ### 类型映射与 `dynamic`
 
 上游类型到 Kotlin 类型的完整对照与写法整理在技能 `ktjs-type-mapping`，本仓库已安装到
