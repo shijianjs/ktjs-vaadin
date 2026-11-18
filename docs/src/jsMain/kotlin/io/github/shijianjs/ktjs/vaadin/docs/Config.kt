@@ -89,7 +89,10 @@ fun docusaurusConfig(): Config = unsafeJso {
     // `d3-transition` is imported for its side effect, not its exports: it is what puts `transition()`
     // on d3 selections, and mermaid calls it for the flowchart node tooltips. The path is relative to
     // the site directory, which the Gradle plugin fixes at `<root>/build/js/docusaurus/<module>`.
-    clientModules = arrayOf("../../node_modules/d3-transition")
+    clientModules = arrayOf(
+        "./client-module.mjs",
+        "../../node_modules/d3-transition",
+    )
 
     // English is the source language; every page under `src/jsMain/resources` has a translation in
     // `i18n/zh-Hans/`, in the directory owned by the plugin that serves it.
