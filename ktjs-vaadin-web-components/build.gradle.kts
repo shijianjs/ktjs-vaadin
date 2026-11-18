@@ -31,7 +31,7 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
-            api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.0")
+            api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.1")
             // Typed `Attribute` objects (`ButtonElement.disabledAttr`): the generated `XxxAttributes`
             // objects expose `Attribute<T>` in the public surface, so this is `api`, not `implementation`.
             api("io.github.shijianjs:ktjs-wrapper-kit:${property("ktjs-wrapper-kit.version")}")
