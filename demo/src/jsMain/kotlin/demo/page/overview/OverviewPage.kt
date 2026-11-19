@@ -35,7 +35,19 @@ import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.dom.css.dsl.CssSelector
+import io.github.shijianjs.ktjs.dom.css.dsl.attributeSelector
+import io.github.shijianjs.ktjs.dom.css.dsl.child
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.compound
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudoClass
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
+import web.cssom.HtmlAttributes
+import web.cssom.number
 import web.cssom.Color
 import web.cssom.CSSStyleSheet
 import web.cssom.TextDecorationLine
@@ -106,6 +118,9 @@ private val overviewTexts: Translations<OverviewTexts> = texts(
 /** The class the index cards are found by in tests; it carries no style of its own. */
 private val COMPONENT_CARD: ClassName = ClassName("component-card")
 
+/** The condition the filter toggles, written as a selector instead of as text. */
+private val NOT_HIDDEN: CssSelector = pseudo(pseudoClass("not"), attributeSelector(HtmlAttributes.hidden))
+
 /**
  * What the index needs from the wrapper: an `<a>` around a card must stop painting text the way a
  * link paints it, and must pass the row's height through to the card inside it.
@@ -115,18 +130,18 @@ private val INDEX_SHEET: CSSStyleSheet = cssSheet {
     // the filter sets - the same trap as an inline display. `flex` rather than `block`: the link is
     // the grid item, so the row stretches it to the tallest card, and a flex box carries that height
     // into the card instead of leaving it at its own content height.
-    ".component-card:not([hidden])" {
+    compound(className(COMPONENT_CARD), NOT_HIDDEN).invoke {
         display = Display.flex
     }
 
-    // cssom has no numeric `flex` shorthand; the card takes the whole cell width and the height it
-    // was stretched to. Working in `zh` (two lines) and `en` (three lines) in the same row depends on
-    // exactly this, since the tallest card decides the row.
-    ".component-card > vaadin-card" {
-        flex = js("""("1")""")
+    // The card takes the whole cell width and the height it was stretched to. A `zh` summary (two
+    // lines) and an `en` one (three lines) in the same row only line up because the tallest card
+    // decides the row.
+    className(COMPONENT_CARD).child(tag(VaadinTagName.card)).invoke {
+        flexGrow = number(1.0)
     }
 
-    ".component-card" {
+    className(COMPONENT_CARD).invoke {
         color = Color("inherit")
         // cssom models `text-decoration-line` without a `none` value (it only has the drawing ones),
         // so the keyword goes in as a cast - the only hand-written value in this file.
