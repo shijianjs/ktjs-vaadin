@@ -47,6 +47,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.tag
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.HtmlAttributes
+import web.cssom.None
 import web.cssom.number
 import web.cssom.Color
 import web.cssom.CSSStyleSheet
@@ -143,9 +144,9 @@ private val INDEX_SHEET: CSSStyleSheet = cssSheet {
 
     className(COMPONENT_CARD).invoke {
         color = Color("inherit")
-        // cssom models `text-decoration-line` without a `none` value (it only has the drawing ones),
-        // so the keyword goes in as a cast - the only hand-written value in this file.
-        textDecorationLine = js("""("none")""")
+        // `TextDecorationLine` has a `None` subtype (`None.none` is the `none` keyword), so the
+        // declaration stays typed - no text goes into this sheet.
+        textDecorationLine = None.none
     }
 }
 
