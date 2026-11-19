@@ -27,8 +27,14 @@ const val API_ROOT = "api/ktjs-vaadin-web-components"
 /** Top-bar entry point of the API reference. */
 const val API_DOCS_URL = "$API_ROOT/index.html"
 
-/** A sidebar group. [id] is stable across languages; [label] is resolved for display. */
-class Group(val id: String, private val zh: String, private val en: String) {
+/**
+ * A sidebar group. [id] is stable across languages; [label] is resolved for display.
+ *
+ * [icon] is an Iconify name. It marks the section, not the row, so it appears twice: before the
+ * group in the drawer, and before the group's heading on the component index. Keeping it here means
+ * both places read it from one declaration instead of each carrying its own table.
+ */
+class Group(val id: String, private val zh: String, private val en: String, val icon: String) {
     val label: String
         get() = tr(zh, en)
 
@@ -38,16 +44,16 @@ class Group(val id: String, private val zh: String, private val en: String) {
 
 /** Sidebar groups, in navigation order. */
 object Groups {
-    val OVERVIEW = Group("overview", "概览", "Overview")
-    val BUTTONS = Group("buttons", "按钮与操作", "Buttons & actions")
-    val FIELDS = Group("fields", "输入字段", "Input fields")
-    val SELECTION = Group("selection", "选择控件", "Selection")
-    val PICKERS = Group("pickers", "日期与时间", "Date & time")
-    val OVERLAYS = Group("overlays", "浮层与反馈", "Overlays & feedback")
-    val DATA = Group("data", "数据展示", "Data display")
-    val LAYOUT = Group("layout", "布局与导航", "Layout & navigation")
-    val DISPLAY = Group("display", "基础展示", "Display")
-    val THEMING = Group("theming", "主题与样式", "Theming & styling")
+    val OVERVIEW = Group("overview", "概览", "Overview", "lucide:layers")
+    val BUTTONS = Group("buttons", "按钮与操作", "Buttons & actions", "lucide:mouse-pointer-click")
+    val FIELDS = Group("fields", "输入字段", "Input fields", "lucide:text-cursor-input")
+    val SELECTION = Group("selection", "选择控件", "Selection", "lucide:check-square")
+    val PICKERS = Group("pickers", "日期与时间", "Date & time", "lucide:calendar")
+    val OVERLAYS = Group("overlays", "浮层与反馈", "Overlays & feedback", "lucide:panels-top-left")
+    val DATA = Group("data", "数据展示", "Data display", "lucide:table")
+    val LAYOUT = Group("layout", "布局与导航", "Layout & navigation", "lucide:layout-dashboard")
+    val DISPLAY = Group("display", "基础展示", "Display", "lucide:image")
+    val THEMING = Group("theming", "主题与样式", "Theming & styling", "lucide:palette")
 }
 
 /**

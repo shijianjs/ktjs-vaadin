@@ -6,21 +6,6 @@ import io.github.shijianjs.ktjs.demo.nav.DemoMenu
 import io.github.shijianjs.ktjs.demo.nav.Entry
 import io.github.shijianjs.ktjs.demo.nav.Group
 
-/** One icon per catalog group; the drawer shows it on the group row and on every page under it. */
-private val GROUP_ICONS: Map<String, String> = mapOf(
-    "overview" to "lucide:layers",
-    "buttons" to "lucide:mouse-pointer-click",
-    "fields" to "lucide:text-cursor-input",
-    "selection" to "lucide:check-square",
-    "pickers" to "lucide:calendar",
-    "overlays" to "lucide:panels-top-left",
-    "data" to "lucide:table",
-    "upload" to "lucide:upload",
-    "layout" to "lucide:layout-dashboard",
-    "display" to "lucide:image",
-    "theming" to "lucide:palette",
-)
-
 /** The wrapper's version, shown under the site name: the npm packages it wraps. */
 const val SITE_VERSION: String = "Vaadin 25"
 
@@ -47,7 +32,7 @@ const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
  */
 fun siteMenu(): DemoMenu {
     val groups: Map<String, Group> = catalog.map { it.group.id }.distinct()
-        .associateWith { id -> Group(id, GROUP_ICONS[id]) }
+        .associateWith { id -> Group(id, catalog.first { it.group.id == id }.group.icon) }
 
     return DemoMenu(
         catalog.map { entry ->

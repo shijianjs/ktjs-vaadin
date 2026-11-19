@@ -19,22 +19,24 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.demo.page.anchor
+import io.github.shijianjs.ktjs.demo.page.grid
 import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.icon
 import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.page.row
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
-import io.github.shijianjs.ktjs.demo.style.Palette
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.card.CardElement
+import io.github.shijianjs.ktjs.vaadin.lumoutility.LumoUtility
+import io.github.shijianjs.ktjs.vaadin.card.CardVariants
+import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
-import web.cssom.Border
-import web.cssom.Display
-import web.cssom.FlexDirection
-import web.cssom.LineStyle
-import web.cssom.Padding
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.cssom.px
+import web.dom.Node
 import web.html.HTMLAnchorElement
 import web.html.HTMLElement
 import web.html.HtmlTagName
@@ -98,8 +100,20 @@ private val overviewTexts: Translations<OverviewTexts> = texts(
 
 private fun languageOf(lang: Lang): Language = if (lang == Langs.EN) Language.EN else Language.ZH
 
-/** One index entry: the link, its name and its summary, kept together so a switch rewrites both. */
-private class Card(val entry: CatalogEntry, val link: HTMLAnchorElement, val name: HTMLElement, val summary: HTMLElement)
+/** The card, the link in its title slot and the two nodes a language switch rewrites. */
+private class Card(
+    val entry: CatalogEntry,
+    val node: CardElement,
+    val link: HTMLAnchorElement,
+    val name: HTMLElement,
+    val summary: HTMLElement,
+)
+
+/**
+ * One section of the index: the heading (whose mark and text are separate nodes, so a language switch
+ * rewrites the text without touching the icon) and the cards under it.
+ */
+private class GroupSection(val title: HTMLElement, val label: HTMLElement, val cards: List<Card>)
 
 /**
  * Landing page: what the showcase covers and an index of every component page.
@@ -122,8 +136,7 @@ internal class OverviewPage : Page {
     private val cards = mutableListOf<Card>()
 
     /** A group's heading and its cards: a group hides when every card in it is filtered out. */
-    private val groups = mutableListOf<Pair<HTMLElement, List<Card>>>()
-
+    private val groups = mutableListOf<GroupSection>()
     private var language: Language = Language.EN
 
     override val node get() = page
@@ -140,76 +153,62 @@ internal class OverviewPage : Page {
         val index = sectionBlock()
         texts.bind(index.title, { it.indexHeading })
         texts.bind(index.hint, { it.indexHint })
-        index.body.append(row(search, counter.root), buildIndex())
+        index.body.append(row(search, counter.root), *buildIndex().toTypedArray())
 
         page.body.append(what.root, index.root)
 
         search.listen(TextFieldEvents.input) { filter() }
     }
 
-    private fun buildIndex(): HTMLElement {
-        val index = HtmlTagName.div {
-            inlineStyle.apply {
-                display = Display.flex
-                flexDirection = FlexDirection.column
-                rowGap = 20.px
-            }
-            // The section body aligns children to the start; the index spans the page so the grids
-            // below it do too.
-            style.setProperty("width", "100%")
-        }
-
+    private fun buildIndex(): List<Node> {
+        val blocks = mutableListOf<Node>()
         catalogGroups.filter { group -> group != Groups.OVERVIEW }.forEach { group ->
-            val groupTitle = heading(3, group.labelFor(LanguageState.current))
+            // The group's mark, the same one the drawer draws: the heading and the drawer row are
+            // two views of one section, so they carry one icon.
+            val groupLabel = HtmlTagName.span { textContent = group.labelFor(LanguageState.current) }
+            // The mark sits beside the title on one line. A horizontal layout *is* that line — it
+            // supplies the gap and the vertical centring through its `spacing` variant — so no
+            // declaration is written by hand here.
+            val groupTitle = row(icon(group.icon), heading(3).apply { append(groupLabel) })
             // Cards flow in as many columns as the width allows: a component name plus its one-line
             // summary reads well in a card, and a vertical list of fifty-nine of them is a wall.
-            val list = HtmlTagName.div {
-                inlineStyle.display = Display.grid
-                // Track sizing is one declarative string (`repeat(auto-fill, minmax(…)`); the typed
-                // vocabulary has no counterpart for the function forms, so it stays a declaration.
-                style.setProperty("grid-template-columns", "repeat(auto-fill, minmax(240px, 1fr))")
-                style.setProperty("gap", "8px")
-                // The section body is a column layout that sizes children to their content; without
-                // this the grid picks its column count from its narrowest possible width.
-                style.setProperty("width", "100%")
-            }
+            val list = grid(240)
             val groupCards = catalogEntriesOf(group).map { entry ->
                 val card = card(entry)
-                list.append(card.link)
+                list.append(card.node)
                 cards += card
                 card
             }
-            index.append(groupTitle, list)
-            groups += groupTitle to groupCards
+            blocks += groupTitle
+            blocks += list
+            groups += GroupSection(groupTitle, groupLabel, groupCards)
         }
-        return index
+        return blocks
     }
 
-    /** One component entry: its name as a link to its page, its summary under it in muted text. */
+    /**
+     * One component entry: a Vaadin card, elevated so the surface comes from the component instead of
+     * from four hand-written declarations, with the page name as its title link and the summary as
+     * its subtitle.
+     *
+     * The link is the title, not the whole card: a link is what makes the entry clickable, reachable
+     * by keyboard and openable in a new tab, and `vaadin-card` slots the title where the component
+     * expects a heading.
+     */
     private fun card(entry: CatalogEntry): Card {
-        val name = HtmlTagName.span {}
-        val summary = HtmlTagName.p {
-            inlineStyle.apply {
-                color = Palette.muted
-                fontSize = 13.px
-            }
+        val name = HtmlTagName.span()
+        val link = anchor("", "#/${entry.id}").apply {
+            setAttribute("slot", "title")
+            append(name)
         }
-        val link = anchor("", "#/${entry.id}")
-        link.classList.add(web.cssom.ClassName("component-card"))
-        link.inlineStyle.apply {
-            display = Display.flex
-            flexDirection = FlexDirection.column
-            rowGap = 2.px
-            padding = Padding(8.px, 12.px)
-            borderRadius = 10.px
-            border = Border(1.px, LineStyle.solid, Palette.border)
+        val summary = HtmlTagName.span().apply { setAttribute("slot", "subtitle") }
+        val node = createCard {
+            addTheme(CardVariants.elevated)
+            classList.add(web.cssom.ClassName("component-card"))
+            dataset["route"] = entry.id
+            append(link, summary)
         }
-        // The card is a link, so the browser underlines its whole text — name and summary alike.
-        // Only the name is a label; the box itself is the affordance.
-        link.style.textDecoration = "none"
-        link.dataset["route"] = entry.id
-        link.append(name, summary)
-        return Card(entry, link, name, summary)
+        return Card(entry, node, link, name, summary)
     }
 
     private fun filter() {
@@ -219,15 +218,14 @@ internal class OverviewPage : Page {
                 card.entry.meta.titleFor(language).lowercase().contains(needle) ||
                 card.entry.id.contains(needle) ||
                 card.entry.meta.summaryFor(language).lowercase().contains(needle)
-            // `hidden` would lose to the card's inline `display: flex`, so filtering flips the display
-            // value itself: the cards stay in the DOM and only their visibility changes.
-            card.link.style.display = if (matches) "flex" else "none"
+            // The card is a component with no display value of its own to fight with, so filtering
+            // only flips `hidden`; the entries stay in the DOM and a language switch keeps them.
+            card.node.toggleAttribute("hidden", !matches)
         }
-        groups.forEach { (groupTitle, groupCards) ->
-            val anyVisible = groupCards.any { it.link.style.display != "none" }
-            groupTitle.toggleAttribute("hidden", !anyVisible)
+        groups.forEach { section ->
+            section.title.toggleAttribute("hidden", section.cards.none { !it.node.hasAttribute("hidden") })
         }
-        val visible = cards.count { it.link.style.display != "none" }
+        val visible = cards.count { !it.node.hasAttribute("hidden") }
         counter.set(overviewTexts[langOf(language)].showing(visible, cards.size))
     }
 
@@ -246,8 +244,8 @@ internal class OverviewPage : Page {
             card.name.textContent = card.entry.meta.titleFor(language)
             card.summary.textContent = card.entry.meta.summaryFor(language)
         }
-        groups.forEach { (groupTitle, groupCards) ->
-            groupTitle.textContent = groupCards.firstOrNull()?.entry?.group?.labelFor(language)
+        groups.forEach { section ->
+            section.label.textContent = section.cards.first().entry.group.labelFor(language)
         }
         filter()
     }
