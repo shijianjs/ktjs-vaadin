@@ -3,11 +3,15 @@ package demo.pages.display
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
+import demo.Language
 import demo.bi
+import demo.componentApiUrl
 import demo.pages.overlays.ariaLabel
 import demo.tr
+import demo.ui.MUTED_SMALL
 import demo.ui.PageMeta
 import demo.ui.PageView
+import demo.ui.REPO_SOURCE_ROOT
 import demo.ui.div
 import demo.ui.element
 import demo.ui.example
@@ -15,11 +19,31 @@ import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
+import io.github.shijianjs.ktjs.demo.nav.Page
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.anchor
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.newPage
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.inputcontainer.createInputContainer
+import web.cssom.Border
+import web.cssom.Color
+import web.cssom.LineStyle
+import web.cssom.Outline
+import web.cssom.pct
+import web.cssom.px
+import web.cssom.rem
+import web.html.HTMLAnchorElement
 import web.html.HTMLElement
 import web.html.HtmlTagName
-import demo.ui.MUTED_SMALL
 
 val inputContainerEntry: CatalogEntry =
     CatalogEntry(
@@ -42,6 +66,7 @@ val inputContainerEntry: CatalogEntry =
                 sourcePath = "pages/display/InputContainerPage.kt",
             ),
         builder = ::buildInputContainerPage,
+        kitPage = ::InputContainerPage,
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -62,13 +87,7 @@ private fun buildInputContainerPage(meta: PageMeta): PageView {
         )
     val container = createInputContainer()
     container.dataset["test"] = "input-container"
-    val input = element(HtmlTagName.input)
-    input.style.setProperty("border", "none")
-    input.style.setProperty("outline", "none")
-    input.style.setProperty("background", "transparent")
-    input.style.setProperty("font", "inherit")
-    input.style.setProperty("color", "inherit")
-    input.style.setProperty("width", "100%")
+    val input = containerInput()
     container.append(createIcon { icon = "lumo:search" }.apply { slot = "prefix" }, input)
     container.append(createIcon { icon = "lumo:checkmark" }.apply { slot = "suffix" })
     basic.body.append(example(null, container))
@@ -103,18 +122,175 @@ private fun plainContainer(label: String, readonly: Boolean = false, invalid: Bo
     container.readonly = readonly
     container.invalid = invalid
     container.disabled = disabled
-    val input = element(HtmlTagName.input)
-    input.value = label
-    input.ariaLabel = label
-    input.style.setProperty("border", "none")
-    input.style.setProperty("outline", "none")
-    input.style.setProperty("background", "transparent")
-    input.style.setProperty("font", "inherit")
-    input.style.setProperty("color", "inherit")
-    input.style.setProperty("width", "100%")
+    val input = containerInput(label)
     container.append(input)
     return div().apply {
         style.setProperty("width", "12rem")
         append(container, paragraph(label, MUTED_SMALL))
     }
 }
+
+/**
+ * The input that sits inside a container: no frame of its own, so the container's border and its
+ * state are the only chrome a reader sees.
+ *
+ * `font: inherit` cannot be written through `web.cssom` — the border/background/size longhands each
+ * have a typed value, but `font` is a shorthand of seven properties and the generated factories all
+ * take concrete sizes rather than the `inherit` keyword, so this one declaration stays a style
+ * property. Everything else on this element is a typed value.
+ */
+private fun containerInput(value: String = "") =
+    element(HtmlTagName.input).apply {
+        this.value = value
+        inlineStyle.apply {
+            border = Border(0.px, LineStyle.solid)
+            outline = Outline(0.px, LineStyle.solid)
+            backgroundColor = Color("transparent")
+            color = Color("inherit")
+            width = 100.pct
+        }
+        style.setProperty("font", "inherit")
+    }
+
+
+// ---------------------------------------------------------------------------------------------
+// The same page on kit blocks
+// ---------------------------------------------------------------------------------------------
+
+/** Every string this page shows, in one language. */
+private class InputContainerTexts(
+    val docsLink: String,
+    val sourceLink: String,
+    val apiLink: String,
+    val basicTitle: String,
+    val basicHint: String,
+    val statesTitle: String,
+    val statesHint: String,
+    val readOnly: String,
+    val invalid: String,
+    val disabled: String,
+)
+
+private val inputContainerEnglish: InputContainerTexts = InputContainerTexts(
+    docsLink = "Vaadin documentation",
+    sourceLink = "Kotlin source",
+    apiLink = "Kotlin API reference",
+    basicTitle = "Basic usage",
+    basicHint = "The container only handles layout and state; the input element is supplied by the caller. " +
+        "The prefix/suffix slots hold icons or buttons.",
+    statesTitle = "States",
+    statesHint = "The readonly / invalid / disabled properties map directly to visual states.",
+    readOnly = "Read-only",
+    invalid = "Invalid",
+    disabled = "Disabled",
+)
+
+private val inputContainerChinese: InputContainerTexts = InputContainerTexts(
+    docsLink = "Vaadin 官方文档",
+    sourceLink = "查看 Kotlin 源码",
+    apiLink = "Kotlin API 文档",
+    basicTitle = "基本用法",
+    basicHint = "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
+    statesTitle = "状态",
+    statesHint = "readonly / invalid / disabled 三个属性直接对应视觉状态。",
+    readOnly = "只读",
+    invalid = "无效",
+    disabled = "禁用",
+)
+
+private val inputContainerTexts: Translations<InputContainerTexts> = texts(
+    Langs.EN to inputContainerEnglish,
+    Langs.ZH_HANS to inputContainerChinese,
+)
+
+/** One state example: the container, the input inside it, and the caption under it. */
+private class StateExample(readOnly: Boolean = false, invalid: Boolean = false, disabled: Boolean = false) {
+    val input = containerInput()
+
+    val container: HTMLElement = createInputContainer().apply {
+        this.readonly = readOnly
+        this.invalid = invalid
+        this.disabled = disabled
+        append(input)
+    }
+
+    val caption: HTMLElement = paragraph("")
+
+    val root: HTMLElement = div().apply {
+        inlineStyle.apply { width = 12.rem }
+        append(container, caption)
+    }
+}
+
+/**
+ * The page on kit blocks: nodes are built once and a language switch only rewrites their text.
+ *
+ * The three state containers carry no text of their own except what a reader typed; their labels are
+ * the captions below them, and the input's value repeats the caption so the state is legible.
+ */
+internal class InputContainerPage : Page {
+    private val meta: PageMeta = inputContainerEntry.meta
+
+    private val page: DemoPage = newPage()
+
+    private val texts = Binder(inputContainerTexts)
+
+    private val basicContainer: HTMLElement = createInputContainer().apply {
+        dataset["test"] = "input-container"
+        append(createIcon { icon = "lumo:search" }.apply { slot = "prefix" })
+        append(containerInput())
+        append(createIcon { icon = "lumo:checkmark" }.apply { slot = "suffix" })
+    }
+
+    private val readOnly = StateExample(readOnly = true)
+
+    private val invalid = StateExample(invalid = true)
+
+    private val disabled = StateExample(disabled = true)
+
+    private val links = mutableListOf<HTMLAnchorElement>()
+
+    override val node get() = page
+
+    init {
+        val docs = anchor("", meta.docsUrl, external = true)
+        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
+        val api = anchor("", componentApiUrl(inputContainerEntry.id), external = true)
+        links += docs
+        links += source
+        links += api
+        page.addLink(texts.bind(docs, { it.docsLink }))
+        page.addLink(texts.bind(source, { it.sourceLink }))
+        page.addLink(texts.bind(api, { it.apiLink }))
+
+        val basic = sectionBlock()
+        texts.bind(basic.title, { it.basicTitle })
+        texts.bind(basic.hint, { it.basicHint })
+        basic.body.append(exampleBox(null, basicContainer))
+        page.body.append(basic.root)
+
+        val states = sectionBlock()
+        texts.bind(states.title, { it.statesTitle })
+        texts.bind(states.hint, { it.statesHint })
+        texts.bind(readOnly.caption, { it.readOnly })
+        texts.bind(invalid.caption, { it.invalid })
+        texts.bind(disabled.caption, { it.disabled })
+        states.body.append(exampleBox(null, kitRow(readOnly.root, invalid.root, disabled.root)))
+        page.body.append(states.root)
+
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        texts.apply(lang)
+        val copy = inputContainerTexts[lang]
+        readOnly.input.value = copy.readOnly
+        invalid.input.value = copy.invalid
+        disabled.input.value = copy.disabled
+        val language = if (lang == Langs.EN) Language.EN else Language.ZH
+        page.setTitle(meta.titleFor(language))
+        page.setSummary(meta.summaryFor(language))
+        links.first().href = meta.docsUrl
+    }
+}
+
