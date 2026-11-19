@@ -22,6 +22,8 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import web.html.HTMLAnchorElement
+import io.github.shijianjs.ktjs.demo.page.exampleCaption
+import io.github.shijianjs.ktjs.vaadin.verticallayout.VerticalLayoutElement
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -748,15 +750,23 @@ internal class ButtonPage : Page {
 
     private val texts = Binder(buttonTexts)
 
-    private var clicks = 0
+    // --- one element per example that owns state ---------------------------------------------------
 
-    private var clicked = false
+    private val clickCounter = newClickCounter()
 
-    private val clickReadout = Readout("")
+    private val enabledToggle = newEnabledToggle()
 
-    private val log = EventLog()
+    private val variantLog = newVariantLog()
 
-    private val saveButton = createButton().apply { dataset["test"] = "basic-button" }
+    private val gridToolbar = newGridToolbar()
+
+    private val longAction = newLongAction()
+
+    private val primaryEmailRow = newEmailRow()
+
+    private val secondaryEmailRow = newEmailRow()
+
+    // --- single components whose text is translated, in examples without state ----------------------
 
     private val addItemButton = createButton()
 
@@ -771,12 +781,6 @@ internal class ButtonPage : Page {
     private val logoButton = createButton()
 
     private val logo = HtmlTagName.img { src = Images.vaadinLogo; width = 100 }
-
-    private val target = createButton().addTheme("primary")
-
-    private val toggleButton = createButton()
-
-    private val stateReadout = Readout("")
 
     private val focusButton = createButton().apply { setAttribute("focus-ring", "") }
 
@@ -800,35 +804,7 @@ internal class ButtonPage : Page {
 
     private val dialogCreateButton = createButton().addTheme("primary").apply { slot = "end" }
 
-    private val primaryEmailField = createEmailField { value = "foo@example.com" }
-
-    private val primaryEmailRemove = createButton()
-
-    private val secondaryEmailField = createEmailField { value = "bar@example.com" }
-
-    private val secondaryEmailRemove = createButton()
-
-    private val variantLog = EventLog(4)
-
-    private val grid = createGrid()
-
-    private val editProfile = createButton()
-
-    private val managePermissions = createButton()
-
-    private val resetPassword = createButton()
-
-    private val deleteUser = createButton().addTheme("error")
-
-    private val addUserButton = createButton()
-
-    private val usersTitle = HtmlTagName.h3()
-
-    private val selectionReadout = Readout("")
-
-    private val progress = createProgressBar { value = 0.0 }.apply { style.setProperty("flex", "1") }
-
-    private val performButton = createButton().addTheme("primary")
+    private val variantCaption = texts.bind(exampleCaption(), { it.variantsHintCaption })
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
@@ -846,107 +822,81 @@ internal class ButtonPage : Page {
         page.addLink(texts.bind(source, { it.sourceLink }))
         page.addLink(texts.bind(api, { it.apiLink }))
 
-        buildBasic()
-        buildIcons()
-        buildImages()
-        buildDisabled()
-        buildFocus()
-        buildForms()
-        buildLabels()
-        buildSizes()
-        buildStyles()
-        buildColours()
-        buildToolbar()
-        buildLongRunning()
+        page.body.append(
+            basicSection(),
+            iconsSection(),
+            imagesSection(),
+            disabledSection(),
+            focusSection(),
+            formsSection(),
+            labelsSection(),
+            sizesSection(),
+            stylesSection(),
+            coloursSection(),
+            toolbarSection(),
+            longSection(),
+        )
 
         applyTranslation(Langs.EN)
     }
 
-    private fun buildBasic() {
+    private fun basicSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.basicTitle })
         texts.bind(section.hint, { it.basicHint })
-        texts.bind(saveButton, { it.saveChanges })
-        saveButton.clickEvent.addHandler {
-            clicks++
-            clicked = true
-            renderClicks()
-            val copy = texts.current
-            log.add(copy.clickLogPrefix + clicks + copy.clickLogSuffix)
-        }
-        section.body.append(
-            exampleBox(null, kitRow(saveButton, clickReadout.root)),
-            exampleBox(texts.current.eventLog, log.root),
-        )
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, clickCounter))
+        return section.root
     }
 
-    private fun buildIcons() {
+    private fun iconsSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.iconsTitle })
         texts.bind(section.hint, { it.iconsHint })
-        texts.bind(addItemButton, { it.addItem }) { text -> addItemButton.ariaLabel = text }
-        texts.bind(closeButton, { it.close }) { text -> closeButton.ariaLabel = text }
-        texts.bind(closeTooltip, { it.closeDialog }) { text -> closeTooltip.text = text }
-        texts.bind(leftButton, { it.left })
-        texts.bind(rightButton, { it.right })
-        addItemButton.append(createIcon { icon = "vaadin:plus" })
-        closeButton.append(createIcon { icon = "vaadin:close" })
-        closeTooltip.slot = "tooltip"
-        closeButton.append(closeTooltip)
-        leftButton.append(createIcon { icon = "vaadin:arrow-left" }.apply { slot = "prefix" })
-        rightButton.append(createIcon { icon = "vaadin:arrow-right" }.apply { slot = "suffix" })
-        section.body.append(exampleBox(null, kitRow(addItemButton, closeButton, leftButton, rightButton)))
-        page.body.append(section.root)
+        if (addItemButton.childElementCount == 0) {
+            addItemButton.append(createIcon { icon = "vaadin:plus" })
+            closeButton.append(createIcon { icon = "vaadin:close" })
+            closeTooltip.slot = "tooltip"
+            closeButton.append(closeTooltip)
+            leftButton.append(createIcon { icon = "vaadin:arrow-left" }.apply { slot = "prefix" })
+            rightButton.append(createIcon { icon = "vaadin:arrow-right" }.apply { slot = "suffix" })
+        }
+        section.body.append(exampleBox(null, row(addItemButton, closeButton, leftButton, rightButton)))
+        return section.root
     }
 
-    private fun buildImages() {
+    private fun imagesSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.imagesTitle })
         texts.bind(section.hint, { it.imagesHint })
         texts.bind(logo, { it.vaadinLogo }) { text -> logo.alt = text }
         logoButton.append(logo)
         section.body.append(exampleBox(null, logoButton))
-        page.body.append(section.root)
+        return section.root
     }
 
-    private fun buildDisabled() {
+    private fun disabledSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.disabledTitle })
         texts.bind(section.hint, { it.disabledHint })
-        texts.bind(target, { it.enabledButton })
-        target.clickEvent.addHandler {
-            clicked = true
-            renderState()
-        }
-        toggleButton.clickEvent.addHandler {
-            target.disabled = !target.disabled
-            clicked = false
-            renderState()
-        }
-        val disabledVariants =
-            kitRow(
-                createButton { textContent = "primary" }.addTheme("primary").apply { disabled = true },
-                createButton { textContent = "secondary" }.addTheme("secondary").apply { disabled = true },
-                createButton { textContent = "tertiary" }.addTheme("tertiary").apply { disabled = true },
-            )
-        section.body.append(
-            exampleBox(null, kitCol(disabledVariants, kitRow(target, toggleButton, stateReadout.root))),
+        // The three disabled variants carry the variant names themselves — those are the values, not copy.
+        val disabledVariants = row(
+            createButton { textContent = "primary" }.addTheme("primary").apply { disabled = true },
+            createButton { textContent = "secondary" }.addTheme("secondary").apply { disabled = true },
+            createButton { textContent = "tertiary" }.addTheme("tertiary").apply { disabled = true },
         )
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, kitCol(disabledVariants, enabledToggle)))
+        return section.root
     }
 
-    private fun buildFocus() {
+    private fun focusSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.focusTitle })
         texts.bind(section.hint, { it.focusHint })
-        texts.bind(focusButton, { it.keyboardFocus })
-        texts.bind(plainFocusButton, { it.plainButton })
-        section.body.append(exampleBox(null, kitRow(focusButton, plainFocusButton)))
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, row(focusButton, plainFocusButton)))
+        return section.root
     }
 
-    private fun buildForms() {
+    private fun formsSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.formsTitle })
         texts.bind(section.hint, { it.formsHint })
@@ -960,121 +910,73 @@ internal class ButtonPage : Page {
                     },
                 )
         }
-        texts.bind(emailField, { it.emailAddress }) { text -> emailField.label = text }
-        texts.bind(firstNameField, { it.firstName }) { text -> firstNameField.label = text }
-        texts.bind(lastNameField, { it.lastName }) { text -> lastNameField.label = text }
         form.append(firstNameField, lastNameField, emailField)
-
-        texts.bind(createAccountButton, { it.createAccount })
-        texts.bind(cancelButton, { it.cancel })
-        texts.bind(dialogDeleteButton, { it.delete })
-        texts.bind(dialogCancelButton, { it.cancel })
-        texts.bind(dialogCreateButton, { it.createAccount })
-
         section.body.append(
-            exampleBox(texts.current.formActions, kitCol(form, kitRow(createAccountButton, cancelButton))),
+            exampleBox(
+                texts.current.formActions,
+                kitCol(form, kitRow(createAccountButton, cancelButton)),
+            ),
             exampleBox(
                 texts.current.dialogFooter,
-                kitRow(dialogDeleteButton, dialogCancelButton, dialogCreateButton),
+                row(dialogDeleteButton, dialogCancelButton, dialogCreateButton),
             ),
         )
-        page.body.append(section.root)
+        return section.root
     }
 
-    private fun buildLabels() {
+    private fun labelsSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.labelsTitle })
         texts.bind(section.hint, { it.labelsHint })
-        texts.bind(primaryEmailField, { it.primaryEmail }) { text -> primaryEmailField.label = text }
-        texts.bind(secondaryEmailField, { it.secondaryEmail }) { text -> secondaryEmailField.label = text }
-        texts.bind(primaryEmailRemove, { it.remove })
-        texts.bind(secondaryEmailRemove, { it.remove })
-        texts.bind(primaryEmailRemove, { it.primaryEmail }) { text ->
-            primaryEmailRemove.ariaLabel = primaryEmailRemove.textContent + " " + text
-        }
-        texts.bind(secondaryEmailRemove, { it.secondaryEmail }) { text ->
-            secondaryEmailRemove.ariaLabel = secondaryEmailRemove.textContent + " " + text
-        }
-        primaryEmailRemove.clickEvent.addHandler { primaryEmailField.value = "" }
-        secondaryEmailRemove.clickEvent.addHandler { secondaryEmailField.value = "" }
-        section.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    kitRow(primaryEmailField, primaryEmailRemove),
-                    kitRow(secondaryEmailField, secondaryEmailRemove),
-                ),
-            ),
-        )
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, kitCol(primaryEmailRow, secondaryEmailRow)))
+        return section.root
     }
 
-    private fun buildSizes() {
+    private fun sizesSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.sizesTitle })
         texts.bind(section.hint, { it.sizesHint })
         section.body.append(
             exampleBox(
                 null,
-                kitRow(
+                row(
                     createButton { textContent = "Large" }.addTheme("large"),
                     createButton { textContent = "Normal" }.addTheme("normal"),
                     createButton { textContent = "Small" }.addTheme("small"),
                 ),
             ),
         )
-        page.body.append(section.root)
+        return section.root
     }
 
-    private fun buildStyles() {
+    private fun stylesSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
-        val variants =
-            kitRow(
-                createButton { textContent = "Primary" }.addTheme("primary"),
-                createButton { textContent = "Secondary" }.addTheme("secondary"),
-                createButton { textContent = "Tertiary" }.addTheme("tertiary"),
-                createButton { textContent = "Tertiary inline" }.addTheme("tertiary-inline"),
-                createButton { textContent = "Contrast" }.addTheme("contrast"),
-            )
-
-        val defaultButton = createButton().apply {
-            clickEvent.addHandler { variantLog.add("click · " + textContent) }
-        }
-        texts.bind(defaultButton, { it.defaultVariant })
-        val themed =
-            listOf(
-                "primary" to listOf("primary"),
-                "tertiary" to listOf("tertiary"),
-                "tertiary-inline" to listOf("tertiary-inline"),
-                "contrast" to listOf("contrast"),
-            ).map { (label, themes) ->
-                createButton { textContent = label }.addTheme(*themes.toTypedArray()).apply {
-                    clickEvent.addHandler { variantLog.add("click · $label") }
-                }
-            }
-        val recordedRow =
-            kitRow(*listOf(defaultButton).plus(themed).toTypedArray())
-        val caption = HtmlTagName.p { className = MUTED_SMALL }
-        texts.bind(caption, { it.variantsHintCaption })
-
+        val variants = row(
+            createButton { textContent = "Primary" }.addTheme("primary"),
+            createButton { textContent = "Secondary" }.addTheme("secondary"),
+            createButton { textContent = "Tertiary" }.addTheme("tertiary"),
+            createButton { textContent = "Tertiary inline" }.addTheme("tertiary-inline"),
+            createButton { textContent = "Contrast" }.addTheme("contrast"),
+        )
         section.body.append(
             exampleBox(null, variants),
-            exampleBox(null, kitCol(caption, recordedRow, variantLog.root)),
+            exampleBox(null, variantCaption, variantLog),
         )
-        page.body.append(section.root)
+        return section.root
     }
 
-    private fun buildColours() {
+    private fun coloursSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.coloursTitle })
         texts.bind(section.hint, { it.coloursHint })
+        // The variant names are the captions here; they are the same word in both languages.
         for (variant in listOf("success", "warning", "error")) {
             section.body.append(
                 exampleBox(
                     variant,
-                    kitRow(
+                    row(
                         createButton { textContent = "Primary" }.addTheme("primary", variant),
                         createButton { textContent = "Secondary" }.addTheme("secondary", variant),
                         createButton { textContent = "Tertiary" }.addTheme("tertiary", variant),
@@ -1082,103 +984,85 @@ internal class ButtonPage : Page {
                 ),
             )
         }
-        page.body.append(section.root)
+        return section.root
     }
 
-    private fun buildToolbar() {
+    private fun toolbarSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.toolbarTitle })
         texts.bind(section.hint, { it.toolbarHint })
-        grid.dataset["test"] = "button-grid"
-        grid.style.setProperty("height", "14rem")
-        grid.items = jsArray<JsAny>(BUTTON_GRID_USERS)
-        val firstNameHeader = createGridColumn { path = "firstName" }
-        val lastNameHeader = createGridColumn { path = "lastName" }
-        val emailHeader = createGridColumn { path = "email" }
-        texts.bind(firstNameHeader, { it.firstName }) { text -> firstNameHeader.header = text }
-        texts.bind(lastNameHeader, { it.lastName }) { text -> lastNameHeader.header = text }
-        texts.bind(emailHeader, { it.email }) { text -> emailHeader.header = text }
-        grid.append(createGridSelectionColumn { autoSelect = true }, firstNameHeader, lastNameHeader, emailHeader)
-
-        texts.bind(editProfile, { it.editProfile })
-        texts.bind(managePermissions, { it.managePermissions })
-        texts.bind(resetPassword, { it.resetPassword })
-        texts.bind(deleteUser, { it.delete })
-        texts.bind(addUserButton, { it.addUser })
-        texts.bind(usersTitle, { it.users })
-        usersTitle.className = SMALL
-
-        grid.listen(GridEvents.selectedItemsChanged) { renderSelection() }
-        section.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    kitRow(usersTitle, addUserButton),
-                    grid,
-                    kitRow(editProfile, managePermissions, resetPassword, deleteUser),
-                    selectionReadout.root,
-                ),
-            ),
-        )
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, gridToolbar))
+        return section.root
     }
 
-    private fun buildLongRunning() {
+    private fun longSection(): VerticalLayoutElement {
         val section = sectionBlock()
         texts.bind(section.title, { it.longTitle })
         texts.bind(section.hint, { it.longHint })
-        texts.bind(performButton, { it.perform })
-        performButton.clickEvent.addHandler {
-            performButton.disabled = true
-            progress.value = 0.0
-            startInterval(40) {
-                progress.value = (progress.value + 0.04).coerceAtMost(1.0)
-                if (progress.value >= 1.0) {
-                    stopInterval()
-                    performButton.disabled = false
-                }
-            }
-        }
-        section.body.append(exampleBox(null, kitRow(performButton, progress)))
-        page.body.append(section.root)
+        section.body.append(exampleBox(null, longAction))
+        return section.root
     }
 
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
+        val copy = texts.current
         val language = if (lang == Langs.EN) Language.EN else Language.ZH
         page.setTitle(meta.titleFor(language))
         page.setSummary(meta.summaryFor(language))
         links.first().href = meta.docsUrl
-        renderClicks()
-        renderState()
-        renderSelection()
-        primaryEmailRemove.ariaLabel =
-            primaryEmailRemove.textContent + " " + texts.current.primaryEmail
-        secondaryEmailRemove.ariaLabel =
-            secondaryEmailRemove.textContent + " " + texts.current.secondaryEmail
-    }
 
-    private fun renderClicks() {
-        clickReadout.set(texts.current.clicksPrefix + clicks)
-    }
+        clickCounter.buttonLabel = copy.saveChanges
+        clickCounter.clicksLabel = copy.clicksPrefix
+        clickCounter.logPrefix = copy.clickLogPrefix
+        clickCounter.logSuffix = copy.clickLogSuffix
+        clickCounter.logCaption = copy.eventLog
 
-    private fun renderState() {
-        val copy = texts.current
-        toggleButton.textContent = if (target.disabled) copy.enable else copy.disable
-        stateReadout.set(
-            copy.statePrefix +
-                when {
-                    target.disabled -> copy.stateDisabled
-                    clicked -> copy.stateEnabledClicked
-                    else -> copy.stateEnabled
-                },
-        )
-    }
+        enabledToggle.targetLabel = copy.enabledButton
+        enabledToggle.enableLabel = copy.enable
+        enabledToggle.disableLabel = copy.disable
+        enabledToggle.statePrefix = copy.statePrefix
+        enabledToggle.stateEnabled = copy.stateEnabled
+        enabledToggle.stateClicked = copy.stateEnabledClicked
+        enabledToggle.stateDisabled = copy.stateDisabled
 
-    private fun renderSelection() {
-        val size = grid.selectedItems.size
-        listOf(editProfile, managePermissions, resetPassword).forEach { it.disabled = size != 1 }
-        deleteUser.disabled = size == 0
-        selectionReadout.set(texts.current.rowsPrefix + size + texts.current.rowsSuffix)
+        variantLog.defaultLabel = copy.defaultVariant
+
+        gridToolbar.gridTitle = copy.users
+        gridToolbar.addLabel = copy.addUser
+        gridToolbar.editLabel = copy.editProfile
+        gridToolbar.manageLabel = copy.managePermissions
+        gridToolbar.resetLabel = copy.resetPassword
+        gridToolbar.deleteLabel = copy.delete
+        gridToolbar.rowsPrefix = copy.rowsPrefix
+        gridToolbar.rowsSuffix = copy.rowsSuffix
+        gridToolbar.setHeader("firstName", copy.firstName)
+        gridToolbar.setHeader("lastName", copy.lastName)
+        gridToolbar.setHeader("email", copy.email)
+
+        longAction.performLabel = copy.perform
+
+        primaryEmailRow.removeLabel = copy.remove
+        primaryEmailRow.subject = copy.primaryEmail
+        primaryEmailRow.setField(copy.primaryEmail, "foo@example.com")
+        secondaryEmailRow.removeLabel = copy.remove
+        secondaryEmailRow.subject = copy.secondaryEmail
+        secondaryEmailRow.setField(copy.secondaryEmail, "bar@example.com")
+
+        addItemButton.textContent = copy.addItem
+        addItemButton.ariaLabel = copy.addItem
+        closeButton.ariaLabel = copy.close
+        closeTooltip.text = copy.closeDialog
+        leftButton.textContent = copy.left
+        rightButton.textContent = copy.right
+        focusButton.textContent = copy.keyboardFocus
+        plainFocusButton.textContent = copy.plainButton
+        emailField.label = copy.emailAddress
+        firstNameField.label = copy.firstName
+        lastNameField.label = copy.lastName
+        createAccountButton.textContent = copy.createAccount
+        cancelButton.textContent = copy.cancel
+        dialogDeleteButton.textContent = copy.delete
+        dialogCancelButton.textContent = copy.cancel
+        dialogCreateButton.textContent = copy.createAccount
     }
 }
