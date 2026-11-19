@@ -560,9 +560,21 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 
 - `demo` 只消费公共 API，不发布、也不进入 Dokka。根 `build.gradle.kts` 的发布与 Dokka 配置按
   `ktjs-vaadin-` 前缀过滤子模块，新增非发布模块时沿用该约定。
-- 演示页是一个组件展示应用（单页、hash 路由），代码在 `demo/src/jsMain/kotlin/demo/`：
+- 演示页是一个组件展示应用（单页、hash 路由），代码在 `demo/src/jsMain/kotlin/demo/`。外壳、导航、
+  面包屑、docs / 语言 / 主题菜单**全部来自 `ktjs-demo-kit`**（`DemoLayout` + `DemoMenu`），本仓只声明
+  目录与文案：
+  - `Main.kt`：唯一入口。`index.html` 里是 `<ktjs-demo-layout id="demo">`，浏览器负责创建元素，
+    `main()` 只做 `mount(LayoutConfig(...))`；`LayoutConfig` 是一个配置对象，新增一项就加一个字段，
+    不要把参数继续加到 `mount` 的签名上。
+  - `site/SiteMenu.kt` / `site/SiteTexts.kt`：`siteMenu()` 把各分组的 `<分组>Entries` 串成 kit 的
+    `DemoMenu`（组、图标、页面工厂都在这里），`siteTexts` 是 kit `Translations<SiteTexts>` 的实现。
+    **组与条目只有一份声明**：抽屉分组、总览页的分组标题与图标都从它读，不要在页面里再写一遍。
+  - `site/LegacyPage.kt`：`PageSwapHost`（`<ktjs-page-swap>`）与 `RebuiltPage`。**这是过渡态**：绝大多数
+    页面仍在构建时用 `tr(zh, en)` 取文案，切语言只能整页重建（示例里的组件状态会丢）。逐页迁到 kit 页
+    （页面自带 `Translations` 表、就地改写文本）是批 1 之后的工作，新写的页面一律走 kit 页，不要再添
+    `RebuiltPage`。
   - `Catalog.kt`：路由 id → 分组 / 页面元信息（标题、官方文档 URL、源码路径）。每个组件一个
-    `CatalogEntry`，`catalog` 按分组顺序聚合各分组导出的 `<分组>Entries`，侧边栏与索引页自动收录。
+    `CatalogEntry`，按分组顺序聚合各分组导出的 `<分组>Entries`。
   - `pages/<分组>/`：页面代码按 URL 分组分包（`overview`、`buttons`、`fields`、`selection`、
     `pickers`、`overlays`、`data`、`upload`、`layout`、`display`、`theming`），**一页一个文件**：
     `XxxPage.kt` 里是这个页面的 `CatalogEntry`（`xxxEntry`）与 `private fun buildXxxPage`，帮助函数
@@ -570,19 +582,27 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
     列出该分组的条目。多个页面共用的示例数据在 `pages/fixtures/People.kt`，跨包引用靠普通
     `import demo.pages.<分组>.<名字>`。新增组件页 = 在对应分组里加一个 `XxxPage.kt` 并把它的条目加
     进该分组 `Entries.kt`。
-  - `AppShell.kt`：侧边栏 + 顶栏 + 内容区，只构建一次；导航只替换 `.content__host` 的单个子节点，
-    已经构建过的页面按路由缓存，因此来回切换不会丢组件状态。
-  - `Router.kt`：`#/<route>` hash 路由，`hashchange` 驱动前进 / 后退。
-  - `Language.kt`：中英切换。所有会显示的文案在构建时经 `tr(zh, en)` 取值，页面元信息用
-    `bi(zh, en)` 包成 `Bilingual`（读取时解析）；`LanguageState` 首次跟随
-    `navigator.languages[0]`，显式切换写入 `localStorage` 的 `ktjs-vaadin-language` 并同步
-    `<html lang>`。切换语言时 `AppShell` 丢弃页面缓存、重建当前路由，同时就地更新侧边栏、
-    分组标题与顶栏按钮；不要把语言状态做成字段级响应式刷新。
-  - `Theme.kt`：Lumo 亮 / 暗切换，`theme="dark"` 设在 `<html>` 上（`color-scheme.css` 用
-    `[theme~='dark']` 切换整套令牌），选择存 `localStorage`，`index.html` 里有一小段内联脚本在首帧前
-    应用，避免闪白。
-  - `ui/`：DOM 构建辅助（`div` / `paragraph` / `anchor` …）、页面骨架（`page` / `section` /
-    `example`）、`Readout`（就地更新的读值）与 `EventLog`（滚动事件流）。
+  - `ui/`：停机位在这一层，`Blocks.kt` 的 `row` / `column` / `grid` / `example` / `section` 全部委托
+    kit 的区块工厂（不再自己拼布局），`Dom.kt` 只保留 kit 没有的少数 helper（`heading`、`anchor`、
+    `bulletList`、`setHidden`），`Typography.kt` 提供共享的 `MUTED` / `SMALL` / `MUTED_SMALL` 与
+    `TEXT_SHEET`，`Readout` / `EventLog` 是 kit 的实现。
+- **一个类名一个对象**：`ClassName("…")` 只出现在声明处，调用点与 `cssSheet` 的键都引用同一个对象。
+  helper 的参数类型是 `ClassName?`，不要引进 `String` 重载，也不要包 `withClass(String)` 这类再包一层
+  的 helper（`classList.add(CONST)` 一行就够）。字符串形式的类名只允许留在 JS API 边界
+  （`className = "$CONST"` 交给 Vaadin 的数据结构）。共享的只有真正多处一起变的（`muted` / `small`），
+  私有放页面自己的文件顶部；规则早被删掉的「死类」直接删用法，不要为它造常量。
+- **sheet 的键一律走选择器 DSL**，本仓没有 `"…" { }` 形式的字符串键：`tag(TagName)` /
+  `className(ClassName)` / `compound(…)` / `pseudo(Pseudo[, ident|CssSelector])` / 组合子（`child`、
+  `descendant`、`nextSibling`，infix）。`invoke` **不是** infix：链式结果要显式
+  `(compound(...) child x).invoke { … }`。组合子作用在 `CssSelector` 上，所以 `className(X).child(...)`
+  才对，`X.child(...)` 编译不过。
+- **`::part()` 是宿主的伪元素，不能跟组合子**：`compound(tag(x), className(y), pseudo(pseudoElement("part"), ident("label")))`
+  生成 `x.y::part(label)`；写成 `(compound(...) child part)` 会生成 `x.y > ::part(label)`，语法合法
+  但匹配不到任何东西，症状是「规则写了、样式没生效」。`vaadin-*` 的内部结构只能通过 `::part` 进入，
+  见 `vaadin/web-components` 的 `custom-elements.json`。
+- **改完之后按规则文本核对，不要只看截图**：页面 `adoptedStyleSheets` 的 `cssRules` 逐条 dump，
+  断言生成文本与改动前**逐字节一致**。选择器错了（多一个 `>`、少一个 compound）在这一步就能看见，
+  而截图上只会表现为「好像没生效」。
 - 示例用到的图片、头像与 SVG 图标是官方文档站点同款，复制自 `S:\workspace\github\vaadin\docs`
   的 `frontend/demo` 目录，放在 `demo/src/jsMain/resources/images` 与 `icons` 下；Kotlin 侧只通过
   `demo.ui.Images` 的常量按相对 `index.html` 的路径引用（`images/...`、`icons/...`），运行时不请求
