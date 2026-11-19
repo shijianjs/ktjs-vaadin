@@ -1,5 +1,6 @@
 package demo.pages.display
 
+
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
@@ -70,23 +71,6 @@ val inputContainerEntry: CatalogEntry =
 // ---------------------------------------------------------------------------------------------
 // Input container (internal element, documented under Text Field)
 // ---------------------------------------------------------------------------------------------
-
-/** Builds an input container with a plain text input inside, for the state examples. */
-private fun plainContainer(label: String, readonly: Boolean = false, invalid: Boolean = false, disabled: Boolean = false): HTMLElement {
-    val container = createInputContainer()
-    container.readonly = readonly
-    container.invalid = invalid
-    container.disabled = disabled
-    val input = containerInput(label)
-    container.append(input)
-    return HtmlTagName.div().apply {
-        style.setProperty("width", "12rem")
-        append(container, HtmlTagName.p {
-                              className = MUTED_SMALL
-                              textContent = label
-                          })
-    }
-}
 
 /**
  * The input that sits inside a container: no frame of its own, so the container's border and its

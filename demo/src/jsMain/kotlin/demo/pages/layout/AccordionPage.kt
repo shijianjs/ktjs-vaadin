@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -83,19 +86,48 @@ internal class AccordionPage : DemoPage() {
             )
         val wizard = createAccordion { opened = 0.0 }
         wizard.dataset["test"] = "accordion-wizard"
-        val customerIcon = completionIcon()
-        val billingIcon = completionIcon()
-        val paymentIcon = completionIcon()
+        val customerIcon = newCompletionIcon()
+        val billingIcon = newCompletionIcon()
+        val paymentIcon = newCompletionIcon()
         wizard.append(
-            wizardStep(tr("客户信息", "Customer details"), customerIcon, customerForm(), tr("继续", "Continue")) {
+            wizardStep(
+                tr("客户信息", "Customer details"),
+                customerIcon,
+                newWizardLayout(
+                    textField(tr("名", "First name")),
+                    textField(tr("姓", "Last name")),
+                    emailField(tr("邮箱地址", "Email address")).apply { setAttribute("colspan", "2") },
+                    textField(tr("电话号码", "Phone number")).apply { setAttribute("colspan", "2") },
+                ),
+                tr("继续", "Continue"),
+            ) {
                 customerIcon.toggleAttribute("hidden", false)
                 wizard.opened = 1.0
             },
-            wizardStep(tr("账单地址", "Billing address"), billingIcon, billingForm(), tr("继续", "Continue")) {
+            wizardStep(
+                tr("账单地址", "Billing address"),
+                billingIcon,
+                newWizardLayout(
+                    textField(tr("地址", "Address")).apply { setAttribute("colspan", "2") },
+                    textField(tr("邮政编码", "ZIP code")),
+                    textField(tr("城市", "City")),
+                    countryComboBox(tr("国家", "Country")),
+                ),
+                tr("继续", "Continue"),
+            ) {
                 billingIcon.toggleAttribute("hidden", false)
                 wizard.opened = 2.0
             },
-            wizardStep(tr("付款方式", "Payment"), paymentIcon, paymentForm(), tr("完成", "Finish")) {
+            wizardStep(
+                tr("付款方式", "Payment"),
+                paymentIcon,
+                newWizardLayout(
+                    textField(tr("卡号", "Card number")).apply { setAttribute("colspan", "2") },
+                    textField(tr("有效期", "Expiry date")),
+                    textField("CVV"),
+                ),
+                tr("完成", "Finish"),
+            ) {
                 paymentIcon.toggleAttribute("hidden", false)
                 wizard.opened = -1.0
             },
@@ -197,14 +229,52 @@ private fun linksAccordion() =
         }
     }
 
-/** A check icon shown in a wizard summary once the step is complete. */
-private fun completionIcon(): HTMLElement =
-    createIcon { icon = "vaadin:check" }.apply {
+/**
+ * `<vaadin-demo-completion-icon>`: the check that marks a completed wizard step in its summary.
+ *
+ * The icon is hidden until the step's button opens the next panel, and the step toggles `hidden` on
+ * the host, so the host is the icon's wrapper rather than something the page has to reach into.
+ */
+internal class CompletionIcon : CustomElementAdapter() {
+    private val icon = createIcon {
+        icon = "vaadin:check"
         style.setProperty("--vaadin-icon-size", "1rem")
+    }
+
+    private var startedHidden = false
+
+    init {
+        attachShadowRoot().append(icon)
+    }
+
+    /** The step's button clears `hidden`; a reconnect must not put it back. */
+    override fun connectedCallback() {
+        if (startedHidden) return
+        startedHidden = true
         toggleAttribute("hidden", true)
     }
 
-/** One wizard panel: a custom summary plus a form and its call-to-action button. */
+    companion object : CustomElementReference<CompletionIcon>(CompletionIcon::class.js) {
+        val NAME: TagName<CompletionIcon> = TagName("vaadin-demo-completion-icon")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-completion-icon>`. */
+internal fun newCompletionIcon(): CompletionIcon {
+    CompletionIcon.define()
+    return CompletionIcon.NAME()
+}
+
+/**
+ * One wizard panel: a custom summary plus a form and its call-to-action button.
+ *
+ * It stays a factory rather than an element because the accordion reads its children as panels, so
+ * what goes into the accordion has to be the panel itself, not a wrapper around it.
+ */
 private fun wizardStep(
     title: String,
     icon: HTMLElement,
@@ -221,27 +291,4 @@ private fun wizardStep(
     action.clickEvent.addHandler { onAction() }
     append(headingNode, createVerticalLayout { addTheme("spacing") }.apply { append(form, action) })
 }
-
-private fun customerForm(): HTMLElement =
-    newWizardLayout(
-        textField(tr("名", "First name")),
-        textField(tr("姓", "Last name")),
-        emailField(tr("邮箱地址", "Email address")).apply { setAttribute("colspan", "2") },
-        textField(tr("电话号码", "Phone number")).apply { setAttribute("colspan", "2") },
-    )
-
-private fun billingForm(): HTMLElement =
-    newWizardLayout(
-        textField(tr("地址", "Address")).apply { setAttribute("colspan", "2") },
-        textField(tr("邮政编码", "ZIP code")),
-        textField(tr("城市", "City")),
-        countryComboBox(tr("国家", "Country")),
-    )
-
-private fun paymentForm(): HTMLElement =
-    newWizardLayout(
-        textField(tr("卡号", "Card number")).apply { setAttribute("colspan", "2") },
-        textField(tr("有效期", "Expiry date")),
-        textField("CVV"),
-    )
 

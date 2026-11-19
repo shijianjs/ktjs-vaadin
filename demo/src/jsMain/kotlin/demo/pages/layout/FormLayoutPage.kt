@@ -1,6 +1,8 @@
 package demo.pages.layout
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
@@ -71,7 +73,7 @@ internal class FormLayoutPage : DemoPage() {
             formRow(emailField(tr("邮箱地址", "Email address"))),
             formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
         )
-        autoSection.body.append(example(null, formFrame(basicForm)))
+        autoSection.body.append(example(null, newFormFrame(basicForm)))
         body.append(autoSection.root)
 
         val labelsSection =
@@ -93,7 +95,7 @@ internal class FormLayoutPage : DemoPage() {
             formItem(tr("姓", "Last name"), createTextField()),
             formItem(tr("邮箱地址", "Email address"), createEmailField()),
         )
-        labelsSection.body.append(example(null, formFrame(asideForm)))
+        labelsSection.body.append(example(null, newFormFrame(asideForm)))
         body.append(labelsSection.root)
 
         val columnsSection =
@@ -128,8 +130,8 @@ internal class FormLayoutPage : DemoPage() {
             formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
         )
         columnsSection.body.append(
-            example("expand-columns", formFrame(expandColumnsForm)),
-            example("expand-columns expand-fields", formFrame(expandFieldsForm)),
+            example("expand-columns", newFormFrame(expandColumnsForm)),
+            example("expand-columns expand-fields", newFormFrame(expandFieldsForm)),
         )
         body.append(columnsSection.root)
 
@@ -156,7 +158,7 @@ internal class FormLayoutPage : DemoPage() {
             ),
             formRow(textField(tr("国家", "Country")).apply { setAttribute("data-colspan", "2") }),
         )
-        colspan.body.append(example(null, formFrame(spanForm)))
+        colspan.body.append(example(null, newFormFrame(spanForm)))
         body.append(colspan.root)
 
         val stepsSection =
@@ -199,8 +201,8 @@ internal class FormLayoutPage : DemoPage() {
             formItem(tr("邮箱地址", "Email address"), createEmailField()),
         )
         stepsSection.body.append(
-            example("responsiveSteps", formFrame(stepsForm)),
-            example(tr("form-item 默认把标签放在左侧", "form-item puts the label aside by default"), formFrame(stepsAsideForm)),
+            example("responsiveSteps", newFormFrame(stepsForm)),
+            example(tr("form-item 默认把标签放在左侧", "form-item puts the label aside by default"), newFormFrame(stepsAsideForm)),
         )
         body.append(stepsSection.root)
 
@@ -222,15 +224,38 @@ internal fun newFormLayoutPage(): FormLayoutPage {
 }
 
 /**
- * Puts a form layout next to an empty pane in a split layout, as the docs examples do: dragging the
- * splitter changes the width of the form and the responsive column count follows it.
+ * `<vaadin-demo-form-frame>`: puts a form layout next to an empty pane in a split layout, as the docs
+ * examples do — dragging the splitter changes the width of the form and the responsive column count
+ * follows it.
  */
-private fun formFrame(form: HTMLElement): HTMLElement {
-    form.style.setProperty("width", "100%")
-    val split = createSplitLayout()
-    split.style.setProperty("height", "18rem")
-    split.append(form, HtmlTagName.div().apply { style.setProperty("background", "var(--lumo-contrast-5pct)") })
-    return split
+internal class FormFrame : CustomElementAdapter() {
+    private val split = createSplitLayout().apply {
+        style.setProperty("height", "18rem")
+    }
+
+    /** Takes [form] into the frame; the form fills the first pane and nothing fills the second. */
+    fun show(form: HTMLElement) {
+        form.style.setProperty("width", "100%")
+        split.append(form, HtmlTagName.div().apply { style.setProperty("background", "var(--lumo-contrast-5pct)") })
+    }
+
+    init {
+        attachShadowRoot().append(split)
+    }
+
+    companion object : CustomElementReference<FormFrame>(FormFrame::class.js) {
+        val NAME: TagName<FormFrame> = TagName("vaadin-demo-form-frame")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-form-frame>` around [form]. */
+internal fun newFormFrame(form: HTMLElement): FormFrame {
+    FormFrame.define()
+    return FormFrame.NAME().also { it.show(form) }
 }
 
 /** A `<vaadin-form-row>` grouping fields into one row of an auto-responsive form layout. */

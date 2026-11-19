@@ -1,5 +1,6 @@
 package demo.pages.buttons
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -476,21 +477,15 @@ internal class MenuBarPage : DemoPage() {
                     "Top-level buttons use the tertiary look by default; compare primary and small below.",
                 ),
             )
-        fun styleBar(label: String, vararg themes: String): HTMLElement =
-            createMenuBar {
-                items =
-                    menuItems(
-                        """[{"text": "$label", "children": [{"text": "${tr("条目", "Item")}"}]}]""",
-                    )
-            }.addTheme(*themes)
+
         styles.body.append(
             example(
                 null,
                 row(
-                    styleBar(tr("默认", "Default")),
-                    styleBar(tr("三级", "Tertiary"), "tertiary"),
-                    styleBar(tr("主要", "Primary"), "primary"),
-                    styleBar(tr("小号", "Small"), "small"),
+                    menuBarVariant(tr("默认", "Default")),
+                    menuBarVariant(tr("三级", "Tertiary"), "tertiary"),
+                    menuBarVariant(tr("主要", "Primary"), "primary"),
+                    menuBarVariant(tr("小号", "Small"), "small"),
                 ),
             ),
         )
@@ -615,3 +610,16 @@ internal fun newMenuBarPage(): MenuBarPage {
     return MenuBarPage.NAME()
 }
 
+/**
+ * One menu bar in the style-variant comparison.
+ *
+ * It stays a factory rather than an element because a menu bar's items are read off the component
+ * itself (`items`), so what goes into the row has to be the `vaadin-menu-bar`.
+ */
+private fun menuBarVariant(label: String, vararg themes: String): HTMLElement =
+    createMenuBar {
+        items =
+            menuItems(
+                """[{"text": "$label", "children": [{"text": "${tr("条目", "Item")}"}]}]""",
+            )
+    }.addTheme(*themes)

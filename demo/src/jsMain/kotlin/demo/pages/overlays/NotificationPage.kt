@@ -1,5 +1,8 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -276,8 +279,8 @@ internal class NotificationPage : DemoPage() {
             bar.append(HtmlTagName.span {
                            textContent = tr("申请已提交！", "Application submitted!")
                        })
-            bar.append(slotted("end", createButton { textContent = tr("查看", "View") }))
-            bar.append(closeIcon(tr("关闭", "Close")) { successNote.opened = false }.also { it.slot = "end" })
+            bar.append(createButton { textContent = tr("查看", "View") }.apply { slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { successNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
 
@@ -291,8 +294,8 @@ internal class NotificationPage : DemoPage() {
             bar.append(HtmlTagName.span {
                            textContent = tr("报表生成失败", "Failed to generate report")
                        })
-            bar.append(slotted("end", createButton { textContent = tr("重试", "Retry") }))
-            bar.append(closeIcon(tr("关闭", "Close")) { failedNote.opened = false }.also { it.slot = "end" })
+            bar.append(createButton { textContent = tr("重试", "Retry") }.apply { slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { failedNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
 
@@ -309,7 +312,7 @@ internal class NotificationPage : DemoPage() {
                     append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
                 },
             )
-            bar.append(closeIcon(tr("关闭", "Close")) { mentionNote.opened = false }.also { it.slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { mentionNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
         richHost.append(
@@ -348,15 +351,15 @@ internal class NotificationPage : DemoPage() {
             bar.append(HtmlTagName.span {
                            textContent = tr("已删除 5 个任务", "5 tasks deleted")
                        })
-            bar.append(
-                slotted("end", createButton { textContent = tr("撤销", "Undo") }.apply {
-                    clickEvent.addHandler {
-                        actionLog.add("undo")
-                        undoNote.opened = false
-                    }
-                }),
-            )
-            bar.append(closeIcon(tr("关闭", "Close")) { undoNote.opened = false }.also { it.slot = "end" })
+            val undo = createButton { textContent = tr("撤销", "Undo") }.apply {
+                clickEvent.addHandler {
+                    actionLog.add("undo")
+                    undoNote.opened = false
+                }
+            }
+            undo.slot = "end"
+            bar.append(undo)
+            bar.append(newCloseIcon(tr("关闭", "Close")) { undoNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
 
@@ -372,7 +375,7 @@ internal class NotificationPage : DemoPage() {
                     append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
                 },
             )
-            bar.append(closeIcon(tr("关闭", "Close")) { linkNote.opened = false }.also { it.slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { linkNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
 
@@ -385,15 +388,15 @@ internal class NotificationPage : DemoPage() {
             bar.append(HtmlTagName.span {
                            textContent = tr("报表生成失败", "Failed to generate report")
                        })
-            bar.append(
-                slotted("end", createButton { textContent = tr("重试", "Retry") }.apply {
-                    clickEvent.addHandler {
-                        actionLog.add("retry")
-                        retryNote.opened = false
-                    }
-                }),
-            )
-            bar.append(closeIcon(tr("关闭", "Close")) { retryNote.opened = false }.also { it.slot = "end" })
+            val retry = createButton { textContent = tr("重试", "Retry") }.apply {
+                clickEvent.addHandler {
+                    actionLog.add("retry")
+                    retryNote.opened = false
+                }
+            }
+            retry.slot = "end"
+            bar.append(retry)
+            bar.append(newCloseIcon(tr("关闭", "Close")) { retryNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
 
@@ -438,11 +441,11 @@ internal class NotificationPage : DemoPage() {
             bar.append(HtmlTagName.span {
                            textContent = tr("已删除 5 个任务", "5 tasks deleted")
                        })
-            bar.append(
-                slotted("end", createButton { textContent = tr("撤销 Ctrl-Z", "Undo Ctrl-Z") }.apply {
-                    clickEvent.addHandler { keyboardNote.opened = false }
-                }),
-            )
+            val undoKey = createButton { textContent = tr("撤销 Ctrl-Z", "Undo Ctrl-Z") }.apply {
+                clickEvent.addHandler { keyboardNote.opened = false }
+            }
+            undoKey.slot = "end"
+            bar.append(undoKey)
             root.append(bar)
         }
         // The listener lives on `document`, so it is registered once per page build and stops reacting
@@ -493,8 +496,8 @@ internal class NotificationPage : DemoPage() {
                     },
                 ),
             )
-            bar.append(slotted("end", createButton { textContent = tr("查看", "View") }))
-            bar.append(closeIcon(tr("关闭", "Close")) { goodNote.opened = false }.also { it.slot = "end" })
+            bar.append(createButton { textContent = tr("查看", "View") }.apply { slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { goodNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
         val longText =
@@ -522,7 +525,7 @@ internal class NotificationPage : DemoPage() {
                     },
                 ),
             )
-            bar.append(closeIcon(tr("关闭", "Close")) { badNote.opened = false }.also { it.slot = "end" })
+            bar.append(newCloseIcon(tr("关闭", "Close")) { badNote.opened = false }.also { it.slot = "end" })
             root.append(bar)
         }
         lengths.body.append(
@@ -564,6 +567,13 @@ internal fun newNotificationPage(): NotificationPage {
     return NotificationPage.NAME()
 }
 
+/**
+ * `<vaadin-demo-notification-bar>`: the horizontal bar the notification examples put into a
+ * notification's content slot — spaced, centred, with a minimum width so the text does not jitter.
+ *
+ * The bar itself stays a `vaadin-horizontal-layout`, because the notification reads the nodes the
+ * examples append to it as its own children.
+ */
 private fun horizontalBar(): HTMLElement {
     val bar = createHorizontalLayout { addTheme("spacing") }
     bar.style.setProperty("align-items", "center")
@@ -571,10 +581,39 @@ private fun horizontalBar(): HTMLElement {
     return bar
 }
 
-private fun closeIcon(name: String, onClick: () -> Unit): HTMLElement =
-    createButton { textContent = "" }.addTheme("icon").apply {
-        setAttribute("aria-label", name)
-        append(createIcon { icon = "lumo:cross" })
-        clickEvent.addHandler { onClick() }
+/**
+ * `<vaadin-demo-close-icon>`: the cross button the notification examples put into their `end` slot.
+ *
+ * The host is what the notification slots, so `slot="end"` stays on it; the button and its icon sit
+ * in the shadow root and the action is handed in as [show]'s callback.
+ */
+internal class CloseIcon : CustomElementAdapter() {
+    private val button = createButton { textContent = "" }.addTheme("icon")
+    private val icon = createIcon { icon = "lumo:cross" }
+
+    init {
+        button.append(icon)
+        attachShadowRoot().append(button)
     }
+
+    /** Sets the accessible name and the action the click runs. */
+    fun show(name: String, onClick: () -> Unit) {
+        button.setAttribute("aria-label", name)
+        button.clickEvent.addHandler { onClick() }
+    }
+
+    companion object : CustomElementReference<CloseIcon>(CloseIcon::class.js) {
+        val NAME: TagName<CloseIcon> = TagName("vaadin-demo-close-icon")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-close-icon>`. */
+internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
+    CloseIcon.define()
+    return CloseIcon.NAME().also { it.show(name, onClick) }
+}
 

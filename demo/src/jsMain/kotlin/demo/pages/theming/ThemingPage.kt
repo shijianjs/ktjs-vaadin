@@ -1,5 +1,7 @@
 package demo.pages.theming
 
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
@@ -94,30 +96,128 @@ val themingEntry: CatalogEntry =
         kitPage = { newThemingPage() },
     )
 
-/** A colour chip bound to one Lumo custom property. */
-private fun swatch(cssVariable: String, label: String): HTMLElement {
-    val chip = HtmlTagName.div().apply {
+/**
+ * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
+ *
+ * The element itself is the chip, so the property lands on its own style instead of on a child.
+ */
+internal class SwatchChip : CustomElementAdapter() {
+    private var cssVariable: String? = null
+
+    /** Shows the colour held by [cssVariable]. */
+    fun show(cssVariable: String) {
+        this.cssVariable = cssVariable
+        style.setProperty("display", "block")
         style.setProperty("width", "3rem")
         style.setProperty("height", "3rem")
         style.setProperty("border-radius", "var(--lumo-border-radius-m)")
         style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
         style.setProperty("background", "var($cssVariable)")
     }
-    return column(chip, HtmlTagName.p {
-                            className = MUTED_SMALL
-                            textContent = label
-                        }, codeText(cssVariable))
+
+    override fun connectedCallback() {
+        cssVariable?.let { show(it) }
+    }
+
+    companion object : CustomElementReference<SwatchChip>(SwatchChip::class.js) {
+        val NAME: TagName<SwatchChip> = TagName("vaadin-demo-swatch-chip")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
 
-/** Shows a stylesheet entry-point constant and its value. */
-private fun entryPoint(name: String, value: String): HTMLElement =
-    row(HtmlTagName.p {
-            className = SMALL
-            textContent = name
-        }, codeText(value))
+/** Creates a defined `<vaadin-demo-swatch-chip>`. */
+internal fun newSwatchChip(cssVariable: String): SwatchChip {
+    SwatchChip.define()
+    return SwatchChip.NAME().also { it.show(cssVariable) }
+}
+
+/**
+ * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
+ *
+ * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
+ * and the code block are kit pieces whose look comes from the page's sheet.
+ */
+internal class EntryPoint : CustomElementAdapter() {
+    private var name: String? = null
+    private var value: String? = null
+    private var built = false
+
+    /** Sets the constant and its value; the row is built once, whichever call comes first. */
+    fun show(name: String, value: String) {
+        this.name = name
+        this.value = value
+        build()
+    }
+
+    override fun connectedCallback() {
+        build()
+    }
+
+    private fun build() {
+        val name = name ?: return
+        val value = value ?: return
+        if (built) return
+        built = true
+        append(
+            row(HtmlTagName.p { className = SMALL; textContent = name }, codeText(value)),
+        )
+    }
+
+    companion object : CustomElementReference<EntryPoint>(EntryPoint::class.js) {
+        val NAME: TagName<EntryPoint> = TagName("vaadin-demo-entry-point")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-entry-point>`. */
+internal fun newEntryPoint(name: String, value: String): EntryPoint {
+    EntryPoint.define()
+    return EntryPoint.NAME().also { it.show(name, value) }
+}
+
+/**
+ * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
+ * the page's binder.
+ */
+internal class DescribedEntryPoint : CustomElementAdapter() {
+    private val description = HtmlTagName.p { className = SMALL }
+    private var built = false
+
+    /** Registers [field] with [binder] and builds the row once. */
+    fun show(name: String, binder: Binder<ThemingTexts>, field: (ThemingTexts) -> String) {
+        binder.bind(description, field)
+        if (built) return
+        built = true
+        append(row(HtmlTagName.p { className = SMALL; textContent = name }, description))
+    }
+
+    companion object : CustomElementReference<DescribedEntryPoint>(DescribedEntryPoint::class.js) {
+        val NAME: TagName<DescribedEntryPoint> = TagName("vaadin-demo-described-entry-point")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-described-entry-point>`. */
+internal fun newDescribedEntryPoint(
+    name: String,
+    binder: Binder<ThemingTexts>,
+    field: (ThemingTexts) -> String,
+): DescribedEntryPoint {
+    DescribedEntryPoint.define()
+    return DescribedEntryPoint.NAME().also { it.show(name, binder, field) }
+}
 
 /** Every string this page shows, in one language. */
-private class ThemingTexts(
+internal class ThemingTexts(
     val docsLink: String,
     val sourceLink: String,
     val apiLink: String,
@@ -411,7 +511,7 @@ internal class ThemingPage : DemoPage() {
         val nodes = swatches.map { (variable, field) ->
             val label = HtmlTagName.p { className = MUTED_SMALL }
             texts.bind(label, field)
-            kitCol(swatchChip(variable), label, codeText(variable))
+            kitCol(newSwatchChip(variable), label, codeText(variable))
         }
         section.body.append(exampleBox(null, kitRow(*nodes.toTypedArray())))
         body.append(section.root)
@@ -426,10 +526,10 @@ internal class ThemingPage : DemoPage() {
             exampleBox(
                 null,
                 kitCol(
-                    entryPoint("LumoThemes.CSS", LumoThemes.CSS),
-                    entryPoint("LumoThemes.COMPACT_CSS", LumoThemes.COMPACT_CSS),
-                    entryPoint("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS),
-                    entryPoint("Aura.CSS", Aura.CSS),
+                    newEntryPoint("LumoThemes.CSS", LumoThemes.CSS),
+                    newEntryPoint("LumoThemes.COMPACT_CSS", LumoThemes.COMPACT_CSS),
+                    newEntryPoint("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS),
+                    newEntryPoint("Aura.CSS", Aura.CSS),
                     entryNote,
                 ),
             ),
@@ -530,10 +630,10 @@ internal class ThemingPage : DemoPage() {
                 null,
                 kitCol(
                     intro,
-                    describedEntryPoint("io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin", { it.elementMixin }),
-                    describedEntryPoint("io.github.shijianjs.ktjs.vaadin.fieldbase.InputControlMixin", { it.inputControl }),
-                    entryPoint("io.github.shijianjs.ktjs.vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
-                    describedEntryPoint("io.github.shijianjs.ktjs.vaadin.VaadinTagName", { it.tagNames }),
+                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin", texts, { it.elementMixin }),
+                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.fieldbase.InputControlMixin", texts, { it.inputControl }),
+                    newEntryPoint("io.github.shijianjs.ktjs.vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
+                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.VaadinTagName", texts, { it.tagNames }),
                 ),
             ),
         )
@@ -552,25 +652,6 @@ internal class ThemingPage : DemoPage() {
     private fun sync() {
         val copy = texts.current
         readout.set(copy.now + if (Theme.isDark) copy.nowDark else copy.nowLight)
-    }
-
-    /** A row of one API name and the text that says what it is for, translated through the binder. */
-    private fun describedEntryPoint(name: String, field: (ThemingTexts) -> String): HTMLElement {
-        val description = HtmlTagName.p { className = SMALL }
-        texts.bind(description, field)
-        return kitRow(HtmlTagName.p {
-                            className = SMALL
-                            textContent = name
-                        }, description)
-    }
-
-    /** A colour chip bound to one Lumo custom property. */
-    private fun swatchChip(cssVariable: String): HTMLElement = HtmlTagName.div {
-        style.setProperty("width", "3rem")
-        style.setProperty("height", "3rem")
-        style.setProperty("border-radius", "var(--lumo-border-radius-m)")
-        style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-        style.setProperty("background", "var($cssVariable)")
     }
 
     companion object : CustomElementReference<ThemingPage>(ThemingPage::class.js) {

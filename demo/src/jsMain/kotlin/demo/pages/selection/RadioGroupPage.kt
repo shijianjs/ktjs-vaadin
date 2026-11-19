@@ -1,5 +1,6 @@
 package demo.pages.selection
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -25,7 +26,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.descendant
 import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
 import io.github.shijianjs.ktjs.demo.style.Palette
 import web.cssom.CSSStyleSheet

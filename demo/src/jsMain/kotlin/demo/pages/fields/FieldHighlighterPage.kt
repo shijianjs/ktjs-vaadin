@@ -23,6 +23,7 @@ import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerConfidences
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighter
+import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighterUser
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.createAiFieldMarker
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.fieldHighlighterUser
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -38,7 +39,6 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerElement
-import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighterUser
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.dom.element.inlineStyle

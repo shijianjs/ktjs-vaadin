@@ -1,10 +1,10 @@
 package demo.pages.overlays
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
-import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
 import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -216,7 +216,7 @@ internal class TooltipPage : DemoPage() {
             )
         val positionedButtons = mutableListOf<HTMLElement>()
         listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
-            val element = iconButton(position, "lumo:info-circle").apply { tokenListAttribute("theme").add("tertiary") }
+            val element = newIconButton(position, "lumo:info-circle").apply { addTheme("tertiary") }
             element.id = ElementId("tooltip-position-$index")
             val positioned = createTooltip { text = position }
             positioned.`for` = "tooltip-position-$index"

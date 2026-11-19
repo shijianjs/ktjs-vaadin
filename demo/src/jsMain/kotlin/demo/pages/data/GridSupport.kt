@@ -1,7 +1,12 @@
 package demo.pages.data
 
-import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
+import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.tr
@@ -119,13 +124,39 @@ internal fun newGrid(height: String = "18rem"): GridElement =
         style.setProperty("height", height)
     }
 
-/** Header content with a trailing info icon, as used by the header renderer example. */
-internal fun headerWithIcon(label: String, icon: String, title: String): HTMLElement =
-    row(HtmlTagName.span {
-            textContent = label
-        }, createIcon { this.icon = icon }.addTheme("small")).apply {
+/**
+ * `<vaadin-demo-grid-header>`: header content with a trailing info icon, as used by the header
+ * renderer example. The `title` tooltip sits on the host, which is the node the header shows.
+ */
+internal class GridHeader : CustomElementAdapter() {
+    private val labelNode = HtmlTagName.span()
+    private val mark = createIcon { }.addTheme("small")
+
+    init {
+        attachShadowRoot().append(row(labelNode, mark))
+    }
+
+    /** Sets the label, the icon and the tooltip title. */
+    fun show(label: String, icon: String, title: String) {
+        labelNode.textContent = label
+        mark.icon = icon
         setAttribute("title", title)
     }
+
+    companion object : CustomElementReference<GridHeader>(GridHeader::class.js) {
+        val NAME: TagName<GridHeader> = TagName("vaadin-demo-grid-header")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-grid-header>`. */
+internal fun newGridHeader(label: String, icon: String, title: String): GridHeader {
+    GridHeader.define()
+    return GridHeader.NAME().also { it.show(label, icon, title) }
+}
 
 internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorterDirection?): List<Person> {
     if (path == null || direction == null) return list
@@ -141,39 +172,61 @@ internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorter
     return if (direction == GridSorterDirections.desc) list.sortedWith(comparator.reversed()) else list.sortedWith(comparator)
 }
 
-/** Avatar + name + email, the two-line cell the docs render through a Lit renderer. */
-internal fun personCell(item: JsAny?): HTMLElement =
-    HtmlTagName.div().apply {
+/**
+ * `<vaadin-demo-person-cell>`: avatar + name + email, the two-line cell the docs render through a
+ * renderer. The cell is an element so a renderer hands back one node with its own shadow rather than
+ * a `div` rebuilt per row.
+ */
+internal class PersonCell : CustomElementAdapter() {
+    private val avatar = createAvatar { }
+    private val displayName = HtmlTagName.span().apply { style.setProperty("font-weight", "600") }
+    private val email = HtmlTagName.span().apply {
         inlineStyle.apply {
-            display = Display.flex
-            alignItems = AlignItems.center
-            columnGap = 8.px
+            color = Palette.muted
+            fontSize = 12.px
         }
-        append(
-            createAvatar {
-                name = "${itemText(item, "firstName")} ${itemText(item, "lastName")}"
-                img = itemText(item, "pictureUrl")
-            },
-            HtmlTagName.div().apply {
-                inlineStyle.apply {
-                    display = Display.flex
-                    flexDirection = FlexDirection.column
-                }
-                append(
-                    HtmlTagName.span {
-                        textContent = itemText(item, "displayName")
-                    }.apply { style.setProperty("font-weight", "600") },
-                    HtmlTagName.span {
-                        textContent = itemText(item, "email")
-                    }.apply {
-                        inlineStyle.apply {
-                            color = Palette.muted
-                            fontSize = 12.px
-                        }
-                    },
-                )
-            },
-        )
     }
+
+    init {
+        val lines = HtmlTagName.div().apply {
+            inlineStyle.apply {
+                display = Display.flex
+                flexDirection = FlexDirection.column
+            }
+        }
+        lines.append(displayName, email)
+        val root = HtmlTagName.div().apply {
+            inlineStyle.apply {
+                display = Display.flex
+                alignItems = AlignItems.center
+                columnGap = 8.px
+            }
+        }
+        root.append(avatar, lines)
+        attachShadowRoot().append(root)
+    }
+
+    /** Fills the cell from the grid's item. */
+    fun show(item: JsAny?) {
+        avatar.name = "${itemText(item, "firstName")} ${itemText(item, "lastName")}"
+        avatar.img = itemText(item, "pictureUrl")
+        displayName.textContent = itemText(item, "displayName")
+        email.textContent = itemText(item, "email")
+    }
+
+    companion object : CustomElementReference<PersonCell>(PersonCell::class.js) {
+        val NAME: TagName<PersonCell> = TagName("vaadin-demo-person-cell")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-person-cell>`. */
+internal fun newPersonCell(item: JsAny?): PersonCell {
+    PersonCell.define()
+    return PersonCell.NAME().also { it.show(item) }
+}
 
 // endregion

@@ -1,5 +1,6 @@
 package demo.pages.overlays
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -181,7 +182,7 @@ internal class PopoverPage : DemoPage() {
                     "theme=\"arrow\" draws an arrow on the overlay edge that points at the trigger.",
                 ),
             )
-        val bell = iconButton(tr("通知", "Notifications"), "lumo:bell")
+        val bell = newIconButton(tr("通知", "Notifications"), "lumo:bell")
         bell.id = ElementId("popover-arrow-trigger")
         val arrowPopover = createPopover { addTheme("arrow") }
         arrowPopover.`for` = "popover-arrow-trigger"
@@ -336,7 +337,7 @@ internal class PopoverPage : DemoPage() {
                         "and a Message List renders the items.",
                 ),
             )
-        val notificationBell = iconButton(tr("通知", "Notifications"), "lumo:bell")
+        val notificationBell = newIconButton(tr("通知", "Notifications"), "lumo:bell")
         notificationBell.id = ElementId("popover-notifications-trigger")
         val notificationsPopover = createPopover { addTheme("arrow", "no-padding") }
         notificationsPopover.`for` = "popover-notifications-trigger"
@@ -472,7 +473,7 @@ internal class PopoverPage : DemoPage() {
             columnElements += path to column
             grid.append(column)
         }
-        val columnsButton = iconButton(tr("显示 / 隐藏列", "Show / hide columns"), "vaadin:grid-h")
+        val columnsButton = newIconButton(tr("显示 / 隐藏列", "Show / hide columns"), "vaadin:grid-h")
         columnsButton.id = ElementId("popover-columns-trigger")
         val columnsPopover = createPopover()
         columnsPopover.`for` = "popover-columns-trigger"

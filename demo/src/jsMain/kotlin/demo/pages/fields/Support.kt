@@ -3,10 +3,10 @@ package demo.pages.fields
 import demo.tr
 import demo.ui.Readout
 import demo.ui.Section
+import demo.ui.section
 import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.js
 import kotlin.js.unsafeCast

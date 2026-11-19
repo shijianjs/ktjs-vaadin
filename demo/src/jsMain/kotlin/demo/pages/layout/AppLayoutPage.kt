@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -81,9 +84,9 @@ internal class AppLayoutPage : DemoPage() {
         layout.dataset["test"] = "app-layout"
         layout.style.setProperty("height", "22rem")
         layout.append(
-            appNavbar(tr("我的应用", "MyApp")),
-            appDrawer(),
-            appContent(tr("内容区由默认插槽填充。", "The content area is filled through the default slot.")),
+            newAppNavbar(tr("我的应用", "MyApp")),
+            newAppDrawer(),
+            newAppContent(tr("内容区由默认插槽填充。", "The content area is filled through the default slot.")),
         )
         val readout = Readout("drawerOpened = false")
         layout.listen(AppLayoutEvents.drawerOpenedChanged) {
@@ -115,13 +118,13 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("justify-content", "center")
             style.setProperty("gap", "0.5rem")
             append(
-                navLink(tr("仪表盘", "Dashboard")),
-                navLink(tr("订单", "Orders")),
-                navLink(tr("客户", "Customers")),
-                navLink(tr("产品", "Products")),
+                newNavLink(tr("仪表盘", "Dashboard")),
+                newNavLink(tr("订单", "Orders")),
+                newNavLink(tr("客户", "Customers")),
+                newNavLink(tr("产品", "Products")),
             )
         }
-        navbarLayout.append(navTitle, navLinks, appContent(tr("内容区", "Content area")))
+        navbarLayout.append(navTitle, navLinks, newAppContent(tr("内容区", "Content area")))
         navbarSection.body.append(example(null, navbarLayout))
         body.append(navbarSection.root)
 
@@ -140,9 +143,9 @@ internal class AppLayoutPage : DemoPage() {
         sideLayout.dataset["test"] = "app-layout-placement"
         sideLayout.style.setProperty("height", "20rem")
         sideLayout.append(
-            appNavbar(tr("仪表盘", "Dashboard")),
-            appDrawer(),
-            appContent(tr("仪表盘内容", "Dashboard content")),
+            newAppNavbar(tr("仪表盘", "Dashboard")),
+            newAppDrawer(),
+            newAppContent(tr("仪表盘内容", "Dashboard content")),
         )
         val placementReadout = Readout("primarySection = drawer")
         val placementButton =
@@ -228,10 +231,10 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("width", "100%")
             style.setProperty("justify-content", "space-evenly")
             append(
-                navLink(tr("仪表盘", "Dashboard"), "vaadin:dashboard"),
-                navLink(tr("订单", "Orders"), "vaadin:cart"),
-                navLink(tr("客户", "Customers"), "vaadin:user-heart"),
-                navLink(tr("产品", "Products"), "vaadin:package"),
+                newNavLink(tr("仪表盘", "Dashboard"), "vaadin:dashboard"),
+                newNavLink(tr("订单", "Orders"), "vaadin:cart"),
+                newNavLink(tr("客户", "Customers"), "vaadin:user-heart"),
+                newNavLink(tr("产品", "Products"), "vaadin:package"),
             )
         }
         bottomLayout.append(
@@ -240,7 +243,7 @@ internal class AppLayoutPage : DemoPage() {
                 style.setProperty("margin", "0")
             },
             bottomNav,
-            appContent(tr("视图标题与内容", "View title and content")),
+            newAppContent(tr("视图标题与内容", "View title and content")),
         )
         bottomNavbar.body.append(example(null, bottomLayout))
         body.append(bottomNavbar.root)
@@ -277,19 +280,19 @@ internal class AppLayoutPage : DemoPage() {
                     style.setProperty("justify-content", "center")
                     style.setProperty("gap", "0.5rem")
                     append(
-                        navLink(tr("全部", "All")),
-                        navLink(tr("进行中", "Open")),
-                        navLink(tr("已完成", "Completed")),
-                        navLink(tr("已取消", "Cancelled")),
+                        newNavLink(tr("全部", "All")),
+                        newNavLink(tr("进行中", "Open")),
+                        newNavLink(tr("已完成", "Completed")),
+                        newNavLink(tr("已取消", "Cancelled")),
                     )
                 },
             )
         }
         secondaryLayout.append(
             drawerTitle,
-            appDrawer(),
+            newAppDrawer(),
             secondaryNavbar,
-            appContent(tr("订单列表", "Order list")),
+            newAppContent(tr("订单列表", "Order list")),
         )
         secondary.body.append(example(null, secondaryLayout))
         body.append(secondary.root)
@@ -311,33 +314,103 @@ internal fun newAppLayoutPage(): AppLayoutPage {
     return AppLayoutPage.NAME()
 }
 
-/** The navbar of the app layout examples: drawer toggle plus the application title. */
-private fun appNavbar(title: String): HTMLElement =
-    HtmlTagName.div().apply {
+/**
+ * `<vaadin-demo-app-navbar>`: the navbar of the app layout examples — drawer toggle plus the
+ * application title. The host carries the slot, the nodes sit in its shadow root.
+ */
+internal class AppNavbar : CustomElementAdapter() {
+    private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
+    private val caption = heading(3, "").apply { style.setProperty("margin", "0") }
+
+    init {
+        attachShadowRoot().append(toggle, caption)
+    }
+
+    /** Sets the application title next to the drawer toggle. */
+    fun show(title: String) {
+        caption.textContent = title
+    }
+
+    override fun connectedCallback() {
         slot = "navbar"
-        append(
-            createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") },
-            heading(3, title).apply { style.setProperty("margin", "0") },
-        )
     }
 
-/** The drawer of the app layout examples: a scroller holding the main side navigation. */
-private fun appDrawer(): HTMLElement =
-    createScroller().apply {
+    companion object : CustomElementReference<AppNavbar>(AppNavbar::class.js) {
+        val NAME: TagName<AppNavbar> = TagName("vaadin-demo-app-navbar")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-app-navbar>`. */
+internal fun newAppNavbar(title: String): AppNavbar {
+    AppNavbar.define()
+    return AppNavbar.NAME().also { it.show(title) }
+}
+
+/**
+ * `<vaadin-demo-app-drawer>`: the drawer of the app layout examples, a scroller holding the main
+ * side navigation.
+ */
+internal class AppDrawer : CustomElementAdapter() {
+    init {
+        attachShadowRoot().append(createScroller().apply { append(newAppSideNav()) })
+    }
+
+    override fun connectedCallback() {
         slot = "drawer"
-        append(newAppSideNav())
     }
 
-/** Content area filler for the app layout examples. */
-private fun appContent(text: String): HTMLElement =
-    HtmlTagName.div().apply {
-        style.setProperty("padding", "var(--lumo-space-m)")
+    companion object : CustomElementReference<AppDrawer>(AppDrawer::class.js) {
+        val NAME: TagName<AppDrawer> = TagName("vaadin-demo-app-drawer")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-app-drawer>`. */
+internal fun newAppDrawer(): AppDrawer {
+    AppDrawer.define()
+    return AppDrawer.NAME()
+}
+
+/** `<vaadin-demo-app-content>`: padding filler for the app layout examples' content area. */
+internal class AppContent : CustomElementAdapter() {
+    /** Sets the text the content area shows. */
+    fun show(text: String) {
         textContent = text
     }
 
-/** A demo navigation link that stays on the current hash route. */
-private fun navLink(label: String, icon: String? = null): HTMLElement =
-    HtmlTagName.a().apply {
+    override fun connectedCallback() {
+        style.setProperty("display", "block")
+        style.setProperty("padding", "var(--lumo-space-m)")
+    }
+
+    companion object : CustomElementReference<AppContent>(AppContent::class.js) {
+        val NAME: TagName<AppContent> = TagName("vaadin-demo-app-content")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-app-content>`. */
+internal fun newAppContent(text: String): AppContent {
+    AppContent.define()
+    return AppContent.NAME().also { it.show(text) }
+}
+
+/**
+ * `<vaadin-demo-nav-link>`: a demo navigation link that stays on the current hash route. The host is
+ * a wrapper around the anchor, because an element cannot take over the `a` tag itself.
+ */
+internal class NavLink : CustomElementAdapter() {
+    private val anchor = HtmlTagName.a().apply {
         href = "#/app-layout"
         style.setProperty("display", "flex")
         style.setProperty("align-items", "center")
@@ -345,13 +418,37 @@ private fun navLink(label: String, icon: String? = null): HTMLElement =
         style.setProperty("font-weight", "500")
         style.setProperty("text-decoration", "none")
         style.setProperty("color", "inherit")
+    }
+
+    init {
+        attachShadowRoot().append(anchor)
+    }
+
+    /** Sets the label; with an [icon] the label moves to `aria-label` and the icon stands in for it. */
+    fun show(label: String, icon: String? = null) {
+        anchor.textContent = ""
         if (icon == null) {
-            textContent = label
+            anchor.textContent = label
         } else {
-            setAttribute("aria-label", label)
-            append(createIcon { this.icon = icon })
+            anchor.setAttribute("aria-label", label)
+            anchor.append(createIcon { this.icon = icon })
         }
     }
+
+    companion object : CustomElementReference<NavLink>(NavLink::class.js) {
+        val NAME: TagName<NavLink> = TagName("vaadin-demo-nav-link")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-nav-link>`. */
+internal fun newNavLink(label: String, icon: String? = null): NavLink {
+    NavLink.define()
+    return NavLink.NAME().also { it.show(label, icon) }
+}
 
 /** A grid of demo people used by the scrolling examples of the app layout page. */
 private fun appPeopleGrid(rows: Int, allRowsVisible: Boolean): GridElement {

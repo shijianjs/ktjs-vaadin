@@ -1,8 +1,13 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
-import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.pages.fixtures.Person
@@ -79,15 +84,27 @@ private fun detailItems(event: Event, key: String): Array<JsAny> =
 
 // endregion
 
-private fun personDetails(item: JsAny?): HTMLElement =
-    HtmlTagName.div().apply {
-        // Six read-only fields, wrapping into rows: the same flex-wrap rule the docs use.
+/**
+ * `<vaadin-demo-person-details>`: six read-only fields in the row details panel, wrapping into rows —
+ * the same flex-wrap rule the docs use. The fields are rebuilt from the item on [show], because the row
+ * details panel hands its content one item at a time.
+ */
+internal class PersonDetails : CustomElementAdapter() {
+    private val fields = HtmlTagName.div().apply {
         inlineStyle.apply {
             display = Display.flex
             flexWrap = FlexWrap.wrap
         }
         style.setProperty("gap", "8px")
-        append(
+    }
+
+    init {
+        attachShadowRoot().append(fields)
+    }
+
+    /** Fills the six fields from the grid's item. */
+    fun show(item: JsAny?) {
+        fields.replaceChildren(
             createTextField { label = tr("邮箱地址", "Email address"); value = itemPathText(item, "email"); readonly = true },
             createTextField { label = tr("电话", "Phone number"); value = itemPathText(item, "address.phone"); readonly = true },
             createTextField { label = tr("街道", "Street address"); value = itemPathText(item, "address.street"); readonly = true },
@@ -96,6 +113,21 @@ private fun personDetails(item: JsAny?): HTMLElement =
             createTextField { label = tr("州", "State"); value = itemPathText(item, "address.state"); readonly = true },
         )
     }
+
+    companion object : CustomElementReference<PersonDetails>(PersonDetails::class.js) {
+        val NAME: TagName<PersonDetails> = TagName("vaadin-demo-person-details")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-person-details>`. */
+internal fun newPersonDetails(item: JsAny?): PersonDetails {
+    PersonDetails.define()
+    return PersonDetails.NAME().also { it.show(item) }
+}
 
 private fun appendGridRowDetails(page: DemoPage) {
     val details =
@@ -115,7 +147,7 @@ private fun appendGridRowDetails(page: DemoPage) {
         createGridColumn { header = tr("姓名", "Name"); path = "displayName" },
         createGridColumn { path = "profession" },
     )
-    clickGrid.rowDetailsRenderer = { root, _, model -> root.append(personDetails(model.item)) }
+    clickGrid.rowDetailsRenderer = { root, _, model -> root.append(newPersonDetails(model.item)) }
     clickGrid.listen(GridEvents.activeItemChanged) { event ->
         val item = detailValue(event)
         if (item == null) {
@@ -134,7 +166,7 @@ private fun appendGridRowDetails(page: DemoPage) {
     // A frozen column with a toggle button.
     val toggleGrid = newGrid()
     toggleGrid.fill(people(5))
-    toggleGrid.rowDetailsRenderer = { root, _, model -> root.append(personDetails(model.item)) }
+    toggleGrid.rowDetailsRenderer = { root, _, model -> root.append(newPersonDetails(model.item)) }
     val openedItems = mutableListOf<JsAny>()
     toggleGrid.append(
         createGridColumn {

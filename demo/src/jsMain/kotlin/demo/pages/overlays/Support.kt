@@ -1,6 +1,14 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
 import demo.pages.fixtures.personItems
@@ -45,20 +53,48 @@ internal fun personGrid(list: List<Person> = people(5), withSelection: Boolean =
 
 internal val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
 
-internal fun iconButton(name: String, vararg iconNames: String): HTMLElement =
-    createButton { textContent = "" }.apply {
-        addTheme("icon")
-        ariaLabel(name)
-        iconNames.forEach { append(createIcon { icon = it }) }
+/**
+ * `<vaadin-demo-icon-button>`: the icon-only button the overlay examples put into their toolbars.
+ *
+ * The host wraps the button because the theme a caller adds (`tertiary` on the tooltip targets) belongs
+ * on the button, and [addTheme] hands it there.
+ */
+internal class IconButton : CustomElementAdapter() {
+    private val button = createButton { textContent = "" }.apply { addTheme("icon") }
+
+    init {
+        attachShadowRoot().append(button)
     }
+
+    /** Sets the accessible name and the icons the button shows. */
+    fun show(name: String, vararg iconNames: String) {
+        button.setAttribute("aria-label", name)
+        button.textContent = ""
+        iconNames.forEach { button.append(createIcon { icon = it }) }
+    }
+
+    /** Adds [themes] to the wrapped button, not to the host. */
+    fun addTheme(vararg themes: String) {
+        button.tokenListAttribute("theme").add(*themes)
+    }
+
+    companion object : CustomElementReference<IconButton>(IconButton::class.js) {
+        val NAME: TagName<IconButton> = TagName("vaadin-demo-icon-button")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-icon-button>`. */
+internal fun newIconButton(name: String, vararg iconNames: String): IconButton {
+    IconButton.define()
+    return IconButton.NAME().also { it.show(name, *iconNames) }
+}
 
 internal fun HTMLElement.ariaLabel(name: String) {
     setAttribute("aria-label", name)
-}
-
-internal fun slotted(slotName: String, element: HTMLElement): HTMLElement {
-    element.slot = slotName
-    return element
 }
 
 /**

@@ -1,5 +1,6 @@
 package demo.pages.data
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -301,7 +302,7 @@ private fun appendGridColumns(page: DemoPage) {
         },
         createGridColumn {
             headerRenderer = { root, _ ->
-                root.append(headerWithIcon(tr("订阅", "Subscriber"), "vaadin:info-circle", tr("订阅者是付费客户", "Subscribers are paying customers")))
+                root.append(newGridHeader(tr("订阅", "Subscriber"), "vaadin:info-circle", tr("订阅者是付费客户", "Subscribers are paying customers")))
             }
             renderer = { root, _, model -> root.textContent = if (itemFlag(model.item, "subscriber")) tr("是", "Yes") else tr("否", "No") }
             footerRenderer = { root, _ -> root.append(HtmlTagName.span {
@@ -311,7 +312,7 @@ private fun appendGridColumns(page: DemoPage) {
         createGridColumn {
             headerRenderer = { root, _ ->
                 root.append(
-                    headerWithIcon(
+                    newGridHeader(
                         tr("会员等级", "Membership"),
                         "vaadin:info-circle",
                         tr("会员等级决定可用的功能", "Membership levels determine which features are available"),
@@ -452,7 +453,7 @@ private fun appendGridDataBinding(page: DemoPage) {
             header = tr("姓名", "Name")
             width = "230px"
             flexGrow = 0.0
-            renderer = { root, _, model -> root.append(personCell(model.item)) }
+            renderer = { root, _, model -> root.append(newPersonCell(model.item)) }
         },
         createGridColumn { header = tr("邮箱", "Email"); path = "email" },
         createGridColumn { header = tr("职业", "Profession"); path = "profession" },
@@ -509,7 +510,7 @@ private fun appendGridDataBinding(page: DemoPage) {
             header = tr("姓名", "Name")
             width = "230px"
             flexGrow = 0.0
-            renderer = { root, _, model -> root.append(personCell(model.item)) }
+            renderer = { root, _, model -> root.append(newPersonCell(model.item)) }
         },
         createGridColumn { path = "email" },
         createGridColumn { path = "profession" },

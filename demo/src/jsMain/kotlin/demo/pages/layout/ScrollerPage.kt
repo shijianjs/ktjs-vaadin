@@ -24,6 +24,8 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -124,10 +126,10 @@ internal class ScrollerPage : DemoPage() {
                 style.setProperty("display", "inline-flex")
                 addTheme("padding", "spacing")
                 append(
-                    scrollerAction(tr("审计", "Audit"), "vaadin:clipboard-check"),
-                    scrollerAction(tr("报表", "Report"), "vaadin:book-dollar"),
-                    scrollerAction(tr("仪表盘", "Dashboard"), "vaadin:line-chart"),
-                    scrollerAction(tr("发票", "Invoice"), "vaadin:invoice"),
+                    newScrollerAction(tr("审计", "Audit"), "vaadin:clipboard-check"),
+                    newScrollerAction(tr("报表", "Report"), "vaadin:book-dollar"),
+                    newScrollerAction(tr("仪表盘", "Dashboard"), "vaadin:line-chart"),
+                    newScrollerAction(tr("发票", "Invoice"), "vaadin:invoice"),
                 )
             },
         )
@@ -223,11 +225,36 @@ private const val SCROLLER_EVENT_EN =
     Questions? Email us at events@techconf.example.
     """
 
-/** Action button of the horizontal mobile scroller example. */
-private fun scrollerAction(label: String, icon: String): HTMLElement {
-    val button = createButton { textContent = label }
-    button.style.setProperty("height", "6.25rem")
-    button.append(createIcon { this.icon = icon }.apply { slot = "prefix" })
-    return button
+/**
+ * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
+ * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
+ */
+internal class ScrollerAction : CustomElementAdapter() {
+    private val button = createButton { textContent = "" }
+
+    init {
+        button.style.setProperty("height", "6.25rem")
+        attachShadowRoot().append(button)
+    }
+
+    /** Sets the label and the prefix icon. */
+    fun show(label: String, icon: String) {
+        button.textContent = label
+        button.append(createIcon { this.icon = icon }.apply { slot = "prefix" })
+    }
+
+    companion object : CustomElementReference<ScrollerAction>(ScrollerAction::class.js) {
+        val NAME: TagName<ScrollerAction> = TagName("vaadin-demo-scroller-action")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-scroller-action>`. */
+internal fun newScrollerAction(label: String, icon: String): ScrollerAction {
+    ScrollerAction.define()
+    return ScrollerAction.NAME().also { it.show(label, icon) }
 }
 

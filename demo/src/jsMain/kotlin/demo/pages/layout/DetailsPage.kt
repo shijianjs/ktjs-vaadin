@@ -1,5 +1,6 @@
 package demo.pages.layout
 
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -196,7 +197,20 @@ internal class DetailsPage : DemoPage() {
             summary = tr("成员（8）", "Members (8)")
             disabled = true
         }
-        disabledDetails.append(membersList())
+        disabledDetails.append(
+            bulletList(
+                listOf(
+                    "Blake Martin",
+                    "Caroline Clark",
+                    "Avery Torres",
+                    "Khloe Scott",
+                    "Camila Fisher",
+                    "Gavin Lewis",
+                    "Isabella Powell",
+                    "Zoe Wilson",
+                ),
+            ),
+        )
         disabledSection.body.append(example(null, disabledDetails))
         body.append(disabledSection.root)
 
@@ -240,24 +254,31 @@ private fun linkDetails(summary: String, items: List<String>) =
         append(column(*items.map { kitAnchor(it, "#/details") }.toTypedArray()))
     }
 
-private fun membersList(): HTMLElement =
-    bulletList(listOf(
-            "Blake Martin",
-            "Caroline Clark",
-            "Avery Torres",
-            "Khloe Scott",
-            "Camila Fisher",
-            "Gavin Lewis",
-            "Isabella Powell",
-            "Zoe Wilson",
-        ))
-
+/**
+ * A details block with the eight members inside, one per theme variant.
+ *
+ * It stays a factory rather than an element because `vaadin-details` reads what the examples append to
+ * it as its own content, so the node that goes into the page has to be the details element itself.
+ */
 private fun membersDetails(theme: String) =
     createDetails {
         summary = tr("成员（8）", "Members (8)")
         opened = true
     }.apply {
         addTheme(theme)
-        append(membersList())
+        append(
+            bulletList(
+                listOf(
+                    "Blake Martin",
+                    "Caroline Clark",
+                    "Avery Torres",
+                    "Khloe Scott",
+                    "Camila Fisher",
+                    "Gavin Lewis",
+                    "Isabella Powell",
+                    "Zoe Wilson",
+                ),
+            ),
+        )
     }
 
