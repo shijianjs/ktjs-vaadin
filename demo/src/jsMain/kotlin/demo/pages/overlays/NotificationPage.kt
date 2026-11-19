@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 
@@ -20,11 +25,7 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -67,7 +68,7 @@ internal class NotificationPage : DemoPage() {
         configureFrame(notificationEntry)
 
         val positions =
-            section(
+            sectionBlock(
                 tr("位置与时长", "Position and duration"),
                 tr(
                     "Notification.show 是一次性提示；options 可以指定 position、duration 与 theme。",
@@ -75,9 +76,9 @@ internal class NotificationPage : DemoPage() {
                 ),
             )
         positions.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("右上角", "Top end") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             Notification.show(
@@ -112,7 +113,7 @@ internal class NotificationPage : DemoPage() {
         body.append(positions.root)
 
         val allPositions =
-            section(
+            sectionBlock(
                 tr("全部位置", "Every position"),
                 tr(
                     "position 接受九种取值：顶部 / 中间 / 底部，各三种水平对齐，stretch 占满整行。",
@@ -133,9 +134,9 @@ internal class NotificationPage : DemoPage() {
                 "bottom-stretch",
             )
         allPositions.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     *positionNames
                         .map { name ->
                             createButton { textContent = name }.addTheme("tertiary small").apply {
@@ -154,14 +155,14 @@ internal class NotificationPage : DemoPage() {
         body.append(allPositions.root)
 
         val themes =
-            section(
+            sectionBlock(
                 tr("主题变体", "Theme variants"),
                 tr("theme 会传播到内部的 notification-card。", "theme propagates to the inner notification-card."),
             )
         themes.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = "success" }.addTheme("success").apply {
                         clickEvent.addHandler {
                             Notification.show(
@@ -223,7 +224,7 @@ internal class NotificationPage : DemoPage() {
         body.append(themes.root)
 
         val persistent =
-            section(
+            sectionBlock(
                 tr("常驻通知", "Persistent notification"),
                 tr(
                     "duration 设为 0 时不自动关闭，需要在 renderer 里放一个关闭按钮。",
@@ -234,7 +235,7 @@ internal class NotificationPage : DemoPage() {
         persistentNote.duration = 0.0
         persistentNote.position = "middle"
         val noteContent =
-            row(
+            kitRow(
                 paragraph(tr("这条通知会一直显示，直到点击关闭。", "This notification stays visible until it is closed.")),
                 createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary small").apply {
                     clickEvent.addHandler { persistentNote.opened = false }
@@ -243,9 +244,9 @@ internal class NotificationPage : DemoPage() {
         persistentNote.renderer = { root, _ -> root.append(noteContent) }
 
         persistent.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("显示常驻通知", "Show persistent notification") }.apply {
                         clickEvent.addHandler { persistentNote.opened = true }
                     },
@@ -259,7 +260,7 @@ internal class NotificationPage : DemoPage() {
         body.append(persistent.root)
 
         val rich =
-            section(
+            sectionBlock(
                 tr("富内容通知", "Rich notifications"),
                 tr(
                     "renderer 里可以放图标、头像、链接与操作按钮；通知卡片在 renderer 与组件之间共享。",
@@ -267,7 +268,7 @@ internal class NotificationPage : DemoPage() {
                         "renderer and the component.",
                 ),
             )
-        val richHost = column()
+        val richHost = kitCol()
 
         val successNote = createNotification()
         successNote.duration = 0.0
@@ -316,7 +317,7 @@ internal class NotificationPage : DemoPage() {
             root.append(bar)
         }
         richHost.append(
-            row(
+            kitRow(
                 createButton { textContent = tr("成功通知", "Show rich notification") }.addTheme("success").apply {
                     clickEvent.addHandler { successNote.opened = true }
                 },
@@ -331,11 +332,11 @@ internal class NotificationPage : DemoPage() {
             failedNote,
             mentionNote,
         )
-        rich.body.append(example(null, richHost))
+        rich.body.append(exampleBox(null, richHost))
         body.append(rich.root)
 
         val actions =
-            section(
+            sectionBlock(
                 tr("带操作的通知", "Notifications with actions"),
                 tr(
                     "撤销、重试与链接操作都放在 renderer 里；关闭按钮用图标按钮表达。",
@@ -401,10 +402,10 @@ internal class NotificationPage : DemoPage() {
         }
 
         actions.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
-                    row(
+                kitCol(
+                    kitRow(
                         createButton { textContent = tr("撤销通知", "Undo notification") }.addTheme("tertiary").apply {
                             clickEvent.addHandler { undoNote.opened = true }
                         },
@@ -425,7 +426,7 @@ internal class NotificationPage : DemoPage() {
         body.append(actions.root)
 
         val keyboard =
-            section(
+            sectionBlock(
                 tr("键盘快捷键", "Keyboard shortcut"),
                 tr(
                     "通知打开时按 Ctrl-Z（macOS 上是 ⌘-Z）也能撤销；快捷键只在通知可见时生效。",
@@ -457,9 +458,9 @@ internal class NotificationPage : DemoPage() {
             }
         }
         keyboard.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createButton { textContent = tr("显示通知", "Show notification") }.apply {
                         clickEvent.addHandler { keyboardNote.opened = true }
                     },
@@ -470,7 +471,7 @@ internal class NotificationPage : DemoPage() {
         body.append(keyboard.root)
 
         val lengths =
-            section(
+            sectionBlock(
                 tr("内容长度", "Content length"),
                 tr(
                     "通知只放结论与一个主要操作；细节留在页面里，避免出现长段落。",
@@ -484,7 +485,7 @@ internal class NotificationPage : DemoPage() {
         goodNote.renderer = { root, _ ->
             val bar = horizontalBar()
             bar.append(
-                column(
+                kitCol(
                     HtmlTagName.span {
                         textContent = tr("Aria Bailey", "Aria Bailey")
                     },
@@ -513,7 +514,7 @@ internal class NotificationPage : DemoPage() {
         badNote.renderer = { root, _ ->
             val bar = horizontalBar()
             bar.append(
-                column(
+                kitCol(
                     HtmlTagName.span {
                         textContent = tr("来自 Aria Bailey 的新消息", "New message from Aria Bailey")
                     },
@@ -529,18 +530,18 @@ internal class NotificationPage : DemoPage() {
             root.append(bar)
         }
         lengths.body.append(
-            example(
+            exampleBox(
                 tr("推荐：一行结论 + 一个操作", "Do: outcome plus one action"),
-                column(
+                kitCol(
                     createButton { textContent = tr("显示推荐示例", "Show recommended") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { goodNote.opened = true }
                     },
                     goodNote,
                 ),
             ),
-            example(
+            exampleBox(
                 tr("不推荐：整段对话塞进通知", "Don't: a whole paragraph in a notification"),
-                column(
+                kitCol(
                     createButton { textContent = tr("显示不推荐示例", "Show discouraged") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { badNote.opened = true }
                     },

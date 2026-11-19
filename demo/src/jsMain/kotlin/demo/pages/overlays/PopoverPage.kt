@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -21,13 +26,8 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.rowStart
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.cssom.AlignItems
 import web.cssom.Display
@@ -103,7 +103,7 @@ internal class PopoverPage : DemoPage() {
         configureFrame(popoverEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "popover 通过 for 指向触发元素的 id；默认点击触发、点击外部关闭。",
@@ -118,18 +118,18 @@ internal class PopoverPage : DemoPage() {
         val popover = createPopover()
         popover.`for` = "popover-trigger"
         popover.append(
-            column(
+            kitCol(
                 heading(3, tr("浮层内容", "Overlay content")),
                 paragraph(tr("任意 DOM 都可以放进 popover 的默认插槽。", "Any DOM goes into the popover's default slot.")),
             ),
         )
         popover.listen(PopoverEvents.openedChanged) { log.add("opened-changed · ${popover.opened}") }
 
-        basic.body.append(example(null, column(row(trigger, popover), log.root)))
+        basic.body.append(exampleBox(null, kitCol(kitRow(trigger, popover), log.root)))
         body.append(basic.root)
 
         val positioning =
-            section(
+            sectionBlock(
                 tr("位置", "Position"),
                 tr(
                     "position 接受 top / bottom / start / end 与它们的组合，共十二个值。",
@@ -170,12 +170,18 @@ internal class PopoverPage : DemoPage() {
             positionPopover.position = positionSelect.value
         }
         positioning.body.append(
-            example(null, column(rowStart(positionTarget, positionSelect), positionPopover)),
+            exampleBox(
+                null,
+                kitCol(
+                    kitRow(positionTarget, positionSelect).apply { style.setProperty("align-items", "flex-start") },
+                    positionPopover,
+                ),
+            ),
         )
         body.append(positioning.root)
 
         val arrow =
-            section(
+            sectionBlock(
                 tr("箭头与图标触发器", "Arrow and icon trigger"),
                 tr(
                     "theme=\"arrow\" 在浮层边缘画一个指向触发元素的箭头。",
@@ -187,11 +193,11 @@ internal class PopoverPage : DemoPage() {
         val arrowPopover = createPopover { addTheme("arrow") }
         arrowPopover.`for` = "popover-arrow-trigger"
         arrowPopover.append(HtmlTagName.div().apply { textContent = tr("没有新通知", "No new notifications") })
-        arrow.body.append(example(null, row(bell, arrowPopover)))
+        arrow.body.append(exampleBox(null, kitRow(bell, arrowPopover)))
         body.append(arrow.root)
 
         val modal =
-            section(
+            sectionBlock(
                 tr("模态与背景", "Modal and backdrop"),
                 tr(
                     "modal 会阻止页面其他交互，withBackdrop 打开遮罩。",
@@ -207,12 +213,12 @@ internal class PopoverPage : DemoPage() {
         val discountField = createTextField { label = tr("折扣码", "Discount code") }
         val applyDiscount = createButton { textContent = tr("应用", "Apply") }
         applyDiscount.clickEvent.addHandler { modalPopover.opened = false }
-        modalPopover.append(column(discountField, applyDiscount))
+        modalPopover.append(kitCol(discountField, applyDiscount))
         modal.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
-                    row(discountButton, modalPopover),
+                kitCol(
+                    kitRow(discountButton, modalPopover),
                     createButton { textContent = tr("打开模态浮层", "Open modal popover") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { modalPopover.opened = true }
                     },
@@ -222,7 +228,7 @@ internal class PopoverPage : DemoPage() {
         body.append(modal.root)
 
         val interactive =
-            section(
+            sectionBlock(
                 tr("交互式提示", "Interactive hint"),
                 tr(
                     "trigger 决定哪些交互会打开浮层；这里悬停与聚焦都会打开，且可以在浮层里点击链接。",
@@ -248,12 +254,12 @@ internal class PopoverPage : DemoPage() {
             ).apply { style.setProperty("max-width", "20rem") },
             kitAnchor(tr("查看不同卡片上的 CVV 位置", "See where to find CVV on different cards"), "https://www.cvvnumber.com/cvv.html"),
         )
-        interactive.body.append(example(null, cvvField))
+        interactive.body.append(exampleBox(null, cvvField))
         interactive.body.append(cvvPopover)
         body.append(interactive.root)
 
         val rangeField =
-            section(
+            sectionBlock(
                 tr("下拉字段", "Dropdown field"),
                 tr(
                     "浮层里放 Select 与两个日期选择器；按下箭头键也能打开浮层。",
@@ -293,9 +299,9 @@ internal class PopoverPage : DemoPage() {
         rangePopover.width = "340px"
         rangePopover.setAttribute("aria-label", tr("选择日期范围", "Select a date range"))
         rangePopover.append(
-            column(
+            kitCol(
                 presets,
-                row(fromPicker, HtmlTagName.div().apply { textContent = "−" }, toPicker),
+                kitRow(fromPicker, HtmlTagName.div().apply { textContent = "−" }, toPicker),
             ),
         )
         rangeInput.listen(KEY_DOWN) { event ->
@@ -325,11 +331,11 @@ internal class PopoverPage : DemoPage() {
             presets.value = ""
             rangeInput.value = "${fromPicker.value} − ${toPicker.value}"
         }
-        rangeField.body.append(example(null, column(rangeInput, rangePopover)))
+        rangeField.body.append(exampleBox(null, kitCol(rangeInput, rangePopover)))
         body.append(rangeField.root)
 
         val panel =
-            section(
+            sectionBlock(
                 tr("通知面板", "Notification panel"),
                 tr(
                     "浮层可以承载完整的面板：Tabsheet 切换未读与全部消息，Message List 渲染条目。",
@@ -377,11 +383,11 @@ internal class PopoverPage : DemoPage() {
                             append(allList)
                         }.apply { setAttribute("tab", "all-tab") })
         notificationsPopover.append(panelHeader, tabSheet)
-        panel.body.append(example(null, row(notificationBell, notificationsPopover)))
+        panel.body.append(exampleBox(null, kitRow(notificationBell, notificationsPopover)))
         body.append(panel.root)
 
         val userMenu =
-            section(
+            sectionBlock(
                 tr("用户菜单", "User menu"),
                 tr(
                     "头像按钮打开一个无内边距的浮层，里面是账号信息和菜单项。",
@@ -441,12 +447,12 @@ internal class PopoverPage : DemoPage() {
                 },
             )
         }
-        userPopover.append(column(userCard, menuLinks))
-        userMenu.body.append(example(null, row(avatarButton, userPopover)))
+        userPopover.append(kitCol(userCard, menuLinks))
+        userMenu.body.append(exampleBox(null, kitRow(avatarButton, userPopover)))
         body.append(userMenu.root)
 
         val columns =
-            section(
+            sectionBlock(
                 tr("浮层里的表单", "Form in a popover"),
                 tr(
                     "Checkbox Group 的选中值直接控制 Grid 列的 hidden；浮层关闭时改动仍然保留。",
@@ -512,7 +518,7 @@ internal class PopoverPage : DemoPage() {
             )
         }
         columnsPopover.append(
-            column(
+            kitCol(
                 HtmlTagName.strong {
                     textContent = tr("配置列", "Configure columns")
                 },
@@ -521,9 +527,9 @@ internal class PopoverPage : DemoPage() {
             ),
         )
         columns.body.append(
-            example(
+            exampleBox(
                 null,
-                column(column(columnsButton, columnsPopover), grid),
+                kitCol(kitCol(columnsButton, columnsPopover), grid),
             ),
         )
         body.append(columns.root)

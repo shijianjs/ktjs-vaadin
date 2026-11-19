@@ -1,5 +1,10 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -17,10 +22,6 @@ import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.Iconset
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -64,7 +65,7 @@ internal class IconPage : DemoPage() {
 
         // --- Basic usage (icons/icon-basic.ts) -----------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "icon 属性接受 图标集:名称。registerLumoIcons() 与 registerVaadinIcons() 保证两个内置集合" +
@@ -74,7 +75,7 @@ internal class IconPage : DemoPage() {
                 ),
             )
         val gallery =
-            row(
+            kitRow(
                 createIcon { icon = "lumo:checkmark" },
                 createIcon { icon = "lumo:photo" },
                 createIcon { icon = "lumo:calendar" },
@@ -93,12 +94,12 @@ internal class IconPage : DemoPage() {
                     iconReadout.set("icon = ${iconNames[iconIndex]}")
                 }
             }
-        basic.body.append(example(null, column(gallery, row(picker, nextIcon, iconReadout.root))))
+        basic.body.append(exampleBox(null, kitCol(gallery, kitRow(picker, nextIcon, iconReadout.root))))
         body.append(basic.root)
 
         // --- Size (icons/icons-sizing.ts) ---------------------------------------------------------
         val sizing =
-            section(
+            sectionBlock(
                 tr("尺寸", "Size"),
                 tr(
                     "--vaadin-icon-size 设置图标的外框尺寸（默认跟随行高 1lh），--vaadin-icon-visual-size 在此基础上" +
@@ -113,13 +114,13 @@ internal class IconPage : DemoPage() {
                 style.setProperty("--vaadin-icon-size", size)
             }
         sizing.body.append(
-            example(null, row(sizedIcon("1rem"), sizedIcon("2rem"), sizedIcon("3rem"), sizedIcon("4rem"))),
+            exampleBox(null, kitRow(sizedIcon("1rem"), sizedIcon("2rem"), sizedIcon("3rem"), sizedIcon("4rem"))),
         )
         body.append(sizing.root)
 
         // --- Colour (icons/icons-color.ts) -------------------------------------------------------
         val colours =
-            section(
+            sectionBlock(
                 tr("颜色", "Colour"),
                 tr(
                     "图标使用 currentColor：设置文字颜色或 --vaadin-icon-color 就能改填充与描边，SVG 图标和字体" +
@@ -137,12 +138,12 @@ internal class IconPage : DemoPage() {
             }.apply { style.color = "red" }
         fun tintedIcon(fill: String): HTMLElement =
             createIcon { icon = "lumo:bell" }.apply { style.setProperty("--vaadin-icon-color", fill) }
-        colours.body.append(example(null, row(redSvg, redFont, tintedIcon("green"), tintedIcon("rgb(0 102 240)"))))
+        colours.body.append(exampleBox(null, kitRow(redSvg, redFont, tintedIcon("green"), tintedIcon("rgb(0 102 240)"))))
         body.append(colours.root)
 
         // --- Font icons (icons/icon-fonts.ts) ----------------------------------------------------
         val fonts =
-            section(
+            sectionBlock(
                 tr("字体图标", "Font icons"),
                 tr(
                     "fontFamily 选择图标字体，char 接受十六进制码点（Lumo 字体：ea0f 对勾、ea04 下箭头、ea26 图片），" +
@@ -159,12 +160,12 @@ internal class IconPage : DemoPage() {
                 fontFamily = "lumo-icons"
                 this.char = char
             }.apply { style.setProperty("--vaadin-icon-size", size) }
-        fonts.body.append(example(null, row(fontIcon("ea0f"), fontIcon("ea04"), fontIcon("ea26"), fontIcon("ea0f", "3rem"))))
+        fonts.body.append(exampleBox(null, kitRow(fontIcon("ea0f"), fontIcon("ea04"), fontIcon("ea26"), fontIcon("ea0f", "3rem"))))
         body.append(fonts.root)
 
         // --- SVG literals (wrapper API; see vaadin/icon/IconTypes.kt) -----------------------------
         val literals =
-            section(
+            sectionBlock(
                 tr("SVG 字面量", "SVG literals"),
                 tr(
                     "Kotlin/JS 写不出 Lit 的 svg 模板字面量：用 unsafeSvgLiteral() 从字符串构造一个，或通过 " +
@@ -186,7 +187,7 @@ internal class IconPage : DemoPage() {
             size = fromSet.size ?: 24.0
         }
         reused.style.setProperty("--vaadin-icon-size", "2rem")
-        literals.body.append(example(null, row(star, reused)))
+        literals.body.append(exampleBox(null, kitRow(star, reused)))
         body.append(literals.root)
 
     }

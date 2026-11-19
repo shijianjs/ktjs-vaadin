@@ -1,5 +1,10 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -18,10 +23,6 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icon.createIconset
@@ -64,7 +65,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Vaadin icons (icons/vaadin-icons.ts) --------------------------------------------------
         val vaadinSet =
-            section(
+            sectionBlock(
                 tr("Vaadin 图标集", "Vaadin icons"),
                 tr(
                     "registerVaadinIcons() 注册 @vaadin/icons，共六百多个图标，用 vaadin: 前缀引用。",
@@ -76,9 +77,9 @@ internal class IconSetsPage : DemoPage() {
         vaadinButton.ariaLabel = tr("通知", "Notifications")
         vaadinButton.append(createIcon { icon = "vaadin:bell" })
         vaadinSet.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createIcon { icon = "vaadin:phone" },
                     createIcon { icon = "vaadin:calendar" },
                     createIcon { icon = "vaadin:alarm" },
@@ -90,7 +91,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Lumo icons (icons/lumo-icons.ts) ----------------------------------------------------
         val lumoSet =
-            section(
+            sectionBlock(
                 tr("Lumo 图标集", "Lumo icons"),
                 tr(
                     "Lumo 图标是主题自带的 24×24 图形（16×16 有效区域加 4 像素留白），用 registerLumoIcons() 注册。",
@@ -102,9 +103,9 @@ internal class IconSetsPage : DemoPage() {
         lumoButton.ariaLabel = tr("通知", "Notifications")
         lumoButton.append(createIcon { icon = "lumo:bell" })
         lumoSet.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createIcon { icon = "lumo:photo" },
                     createIcon { icon = "lumo:calendar" },
                     createIcon { icon = "lumo:clock" },
@@ -116,7 +117,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Mixing both sets (wrapper extra) ----------------------------------------------------
         val mixing =
-            section(
+            sectionBlock(
                 tr("同时使用两个图标集", "Mixing two icon sets"),
                 tr(
                     "图标集按名字隔离，lumo: 与 vaadin: 可以在同一页混用，同名图标（这里都有 bell）来自不同集合。",
@@ -125,9 +126,9 @@ internal class IconSetsPage : DemoPage() {
                 ),
             )
         mixing.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createIcon { icon = "lumo:checkmark" },
                     createIcon { icon = "vaadin:check" },
                     createIcon { icon = "lumo:bell" },
@@ -139,7 +140,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Accessibility (icons/icons-accessibility.ts) ---------------------------------------
         val accessibility =
-            section(
+            sectionBlock(
                 tr("无障碍", "Accessibility"),
                 tr(
                     "图标本身对辅助技术完全隐藏，所以承载它的组件要提供可访问名称；图标单独传达信息时，" +
@@ -155,8 +156,8 @@ internal class IconSetsPage : DemoPage() {
         favourite.setAttribute("role", "img")
         favourite.ariaLabel = tr("收藏", "Favorite")
         accessibility.body.append(
-            example(null, row(closeButton, favourite)),
-            example(
+            exampleBox(null, kitRow(closeButton, favourite)),
+            exampleBox(
                 tr("第二个图标带 role=\"img\" 与 aria-label=\"收藏\"", "The second icon has role=\"img\" and an aria-label"),
                 HtmlTagName.p {
                     className = MUTED_SMALL
@@ -171,7 +172,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Standalone SVG (icons/svg-standalone.ts) --------------------------------------------
         val standalone =
-            section(
+            sectionBlock(
                 tr("独立 SVG 文件", "Standalone SVG images"),
                 tr(
                     "src 可以是任何 URL，图标会被内联成 SVG，因此可以用 CSS 着色；demo 使用从官方文档复制来的同一份 SVG 文件。",
@@ -179,12 +180,12 @@ internal class IconSetsPage : DemoPage() {
                         "same SVG file copied from the official documentation.",
                 ),
             )
-        standalone.body.append(example(null, createIcon { src = Images.codeBranchIcon }))
+        standalone.body.append(exampleBox(null, createIcon { src = Images.codeBranchIcon }))
         body.append(standalone.root)
 
         // --- SVG sprites (icons/svg-sprites.ts) -------------------------------------------------
         val sprites =
-            section(
+            sectionBlock(
                 tr("SVG sprite", "SVG sprites"),
                 tr(
                     "sprite 是包含多个 <symbol> 的 SVG 文件：src 指向文件，symbol 指定要用的 id。demo 使用与官方示例相同的 sprite 文件。",
@@ -193,9 +194,9 @@ internal class IconSetsPage : DemoPage() {
                 ),
             )
         sprites.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createIcon {
                         src = Images.solidSprite
                         symbol = "code-branch"
@@ -211,7 +212,7 @@ internal class IconSetsPage : DemoPage() {
 
         // --- Padding (icons/icons-padding.ts) ---------------------------------------------------
         val padding =
-            section(
+            sectionBlock(
                 tr("内边距", "Padding"),
                 tr(
                     "外框固定为 3rem，同时把 --vaadin-icon-visual-size 调小，就能给图形四周留出空白；" +
@@ -225,14 +226,14 @@ internal class IconSetsPage : DemoPage() {
                 style.setProperty("--vaadin-icon-size", "3rem")
                 if (visualSize != null) style.setProperty("--vaadin-icon-visual-size", visualSize)
             }
-        val paddedRow = row(paddedIcon(null), paddedIcon("2rem"), paddedIcon("1rem"))
+        val paddedRow = kitRow(paddedIcon(null), paddedIcon("2rem"), paddedIcon("1rem"))
         paddedRow.style.setProperty("align-items", "flex-end")
-        padding.body.append(example(null, paddedRow))
+        padding.body.append(exampleBox(null, paddedRow))
         body.append(padding.root)
 
         // --- Icon set generator (icons/iconset-generator.ts, icons/iconset-helpers.ts) -----------
         val generator =
-            section(
+            sectionBlock(
                 tr("图标集生成器", "Icon set generator"),
                 tr(
                     "官方页面上的生成器把上传的 SVG 文件夹转成 <vaadin-iconset> 定义（.js）和 Java 枚举。演示站不" +
@@ -263,11 +264,11 @@ internal class IconSetsPage : DemoPage() {
         // Setting the name last registers the set: the element collects every `[id]` child at that point.
         iconset.name = "demo"
         generator.body.append(
-            example(
+            exampleBox(
                 tr("生成的文件等价于下面的结构", "The generated file is equivalent to the structure below"),
-                column(
+                kitCol(
                     codeText("<vaadin-iconset name=\"demo\" size=\"24\">…</vaadin-iconset>"),
-                    row(
+                    kitRow(
                         createIcon { icon = "demo:heart" }.apply { style.color = "crimson" },
                         createIcon { icon = "demo:star" }.apply { style.color = "goldenrod" },
                         iconset,

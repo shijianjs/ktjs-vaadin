@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -19,11 +24,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.confirmdialog.ConfirmDialogEvents
 import io.github.shijianjs.ktjs.vaadin.confirmdialog.createConfirmDialog
@@ -55,7 +56,7 @@ internal class ConfirmDialogPage : DemoPage() {
         configureFrame(confirmDialogEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "确认 / 取消会分别触发 confirm 与 cancel，之后触发 closed。",
@@ -88,11 +89,11 @@ internal class ConfirmDialogPage : DemoPage() {
                     status.set(tr("状态：", "Status: "))
                 }
             }
-        basic.body.append(example(null, column(row(openButton, status.root), confirm, log.root)))
+        basic.body.append(exampleBox(null, kitCol(kitRow(openButton, status.root), confirm, log.root)))
         body.append(basic.root)
 
         val threeWay =
-            section(
+            sectionBlock(
                 tr("三种结果", "Three outcomes"),
                 tr(
                     "rejectButtonVisible 打开第三个按钮，事件为 reject。",
@@ -115,9 +116,9 @@ internal class ConfirmDialogPage : DemoPage() {
         threeWayDialog.listen(ConfirmDialogEvents.cancel) { threeLog.add(tr("cancel → 返回", "cancel → Back")) }
 
         threeWay.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createButton { textContent = tr("打开三按钮对话框", "Open three-button dialog") }
                         .addTheme("tertiary").apply {
                             clickEvent.addHandler { threeWayDialog.opened = true }
@@ -130,7 +131,7 @@ internal class ConfirmDialogPage : DemoPage() {
         body.append(threeWay.root)
 
         val cancelSection =
-            section(
+            sectionBlock(
                 tr("取消按钮", "Cancel button"),
                 tr(
                     "cancelButtonVisible 显示取消按钮，confirmTheme 让确认按钮表达危险操作。",
@@ -151,10 +152,10 @@ internal class ConfirmDialogPage : DemoPage() {
             deleteStatus.set(tr("状态：", "Status: "), tr("已取消", "Canceled"))
         }
         cancelSection.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
-                    row(
+                kitCol(
+                    kitRow(
                         createButton { textContent = tr("删除报告", "Delete report") }.addTheme("error").apply {
                             clickEvent.addHandler { deleteDialog.opened = true }
                         },
@@ -167,7 +168,7 @@ internal class ConfirmDialogPage : DemoPage() {
         body.append(cancelSection.root)
 
         val confirmOnlySection =
-            section(
+            sectionBlock(
                 tr("仅确认按钮", "Confirm only"),
                 tr(
                     "只保留一个确认按钮时，它用于告知结果；消息支持任意 DOM，包括粗体与链接。",
@@ -193,10 +194,10 @@ internal class ConfirmDialogPage : DemoPage() {
             )
         exportDialog.append(exportMessage)
         confirmOnlySection.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
-                    row(
+                kitCol(
+                    kitRow(
                         createButton { textContent = tr("导出报告", "Export report") }.addTheme("tertiary").apply {
                             clickEvent.addHandler { exportDialog.opened = true }
                         },

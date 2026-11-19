@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,10 +20,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -57,7 +58,7 @@ internal class TabSheetPage : DemoPage() {
         registerVaadinIcons()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
@@ -71,11 +72,11 @@ internal class TabSheetPage : DemoPage() {
         sheet.dataset["test"] = "tab-sheet"
         val selected = Readout("selected = 0")
         sheet.listen(TabSheetEvents.selectedChanged) { selected.set("selected = ${sheet.selected}") }
-        basic.body.append(example(null, column(sheet, selected.root)))
+        basic.body.append(exampleBox(null, kitCol(sheet, selected.root)))
         body.append(basic.root)
 
         val lazy =
-            section(
+            sectionBlock(
                 tr("内容懒初始化", "Lazy initialization of tab contents"),
                 tr(
                     "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
@@ -112,11 +113,11 @@ internal class TabSheetPage : DemoPage() {
             if (index in lazyPanels.indices && visited.add(index)) lazySheet.append(lazyPanels[index])
             visitedReadout.set("visited = ${visited.sorted().joinToString(", ", "[", "]")}")
         }
-        lazy.body.append(example(null, column(lazySheet, visitedReadout.root)))
+        lazy.body.append(exampleBox(null, kitCol(lazySheet, visitedReadout.root)))
         body.append(lazy.root)
 
         val prefixSuffix =
-            section(
+            sectionBlock(
                 tr("前缀与后缀", "Prefix and suffix"),
                 tr(
                     "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
@@ -133,18 +134,18 @@ internal class TabSheetPage : DemoPage() {
                 append(createIcon { icon = "vaadin:plus" })
             },
         )
-        prefixSuffix.body.append(example(null, adorned))
+        prefixSuffix.body.append(exampleBox(null, adorned))
         body.append(prefixSuffix.root)
 
         val bordered =
-            section(
+            sectionBlock(
                 tr("主题", "Theme"),
                 tr(
                     "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
                     "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
                 ),
             )
-        bordered.body.append(example(null, demoTabSheet("tabsheet-bordered", "bordered")))
+        bordered.body.append(exampleBox(null, demoTabSheet("tabsheet-bordered", "bordered")))
         body.append(bordered.root)
 
     }

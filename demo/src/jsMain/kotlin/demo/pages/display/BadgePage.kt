@@ -1,5 +1,10 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,12 +22,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
@@ -131,7 +132,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Label (badge/badge-basic.ts) -----------------------------------------------------------
         val labelSection =
-            section(
+            sectionBlock(
                 tr("标签", "Label"),
                 tr(
                     "默认插槽放文本，theme 的 success / warning / error 表达状态；只给文本、不带数字时，徽标就是" +
@@ -143,9 +144,9 @@ internal class BadgePage : DemoPage() {
         val numeric = createBadge { number = 4.0 }
         numeric.dataset["test"] = "badge"
         labelSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     textBadge(tr("待处理", "Pending")),
                     textBadge(tr("已确认", "Confirmed"), "success"),
                     textBadge(tr("警告", "Warning"), "warning"),
@@ -158,7 +159,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Colour variants (badge/badge-color.ts) -----------------------------------------------
         val colour =
-            section(
+            sectionBlock(
                 tr("颜色", "Colour"),
                 tr(
                     "默认是浅色底；再加 filled 变体得到实心徽标，两种风格可以并排比较。",
@@ -167,18 +168,18 @@ internal class BadgePage : DemoPage() {
                 ),
             )
         colour.body.append(
-            example(
+            exampleBox(
                 tr("默认", "Default"),
-                row(
+                kitRow(
                     textBadge(tr("待处理", "Pending")),
                     textBadge(tr("已确认", "Confirmed"), "success"),
                     textBadge(tr("警告", "Warning"), "warning"),
                     textBadge(tr("已拒绝", "Denied"), "error"),
                 ),
             ),
-            example(
+            exampleBox(
                 tr("filled", "filled"),
-                row(
+                kitRow(
                     textBadge(tr("待处理", "Pending"), "filled"),
                     textBadge(tr("已确认", "Confirmed"), "success filled"),
                     textBadge(tr("警告", "Warning"), "warning filled"),
@@ -190,7 +191,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Icons (badge/badge-icons.ts) ----------------------------------------------------------
         val withIcons =
-            section(
+            sectionBlock(
                 tr("图标", "Icons"),
                 tr(
                     "slot=\"icon\" 在文字前面放图标；徽标的 has-icon 状态属性由插槽内容自动维护。",
@@ -199,9 +200,9 @@ internal class BadgePage : DemoPage() {
                 ),
             )
         withIcons.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     iconBadge("vaadin:clock", tr("待处理", "Pending")),
                     iconBadge("vaadin:check", tr("已确认", "Confirmed"), "success"),
                     iconBadge("vaadin:warning", tr("警告", "Warning"), "warning"),
@@ -213,7 +214,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Icon-only + icon-only table (badge-icons-only.ts, badge-icons-only-table.ts) ----------
         val iconOnly =
-            section(
+            sectionBlock(
                 tr("只有图标", "Icon-only"),
                 tr(
                     "theme=\"icon-only\" 隐藏文字但保留为无障碍名称；表格里用同样的徽标表示布尔值，" +
@@ -235,20 +236,20 @@ internal class BadgePage : DemoPage() {
             permissionColumn(tr("编辑", "Edit")) { it.edit },
         )
         iconOnly.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     iconBadge("vaadin:check", tr("已确认", "Confirmed"), "success", "icon-only"),
                     iconBadge("vaadin:close", tr("已取消", "Cancelled"), "error", "icon-only"),
                 ),
             ),
-            example(tr("权限表格", "Permissions table"), permissions),
+            exampleBox(tr("权限表格", "Permissions table"), permissions),
         )
         body.append(iconOnly.root)
 
         // --- Number (badge/badge-number.ts) --------------------------------------------------------
         val numberSection =
-            section(
+            sectionBlock(
                 tr("数字", "Number"),
                 tr(
                     "number 在文字前显示计数；它和默认插槽的文本一起被朗读。",
@@ -257,9 +258,9 @@ internal class BadgePage : DemoPage() {
                 ),
             )
         numberSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createBadge {
                         number = 12.0
                         textContent = tr("新消息", "New messages")
@@ -279,7 +280,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Number-only (badge/badge-number-only.ts) ---------------------------------------------
         val numberOnly =
-            section(
+            sectionBlock(
                 tr("仅数字", "Number-only"),
                 tr(
                     "theme=\"number-only\" 只显示数字，文本仍是可访问名称——适合放在 tab 或图标旁边。",
@@ -288,9 +289,9 @@ internal class BadgePage : DemoPage() {
                 ),
             )
         numberOnly.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createBadge {
                         number = 12.0
                         textContent = tr("新消息", "New messages")
@@ -306,7 +307,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Highlighting information (badge/badge-highlight.ts) ----------------------------------
         val highlight =
-            section(
+            sectionBlock(
                 tr("区分信息", "Highlighting information"),
                 tr(
                     "徽标最适合把状态列变成一眼可读的标记；官方示例的列渲染器用 Lit，这里用 renderer lambda " +
@@ -336,12 +337,12 @@ internal class BadgePage : DemoPage() {
                 renderer = { cell, _, model -> cell.replaceChildren(statusBadge(model.item.unsafeCast<ReportRow>().status)) }
             },
         )
-        highlight.body.append(example(null, reports))
+        highlight.body.append(exampleBox(null, reports))
         body.append(highlight.root)
 
         // --- Interactive content (badge/badge-interactive.ts) -------------------------------------
         val interactive =
-            section(
+            sectionBlock(
                 tr("可交互内容", "Interactive content"),
                 tr(
                     "徽标里可以放按钮：选中职业后加一个带清除按钮的徽标。官方示例的职业列表来自后端，这里用固定" +
@@ -357,7 +358,7 @@ internal class BadgePage : DemoPage() {
                 tr("产品经理", "Product manager"),
                 tr("研究员", "Researcher"),
             )
-        val chips = row()
+        val chips = kitRow()
         val chipsByProfession = mutableMapOf<String, HTMLElement>()
         val filterReadout = Readout(tr("没有筛选条件", "No filters"))
         val selectedProfessions = mutableListOf<String>()
@@ -410,12 +411,12 @@ internal class BadgePage : DemoPage() {
             val item = professionCombo.selectedItem ?: return@listen
             addProfession(item.unsafeCast<String>())
         }
-        interactive.body.append(example(null, column(professionCombo, chips, filterReadout.root)))
+        interactive.body.append(exampleBox(null, kitCol(professionCombo, chips, filterReadout.root)))
         body.append(interactive.root)
 
         // --- Counter (badge/badge-counter.ts) -----------------------------------------------------
         val counter =
-            section(
+            sectionBlock(
                 tr("计数器", "Counter"),
                 tr(
                     "选项卡里的 number-only 徽标是未读计数；文字部分是读屏使用的说明。",
@@ -442,12 +443,12 @@ internal class BadgePage : DemoPage() {
             counterTab(tr("垃圾邮件", "Spam"), 45.0),
             counterTab(tr("归档", "Archive"), 23.0),
         )
-        counter.body.append(example(null, tabs))
+        counter.body.append(exampleBox(null, tabs))
         body.append(counter.root)
 
         // --- Dot (badge/badge-dot.ts) -------------------------------------------------------------
         val dot =
-            section(
+            sectionBlock(
                 tr("圆点", "Dot"),
                 tr(
                     "theme=\"dot\" 只显示一个圆点（数字与文本都隐藏），适合表达「有新内容」；也可以放进按钮的" +
@@ -470,9 +471,9 @@ internal class BadgePage : DemoPage() {
         completed.style.setProperty("right", "0.3em")
         download.append(completed)
         dot.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     textBadge(tr("待处理", "Pending"), "dot"),
                     textBadge(tr("已确认", "Confirmed"), "dot", "success"),
                     textBadge(tr("警告", "Warning"), "dot", "warning"),
@@ -485,7 +486,7 @@ internal class BadgePage : DemoPage() {
 
         // --- Live number (wrapper extra, exercised by the end-to-end suite) ------------------------
         val live =
-            section(
+            sectionBlock(
                 tr("动态更新", "Live updates"),
                 tr(
                     "number 可以随时修改，徽标立即更新；计数为 0 时仍然显示（与「不显示」用 hidden 属性区分）。",
@@ -499,7 +500,7 @@ internal class BadgePage : DemoPage() {
             createButton { textContent = tr("加一", "Add one") }.addTheme("tertiary").apply {
                 clickEvent.addHandler { liveBadge.number += 1.0 }
             }
-        live.body.append(example(null, row(liveBadge, addOne)))
+        live.body.append(exampleBox(null, kitRow(liveBadge, addOne)))
         body.append(live.root)
 
     }

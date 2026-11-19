@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -14,12 +19,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.slider.RangeSliderEvents
 import io.github.shijianjs.ktjs.vaadin.slider.SliderEvents
 import io.github.shijianjs.ktjs.vaadin.slider.createRangeSlider
@@ -50,7 +51,7 @@ internal class SliderPage : DemoPage() {
         configureFrame(sliderEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "拖动时触发 input，松开后触发 change；value 是 Double。",
@@ -71,11 +72,11 @@ internal class SliderPage : DemoPage() {
         slider.listen(SliderEvents.change) {
             readout.set(tr("已提交数值 = ", "Committed value = "), slider.value.toString())
         }
-        basic.body.append(example(null, column(slider, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(slider, readout.root)))
         body.append(basic.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("辅助信息", "Helper text"),
                 tr(
                     "helper-text 用来解释滑块的单位或含义。",
@@ -83,7 +84,7 @@ internal class SliderPage : DemoPage() {
                 ),
             )
         features.body.append(
-            example(
+            exampleBox(
                 null,
                 createSlider {
                     label = tr("标签", "Label")
@@ -94,7 +95,7 @@ internal class SliderPage : DemoPage() {
         body.append(features.root)
 
         val minMax =
-            section(
+            sectionBlock(
                 tr("最小值与最大值标签", "Min & max labels"),
                 tr(
                     "min-max-visible 在轨道两端显示取值范围。",
@@ -102,7 +103,7 @@ internal class SliderPage : DemoPage() {
                 ),
             )
         minMax.body.append(
-            example(
+            exampleBox(
                 null,
                 createSlider {
                     label = tr("温度", "Temperature")
@@ -116,7 +117,7 @@ internal class SliderPage : DemoPage() {
         body.append(minMax.root)
 
         val alwaysVisible =
-            section(
+            sectionBlock(
                 tr("常显数值", "Persistent value display"),
                 tr(
                     "value-always-visible 让数值气泡常驻，不必等用户拖动才显示。",
@@ -124,7 +125,7 @@ internal class SliderPage : DemoPage() {
                 ),
             )
         alwaysVisible.body.append(
-            example(
+            exampleBox(
                 null,
                 createSlider {
                     label = tr("亮度", "Brightness")
@@ -138,7 +139,7 @@ internal class SliderPage : DemoPage() {
         body.append(alwaysVisible.root)
 
         val stepSection =
-            section(
+            sectionBlock(
                 tr("步进", "Step"),
                 tr(
                     "step 决定键盘与拖动的增量，也可以是非整数。",
@@ -156,11 +157,11 @@ internal class SliderPage : DemoPage() {
             }
         val stepReadout = Readout("value = 5.0")
         stepped.listen(SliderEvents.valueChanged) { stepReadout.set("value = ", stepped.value.toString()) }
-        stepSection.body.append(example(null, column(stepped, stepReadout.root)))
+        stepSection.body.append(exampleBox(null, kitCol(stepped, stepReadout.root)))
         body.append(stepSection.root)
 
         val range =
-            section(
+            sectionBlock(
                 tr("区间滑块", "Range slider"),
                 tr(
                     "range-slider 的 value 是两元素数组，两个手柄分别控制下限与上限；" +
@@ -183,11 +184,11 @@ internal class SliderPage : DemoPage() {
         rangeSlider.listen(RangeSliderEvents.valueChanged) {
             rangeReadout.set(tr("区间 = ", "Range = "), joinValues(rangeSlider.value))
         }
-        range.body.append(example(null, column(rangeSlider, rangeReadout.root)))
+        range.body.append(exampleBox(null, kitCol(rangeSlider, rangeReadout.root)))
         body.append(range.root)
 
         val rangeValidation =
-            section(
+            sectionBlock(
                 tr("区间校验", "Range validation"),
                 tr(
                     "区间跨度不满足业务规则时，把 invalid 置真并给出 error-message。",
@@ -212,11 +213,11 @@ internal class SliderPage : DemoPage() {
                 priceRange.invalid = false
             }
         }
-        rangeValidation.body.append(example(null, priceRange))
+        rangeValidation.body.append(exampleBox(null, priceRange))
         body.append(rangeValidation.root)
 
         val valueModes =
-            section(
+            sectionBlock(
                 tr("值变更模式", "Value change modes"),
                 tr(
                     "Web Component 只有 input（拖动中）与 change（提交）两个时机；" +
@@ -239,14 +240,14 @@ internal class SliderPage : DemoPage() {
         modeSlider.listen(SliderEvents.change) {
             committedValue.set(tr("已提交：", "Committed: "), modeSlider.value.toString())
         }
-        valueModes.body.append(example(null, column(modeSlider, row(liveValue.root, committedValue.root))))
+        valueModes.body.append(exampleBox(null, kitCol(modeSlider, kitRow(liveValue.root, committedValue.root))))
         body.append(valueModes.root)
 
-        val states = section(tr("只读与禁用", "Read-only and disabled"))
+        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createSlider {
                         label = tr("只读", "Read-only")
                         value = 60.0

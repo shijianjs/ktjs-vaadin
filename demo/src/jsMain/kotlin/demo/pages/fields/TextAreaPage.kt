@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,11 +22,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -78,7 +79,7 @@ internal class TextAreaPage : DemoPage() {
 
         // --- Basic usage (text-area-basic.ts) -------------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "多行输入默认两行高，并随内容自动增长；maxlength 限制字符数，辅助文本实时显示已输入的" +
@@ -108,12 +109,12 @@ internal class TextAreaPage : DemoPage() {
             messageField.helperText = "$length/200"
             counter.set(tr("字数：$length / 200", "Characters: $length / 200"))
         }
-        basic.body.append(example(null, column(messageField, counter.root)))
+        basic.body.append(exampleBox(null, kitCol(messageField, counter.root)))
         body.append(basic.root)
 
         // --- Automatic height (text-area-auto-height.ts, text-area-height.ts) -----------------------
         val height =
-            section(
+            sectionBlock(
                 tr("高度自动调整", "Automatic height adjustment"),
                 tr(
                     "没有固定高度时，Text Area 随内容增长，默认最小高度是两行；也可以用 min-height / " +
@@ -150,15 +151,15 @@ internal class TextAreaPage : DemoPage() {
                 maxRows = 1.0
             }
         height.body.append(
-            example(tr("自动增长", "Growing automatically"), autoHeight),
-            example(tr("限制高度", "Bounded height"), boundedHeight),
-            example(tr("限制行数", "Bounded row count"), row(rowsHeight, singleRow)),
+            exampleBox(tr("自动增长", "Growing automatically"), autoHeight),
+            exampleBox(tr("限制高度", "Bounded height"), boundedHeight),
+            exampleBox(tr("限制行数", "Bounded row count"), kitRow(rowsHeight, singleRow)),
         )
         body.append(height.root)
 
         // --- Basic features (text-area-basic-features.ts) -------------------------------------------
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "除多行输入外，Text Area 与 Text Field 共享标签、辅助文本、占位符、提示与前后缀插槽。",
@@ -181,12 +182,12 @@ internal class TextAreaPage : DemoPage() {
                 textContent = ":)"
             }.apply { slot = "suffix" },
         )
-        features.body.append(example(null, featureField))
+        features.body.append(exampleBox(null, featureField))
         body.append(features.root)
 
         // --- Validation (text-area-validation.ts) ---------------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "required、minlength / maxlength、pattern 与 allowedCharPattern 组合使用。textarea 不支持" +
@@ -254,14 +255,14 @@ internal class TextAreaPage : DemoPage() {
                 }
             }
         validation.body.append(
-            example(tr("约束与错误文案", "Constraints and error messages"), column(sentence, sentenceResult.root)),
-            example(tr("手动校验（validate）", "Manual validation (validate())"), column(requiredArea, row(validateButton, result.root))),
+            exampleBox(tr("约束与错误文案", "Constraints and error messages"), kitCol(sentence, sentenceResult.root)),
+            exampleBox(tr("手动校验（validate）", "Manual validation (validate())"), kitCol(requiredArea, kitRow(validateButton, result.root))),
         )
         body.append(validation.root)
 
         // --- Read-only and disabled (text-area-readonly-and-disabled.ts) ----------------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
@@ -270,9 +271,9 @@ internal class TextAreaPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createTextArea {
                         label = tr("只读", "Read-only")
                         value = tr("值", "Value")
@@ -288,7 +289,7 @@ internal class TextAreaPage : DemoPage() {
 
         // --- Character counter (text-area-helper.ts) ------------------------------------------------
         val counterSection =
-            section(
+            sectionBlock(
                 tr("字数统计", "Character counter"),
                 tr(
                     "较长的自由文本常用 maxlength 限制上限，并借助辅助文本显示当前长度与上限。",
@@ -305,12 +306,12 @@ internal class TextAreaPage : DemoPage() {
             }
         longArea.style.setProperty("width", "100%")
         longArea.listen(TextAreaEvents.valueChanged) { longArea.helperText = "${longArea.value.length}/600" }
-        counterSection.body.append(example(null, longArea))
+        counterSection.body.append(exampleBox(null, longArea))
         body.append(counterSection.root)
 
         // --- Style variants (text-area-styles.ts) ---------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "theme 属性同样接受 align-right、small 与 helper-above-field；多行输入通常占满容器宽度。",
@@ -325,7 +326,7 @@ internal class TextAreaPage : DemoPage() {
                 value = tr("值", "Value")
             }.addTheme("align-right", "small", "helper-above-field")
         styledArea.style.setProperty("width", "100%")
-        styles.body.append(example(null, styledArea))
+        styles.body.append(exampleBox(null, styledArea))
         body.append(styles.root)
 
         // --- Value change modes (text-area-value-change-mode.ts, Flow-only example) -----------------

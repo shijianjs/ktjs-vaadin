@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -20,13 +25,9 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
 import demo.ui.detailText
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -89,7 +90,7 @@ internal class ComboBoxPage : DemoPage() {
         addSheet(FRUIT_SHEET)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "给定 itemLabelPath 与 itemValuePath 后，items 可以是任意对象。",
@@ -110,11 +111,11 @@ internal class ComboBoxPage : DemoPage() {
         owners.listen(ComboBoxEvents.valueChanged) {
             readout.set("value = ", owners.value.ifEmpty { tr("（空）", "(empty)") })
         }
-        basic.body.append(example(null, column(owners, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(owners, readout.root)))
         body.append(basic.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "helper-text、placeholder、clear-button-visible、prefix 图标与 tooltip 都是字段级配置。",
@@ -134,11 +135,11 @@ internal class ComboBoxPage : DemoPage() {
             createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
             createIcon { icon = "vaadin:search" }.apply { setAttribute("slot", "prefix") },
         )
-        features.body.append(example(null, featured))
+        features.body.append(exampleBox(null, featured))
         body.append(features.root)
 
         val customValue =
-            section(
+            sectionBlock(
                 tr("自定义值", "Custom value entry"),
                 tr(
                     "allowCustomValue 允许输入列表之外的值；custom-value-set 事件携带新值，可以把它追加进 items。",
@@ -160,11 +161,11 @@ internal class ComboBoxPage : DemoPage() {
             customReadout.set(tr("自定义值：", "Custom value: "), value)
             browser.items = appendItem(browser.items ?: browsers, value)
         }
-        customValue.body.append(example(null, column(browser, customReadout.root)))
+        customValue.body.append(exampleBox(null, kitCol(browser, customReadout.root)))
         body.append(customValue.root)
 
         val classNames =
-            section(
+            sectionBlock(
                 tr("选项类名", "Item class names"),
                 tr(
                     "itemClassNameGenerator 返回的类名会加到每个下拉条目上，可以据此改变颜色。",
@@ -178,11 +179,11 @@ internal class ComboBoxPage : DemoPage() {
                 items = jsArray(FRUITS_JSON)
                 itemClassNameGenerator = { item -> fruitClass(item.unsafeCast<String>()) }
             }
-        classNames.body.append(example(null, fruit))
+        classNames.body.append(exampleBox(null, fruit))
         body.append(classNames.root)
 
         val autoOpen =
-            section(
+            sectionBlock(
                 tr("自动展开", "Auto open"),
                 tr(
                     "auto-open-disabled 阻止聚焦或输入时自动展开下拉，只在点击切换按钮时打开。",
@@ -198,11 +199,11 @@ internal class ComboBoxPage : DemoPage() {
                 items = jsArray<JsAny>(COUNTRIES_JSON)
                 autoOpenDisabled = true
             }
-        autoOpen.body.append(example(null, country))
+        autoOpen.body.append(exampleBox(null, country))
         body.append(autoOpen.root)
 
         val popupWidth =
-            section(
+            sectionBlock(
                 tr("浮层宽度", "Popup width"),
                 tr(
                     "--vaadin-combo-box-overlay-width 让下拉比输入框更宽，适合展示较长的标签。",
@@ -219,11 +220,11 @@ internal class ComboBoxPage : DemoPage() {
                 items = employeeItems
             }
         employee.style.setProperty("--vaadin-combo-box-overlay-width", "350px")
-        popupWidth.body.append(example(null, employee))
+        popupWidth.body.append(exampleBox(null, employee))
         body.append(popupWidth.root)
 
         val customFiltering =
-            section(
+            sectionBlock(
                 tr("自定义筛选", "Custom filtering"),
                 tr(
                     "设置 filteredItems 并监听 filter-changed，可以完全接管匹配逻辑。",
@@ -250,11 +251,11 @@ internal class ComboBoxPage : DemoPage() {
             filtered.filteredItems = matches
             filterReadout.set(tr("匹配 ${matches.size} 项", "${matches.size} items match"))
         }
-        customFiltering.body.append(example(null, column(filtered, filterReadout.root)))
+        customFiltering.body.append(exampleBox(null, kitCol(filtered, filterReadout.root)))
         body.append(customFiltering.root)
 
         val partialMatch =
-            section(
+            sectionBlock(
                 tr("部分匹配模式", "Partial match mode"),
                 tr(
                     "partial-match-mode 决定输入内容只匹配开头、匹配任意位置还是必须完全匹配。",
@@ -270,11 +271,11 @@ internal class ComboBoxPage : DemoPage() {
                 items = jsArray<JsAny>(COUNTRIES_JSON)
                 partialMatchMode = ComboBoxPartialMatchModes.firstMatch
             }
-        partialMatch.body.append(example(null, partial))
+        partialMatch.body.append(exampleBox(null, partial))
         body.append(partialMatch.root)
 
         val lazyLoading =
-            section(
+            sectionBlock(
                 tr("懒加载", "Lazy loading"),
                 tr(
                     "dataProvider 按页取数：参数带 page、pageSize 与当前 filter，回调返回这一页与总数。",
@@ -301,11 +302,11 @@ internal class ComboBoxPage : DemoPage() {
                     callback(slice.map { it.unsafeCast<JsAny?>() }.toTypedArray(), matching.size.toDouble())
                 }
             }
-        lazyLoading.body.append(example(null, column(lazy, lazyReadout.root)))
+        lazyLoading.body.append(exampleBox(null, kitCol(lazy, lazyReadout.root)))
         body.append(lazyLoading.root)
 
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "required 与 allowed-char-pattern 一起约束输入；错误文案由 error-message 提供。",
@@ -333,11 +334,11 @@ internal class ComboBoxPage : DemoPage() {
                     )
                 }
             }
-        validation.body.append(example(null, column(countryCode, row(validateButton, validationResult.root))))
+        validation.body.append(exampleBox(null, kitCol(countryCode, kitRow(validateButton, validationResult.root))))
         body.append(validation.root)
 
         val presentation =
-            section(
+            sectionBlock(
                 tr("自定义条目呈现", "Custom item presentation"),
                 tr(
                     "renderer 自己构建条目 DOM：头像、姓名与职业，与保留模式的其他示例一样逐个节点组装。",
@@ -368,14 +369,14 @@ internal class ComboBoxPage : DemoPage() {
             doctorCombo.filteredItems = personItems(visibleDoctors, withDisplayName = true)
             doctorCombo.requestContentUpdate()
         }
-        presentation.body.append(example(null, doctorCombo))
+        presentation.body.append(exampleBox(null, doctorCombo))
         body.append(presentation.root)
 
-        val states = section(tr("只读与禁用", "Read-only and disabled"))
+        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createComboBox {
                         label = tr("只读", "Read-only")
                         items = jsArray("""["Value"]""")
@@ -392,7 +393,7 @@ internal class ComboBoxPage : DemoPage() {
         body.append(states.root)
 
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "align-right、small 与 helper-above-field 同样适用于 combo-box。",
@@ -400,7 +401,7 @@ internal class ComboBoxPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createComboBox {
                     label = tr("标签", "Label")
@@ -438,12 +439,12 @@ private fun renderPersonItem(container: HTMLElement, model: ComboBoxItemModel, p
     val index = model.index.toInt()
     val person = peopleList.getOrNull(index) ?: return
     container.replaceChildren(
-        row(
+        kitRow(
             io.github.shijianjs.ktjs.vaadin.avatar.createAvatar {
                 name = person.displayName
                 img = person.pictureUrl
             },
-            column(HtmlTagName.span {
+            kitCol(HtmlTagName.span {
                        textContent = person.displayName
                    }, HtmlTagName.span {
                           textContent = person.profession

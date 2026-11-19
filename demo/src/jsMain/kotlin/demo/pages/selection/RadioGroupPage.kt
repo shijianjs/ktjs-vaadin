@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,11 +21,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.descendant
@@ -74,10 +75,10 @@ private val RADIO_OPTION: ClassName = ClassName("radio-option")
 
 /**
  * The card-style options of the "custom label" example: two lines of text per option, the second
- * one muted. The boxes themselves are `column(...)`, so only the muted second line needs a rule.
+ * one muted. The boxes themselves are `kitCol(...)`, so only the muted second line needs a rule.
  */
 private val RADIO_SHEET: CSSStyleSheet = cssSheet {
-    // The boxes themselves are `column(...)` (a vertical layout), so the sheet only says that the
+    // The boxes themselves are `kitCol(...)` (a vertical layout), so the sheet only says that the
     // second line of an option is the muted one.
     ((className(RADIO_OPTION) descendant tag(HtmlTagName.span)) nextSibling tag(HtmlTagName.span)).invoke {
         color = Palette.muted
@@ -91,7 +92,7 @@ internal class RadioGroupPage : DemoPage() {
         addSheet(RADIO_SHEET)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "同一 radio-group 内的 radio-button 互斥；value 是选中的字符串。",
@@ -122,11 +123,11 @@ internal class RadioGroupPage : DemoPage() {
         group.listen(RadioGroupEvents.valueChanged) {
             readout.set("value = ", group.value.ifEmpty { tr("（未选择）", "(none)") })
         }
-        basic.body.append(example(null, column(group, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(group, readout.root)))
         body.append(basic.root)
 
         val defaults =
-            section(
+            sectionBlock(
                 tr("默认值与分组标签", "Default value and group labels"),
                 tr(
                     "给组赋初始 value 就有默认选中项；同一页面上的多组互不影响，各自的 label 说明不同维度。",
@@ -154,11 +155,11 @@ internal class RadioGroupPage : DemoPage() {
                 textContent = tr("每月", "Monthly")
             },
         )
-        defaults.body.append(example(null, repeat))
+        defaults.body.append(exampleBox(null, repeat))
         body.append(defaults.root)
 
         val orientation =
-            section(
+            sectionBlock(
                 tr("方向", "Orientation"),
                 tr(
                     "theme=\"horizontal\" 让选项横排，vertical 让选项竖排。",
@@ -200,11 +201,11 @@ internal class RadioGroupPage : DemoPage() {
                 textContent = tr("头等舱", "First Class")
             },
         )
-        orientation.body.append(example(null, horizontal), example(null, vertical))
+        orientation.body.append(exampleBox(null, horizontal), exampleBox(null, vertical))
         body.append(orientation.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("标签、辅助信息与提示", "Label, helper text and tooltip"),
                 tr(
                     "group 上的 helper-text 与 slot=\"tooltip\" 的 tooltip 覆盖字段级说明。",
@@ -231,11 +232,11 @@ internal class RadioGroupPage : DemoPage() {
                 textContent = tr("选项 3", "Item 3")
             },
         )
-        features.body.append(example(null, labeled))
+        features.body.append(exampleBox(null, labeled))
         body.append(features.root)
 
         val required =
-            section(
+            sectionBlock(
                 tr("校验与状态", "Validation and states"),
                 tr(
                     "required 让空值无法通过；readonly 保留选择但不能更改，disabled 完全不可交互。",
@@ -301,15 +302,15 @@ internal class RadioGroupPage : DemoPage() {
                     )
                 }
             }
-        val statesRow = row(readonly, disabled)
+        val statesRow = kitRow(readonly, disabled)
         required.body.append(
-            example(null, column(payment, row(validateButton, result.root))),
-            example(null, statesRow),
+            exampleBox(null, kitCol(payment, kitRow(validateButton, result.root))),
+            exampleBox(null, statesRow),
         )
         body.append(required.root)
 
         val customOption =
-            section(
+            sectionBlock(
                 tr("自定义选项", "Custom option"),
                 tr(
                     "radio-button 的 label 插槽可以放任意内容；选中「其他」时再补一个输入字段收集详情。",
@@ -321,7 +322,7 @@ internal class RadioGroupPage : DemoPage() {
             createRadioGroup { label = tr("付款方式", "Payment method") }.addTheme("vertical")
         val visa =
             createRadioButton { value = "visa" }.apply {
-                append(column(HtmlTagName.span {
+                append(kitCol(HtmlTagName.span {
                                   textContent = tr("Visa · 账户 1234", "Visa · account 1234")
                               }, HtmlTagName.span {
                                      textContent = tr("有效期 12/28", "Expires 12/28")
@@ -330,7 +331,7 @@ internal class RadioGroupPage : DemoPage() {
         visa.firstElementChild?.setAttribute("slot", "label")
         val other =
             createRadioButton { value = "-1" }.apply {
-                append(column(HtmlTagName.span {
+                append(kitCol(HtmlTagName.span {
                                   textContent = tr("其他", "Other")
                               }, HtmlTagName.span {
                                      textContent = tr("手动输入卡号", "Enter the card number manually")
@@ -341,11 +342,11 @@ internal class RadioGroupPage : DemoPage() {
         val cardNumber = createTextField { label = tr("卡号", "Card number") }
         cardNumber.toggleAttribute("hidden", true)
         cardGroup.listen(RadioGroupEvents.valueChanged) { cardNumber.toggleAttribute("hidden", cardGroup.value != "-1") }
-        customOption.body.append(example(null, column(cardGroup, cardNumber)))
+        customOption.body.append(exampleBox(null, kitCol(cardGroup, cardNumber)))
         body.append(customOption.root)
 
         val alternative =
-            section(
+            sectionBlock(
                 tr("替代勾选框", "Alternative to a checkbox"),
                 tr(
                     "单个二选一的决定用 radio-group 更明确：这里的「回复」与「回复全部」始终只有一个生效。",
@@ -367,9 +368,9 @@ internal class RadioGroupPage : DemoPage() {
             },
         )
         alternative.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createCheckbox { label = tr("默认回复全部（未勾选状态不明确）", "Reply All by default (unchecked state not clear)") },
                     replyGroup,
                 ),
@@ -378,7 +379,7 @@ internal class RadioGroupPage : DemoPage() {
         body.append(alternative.root)
 
         val presentation =
-            section(
+            sectionBlock(
                 tr("自定义条目呈现", "Custom item presentation"),
                 tr(
                     "多行 label 让每个选项带上补充信息，适合需要对比细节的场景。",
@@ -394,7 +395,7 @@ internal class RadioGroupPage : DemoPage() {
             *people(3).mapIndexed { index, person ->
                 createRadioButton { value = "${person.id}" }.apply {
                     append(
-                        column(
+                        kitCol(
                             HtmlTagName.span {
                                 textContent = tr("账户 ${person.id}", "Account ${person.id}")
                             },
@@ -413,11 +414,11 @@ internal class RadioGroupPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        presentation.body.append(example(null, accounts))
+        presentation.body.append(exampleBox(null, accounts))
         body.append(presentation.root)
 
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "helper-above-field 把辅助信息放到标签与选项之间。",
@@ -437,7 +438,7 @@ internal class RadioGroupPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        styles.body.append(example(null, styled))
+        styles.body.append(exampleBox(null, styled))
         body.append(styles.root)
 
     }

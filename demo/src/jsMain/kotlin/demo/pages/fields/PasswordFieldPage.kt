@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -18,11 +23,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldEvents
@@ -64,7 +65,7 @@ internal class PasswordFieldPage : DemoPage() {
 
         // --- Basic usage (password-field-basic.ts) --------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "密码默认以掩码显示，眼睛按钮可以临时切换为明文；passwordVisible 只读反映当前状态。",
@@ -98,14 +99,14 @@ internal class PasswordFieldPage : DemoPage() {
         // so a click listener on the host is enough to refresh the read-out.
         passwordField.clickEvent.addHandler { syncVisibility() }
         basic.body.append(
-            example(null, docsField),
-            example(tr("明文切换与读值", "Reveal toggle and read-out"), column(passwordField, readout.root)),
+            exampleBox(null, docsField),
+            exampleBox(tr("明文切换与读值", "Reveal toggle and read-out"), kitCol(passwordField, readout.root)),
         )
         body.append(basic.root)
 
         // --- Reveal button (password-field-reveal-button-hidden.ts) --------------------------------
         val reveal =
-            section(
+            sectionBlock(
                 tr("明文切换按钮", "Reveal button"),
                 tr(
                     "眼睛按钮让用户在输入后确认内容，移动端尤其有用；revealButtonHidden 可以去掉这个按钮，" +
@@ -116,9 +117,9 @@ internal class PasswordFieldPage : DemoPage() {
                 ),
             )
         reveal.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createPasswordField {
                         label = tr("显示切换按钮", "Reveal button shown")
                         value = "Ex@mplePassw0rd"
@@ -135,7 +136,7 @@ internal class PasswordFieldPage : DemoPage() {
 
         // --- Basic features (password-field-basic-features.ts) --------------------------------------
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
@@ -154,12 +155,12 @@ internal class PasswordFieldPage : DemoPage() {
             createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" },
             createIcon { icon = "vaadin:lock" }.apply { slot = "prefix" },
         )
-        features.body.append(example(null, featureField))
+        features.body.append(exampleBox(null, featureField))
         body.append(features.root)
 
         // --- Validation (password-field-validation.ts) ----------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "required、minlength / maxlength 与 pattern 一起约束密码；示例在 validated 事件里把每种" +
@@ -206,12 +207,12 @@ internal class PasswordFieldPage : DemoPage() {
                 if (message.isEmpty()) tr("通过", "passed") else tr("未通过", "failed"),
             )
         }
-        validation.body.append(example(null, column(password, passwordResult.root)))
+        validation.body.append(exampleBox(null, kitCol(password, passwordResult.root)))
         body.append(validation.root)
 
         // --- Read-only and disabled (password-field-readonly-and-disabled.ts) -----------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 可以聚焦和复制但不能修改；disabled 完全移除交互，两者都保留掩码显示。",
@@ -220,9 +221,9 @@ internal class PasswordFieldPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createPasswordField {
                         label = tr("只读", "Read-only")
                         value = "Ex@mplePassw0rd"
@@ -238,7 +239,7 @@ internal class PasswordFieldPage : DemoPage() {
 
         // --- Style variants (password-field-styles.ts) ----------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
@@ -252,12 +253,12 @@ internal class PasswordFieldPage : DemoPage() {
                 helperText = tr("辅助文本", "Helper text")
                 value = "Ex@mplePassw0rd"
             }.addTheme("align-right", "small", "helper-above-field")
-        styles.body.append(example(null, styledField))
+        styles.body.append(exampleBox(null, styledField))
         body.append(styles.root)
 
         // --- Best practices (password-field-helper.ts, password-field-advanced-helper.ts) -----------
         val practices =
-            section(
+            sectionBlock(
                 tr("最佳实践", "Best practices"),
                 tr(
                     "在辅助文本里直接说明密码要求，用户不必猜；密码强度也可以显示在辅助文本和后缀图标里。" +
@@ -322,8 +323,8 @@ internal class PasswordFieldPage : DemoPage() {
         updateStrength()
 
         practices.body.append(
-            example(tr("在辅助文本中说明要求", "Requirements in the helper text"), requirements),
-            example(tr("显示密码强度", "Showing password strength"), advanced),
+            exampleBox(tr("在辅助文本中说明要求", "Requirements in the helper text"), requirements),
+            exampleBox(tr("显示密码强度", "Showing password strength"), advanced),
         )
         body.append(practices.root)
 

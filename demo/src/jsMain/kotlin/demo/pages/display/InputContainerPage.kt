@@ -18,9 +18,6 @@ import demo.tr
 import demo.ui.MUTED_SMALL
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs

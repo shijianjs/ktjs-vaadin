@@ -1,5 +1,9 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,9 +19,6 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 
 val avatarEntry: CatalogEntry =
@@ -42,7 +43,7 @@ internal class AvatarPage : DemoPage() {
 
         // --- Basic usage (avatar/avatar-basic.ts) ---------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
@@ -55,9 +56,9 @@ internal class AvatarPage : DemoPage() {
         val anonymous = createAvatar()
         anonymous.dataset["test"] = "avatar-anonymous"
         basic.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     anonymous,
                     createAvatar { name = "Ada Lovelace" },
                     createAvatar {
@@ -71,7 +72,7 @@ internal class AvatarPage : DemoPage() {
 
         // --- Name and abbreviation (avatar/avatar-name.ts, avatar/avatar-abbreviation.ts) -----------
         val naming =
-            section(
+            sectionBlock(
                 tr("姓名与缩写", "Name and abbreviation"),
                 tr(
                     "只给 name 时缩写由姓名推导；abbr 显式覆盖。withTooltip 打开后，悬停或聚焦会显示 name " +
@@ -81,9 +82,9 @@ internal class AvatarPage : DemoPage() {
                 ),
             )
         naming.body.append(
-            example(
+            exampleBox(
                 tr("姓名推导缩写 / 显式缩写", "Derived initials / explicit abbreviation"),
-                row(
+                kitRow(
                     createAvatar {
                         name = "Augusta Ada King"
                         withTooltip = true
@@ -100,7 +101,7 @@ internal class AvatarPage : DemoPage() {
 
         // --- Image (avatar/avatar-image.ts) ---------------------------------------------------------
         val image =
-            section(
+            sectionBlock(
                 tr("图片", "Image"),
                 tr(
                     "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
@@ -109,9 +110,9 @@ internal class AvatarPage : DemoPage() {
                 ),
             )
         image.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createAvatar {
                         name = "Ada Lovelace"
                         img = Images.portrait(1)
@@ -127,7 +128,7 @@ internal class AvatarPage : DemoPage() {
 
         // --- Sizes (avatar/avatar-sizes.ts) ---------------------------------------------------------
         val sizes =
-            section(
+            sectionBlock(
                 tr("尺寸", "Sizes"),
                 tr(
                     "theme 提供 xlarge / large / small / xsmall 四个尺寸，未设置时使用默认尺寸。",
@@ -135,9 +136,9 @@ internal class AvatarPage : DemoPage() {
                 ),
             )
         sizes.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createAvatar { name = "Ada Lovelace" }.addTheme("xlarge"),
                     createAvatar { name = "Ada Lovelace" }.addTheme("large"),
                     createAvatar { name = "Ada Lovelace" },
@@ -150,7 +151,7 @@ internal class AvatarPage : DemoPage() {
 
         // --- Background colour (wrapper extra, see avatar-group-bg-color.ts) ------------------------
         val colours =
-            section(
+            sectionBlock(
                 tr("颜色索引", "Colour index"),
                 tr(
                     "colorIndex 选择 Lumo 的用户色板，共 7 个颜色；avatar-group 的例子用同样的属性。",
@@ -159,9 +160,9 @@ internal class AvatarPage : DemoPage() {
                 ),
             )
         colours.body.append(
-            example(
+            exampleBox(
                 null,
-                row(*(0..6).map { index ->
+                kitRow(*(0..6).map { index ->
                     createAvatar {
                         name = tr("用户 $index", "User $index")
                         abbr = "U$index"

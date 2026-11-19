@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,11 +21,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -63,7 +64,7 @@ internal class CustomFieldPage : DemoPage() {
 
         // --- Basic: enrollment period ---------------------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "custom-field 按顺序收集插槽里的输入组件，formatValue 把它们的值数组拼成一个字段值，" +
@@ -127,12 +128,12 @@ internal class CustomFieldPage : DemoPage() {
             createButton { textContent = tr("校验", "Validate") }.apply {
                 clickEvent.addHandler { checkPeriod() }
             }
-        basic.body.append(example(null, column(period, row(periodValidate, periodReadout.root))))
+        basic.body.append(exampleBox(null, kitCol(period, kitRow(periodValidate, periodReadout.root))))
         body.append(basic.root)
 
         // --- Formatting the combined value ----------------------------------------------------------
         val formatting =
-            section(
+            sectionBlock(
                 tr("组合值与格式化", "Combined value and formatting"),
                 tr(
                     "formatValue 决定 value 的拼法，parseValue 负责把已有值拆回各个输入；" +
@@ -167,12 +168,12 @@ internal class CustomFieldPage : DemoPage() {
             nameReadout.set(tr("字段值：", "Field value: "), fullName.value.ifEmpty { tr("（空）", "(empty)") })
             inputCount.set("inputs = ${fullName.inputs?.size ?: 0}")
         }
-        formatting.body.append(example(null, column(fullName, row(nameReadout.root, inputCount.root))))
+        formatting.body.append(exampleBox(null, kitCol(fullName, kitRow(nameReadout.root, inputCount.root))))
         body.append(formatting.root)
 
         // --- Native input fields --------------------------------------------------------------------
         val native =
-            section(
+            sectionBlock(
                 tr("原生输入字段", "Native input fields"),
                 tr(
                     "插槽里可以放任意原生输入：组件用 value 把它们按顺序拼起来，pattern / required 仍由浏览器校验。" +
@@ -189,7 +190,7 @@ internal class CustomFieldPage : DemoPage() {
         val cardholder = nativeInput(tr("持卡人姓名", "Cardholder name"), """[\p{L} \-]+""")
         val cardNumber = nativeInput(tr("卡号", "Card number"), """[\d ]{12,23}""")
         val securityCode = nativeInput(tr("安全码", "Security code"), """[0-9]{3,4}""")
-        payment.append(row(cardholder, cardNumber, securityCode))
+        payment.append(kitRow(cardholder, cardNumber, securityCode))
         val paymentReadout = Readout(tr("付款信息：（空）", "Payment information: (empty)"))
         payment.listen(CustomFieldEvents.change) {
             paymentReadout.set(
@@ -197,12 +198,12 @@ internal class CustomFieldPage : DemoPage() {
                 payment.value.replace("\t", " · ").ifEmpty { tr("（空）", "(empty)") },
             )
         }
-        native.body.append(example(null, column(payment, paymentReadout.root)))
+        native.body.append(exampleBox(null, kitCol(payment, paymentReadout.root)))
         body.append(native.root)
 
         // --- Styles ---------------------------------------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Styles"),
                 tr(
                     "small 与 helper-above-field 作用在整个组合字段上；内部字段各自也要 small，尺寸才一致。",
@@ -236,8 +237,8 @@ internal class CustomFieldPage : DemoPage() {
                 value = "usd"
             }.addTheme("small")
         currency.style.setProperty("width", "6em")
-        price.append(row(amount, currency))
-        styles.body.append(example(null, price))
+        price.append(kitRow(amount, currency))
+        styles.body.append(exampleBox(null, price))
         body.append(styles.root)
 
     }

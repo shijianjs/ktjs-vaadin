@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -19,12 +24,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -89,7 +90,7 @@ internal class SelectPage : DemoPage() {
         configureFrame(selectEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
@@ -109,11 +110,11 @@ internal class SelectPage : DemoPage() {
         cities.listen(SelectEvents.valueChanged) {
             readout.set("value = ", cities.value.ifEmpty { tr("（未选择）", "(none)") })
         }
-        basic.body.append(example(null, column(cities, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(cities, readout.root)))
         body.append(basic.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "label、helper-text、placeholder 与 prefix 图标组合成完整字段；tooltip 通过 slot 挂载。",
@@ -132,11 +133,11 @@ internal class SelectPage : DemoPage() {
             createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
             createIcon { icon = "vaadin:vaadin-h" }.apply { setAttribute("slot", "prefix") },
         )
-        features.body.append(example(null, sortBy))
+        features.body.append(exampleBox(null, sortBy))
         body.append(features.root)
 
         val dividersAndDisabled =
-            section(
+            sectionBlock(
                 tr("分隔线与禁用条目", "Dividers and disabled items"),
                 tr(
                     "items 里用 { component: \"hr\" } 插入分隔线；单个条目可以用 disabled 标为不可选。",
@@ -155,11 +156,11 @@ internal class SelectPage : DemoPage() {
                 value = "xl"
                 items = selectItems(SIZES_JSON)
             }
-        dividersAndDisabled.body.append(example(null, row(divided, sizes)))
+        dividersAndDisabled.body.append(exampleBox(null, kitRow(divided, sizes)))
         body.append(dividersAndDisabled.root)
 
         val overlay =
-            section(
+            sectionBlock(
                 tr("浮层位置与宽度", "Overlay position and width"),
                 tr(
                     "no-vertical-overlap 禁止浮层覆盖输入框本身；" +
@@ -189,11 +190,11 @@ internal class SelectPage : DemoPage() {
                     )
             }
         wide.style.setProperty("--vaadin-select-overlay-width", "350px")
-        overlay.body.append(example(null, row(noOverlap, wide)))
+        overlay.body.append(exampleBox(null, kitRow(noOverlap, wide)))
         body.append(overlay.root)
 
         val placeholderSection =
-            section(
+            sectionBlock(
                 tr("占位符与清空", "Placeholder and clearing"),
                 tr(
                     "placeholder 只在没有选中值时显示；把 value 置空即可回到占位状态。",
@@ -223,11 +224,11 @@ internal class SelectPage : DemoPage() {
             createButton { textContent = tr("清空", "Clear") }.apply {
                 clickEvent.addHandler { team.value = "" }
             }
-        placeholderSection.body.append(example(null, column(team, row(clear, teamReadout.root))))
+        placeholderSection.body.append(exampleBox(null, kitCol(team, kitRow(clear, teamReadout.root))))
         body.append(placeholderSection.root)
 
         val emptySelection =
-            section(
+            sectionBlock(
                 tr("空选择项", "Empty selection item"),
                 tr(
                     "在下拉列表里放一个表示「不选择」的条目、并自定义它的文案，需要 Flow 侧的 " +
@@ -240,7 +241,7 @@ internal class SelectPage : DemoPage() {
         body.append(emptySelection.root)
 
         val customLabel =
-            section(
+            sectionBlock(
                 tr("自定义条目标签", "Custom item label"),
                 tr(
                     "用默认插槽自行组装下拉内容；条目上的 label 属性决定选中后显示在输入框里的文本。",
@@ -257,7 +258,7 @@ internal class SelectPage : DemoPage() {
                     label = person.displayName
                 }.apply {
                     append(
-                        column(
+                        kitCol(
                             HtmlTagName.span {
                                 textContent = person.displayName
                             },
@@ -271,11 +272,11 @@ internal class SelectPage : DemoPage() {
         }
         assignee.append(assigneeBox)
         assignee.value = "${employees.first().id}"
-        customLabel.body.append(example(null, assignee))
+        customLabel.body.append(exampleBox(null, assignee))
         body.append(customLabel.root)
 
         val presentation =
-            section(
+            sectionBlock(
                 tr("自定义条目呈现", "Custom item presentation"),
                 tr(
                     "条目内部可以放头像与次要信息；选中值仍由 label 决定。",
@@ -290,12 +291,12 @@ internal class SelectPage : DemoPage() {
             doctorBox.append(
                 createSelectItem { value = "${person.id}" }.apply {
                     append(
-                        row(
+                        kitRow(
                             io.github.shijianjs.ktjs.vaadin.avatar.createAvatar {
                                 name = person.displayName
                                 img = person.pictureUrl
                             },
-                            column(HtmlTagName.span {
+                            kitCol(HtmlTagName.span {
                                        textContent = person.displayName
                                    }, HtmlTagName.span {
                                           textContent = person.profession
@@ -307,14 +308,14 @@ internal class SelectPage : DemoPage() {
         }
         doctors.append(doctorBox)
         doctors.value = "${employees.first().id}"
-        presentation.body.append(example(null, doctors))
+        presentation.body.append(exampleBox(null, doctors))
         body.append(presentation.root)
 
-        val states = section(tr("只读与禁用", "Read-only and disabled"))
+        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createSelect {
                         label = tr("只读", "Read-only")
                         value = "bravo"
@@ -350,7 +351,7 @@ internal class SelectPage : DemoPage() {
         body.append(states.root)
 
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "align-right 让文本右对齐，small 压缩高度，helper-above-field 把辅助信息放到标签下。",
@@ -359,7 +360,7 @@ internal class SelectPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createSelect {
                     label = tr("标签", "Label")

@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,11 +22,7 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsObject
-import demo.ui.row
-import demo.ui.section
 import js.objects.Record
 import kotlin.js.JsAny
 import kotlin.js.JsString
@@ -69,7 +70,7 @@ internal class TooltipPage : DemoPage() {
         configureFrame(tooltipEntry)
 
         val slotted =
-            section(
+            sectionBlock(
                 tr("放进插槽", "Inside a slot"),
                 tr(
                     "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
@@ -97,11 +98,11 @@ internal class TooltipPage : DemoPage() {
             createTooltip { text = tr("用「引号」包裹可以精确匹配短语", "Wrap in “quotes” for exact phrase") }
                 .also { it.slot = "tooltip" },
         )
-        slotted.body.append(example(null, row(buttonWithTooltip, fieldWithTooltip, searchField)))
+        slotted.body.append(exampleBox(null, kitRow(buttonWithTooltip, fieldWithTooltip, searchField)))
         body.append(slotted.root)
 
         val linked =
-            section(
+            sectionBlock(
                 tr("用 for 关联", "Linked with for"),
                 tr(
                     "不在组件内部时，用 for 指向目标元素的 id；position 决定浮层落在哪一侧。",
@@ -120,11 +121,11 @@ internal class TooltipPage : DemoPage() {
         val headingTooltip = createTooltip { text = tr("这是标题上的提示", "This is a tooltip") }
         headingTooltip.`for` = "tooltip-heading"
         headingTooltip.position = "top-start"
-        linked.body.append(example(null, column(target, headingTarget), tooltip, headingTooltip))
+        linked.body.append(exampleBox(null, kitCol(target, headingTarget), tooltip, headingTooltip))
         body.append(linked.root)
 
         val manualSection =
-            section(
+            sectionBlock(
                 tr("手动打开", "Manual mode"),
                 tr(
                     "manual 关闭自动显示，由 opened 控制；这里用后缀图标按钮切换。",
@@ -148,11 +149,11 @@ internal class TooltipPage : DemoPage() {
         }
         infoButton.slot = "suffix"
         manualField.append(createIcon { icon = "lumo:search" }.also { it.slot = "prefix" }, manualTooltip, infoButton)
-        manualSection.body.append(example(null, manualField))
+        manualSection.body.append(exampleBox(null, manualField))
         body.append(manualSection.root)
 
         val delays =
-            section(
+            sectionBlock(
                 tr("延迟与 Markdown", "Delays and Markdown"),
                 tr(
                     "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
@@ -177,11 +178,11 @@ internal class TooltipPage : DemoPage() {
                 hideDelay = 500.0
             }
         slowTooltip.`for` = "tooltip-slow"
-        delays.body.append(example(null, row(mdTarget, mdTooltip, slowTarget, slowTooltip)))
+        delays.body.append(exampleBox(null, kitRow(mdTarget, mdTooltip, slowTarget, slowTooltip)))
         body.append(delays.root)
 
         val generated =
-            section(
+            sectionBlock(
                 tr("动态文本", "Generated text"),
                 tr(
                     "generator 接收 context，返回要显示的文本；同一个 tooltip 可以服务多个元素。",
@@ -203,11 +204,11 @@ internal class TooltipPage : DemoPage() {
             val index: Int = js("(context) => context.index | 0")(context)
             tr("第 ${index + 1} 个元素的说明", "Hint for element ${index + 1}")
         }
-        generated.body.append(example(null, row(*generatedTargets.toTypedArray(), generatedTooltip)))
+        generated.body.append(exampleBox(null, kitRow(*generatedTargets.toTypedArray(), generatedTooltip)))
         body.append(generated.root)
 
         val positions =
-            section(
+            sectionBlock(
                 tr("位置", "Position"),
                 tr(
                     "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
@@ -224,7 +225,7 @@ internal class TooltipPage : DemoPage() {
             positionedButtons += element
             positionedButtons += positioned
         }
-        positions.body.append(example(null, row(*positionedButtons.toTypedArray())))
+        positions.body.append(exampleBox(null, kitRow(*positionedButtons.toTypedArray())))
         body.append(positions.root)
 
     }

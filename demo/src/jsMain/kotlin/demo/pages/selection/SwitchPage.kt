@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -14,11 +19,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
@@ -52,7 +53,7 @@ internal class SwitchPage : DemoPage() {
         configureFrame(switchEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "switch 与 checkbox 共享状态模型，用 checked 读写。",
@@ -66,11 +67,11 @@ internal class SwitchPage : DemoPage() {
         notifications.listen(SwitchEvents.checkedChanged) {
             readout.set(tr("状态：", "State: "), if (notifications.checked) tr("已开启", "on") else tr("已关闭", "off"))
         }
-        basic.body.append(example(null, column(notifications, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(notifications, readout.root)))
         body.append(basic.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("辅助信息与提示", "Helper text and tooltip"),
                 tr(
                     "helper-text 说明开关的作用；slot=\"tooltip\" 的 tooltip 补充细节。",
@@ -87,11 +88,11 @@ internal class SwitchPage : DemoPage() {
                 setAttribute("slot", "tooltip")
             },
         )
-        features.body.append(example(null, autosave))
+        features.body.append(exampleBox(null, autosave))
         body.append(features.root)
 
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "开关同样支持 required：未满足时 validate() 失败并显示 error-message。",
@@ -116,11 +117,11 @@ internal class SwitchPage : DemoPage() {
                     )
                 }
             }
-        validation.body.append(example(null, column(twoFactor, row(validateButton, result.root))))
+        validation.body.append(exampleBox(null, kitCol(twoFactor, kitRow(validateButton, result.root))))
         body.append(validation.root)
 
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 只展示当前状态；disabled 让整行不可交互。",
@@ -128,9 +129,9 @@ internal class SwitchPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createSwitch {
                         label = tr("审计日志保留（90 天）", "Audit log retention (90 days)")
                         helperText = tr("商业版套餐已包含", "Included on the Business plan")

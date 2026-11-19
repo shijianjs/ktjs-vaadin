@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,9 +19,6 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.breadcrumbs.BreadcrumbsI18n
 import io.github.shijianjs.ktjs.vaadin.breadcrumbs.BreadcrumbsItemElement
@@ -55,7 +56,7 @@ internal class BreadcrumbsPage : DemoPage() {
 
         val log = EventLog(4)
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "面包屑从顶层位置逐级指向当前页面：带 path 的项渲染成链接，最后一项不带 path，代表当前页且不可点击。" +
@@ -74,11 +75,11 @@ internal class BreadcrumbsPage : DemoPage() {
             crumb(tr("组件", "Components"), "/components", onPath = { log.add("clicked · $it") }),
             crumb(tr("面包屑", "Breadcrumbs")),
         )
-        basic.body.append(example(null, column(crumbs, log.root)))
+        basic.body.append(exampleBox(null, kitCol(crumbs, log.root)))
         body.append(basic.root)
 
         val items =
-            section(
+            sectionBlock(
                 tr("项与图标", "Items and icons"),
                 tr(
                     "path 决定一项是链接还是当前页；prefix 插槽可以放图标，例如层级根节点的房子图标。",
@@ -93,11 +94,11 @@ internal class BreadcrumbsPage : DemoPage() {
             crumb(tr("订单", "Orders"), "/orders", iconName = "vaadin:package"),
             crumb(tr("订单详情", "Order Details")),
         )
-        items.body.append(example(null, iconCrumbs))
+        items.body.append(exampleBox(null, iconCrumbs))
         body.append(items.root)
 
         val overflow =
-            section(
+            sectionBlock(
                 tr("溢出", "Overflow"),
                 tr(
                     "宽度不足时，前面的项会折叠进开头的溢出菜单，最后一项（当前页）始终可见。",
@@ -116,11 +117,11 @@ internal class BreadcrumbsPage : DemoPage() {
             crumb(tr("笔记本", "Laptops"), "/catalog/electronics/computers/laptops"),
             crumb(tr("Model X1", "Model X1")),
         )
-        overflow.body.append(example(null, many))
+        overflow.body.append(exampleBox(null, many))
         body.append(overflow.root)
 
         val i18nSection =
-            section(
+            sectionBlock(
                 tr("本地化", "Internationalization"),
                 tr(
                     "目前可以本地化的只有溢出菜单按钮的无障碍标签：moreItems，屏幕阅读器会朗读它。",
@@ -142,11 +143,11 @@ internal class BreadcrumbsPage : DemoPage() {
             crumb(tr("笔记本", "Laptops"), "/catalog/electronics/computers/laptops"),
             crumb(tr("Model X1", "Model X1")),
         )
-        i18nSection.body.append(example(null, localized))
+        i18nSection.body.append(exampleBox(null, localized))
         body.append(i18nSection.root)
 
         val accessibility =
-            section(
+            sectionBlock(
                 tr("无障碍", "Accessibility"),
                 tr(
                     "组件渲染为 navigation 地标，辅助技术会把整条路径读成一个导航区域。",
@@ -155,7 +156,7 @@ internal class BreadcrumbsPage : DemoPage() {
                 ),
             )
         accessibility.body.append(
-            example(
+            exampleBox(
                 null,
                 bulletList(listOf(
                         tr(

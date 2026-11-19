@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,10 +20,7 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -59,7 +60,7 @@ internal class TabsPage : DemoPage() {
         registerVaadinIcons()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "标签页把内容分组到几个可切换的小节里，适合在同一块界面里就地切换、而不必加载新页面。" +
@@ -72,11 +73,11 @@ internal class TabsPage : DemoPage() {
         val tabs = tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping"))
         tabs.dataset["test"] = "tabs"
         tabs.listen(TabsEvents.selectedChanged) { log.add("selected-changed · ${tabs.selected}") }
-        basic.body.append(example(null, column(tabs, log.root)))
+        basic.body.append(exampleBox(null, kitCol(tabs, log.root)))
         body.append(basic.root)
 
         val states =
-            section(
+            sectionBlock(
                 tr("状态", "States"),
                 tr(
                     "tab 可以是选中、未选中或禁用。禁用的 tab 无法聚焦，键盘导航会跳过它；用禁用代替隐藏既能避免" +
@@ -94,11 +95,11 @@ internal class TabsPage : DemoPage() {
                 disabled = true
             },
         )
-        states.body.append(example(null, stateTabs))
+        states.body.append(exampleBox(null, stateTabs))
         body.append(states.root)
 
         val orientation =
-            section(
+            sectionBlock(
                 tr("方向与溢出", "Orientation and overflow"),
                 tr(
                     "横向标签适合少量条目，溢出时可以横向滚动，默认在两端显示滚动按钮；hide-scroll-buttons 去掉这些" +
@@ -152,14 +153,14 @@ internal class TabsPage : DemoPage() {
                 style.setProperty("width", "240px")
             }
         orientation.body.append(
-            example(tr("横向：溢出时显示滚动按钮", "Horizontal: scroll buttons appear on overflow"), horizontalTabs),
-            example(tr("隐藏滚动按钮（hide-scroll-buttons）", "Scroll buttons hidden (hide-scroll-buttons)"), hiddenScrollTabs),
-            example(tr("纵向：没有滚动按钮", "Vertical: no scroll buttons"), verticalTabs),
+            exampleBox(tr("横向：溢出时显示滚动按钮", "Horizontal: scroll buttons appear on overflow"), horizontalTabs),
+            exampleBox(tr("隐藏滚动按钮（hide-scroll-buttons）", "Scroll buttons hidden (hide-scroll-buttons)"), hiddenScrollTabs),
+            exampleBox(tr("纵向：没有滚动按钮", "Vertical: no scroll buttons"), verticalTabs),
         )
         body.append(orientation.root)
 
         val icons =
-            section(
+            sectionBlock(
                 tr("图标与其他内容", "Icons and other content"),
                 tr(
                     "tab 里可以放图标、徽标等几乎任意元素。横向标签通常把图标放在文字上方（icon-on-top，仅 Lumo），" +
@@ -202,14 +203,14 @@ internal class TabsPage : DemoPage() {
             )
         }
         icons.body.append(
-            example(tr("横向标签：图标在文字上方", "Horizontal tabs: icon above the label"), iconTabs),
-            example(tr("纵向标签：图标与文字并排", "Vertical tabs: icon beside the label"), verticalIconTabs),
-            example(tr("其他元素：徽标", "Other elements: badges"), badgeTabs),
+            exampleBox(tr("横向标签：图标在文字上方", "Horizontal tabs: icon above the label"), iconTabs),
+            exampleBox(tr("纵向标签：图标与文字并排", "Vertical tabs: icon beside the label"), verticalIconTabs),
+            exampleBox(tr("其他元素：徽标", "Other elements: badges"), badgeTabs),
         )
         body.append(icons.root)
 
         val themes =
-            section(
+            sectionBlock(
                 tr("主题变体", "Theme variants"),
                 tr(
                     "centered 让标签居中排列，equal-width-tabs 让各标签等宽，minimal 去掉标签栏背景，small 缩小尺寸。",
@@ -227,7 +228,7 @@ internal class TabsPage : DemoPage() {
         themes.body.append(
             *themeVariants
                 .map { (theme, label) ->
-                    example(
+                    exampleBox(
                         label,
                         tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping")).apply {
                             addTheme(theme)
@@ -240,7 +241,7 @@ internal class TabsPage : DemoPage() {
         body.append(themes.root)
 
         val focus =
-            section(
+            sectionBlock(
                 tr("焦点与键盘", "Focus and keyboard"),
                 tr(
                     "键盘聚焦时 tab 显示焦点环（focus-ring）。聚焦后左右方向键在 tab 之间移动焦点，Enter 或空格选中" +
@@ -252,11 +253,11 @@ internal class TabsPage : DemoPage() {
         val focusTabs = tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping"))
         focusTabs.dataset["test"] = "tabs-focus-ring"
         focusTabs.firstElementChild?.setAttribute("focus-ring", "")
-        focus.body.append(example(null, focusTabs))
+        focus.body.append(exampleBox(null, focusTabs))
         body.append(focus.root)
 
         val switching =
-            section(
+            sectionBlock(
                 tr("不使用 Tab Sheet 切换内容", "Content switching without Tab Sheet"),
                 tr(
                     "结构上必须把标签与内容分开时，用 selected-changed 自己切换内容；能放在一起时优先用 Tab Sheet，" +
@@ -276,7 +277,7 @@ internal class TabsPage : DemoPage() {
             val name = pageNames[contentTabs.selected.toInt()]
             content.textContent = tr("这是“$name”的内容。", "This is the $name content.")
         }
-        switching.body.append(example(null, column(contentTabs, content)))
+        switching.body.append(exampleBox(null, kitCol(contentTabs, content)))
         body.append(switching.root)
 
     }

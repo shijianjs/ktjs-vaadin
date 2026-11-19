@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,10 +20,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.overlay.createOverlay
@@ -56,7 +57,7 @@ internal class OverlayPage : DemoPage() {
         configureFrame(overlayEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "renderer(root, owner, model) 负责内容；withBackdrop 打开遮罩。",
@@ -67,7 +68,7 @@ internal class OverlayPage : DemoPage() {
         overlay.dataset["test"] = "overlay-basic"
         overlay.withBackdrop = true
         val overlayContent =
-            column(
+            kitCol(
                 paragraph(
                     tr(
                         "这是一个裸 overlay，没有 dialog 的头部与底部。",
@@ -84,11 +85,11 @@ internal class OverlayPage : DemoPage() {
             createButton { textContent = tr("打开 overlay", "Open overlay") }.apply {
                 clickEvent.addHandler { overlay.opened = true }
             }
-        basic.body.append(example(null, row(openButton, overlay)))
+        basic.body.append(exampleBox(null, kitRow(openButton, overlay)))
         body.append(basic.root)
 
         val modeless =
-            section(
+            sectionBlock(
                 tr("无遮罩 / 非模态", "No backdrop / modeless"),
                 tr(
                     "modeless 让浮层不抢焦点；withBackdrop=false 去掉遮罩。",
@@ -99,7 +100,7 @@ internal class OverlayPage : DemoPage() {
         modelessOverlay.withBackdrop = false
         modelessOverlay.modeless = true
         val modelessContent =
-            column(
+            kitCol(
                 paragraph(tr("非模态浮层，页面其他部分仍可交互。", "Modeless overlay: the rest of the page stays interactive.")),
             )
         val modelessClose = createButton { textContent = tr("关闭", "Close") }
@@ -107,9 +108,9 @@ internal class OverlayPage : DemoPage() {
         modelessContent.append(modelessClose)
         modelessOverlay.renderer = { root, _, _ -> root.append(modelessContent) }
         modeless.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开非模态 overlay", "Open modeless overlay") }
                         .addTheme("tertiary").apply {
                             clickEvent.addHandler { modelessOverlay.opened = true }
@@ -121,7 +122,7 @@ internal class OverlayPage : DemoPage() {
         body.append(modeless.root)
 
         val sized =
-            section(
+            sectionBlock(
                 tr("尺寸与滚动", "Size and scrolling"),
                 tr(
                     "setBounds 写入浮层的宽度与高度，内容超出时由内容区滚动。",
@@ -130,7 +131,7 @@ internal class OverlayPage : DemoPage() {
                 ),
             )
         val sizedOverlay = createOverlay()
-        val longContent = column(paragraph(tr("可滚动的内容：", "Scrollable content:")))
+        val longContent = kitCol(paragraph(tr("可滚动的内容：", "Scrollable content:")))
         repeat(12) { index ->
             longContent.append(paragraph(tr("第 ${index + 1} 行内容", "Line ${index + 1}")))
         }
@@ -139,9 +140,9 @@ internal class OverlayPage : DemoPage() {
         longContent.append(sizedClose)
         sizedOverlay.renderer = { root, _, _ -> root.append(longContent) }
         sized.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开固定尺寸 overlay", "Open sized overlay") }
                         .addTheme("tertiary").apply {
                             clickEvent.addHandler {

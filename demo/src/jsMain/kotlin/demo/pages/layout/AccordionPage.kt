@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 
@@ -18,9 +22,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordion
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionHeading
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
@@ -60,7 +61,7 @@ internal class AccordionPage : DemoPage() {
         registerVaadinIcons()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "每个 panel 用 summary 定义标题，子节点是展开后的内容；同一时间只展开一个面板（手风琴模式）。",
@@ -71,11 +72,11 @@ internal class AccordionPage : DemoPage() {
         val accordion = infoAccordion()
         accordion.headingLevel = 3.0
         accordion.dataset["test"] = "accordion"
-        basic.body.append(example(null, accordion))
+        basic.body.append(exampleBox(null, accordion))
         body.append(basic.root)
 
         val summarySection =
-            section(
+            sectionBlock(
                 tr("自定义 summary", "Custom summary"),
                 tr(
                     "summary 插槽里可以放 accordion-heading 与任意节点；下方向导用 vaadin:check 图标标记已完成的" +
@@ -132,33 +133,33 @@ internal class AccordionPage : DemoPage() {
                 wizard.opened = -1.0
             },
         )
-        summarySection.body.append(example(null, wizard))
+        summarySection.body.append(exampleBox(null, wizard))
         body.append(summarySection.root)
 
         val contentSection =
-            section(
+            sectionBlock(
                 tr("内容", "Content"),
                 tr(
                     "面板内容可以是链接列表之类的任意节点，展开状态由 opened 控制。",
                     "Panel content can be any nodes, such as a list of links; opened controls the expanded state.",
                 ),
             )
-        contentSection.body.append(example(null, linksAccordion()))
+        contentSection.body.append(exampleBox(null, linksAccordion()))
         body.append(contentSection.root)
 
         val disabledSection =
-            section(
+            sectionBlock(
                 tr("禁用面板", "Disabled panels"),
                 tr(
                     "给 panel 设 disabled 后标题不可点击，也无法通过键盘或程序展开。",
                     "A disabled panel cannot be toggled by pointer, keyboard or programmatic changes.",
                 ),
             )
-        disabledSection.body.append(example(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
+        disabledSection.body.append(exampleBox(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
         body.append(disabledSection.root)
 
         val themes =
-            section(
+            sectionBlock(
                 tr("主题变体", "Theme variants"),
                 tr(
                     "filled、no-padding、reverse、small 是 panel 上的主题变体，可以逐面板设置。",
@@ -166,10 +167,10 @@ internal class AccordionPage : DemoPage() {
                 ),
             )
         themes.body.append(
-            example("filled", infoAccordion(theme = "filled")),
-            example("no-padding", infoAccordion(theme = "no-padding")),
-            example("reverse", infoAccordion(theme = "reverse")),
-            example("small", infoAccordion(theme = "small")),
+            exampleBox("filled", infoAccordion(theme = "filled")),
+            exampleBox("no-padding", infoAccordion(theme = "no-padding")),
+            exampleBox("reverse", infoAccordion(theme = "reverse")),
+            exampleBox("small", infoAccordion(theme = "small")),
         )
         body.append(themes.root)
 
@@ -206,7 +207,7 @@ private fun infoAccordion(theme: String? = null, disabledIndexes: IntArray = int
             val panel = accordionPanel(summary)
             if (theme != null) panel.addTheme(theme)
             panel.disabled = index in disabledIndexes
-            panel.append(column(*lines.map { HtmlTagName.span {
+            panel.append(kitCol(*lines.map { HtmlTagName.span {
                                                  textContent = it
                                              } }.toTypedArray()))
             append(panel)
@@ -224,7 +225,7 @@ private fun linksAccordion() =
             )
         entries.forEach { (summary, links) ->
             val panel = accordionPanel(summary)
-            panel.append(column(*links.map { kitAnchor(it, "#/accordion") }.toTypedArray()))
+            panel.append(kitCol(*links.map { kitAnchor(it, "#/accordion") }.toTypedArray()))
             append(panel)
         }
     }

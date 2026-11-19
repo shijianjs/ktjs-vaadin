@@ -1,5 +1,10 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 
@@ -20,12 +25,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.grid
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutEvents
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutPrimarySections
@@ -72,7 +72,7 @@ internal class AppLayoutPage : DemoPage() {
         registerVaadinIcons()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "应用由内容区、导航栏与抽屉组成：抽屉在宽屏上是固定栏，窄屏时变成由抽屉开关控制的浮层。",
@@ -92,11 +92,11 @@ internal class AppLayoutPage : DemoPage() {
         layout.listen(AppLayoutEvents.drawerOpenedChanged) {
             readout.set("drawerOpened = ${layout.drawerOpened}")
         }
-        basic.body.append(example(null, column(layout, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(layout, readout.root)))
         body.append(basic.root)
 
         val navbarSection =
-            section(
+            sectionBlock(
                 tr("导航栏", "Navbar"),
                 tr(
                     "navbar 是内容区上方的头部，可以放应用名、主工具栏或次级导航。",
@@ -125,11 +125,11 @@ internal class AppLayoutPage : DemoPage() {
             )
         }
         navbarLayout.append(navTitle, navLinks, newAppContent(tr("内容区", "Content area")))
-        navbarSection.body.append(example(null, navbarLayout))
+        navbarSection.body.append(exampleBox(null, navbarLayout))
         body.append(navbarSection.root)
 
         val placement =
-            section(
+            sectionBlock(
                 tr("导航栏位置", "Navbar placement"),
                 tr(
                     "默认导航栏在顶部；把 primarySection 设为 drawer 后抽屉占满整个高度，导航栏移到右侧内容区" +
@@ -161,11 +161,11 @@ internal class AppLayoutPage : DemoPage() {
                     placementReadout.set("primarySection = ${next.unsafeCast<String>()}")
                 }
             }
-        placement.body.append(example(null, column(sideLayout, row(placementButton, placementReadout.root))))
+        placement.body.append(exampleBox(null, kitCol(sideLayout, kitRow(placementButton, placementReadout.root))))
         body.append(placement.root)
 
         val scrolling =
-            section(
+            sectionBlock(
                 tr("滚动行为", "Scrolling behavior"),
                 tr(
                     "布局默认随内容增高，页面自己滚动；给布局设固定高度并让内容区撑满，长内容就在内容区内部滚动。",
@@ -209,11 +209,11 @@ internal class AppLayoutPage : DemoPage() {
             fullGrid,
         )
         fullFrame.append(fullLayout)
-        scrolling.body.append(example(tr("自动高度", "Auto height"), autoFrame), example(tr("固定高度", "Full height"), fullFrame))
+        scrolling.body.append(exampleBox(tr("自动高度", "Auto height"), autoFrame), exampleBox(tr("固定高度", "Full height"), fullFrame))
         body.append(scrolling.root)
 
         val bottomNavbar =
-            section(
+            sectionBlock(
                 tr("小屏底部导航栏", "Bottom navbar on small touchscreens"),
                 tr(
                     "打开 --vaadin-app-layout-touch-optimized 后，放在 navbar touch-optimized 插槽里的导航会显示在" +
@@ -245,11 +245,11 @@ internal class AppLayoutPage : DemoPage() {
             bottomNav,
             newAppContent(tr("视图标题与内容", "View title and content")),
         )
-        bottomNavbar.body.append(example(null, bottomLayout))
+        bottomNavbar.body.append(exampleBox(null, bottomLayout))
         body.append(bottomNavbar.root)
 
         val secondary =
-            section(
+            sectionBlock(
                 tr("次级导航", "Secondary navigation"),
                 tr(
                     "抽屉放大类导航，navbar 里放当前视图的标题与只与该视图相关的次级导航。",
@@ -294,7 +294,7 @@ internal class AppLayoutPage : DemoPage() {
             secondaryNavbar,
             newAppContent(tr("订单列表", "Order list")),
         )
-        secondary.body.append(example(null, secondaryLayout))
+        secondary.body.append(exampleBox(null, secondaryLayout))
         body.append(secondary.root)
 
     }

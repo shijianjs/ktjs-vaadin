@@ -16,11 +16,7 @@ import demo.componentApiUrl
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang

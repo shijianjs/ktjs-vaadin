@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -19,11 +24,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.js
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -76,7 +77,7 @@ internal class LoginPage : DemoPage() {
         configureFrame(loginEntry)
 
         val formSection =
-            section(
+            sectionBlock(
                 tr("登录表单", "Login form"),
                 tr(
                     "点击提交后字段会先校验，然后触发 login 事件（本页不连后端）。",
@@ -97,11 +98,11 @@ internal class LoginPage : DemoPage() {
         val disabledSwitch = createSwitch { label = tr("禁用表单", "Disable form") }
         disabledSwitch.listen(SwitchEvents.checkedChanged) { loginForm.disabled = disabledSwitch.checked }
 
-        formSection.body.append(example(null, row(loginForm, column(errorSwitch, disabledSwitch, log.root))))
+        formSection.body.append(exampleBox(null, kitRow(loginForm, kitCol(errorSwitch, disabledSwitch, log.root))))
         body.append(formSection.root)
 
         val eventSection =
-            section(
+            sectionBlock(
                 tr("禁用与重新启用", "Disabling during submit"),
                 tr(
                     "disabled 会锁住提交按钮；真实应用可以在 login 事件里禁用，等请求返回后再放开。",
@@ -123,11 +124,11 @@ internal class LoginPage : DemoPage() {
                 1000.0,
             )
         }
-        eventSection.body.append(example(null, row(slowForm, column(slowStatus.root))))
+        eventSection.body.append(exampleBox(null, kitRow(slowForm, kitCol(slowStatus.root))))
         body.append(eventSection.root)
 
         val i18nSection =
-            section(
+            sectionBlock(
                 tr("国际化", "Localization"),
                 tr(
                     "i18n 覆盖表单里的全部文案；只提供需要的字段时会与默认值合并。",
@@ -155,11 +156,11 @@ internal class LoginPage : DemoPage() {
                         password = "Salasana vaaditaan"
                     }
             }
-        i18nSection.body.append(example(null, finnishForm))
+        i18nSection.body.append(exampleBox(null, finnishForm))
         body.append(i18nSection.root)
 
         val overlay =
-            section(
+            sectionBlock(
                 tr("登录浮层", "Login overlay"),
                 tr(
                     "LoginOverlay 把同一个表单放进全屏浮层，适合应用入口。",
@@ -172,9 +173,9 @@ internal class LoginPage : DemoPage() {
         loginOverlay.noAutofocus = true
         loginOverlay.listen(LoginFormEvents.login) { loginOverlay.opened = false }
         overlay.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开登录浮层", "Open login overlay") }.addTheme("primary").apply {
                         clickEvent.addHandler { loginOverlay.opened = true }
                     },
@@ -185,7 +186,7 @@ internal class LoginPage : DemoPage() {
         body.append(overlay.root)
 
         val overlayParts =
-            section(
+            sectionBlock(
                 tr("浮层插槽", "Overlay slots"),
                 tr(
                     "custom-form-area 把额外字段放进表单区域，footer 在按钮下方追加内容。",
@@ -209,9 +210,9 @@ internal class LoginPage : DemoPage() {
             },
         )
         overlayParts.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     openOverlayButton(tr("打开验证码浮层", "Open code overlay"), codeOverlay),
                     openOverlayButton(tr("打开底部插槽浮层", "Open footer overlay"), footerOverlay),
                     codeOverlay,
@@ -222,7 +223,7 @@ internal class LoginPage : DemoPage() {
         body.append(overlayParts.root)
 
         val overlayHeader =
-            section(
+            sectionBlock(
                 tr("浮层标题与本地化", "Overlay header and localization"),
                 tr(
                     "title / description 覆盖头部文案；i18n.header 与 additionalInformation 一并生效。",
@@ -251,9 +252,9 @@ internal class LoginPage : DemoPage() {
                 additionalInformation = "Jos tarvitset lisätietoja käyttäjälle."
             }
         overlayHeader.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     openOverlayButton(tr("打开品牌浮层", "Open branded overlay"), brandedOverlay),
                     openOverlayButton(tr("打开本地化浮层", "Open localized overlay"), localizedOverlay),
                     brandedOverlay,
@@ -264,7 +265,7 @@ internal class LoginPage : DemoPage() {
         body.append(overlayHeader.root)
 
         val states =
-            section(
+            sectionBlock(
                 tr("错误状态与附加信息", "Error state and extra information"),
                 tr(
                     "error 直接打开失败横幅；additionalInformation 在表单下方追加说明。",
@@ -285,9 +286,9 @@ internal class LoginPage : DemoPage() {
                     )
             }
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     openOverlayButton(tr("打开错误状态浮层", "Open error overlay"), errorOverlay),
                     openOverlayButton(tr("打开附加信息浮层", "Open extra information overlay"), infoOverlay),
                     errorOverlay,
@@ -298,7 +299,7 @@ internal class LoginPage : DemoPage() {
         body.append(states.root)
 
         val rich =
-            section(
+            sectionBlock(
                 tr("富内容背景", "Rich background"),
                 tr(
                     "登录表单可以放在任意背景上；深色背景配合 theme=\"dark\" 保持对比度。",
@@ -316,7 +317,7 @@ internal class LoginPage : DemoPage() {
                 style.setProperty("background", "linear-gradient(135deg, #1f4e9c, #7a3f8f)")
                 append(richForm)
             }
-        rich.body.append(example(null, richHost))
+        rich.body.append(exampleBox(null, richHost))
         body.append(rich.root)
 
     }

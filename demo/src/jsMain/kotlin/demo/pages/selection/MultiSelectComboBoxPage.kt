@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -14,13 +19,9 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -59,7 +60,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         val countries = jsArray<JsAny>(COUNTRIES_JSON)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "item-id-path 用来比较对象身份；selectedItems 是选中对象的数组。",
@@ -82,11 +83,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 itemNames(multi.selectedItems),
             )
         }
-        basic.body.append(example(null, column(multi, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(multi, readout.root)))
         body.append(basic.root)
 
         val selection =
-            section(
+            sectionBlock(
                 tr("预设选中项", "Preselected items"),
                 tr(
                     "selectedItems 可以直接赋值，chip 数量随选中项变化。",
@@ -102,11 +103,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 selectedItems = countries.copyOfRange(0, 4)
             }
         preset.style.width = "300px"
-        selection.body.append(example(null, preset))
+        selection.body.append(exampleBox(null, preset))
         body.append(selection.root)
 
         val selectionChange =
-            section(
+            sectionBlock(
                 tr("选择变更", "Selection change"),
                 tr(
                     "selected-items-changed 的 detail 带当前选中数组，可以同步到其他字段。",
@@ -128,11 +129,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         changing.listen(MultiSelectComboBoxEvents.selectedItemsChanged) {
             summary.value = itemNames(changing.selectedItems)
         }
-        selectionChange.body.append(example(null, row(changing, summary)))
+        selectionChange.body.append(exampleBox(null, kitRow(changing, summary)))
         body.append(selectionChange.root)
 
         val readonly =
-            section(
+            sectionBlock(
                 tr("只读", "Read-only"),
                 tr(
                     "readonly 保留 chip 展示，但用户不能添加或移除。",
@@ -149,11 +150,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 this.readonly = true
             }
         readonlyBox.style.width = "300px"
-        readonly.body.append(example(null, readonlyBox))
+        readonly.body.append(exampleBox(null, readonlyBox))
         body.append(readonly.root)
 
         val autoExpand =
-            section(
+            sectionBlock(
                 tr("自动展开", "Auto expand"),
                 tr(
                     "auto-expand-horizontally / auto-expand-vertically 让字段随 chip 数量变大，而不是滚动。",
@@ -171,11 +172,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 autoExpandHorizontally = true
                 autoExpandVertically = true
             }
-        autoExpand.body.append(example(null, expanding))
+        autoExpand.body.append(exampleBox(null, expanding))
         body.append(autoExpand.root)
 
         val selectedOnTop =
-            section(
+            sectionBlock(
                 tr("选中项置顶", "Selected items on top"),
                 tr(
                     "selected-items-on-top 把已选项排到下拉列表最前面，长列表里更容易核对。",
@@ -192,11 +193,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 selectedItems = countries.copyOfRange(4, 6)
                 selectedItemsOnTop = true
             }
-        selectedOnTop.body.append(example(null, onTop))
+        selectedOnTop.body.append(exampleBox(null, onTop))
         body.append(selectedOnTop.root)
 
         val collapseChipsSection =
-            section(
+            sectionBlock(
                 tr("折叠 chip", "Collapse chips"),
                 tr(
                     "collapseChips 把溢出的 chip 折叠成计数，可以由页面上的开关实时切换。",
@@ -216,11 +217,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         val collapseToggle = createCheckbox { label = tr("折叠 chip", "Collapse chips") }
         collapseToggle.checked = true
         collapseToggle.listen(CheckboxEvents.checkedChanged) { collapsing.collapseChips = collapseToggle.checked }
-        collapseChipsSection.body.append(example(null, column(collapsing, collapseToggle)))
+        collapseChipsSection.body.append(exampleBox(null, kitCol(collapsing, collapseToggle)))
         body.append(collapseChipsSection.root)
 
         val classNames =
-            section(
+            sectionBlock(
                 tr("选项类名", "Item class names"),
                 tr(
                     "itemClassNameGenerator 同时作用在 chip 与下拉条目上。",
@@ -236,11 +237,11 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                 itemClassNameGenerator = { item -> fruitClass(item.unsafeCast<String>()) }
             }
         fruit.style.width = "300px"
-        classNames.body.append(example(null, fruit))
+        classNames.body.append(exampleBox(null, fruit))
         body.append(classNames.root)
 
         val i18nSection =
-            section(
+            sectionBlock(
                 tr("国际化", "Internationalization"),
                 tr(
                     "i18n 覆盖清除、选中、取消与计数的提示文案；示例沿用官方文档的德语字符串。",
@@ -268,7 +269,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
                     )
             }
         localized.style.width = "300px"
-        i18nSection.body.append(example(null, localized))
+        i18nSection.body.append(exampleBox(null, localized))
         body.append(i18nSection.root)
 
     }

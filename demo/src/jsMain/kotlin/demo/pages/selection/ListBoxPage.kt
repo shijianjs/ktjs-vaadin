@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -15,12 +20,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.item.createItem
@@ -54,7 +55,7 @@ internal class ListBoxPage : DemoPage() {
         configureFrame(listBoxEntry)
 
         val dividers =
-            section(
+            sectionBlock(
                 tr("分隔线", "Dividers"),
                 tr(
                     "列表里可以混入 <hr> 作为分组分隔线，它不参与选择。",
@@ -75,11 +76,11 @@ internal class ListBoxPage : DemoPage() {
         separated.listen(ListBoxEvents.selectedValuesChanged) {
             separatedReadout.set("selectedValues = ", joinValues(separated.selectedValues).ifEmpty { "[]" })
         }
-        dividers.body.append(example(null, column(separated, separatedReadout.root)))
+        dividers.body.append(exampleBox(null, kitCol(separated, separatedReadout.root)))
         body.append(dividers.root)
 
         val disabledItems =
-            section(
+            sectionBlock(
                 tr("禁用条目", "Disabled items"),
                 tr(
                     "单个条目可以单独禁用，列表其余部分仍可交互。",
@@ -96,11 +97,11 @@ internal class ListBoxPage : DemoPage() {
                 disabled = true
             },
         )
-        disabledItems.body.append(example(null, withDisabled))
+        disabledItems.body.append(exampleBox(null, withDisabled))
         body.append(disabledItems.root)
 
         val single =
-            section(
+            sectionBlock(
                 tr("单选", "Single selection"),
                 tr(
                     "selected 是选中项的下标（Double），未选中时为 undefined。",
@@ -120,11 +121,11 @@ internal class ListBoxPage : DemoPage() {
         singleBox.listen(ListBoxEvents.selectedChanged) {
             readout.set("selected = ", singleBox.selected.toString())
         }
-        single.body.append(example(null, row(singleBox, readout.root)))
+        single.body.append(exampleBox(null, kitRow(singleBox, readout.root)))
         body.append(single.root)
 
         val multipleSection =
-            section(
+            sectionBlock(
                 tr("多选", "Multiple selection"),
                 tr(
                     "multiple 打开后用 selectedValues 读写所有选中下标；列表可滚动，固定高度即可。",
@@ -144,11 +145,11 @@ internal class ListBoxPage : DemoPage() {
         multiBox.listen(ListBoxEvents.selectedValuesChanged) {
             multiReadout.set("selectedValues = ", joinValues(multiBox.selectedValues).ifEmpty { "[]" })
         }
-        multipleSection.body.append(example(null, column(multiBox, multiReadout.root)))
+        multipleSection.body.append(exampleBox(null, kitCol(multiBox, multiReadout.root)))
         body.append(multipleSection.root)
 
         val presentation =
-            section(
+            sectionBlock(
                 tr("自定义条目呈现", "Custom item presentation"),
                 tr(
                     "条目内容是普通 DOM：头像 + 姓名 + 职业，随选中状态一并高亮。",
@@ -162,12 +163,12 @@ internal class ListBoxPage : DemoPage() {
             *people(5).map { person ->
                 createItem {
                     append(
-                        row(
+                        kitRow(
                             createAvatar {
                                 name = person.displayName
                                 img = person.pictureUrl
                             },
-                            column(HtmlTagName.span {
+                            kitCol(HtmlTagName.span {
                                        textContent = person.displayName
                                    }, HtmlTagName.span {
                                           textContent = person.profession
@@ -177,11 +178,11 @@ internal class ListBoxPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        presentation.body.append(example(null, rich))
+        presentation.body.append(exampleBox(null, rich))
         body.append(presentation.root)
 
         val orientationSection =
-            section(
+            sectionBlock(
                 tr("方向与禁用", "Orientation and disabled state"),
                 tr(
                     "orientation 控制排布方向，禁用后整组不可交互。",
@@ -200,7 +201,7 @@ internal class ListBoxPage : DemoPage() {
             createItem { textContent = tr("禁用项一", "Disabled item 1") },
             createItem { textContent = tr("禁用项二", "Disabled item 2") },
         )
-        orientationSection.body.append(example(null, row(horizontal, disabledBox)))
+        orientationSection.body.append(exampleBox(null, kitRow(horizontal, disabledBox)))
         body.append(orientationSection.root)
 
     }

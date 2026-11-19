@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -15,8 +18,6 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
@@ -54,7 +55,7 @@ internal class ScrollerPage : DemoPage() {
         configureFrame(scrollerEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "内容超出固定高度时出现滚动条；overflow-indicators 在顶部与底部显示渐隐指示。",
@@ -74,11 +75,11 @@ internal class ScrollerPage : DemoPage() {
             scroller,
             createButton { textContent = tr("加入日历", "Add to calendar") }.apply { slot = "footer" },
         )
-        basic.body.append(example(null, card))
+        basic.body.append(exampleBox(null, card))
         body.append(basic.root)
 
         val both =
-            section(
+            sectionBlock(
                 tr("双向滚动", "Scrolling in both directions"),
                 tr(
                     "内容比容器更宽更高时，两个方向都会出现滚动条。",
@@ -96,11 +97,11 @@ internal class ScrollerPage : DemoPage() {
         illustration.alt = tr("漫步在黄昏雪湖岸边的驯鹿", "A reindeer walking on a snowy lake shore at dusk")
         illustration.style.setProperty("display", "block")
         bothScroller.append(illustration)
-        both.body.append(example(null, bothScroller))
+        both.body.append(exampleBox(null, bothScroller))
         body.append(both.root)
 
         val mobile =
-            section(
+            sectionBlock(
                 tr("移动端横向滚动", "Horizontal scrolling on mobile"),
                 tr(
                     "scrollDirection 设为 horizontal 后只允许横向滚动，适合把一组按钮放在一行里横向滑动。",
@@ -134,7 +135,7 @@ internal class ScrollerPage : DemoPage() {
             },
         )
         phone.append(horizontalScroller)
-        mobile.body.append(example(null, phone))
+        mobile.body.append(exampleBox(null, phone))
         body.append(mobile.root)
 
     }

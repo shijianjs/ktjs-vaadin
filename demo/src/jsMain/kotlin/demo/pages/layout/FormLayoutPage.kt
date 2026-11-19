@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
@@ -14,9 +17,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutLabelsPositions
@@ -57,7 +57,7 @@ internal class FormLayoutPage : DemoPage() {
         configureFrame(formLayoutEntry)
 
         val autoSection =
-            section(
+            sectionBlock(
                 tr("自动响应式模式", "Auto-responsive mode"),
                 tr(
                     "autoResponsive 按可用宽度自动创建列，列宽由 columnWidth 指定（默认 12em）。每个字段默认独占" +
@@ -73,11 +73,11 @@ internal class FormLayoutPage : DemoPage() {
             formRow(emailField(tr("邮箱地址", "Email address"))),
             formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
         )
-        autoSection.body.append(example(null, newFormFrame(basicForm)))
+        autoSection.body.append(exampleBox(null, newFormFrame(basicForm)))
         body.append(autoSection.root)
 
         val labelsSection =
-            section(
+            sectionBlock(
                 tr("标签位置", "Label position"),
                 tr(
                     "labelsAside 让 form-item 优先把标签放在字段左侧；宽度不够时自动改回字段上方。",
@@ -95,11 +95,11 @@ internal class FormLayoutPage : DemoPage() {
             formItem(tr("姓", "Last name"), createTextField()),
             formItem(tr("邮箱地址", "Email address"), createEmailField()),
         )
-        labelsSection.body.append(example(null, newFormFrame(asideForm)))
+        labelsSection.body.append(exampleBox(null, newFormFrame(asideForm)))
         body.append(labelsSection.root)
 
         val columnsSection =
-            section(
+            sectionBlock(
                 tr("列宽与列数", "Column width and count"),
                 tr(
                     "columnWidth 决定一列多宽，expandColumns 让列平分剩余宽度，expandFields 让字段撑满所在列" +
@@ -130,13 +130,13 @@ internal class FormLayoutPage : DemoPage() {
             formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
         )
         columnsSection.body.append(
-            example("expand-columns", newFormFrame(expandColumnsForm)),
-            example("expand-columns expand-fields", newFormFrame(expandFieldsForm)),
+            exampleBox("expand-columns", newFormFrame(expandColumnsForm)),
+            exampleBox("expand-columns expand-fields", newFormFrame(expandFieldsForm)),
         )
         body.append(columnsSection.root)
 
         val colspan =
-            section(
+            sectionBlock(
                 tr("跨列", "Column span"),
                 tr(
                     "字段上的 data-colspan 让它占据多列；只能用在 form-row 里，并且需要 autoResponsive。",
@@ -158,11 +158,11 @@ internal class FormLayoutPage : DemoPage() {
             ),
             formRow(textField(tr("国家", "Country")).apply { setAttribute("data-colspan", "2") }),
         )
-        colspan.body.append(example(null, newFormFrame(spanForm)))
+        colspan.body.append(exampleBox(null, newFormFrame(spanForm)))
         body.append(colspan.root)
 
         val stepsSection =
-            section(
+            sectionBlock(
                 tr("响应式断点", "Responsive steps"),
                 tr(
                     "不用 autoResponsive 时用 responsiveSteps 描述断点与列数；首项通常从 0 开始。",
@@ -201,8 +201,8 @@ internal class FormLayoutPage : DemoPage() {
             formItem(tr("邮箱地址", "Email address"), createEmailField()),
         )
         stepsSection.body.append(
-            example("responsiveSteps", newFormFrame(stepsForm)),
-            example(tr("form-item 默认把标签放在左侧", "form-item puts the label aside by default"), newFormFrame(stepsAsideForm)),
+            exampleBox("responsiveSteps", newFormFrame(stepsForm)),
+            exampleBox(tr("form-item 默认把标签放在左侧", "form-item puts the label aside by default"), newFormFrame(stepsAsideForm)),
         )
         body.append(stepsSection.root)
 

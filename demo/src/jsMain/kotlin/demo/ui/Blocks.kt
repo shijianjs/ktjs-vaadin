@@ -13,13 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.EventLog as KitEventLog
 import io.github.shijianjs.ktjs.demo.page.Readout as KitReadout
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import kotlin.js.Date
-import web.dom.Node
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -97,32 +91,6 @@ fun DemoPage.configureFrame(entry: CatalogEntry) {
         body.append(paragraph(note))
     }
 }
-
-/** One titled block of a page; [body] receives the individual examples. */
-class Section(val root: HTMLElement, val body: HTMLElement)
-
-/** Creates a section with [title] and an optional [description]. */
-fun section(title: String, description: String = ""): Section {
-    val block: SectionBlock = sectionBlock(title, description)
-    return Section(block.root, block.body)
-}
-
-/** One example box: a card, optionally captioned. */
-fun example(caption: String? = null, vararg children: Node): HTMLElement = exampleBox(caption, *children)
-
-/** Horizontal group of controls or components. */
-fun row(vararg children: Node): HTMLElement = kitRow(*children)
-
-/** Horizontal group aligned to the top, for cards of different height. */
-fun rowStart(vararg children: Node): HTMLElement = kitRow(*children).apply {
-    style.setProperty("align-items", "flex-start")
-}
-
-/** Vertical group. */
-fun column(vararg children: Node): HTMLElement = kitCol(*children)
-
-/** Responsive grid of [children]. */
-fun grid(vararg children: Node): HTMLElement = kitGrid(260, *children)
 
 /**
  * Text that is updated in place, showing the current state of an example.

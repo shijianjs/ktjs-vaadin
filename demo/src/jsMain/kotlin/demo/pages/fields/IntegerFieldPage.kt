@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -16,11 +21,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import io.github.shijianjs.ktjs.vaadin.integerfield.IntegerFieldEvents
@@ -59,7 +60,7 @@ internal class IntegerFieldPage : DemoPage() {
         configureFrame(integerFieldEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "只解析整数；带小数点的输入会触发 unparsable-change 并且不更新 value。",
@@ -86,13 +87,13 @@ internal class IntegerFieldPage : DemoPage() {
         }
 
         basic.body.append(
-            example(null, column(count, readout.root)),
-            example(tr("事件流", "Event log"), log.root),
+            exampleBox(null, kitCol(count, readout.root)),
+            exampleBox(tr("事件流", "Event log"), log.root),
         )
         body.append(basic.root)
 
         val variants =
-            section(
+            sectionBlock(
                 tr("取值示例", "Value examples"),
                 tr(
                     "Integer Field 的 value 同样是字符串，负整数与多位数都直接以十进制文本读写。",
@@ -115,11 +116,11 @@ internal class IntegerFieldPage : DemoPage() {
                 value = "3910"
             },
         )
-        variants.body.append(example(null, variantLayout))
+        variants.body.append(exampleBox(null, variantLayout))
         body.append(variants.root)
 
         val range =
-            section(
+            sectionBlock(
                 tr("范围校验", "Range validation"),
                 tr("min / max 同时约束步进按钮和 validate()。", "min / max constrain both the step buttons and validate()."),
             )
@@ -138,11 +139,11 @@ internal class IntegerFieldPage : DemoPage() {
                     result.set(tr("校验结果：", "Result: "), if (age.validate()) tr("通过", "Valid") else tr("失败", "Failed"))
                 }
             }
-        range.body.append(example(null, column(age, row(validateButton, result.root))))
+        range.body.append(exampleBox(null, kitCol(age, kitRow(validateButton, result.root))))
         body.append(range.root)
 
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Styles"),
                 tr(
                     "与 Number Field 共用同一套主题变体。",
@@ -150,7 +151,7 @@ internal class IntegerFieldPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createIntegerField {
                     label = tr("数量", "Quantity")

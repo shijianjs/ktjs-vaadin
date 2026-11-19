@@ -1,5 +1,10 @@
 package demo.pages.buttons
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -17,12 +22,8 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -130,7 +131,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Basic usage ----------------------------------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "items 接受树形结构；打开子菜单后选择一项会触发 item-selected。",
@@ -147,14 +148,14 @@ internal class MenuBarPage : DemoPage() {
             log.add("item-selected · $text")
         }
         basic.body.append(
-            example(null, column(menuBar, readout.root)),
-            example(tr("事件流", "Event log"), log.root),
+            exampleBox(null, kitCol(menuBar, readout.root)),
+            exampleBox(tr("事件流", "Event log"), log.root),
         )
         body.append(basic.root)
 
         // --- Checkable items ------------------------------------------------------------------------
         val checkable =
-            section(
+            sectionBlock(
                 tr("可勾选项", "Checkable items"),
                 tr(
                     "子菜单项的 checked 由应用自己维护：在 item-selected 里取反，组件按状态显示勾选标记。",
@@ -178,12 +179,12 @@ internal class MenuBarPage : DemoPage() {
             val item = selectedMenuItem(event).unsafeCast<SubMenuItem>()
             item.checked = !(item.checked ?: false)
         }
-        checkable.body.append(example(null, checkBar))
+        checkable.body.append(exampleBox(null, checkBar))
         body.append(checkable.root)
 
         // --- Dividers -------------------------------------------------------------------------------
         val dividers =
-            section(
+            sectionBlock(
                 tr("分隔线", "Dividers"),
                 tr(
                     "把 component 设为 \"hr\" 的条目渲染成分隔线，用来分组子菜单项。",
@@ -191,7 +192,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         dividers.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar {
                     items =
@@ -216,7 +217,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Drop-down ------------------------------------------------------------------------------
         val dropDown =
-            section(
+            sectionBlock(
                 tr("下拉菜单", "Drop-down menu"),
                 tr(
                     "只有一个按钮时，菜单栏就是普通的下拉菜单，常见于用户账户入口。",
@@ -224,7 +225,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         dropDown.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar {
                     items =
@@ -248,7 +249,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Icons ----------------------------------------------------------------------------------
         val icons =
-            section(
+            sectionBlock(
                 tr("图标", "Icons"),
                 tr(
                     "item 的 component 接受任意元素：这里放 vaadin-menu-bar-item，里面是图标加文字；" +
@@ -314,15 +315,15 @@ internal class MenuBarPage : DemoPage() {
             }
         comboBar.addTheme("icon", "primary")
         icons.body.append(
-            example(tr("图标加文字", "Icons with text"), iconBar),
-            example(tr("只有图标", "Icon-only buttons"), iconOnlyBar),
-            example(tr("组合按钮", "Combo buttons"), comboBar),
+            exampleBox(tr("图标加文字", "Icons with text"), iconBar),
+            exampleBox(tr("只有图标", "Icon-only buttons"), iconOnlyBar),
+            exampleBox(tr("组合按钮", "Combo buttons"), comboBar),
         )
         body.append(icons.root)
 
         // --- Custom item data -----------------------------------------------------------------------
         val customData =
-            section(
+            sectionBlock(
                 tr("自定义条目数据", "Custom item data"),
                 tr(
                     "条目里可以带业务字段（这里是 value），item-selected 读出来后直接使用；示例把内容写进剪贴板。",
@@ -354,12 +355,12 @@ internal class MenuBarPage : DemoPage() {
                 copied.set(tr("已复制：", "Copied: "), value)
             }
         }
-        customData.body.append(example(null, column(copyBar, copied.root)))
+        customData.body.append(exampleBox(null, kitCol(copyBar, copied.root)))
         body.append(customData.root)
 
         // --- Disabled items -------------------------------------------------------------------------
         val disabled =
-            section(
+            sectionBlock(
                 tr("禁用项", "Disabled items"),
                 tr(
                     "disabled 可以设在顶层按钮或子菜单项上，禁用的条目不能点击。",
@@ -367,7 +368,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         disabled.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar {
                     items =
@@ -390,7 +391,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Class names ----------------------------------------------------------------------------
         val classNames =
-            section(
+            sectionBlock(
                 tr("自定义类名", "Item class names"),
                 tr(
                     "className 加到生成的按钮上，配合主题样式做更细的定制。",
@@ -398,7 +399,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         classNames.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar {
                     items =
@@ -421,7 +422,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Drop-down indicators -------------------------------------------------------------------
         val indicators =
-            section(
+            sectionBlock(
                 tr("展开指示器", "Drop-down indicators"),
                 tr(
                     "theme=\"dropdown-indicators\" 给带子菜单的按钮加上下拉箭头。",
@@ -429,7 +430,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         indicators.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar { items = sharedMenuItems() }.addTheme("dropdown-indicators"),
             ),
@@ -438,7 +439,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Overflow -------------------------------------------------------------------------------
         val overflow =
-            section(
+            sectionBlock(
                 tr("溢出折叠", "Overflow"),
                 tr(
                     "空间不足时，放不下的按钮收进溢出菜单；拖动分隔条可以看到折叠过程。",
@@ -451,12 +452,12 @@ internal class MenuBarPage : DemoPage() {
             createMenuBar { items = sharedMenuItems() },
             paragraph(tr("拖动分隔条观察溢出", "Move the splitter to see overflow")),
         )
-        overflow.body.append(example(null, split))
+        overflow.body.append(exampleBox(null, split))
         body.append(overflow.root)
 
         // --- Right-aligned --------------------------------------------------------------------------
         val rightAligned =
-            section(
+            sectionBlock(
                 tr("右对齐", "Right-aligned"),
                 tr(
                     "theme=\"end-aligned\" 把按钮组靠右排列，适合放在工具栏末端。",
@@ -465,12 +466,12 @@ internal class MenuBarPage : DemoPage() {
             )
         val rightBar = createMenuBar { items = sharedMenuItems() }.addTheme("end-aligned")
         rightBar.style.setProperty("width", "100%")
-        rightAligned.body.append(example(null, rightBar))
+        rightAligned.body.append(exampleBox(null, rightBar))
         body.append(rightAligned.root)
 
         // --- Style variants -------------------------------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "顶层按钮默认使用 tertiary 外观；primary、small 与默认样式对比见下。",
@@ -479,9 +480,9 @@ internal class MenuBarPage : DemoPage() {
             )
 
         styles.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     menuBarVariant(tr("默认", "Default")),
                     menuBarVariant(tr("三级", "Tertiary"), "tertiary"),
                     menuBarVariant(tr("主要", "Primary"), "primary"),
@@ -493,7 +494,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Internationalization -------------------------------------------------------------------
         val i18n =
-            section(
+            sectionBlock(
                 tr("本地化", "Internationalization"),
                 tr(
                     "i18n 覆盖组件自带的文案，例如溢出按钮给屏幕阅读器读的 moreOptions。",
@@ -502,7 +503,7 @@ internal class MenuBarPage : DemoPage() {
                 ),
             )
         i18n.body.append(
-            example(
+            exampleBox(
                 null,
                 createMenuBar {
                     items = sharedMenuItems()
@@ -514,7 +515,7 @@ internal class MenuBarPage : DemoPage() {
 
         // --- Tooltips -------------------------------------------------------------------------------
         val tooltips =
-            section(
+            sectionBlock(
                 tr("条目提示", "Item tooltips"),
                 tr(
                     "给每个条目设置 tooltip，再在菜单栏里放一个 slot=\"tooltip\" 的 vaadin-tooltip，悬停和键盘聚焦时都会显示。",
@@ -553,12 +554,12 @@ internal class MenuBarPage : DemoPage() {
             }
         tooltipBar.addTheme("icon")
         tooltipBar.append(createTooltip().apply { slot = "tooltip" })
-        tooltips.body.append(example(null, tooltipBar))
+        tooltips.body.append(exampleBox(null, tooltipBar))
         body.append(tooltips.root)
 
         // --- Behaviour switches ---------------------------------------------------------------------
         val behaviour =
-            section(
+            sectionBlock(
                 tr("行为开关", "Behaviour switches"),
                 tr(
                     "openOnHover 决定子菜单是否悬停展开，tabNavigation 让 Tab 键在顶层项之间移动。",
@@ -589,7 +590,7 @@ internal class MenuBarPage : DemoPage() {
         sync()
 
         behaviour.body.append(
-            example(null, column(hoverSwitch, tabSwitch, disabledSwitch, reactiveBar, switchReadout.root)),
+            exampleBox(null, kitCol(hoverSwitch, tabSwitch, disabledSwitch, reactiveBar, switchReadout.root)),
         )
         body.append(behaviour.root)
 

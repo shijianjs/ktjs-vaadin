@@ -35,10 +35,6 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.aura.Aura
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
@@ -162,7 +158,7 @@ internal class EntryPoint : CustomElementAdapter() {
         if (built) return
         built = true
         append(
-            row(HtmlTagName.p { className = SMALL; textContent = name }, codeText(value)),
+            kitRow(HtmlTagName.p { className = SMALL; textContent = name }, codeText(value)),
         )
     }
 
@@ -194,7 +190,7 @@ internal class DescribedEntryPoint : CustomElementAdapter() {
         binder.bind(description, field)
         if (built) return
         built = true
-        append(row(HtmlTagName.p { className = SMALL; textContent = name }, description))
+        append(kitRow(HtmlTagName.p { className = SMALL; textContent = name }, description))
     }
 
     companion object : CustomElementReference<DescribedEntryPoint>(DescribedEntryPoint::class.js) {

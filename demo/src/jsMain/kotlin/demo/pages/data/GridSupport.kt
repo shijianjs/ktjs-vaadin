@@ -1,5 +1,7 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
@@ -11,7 +13,6 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.tr
 import demo.ui.jsArray
-import demo.ui.row
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.demo.style.Palette
 import kotlin.js.Date
@@ -133,7 +134,7 @@ internal class GridHeader : CustomElementAdapter() {
     private val mark = createIcon { }.addTheme("small")
 
     init {
-        attachShadowRoot().append(row(labelNode, mark))
+        attachShadowRoot().append(kitRow(labelNode, mark))
     }
 
     /** Sets the label, the icon and the tooltip title. */

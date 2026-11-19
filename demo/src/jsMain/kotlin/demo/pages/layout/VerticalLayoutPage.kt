@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -15,8 +18,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 
 val verticalLayoutEntry: CatalogEntry =
@@ -40,7 +41,7 @@ internal class VerticalLayoutPage : DemoPage() {
         configureFrame(verticalLayoutEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "与 Horizontal Layout 相同的主题，方向改为纵向；spacing 变成行间距。",
@@ -48,7 +49,7 @@ internal class VerticalLayoutPage : DemoPage() {
                 ),
             )
         basic.body.append(
-            example(
+            exampleBox(
                 "theme=\"spacing padding\"",
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -63,7 +64,7 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(basic.root)
 
         val verticalAlignment =
-            section(
+            sectionBlock(
                 tr("纵向对齐", "Vertical alignment"),
                 tr(
                     "布局比内容高时，justify-content 控制子项在纵向上的分布。",
@@ -71,7 +72,7 @@ internal class VerticalLayoutPage : DemoPage() {
                 ),
             )
         verticalAlignment.body.append(
-            example(
+            exampleBox(
                 "justify-content: center",
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -88,7 +89,7 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(verticalAlignment.root)
 
         val horizontalAlignment =
-            section(
+            sectionBlock(
                 tr("水平对齐", "Horizontal alignment"),
                 tr(
                     "align-items 控制子项在横向上的位置，例如整体居中。",
@@ -96,7 +97,7 @@ internal class VerticalLayoutPage : DemoPage() {
                 ),
             )
         horizontalAlignment.body.append(
-            example(
+            exampleBox(
                 "align-items: center",
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -112,7 +113,7 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(horizontalAlignment.root)
 
         val individual =
-            section(
+            sectionBlock(
                 tr("单项对齐", "Aligning individual items"),
                 tr(
                     "子项的 align-self 可以覆盖容器的 align-items，只影响它自己。",
@@ -120,7 +121,7 @@ internal class VerticalLayoutPage : DemoPage() {
                 ),
             )
         individual.body.append(
-            example(
+            exampleBox(
                 null,
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -136,19 +137,19 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(individual.root)
 
         val spacing =
-            section(
+            sectionBlock(
                 tr("间距", "Spacing"),
                 tr("spacing 在子项之间加入统一间隔。", "spacing adds a uniform gap between the children."),
             )
         spacing.body.append(
-            example(
+            exampleBox(
                 tr("没有 spacing", "Without spacing"),
                 createVerticalLayout().apply {
                     addTheme("padding")
                     append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
-            example(
+            exampleBox(
                 tr("有 spacing", "With spacing"),
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -159,19 +160,19 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(spacing.root)
 
         val padding =
-            section(
+            sectionBlock(
                 tr("内边距", "Padding"),
                 tr("padding 在容器内部四周留出空间。", "padding adds space inside the container."),
             )
         padding.body.append(
-            example(
+            exampleBox(
                 tr("没有 padding", "Without padding"),
                 createVerticalLayout().apply {
                     addTheme("spacing")
                     append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
-            example(
+            exampleBox(
                 tr("有 padding", "With padding"),
                 createVerticalLayout().apply {
                     addTheme("padding", "spacing")
@@ -182,12 +183,12 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(padding.root)
 
         val margin =
-            section(
+            sectionBlock(
                 tr("外边距", "Margin"),
                 tr("margin 在容器外部留出空间，与相邻元素拉开距离。", "margin adds space around the container."),
             )
         margin.body.append(
-            example(
+            exampleBox(
                 tr("没有 margin", "Without margin"),
                 HtmlTagName.div().apply {
                     style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
@@ -199,7 +200,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     )
                 },
             ),
-            example(
+            exampleBox(
                 tr("有 margin", "With margin"),
                 HtmlTagName.div().apply {
                     style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
@@ -215,7 +216,7 @@ internal class VerticalLayoutPage : DemoPage() {
         body.append(margin.root)
 
         val wrapping =
-            section(
+            sectionBlock(
                 tr("换行", "Wrapping"),
                 tr(
                     "默认空间不足时子项会收缩或溢出；wrap 让它们换到下一列。",
@@ -223,7 +224,7 @@ internal class VerticalLayoutPage : DemoPage() {
                 ),
             )
         wrapping.body.append(
-            example(
+            exampleBox(
                 tr("没有 wrap", "Without wrap"),
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
@@ -232,7 +233,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     append(*(1..4).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
                 },
             ),
-            example(
+            exampleBox(
                 tr("有 wrap", "With wrap"),
                 createVerticalLayout().apply {
                     addTheme("wrap", "spacing", "padding")

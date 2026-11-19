@@ -13,13 +13,9 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.row
 import demo.Language
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerConfidences
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighter

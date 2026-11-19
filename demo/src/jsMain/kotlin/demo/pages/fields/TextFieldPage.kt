@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -18,11 +23,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -65,7 +66,7 @@ internal class TextFieldPage : DemoPage() {
 
         // --- Basic usage (text-field-basic.ts) ------------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "文本输入支持标签、前缀 / 后缀插槽和内置清空按钮；input 在每次按键后触发，change 在提交" +
@@ -96,15 +97,15 @@ internal class TextFieldPage : DemoPage() {
         nameField.listen(TextFieldEvents.change) { log.add("change · ${nameField.value}") }
         nameField.listen(TextFieldEvents.valueChanged) { log.add("value-changed · ${nameField.value}") }
         basic.body.append(
-            example(tr("街道地址：前缀图标与清空按钮", "Street address: prefix icon and clear button"), address),
-            example(tr("读值", "Read-out"), column(nameField, readout.root)),
-            example(tr("事件流", "Event log"), log.root),
+            exampleBox(tr("街道地址：前缀图标与清空按钮", "Street address: prefix icon and clear button"), address),
+            exampleBox(tr("读值", "Read-out"), kitCol(nameField, readout.root)),
+            exampleBox(tr("事件流", "Event log"), log.root),
         )
         body.append(basic.root)
 
         // --- Basic features (text-field-basic-features.ts) ------------------------------------------
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "标签说明字段用途，辅助文本补充说明，占位符给出输入示例；tooltip 插槽在悬停与键盘聚焦时" +
@@ -128,12 +129,12 @@ internal class TextFieldPage : DemoPage() {
                 textContent = ":)"
             }.apply { slot = "suffix" },
         )
-        features.body.append(example(null, featureField))
+        features.body.append(exampleBox(null, featureField))
         body.append(features.root)
 
         // --- Validation (text-field-validation.ts) --------------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "required、minlength / maxlength、pattern 与 allowedCharPattern 一起约束输入。示例在" +
@@ -213,17 +214,17 @@ internal class TextFieldPage : DemoPage() {
                 }
             }
         validation.body.append(
-            example(tr("约束与错误文案", "Constraints and error messages"), column(phone, phoneResult.root)),
-            example(
+            exampleBox(tr("约束与错误文案", "Constraints and error messages"), kitCol(phone, phoneResult.root)),
+            exampleBox(
                 tr("手动校验（validate）", "Manual validation (validate())"),
-                column(codeField, row(validateButton, resetButton), result.root),
+                kitCol(codeField, kitRow(validateButton, resetButton), result.root),
             ),
         )
         body.append(validation.root)
 
         // --- Read-only and disabled (text-field-readonly-and-disabled.ts) ---------------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
@@ -232,9 +233,9 @@ internal class TextFieldPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createTextField {
                         label = tr("只读", "Read-only")
                         value = tr("值", "Value")
@@ -250,7 +251,7 @@ internal class TextFieldPage : DemoPage() {
 
         // --- Autoselect -----------------------------------------------------------------------------
         val autoselectSection =
-            section(
+            sectionBlock(
                 tr("自动全选", "Autoselect"),
                 tr(
                     "autoselect 打开时，用鼠标或键盘聚焦都会选中全部内容，便于直接替换；关闭时鼠标点击会把" +
@@ -272,12 +273,12 @@ internal class TextFieldPage : DemoPage() {
                 checked = true
             }
         autoselectSwitch.listen(SwitchEvents.checkedChanged) { autoselectField.autoselect = autoselectSwitch.checked }
-        autoselectSection.body.append(example(null, column(autoselectSwitch, autoselectField)))
+        autoselectSection.body.append(exampleBox(null, kitCol(autoselectSwitch, autoselectField)))
         body.append(autoselectSection.root)
 
         // --- Input mode -----------------------------------------------------------------------------
         val inputMode =
-            section(
+            sectionBlock(
                 tr("输入模式", "Input mode"),
                 tr(
                     "inputmode 是给移动端浏览器的提示，决定聚焦时弹出哪种虚拟键盘；桌面浏览器没有可见效果。",
@@ -286,9 +287,9 @@ internal class TextFieldPage : DemoPage() {
                 ),
             )
         inputMode.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createTextField {
                         label = tr("网址", "URL")
                         inputModeProperty = "url"
@@ -311,7 +312,7 @@ internal class TextFieldPage : DemoPage() {
 
         // --- Style variants (text-field-styles.ts) --------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "theme 属性接受空格分隔的变体：align-right 右对齐文本（适合纵向排列的数值），small 更紧凑，" +
@@ -328,13 +329,13 @@ internal class TextFieldPage : DemoPage() {
                 value = tr("值", "Value")
             }.addTheme("align-right", "small", "helper-above-field")
         styles.body.append(
-            example(
+            exampleBox(
                 tr("align-right + small + helper-above-field", "align-right + small + helper-above-field"),
                 styledField,
             ),
-            example(
+            exampleBox(
                 tr("文本对齐", "Text alignment"),
-                row(
+                kitRow(
                     createTextField {
                         label = "align-left"
                         value = "1234"

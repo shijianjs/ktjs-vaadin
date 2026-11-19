@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -17,12 +22,8 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
@@ -57,7 +58,7 @@ internal class CheckboxPage : DemoPage() {
         configureFrame(checkboxEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "checked 反映勾选状态；change 只在用户操作时触发，checked-changed 在属性被代码设置时也会触发。",
@@ -80,11 +81,11 @@ internal class CheckboxPage : DemoPage() {
                     log.add(tr("checked-changed（程序设置）· ${terms.checked}", "checked-changed (from code) · ${terms.checked}"))
                 }
             }
-        basic.body.append(example(null, column(terms, row(toggleFromCode, stateReadout.root), log.root)))
+        basic.body.append(exampleBox(null, kitCol(terms, kitRow(toggleFromCode, stateReadout.root), log.root)))
         body.append(basic.root)
 
         val labeling =
-            section(
+            sectionBlock(
                 tr("标签与辅助信息", "Label and helper text"),
                 tr(
                     "label 是可见标签；helper-text 提示填写方式，两者都通过 property 设置。",
@@ -93,9 +94,9 @@ internal class CheckboxPage : DemoPage() {
                 ),
             )
         labeling.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createCheckbox {
                         label = tr("我同意", "Yes, I agree")
                     },
@@ -109,7 +110,7 @@ internal class CheckboxPage : DemoPage() {
         body.append(labeling.root)
 
         val required =
-            section(
+            sectionBlock(
                 tr("必填", "Required"),
                 tr(
                     "required 让空值无法通过校验；error-message 是失败时显示在字段下方的文案。",
@@ -132,11 +133,11 @@ internal class CheckboxPage : DemoPage() {
                     )
                 }
             }
-        required.body.append(example(null, column(grant, row(submit, requiredResult.root))))
+        required.body.append(exampleBox(null, kitCol(grant, kitRow(submit, requiredResult.root))))
         body.append(required.root)
 
         val indeterminate =
-            section(
+            sectionBlock(
                 tr("不确定态", "Indeterminate"),
                 tr(
                     "「全选」勾选框用 indeterminate 表示部分选中；它与组件的 checked 一起由选中数量派生。",
@@ -168,11 +169,11 @@ internal class CheckboxPage : DemoPage() {
             syncSelectAll()
         }
         userGroup.listen(CheckboxGroupEvents.valueChanged) { syncSelectAll() }
-        indeterminate.body.append(example(null, column(selectAll, userGroup)))
+        indeterminate.body.append(exampleBox(null, kitCol(selectAll, userGroup)))
         body.append(indeterminate.root)
 
         val orientation =
-            section(
+            sectionBlock(
                 tr("方向", "Orientation"),
                 tr(
                     "theme=\"horizontal\" 让选项横排，vertical 让选项竖排；相邻的两个组之间留出间距更易读。",
@@ -240,16 +241,16 @@ internal class CheckboxPage : DemoPage() {
                 textContent = tr("已取消", "Cancelled")
             },
         )
-        val adjacent = column(manufacturers, statuses)
+        val adjacent = kitCol(manufacturers, statuses)
         orientation.body.append(
-            example(null, horizontal),
-            example(null, vertical),
-            example(null, adjacent),
+            exampleBox(null, horizontal),
+            exampleBox(null, vertical),
+            exampleBox(null, adjacent),
         )
         body.append(orientation.root)
 
         val preset =
-            section(
+            sectionBlock(
                 tr("预设值", "Preset value"),
                 tr(
                     "value 可以直接赋值；value-changed 报告用户改动后的数组。",
@@ -283,11 +284,11 @@ internal class CheckboxPage : DemoPage() {
         exportGroup.listen(CheckboxGroupEvents.valueChanged) {
             exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { "[]" })
         }
-        preset.body.append(example(null, column(exportGroup, exportReadout.root)))
+        preset.body.append(exampleBox(null, kitCol(exportGroup, exportReadout.root)))
         body.append(preset.root)
 
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "helper-above-field 把辅助信息放到标签与选项之间。",
@@ -307,7 +308,7 @@ internal class CheckboxPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        styles.body.append(example(null, styled))
+        styles.body.append(exampleBox(null, styled))
         body.append(styles.root)
 
     }

@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -18,10 +22,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import io.github.shijianjs.ktjs.dom.css.dsl.Pseudos
 import io.github.shijianjs.ktjs.dom.css.dsl.className
@@ -99,7 +100,7 @@ internal class SideNavPage : DemoPage() {
 
         val log = EventLog(4)
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "Side Navigation 是带链接的纵向导航列表，通常放在 App Layout 的抽屉里。示例里的同源链接不会真的" +
@@ -122,11 +123,11 @@ internal class SideNavPage : DemoPage() {
             )
         basicNav.dataset["test"] = "side-nav"
         basicNav.style.setProperty("width", "100%")
-        basic.body.append(example(null, column(basicNav, log.root)))
+        basic.body.append(exampleBox(null, kitCol(basicNav, log.root)))
         body.append(basic.root)
 
         val current =
-            section(
+            sectionBlock(
                 tr("自动高亮当前项", "Automatic highlighting of the current item"),
                 tr(
                     "path 与当前 URL 匹配的项会自动高亮，并把 aria-current 设为 page。默认只匹配完整路径，" +
@@ -150,11 +151,11 @@ internal class SideNavPage : DemoPage() {
             navItem(tr("另一个页面", "Another page"), "vaadin:envelope", "/inbox"),
             navItem(tr("嵌套路由父项", "Nested route parent"), "vaadin:folder", "/parent").apply { matchNested = true },
         )
-        current.body.append(example(null, currentNav))
+        current.body.append(exampleBox(null, currentNav))
         body.append(current.root)
 
         val suffix =
-            section(
+            sectionBlock(
                 tr("前缀与后缀", "Prefix and suffix elements"),
                 tr(
                     "项上有 prefix / suffix 插槽：prefix 主要放图标，suffix 可以放通知徽标。整行都是链接，" +
@@ -185,11 +186,11 @@ internal class SideNavPage : DemoPage() {
                 },
             )
         suffixNav.style.setProperty("width", "100%")
-        suffix.body.append(example(null, suffixNav))
+        suffix.body.append(exampleBox(null, suffixNav))
         body.append(suffix.root)
 
         val hierarchy =
-            section(
+            sectionBlock(
                 tr("层级", "Hierarchy"),
                 tr(
                     "子项放进 slot=\"children\"，默认折叠。父项也可以带 path：点击时既导航也展开子项；" +
@@ -216,11 +217,11 @@ internal class SideNavPage : DemoPage() {
             }
         val hierarchyNav = navOf(messages, admin)
         hierarchyNav.style.setProperty("width", "100%")
-        hierarchy.body.append(example(null, hierarchyNav))
+        hierarchy.body.append(exampleBox(null, hierarchyNav))
         body.append(hierarchy.root)
 
         val labelled =
-            section(
+            sectionBlock(
                 tr("带标签的可折叠列表", "Labeled collapsible list"),
                 tr(
                     "label 插槽在列表顶部加标题，便于并排放多个列表；标签列表可以设为可折叠，" +
@@ -260,7 +261,7 @@ internal class SideNavPage : DemoPage() {
         val collapsed = Readout("collapsed = false")
         adminNav.listen(SideNavEvents.collapsedChanged) { collapsed.set("collapsed = ${adminNav.collapsed}") }
         labelled.body.append(
-            example(null, createVerticalLayout().apply {
+            exampleBox(null, createVerticalLayout().apply {
                 addTheme("spacing")
                 style.setProperty("width", "100%")
                 append(messagesNav, adminNav, collapsed.root)
@@ -269,7 +270,7 @@ internal class SideNavPage : DemoPage() {
         body.append(labelled.root)
 
         val newTab =
-            section(
+            sectionBlock(
                 tr("在新标签页打开", "Open in another browser tab"),
                 tr(
                     "给项设置 target（例如 _blank）可以让链接在新的标签页或窗口中打开，行为取决于浏览器设置。",
@@ -279,11 +280,11 @@ internal class SideNavPage : DemoPage() {
             )
         val newTabNav = navOf(navItem(tr("示例站点", "Example"), path = "https://example.com").apply { target = "_blank" })
         newTabNav.style.setProperty("width", "100%")
-        newTab.body.append(example(null, newTabNav))
+        newTab.body.append(exampleBox(null, newTabNav))
         body.append(newTab.root)
 
         val scrolling =
-            section(
+            sectionBlock(
                 tr("滚动", "Scrolling"),
                 tr(
                     "Side Navigation 自身没有滚动区；条目较多时把它包进 Scroller，并给 Scroller 限定高度。",
@@ -302,11 +303,11 @@ internal class SideNavPage : DemoPage() {
         scroller.dataset["test"] = "side-nav-scroller"
         scroller.style.setProperty("height", "12rem")
         scroller.append(longNav)
-        scrolling.body.append(example(null, scroller))
+        scrolling.body.append(exampleBox(null, scroller))
         body.append(scrolling.root)
 
         val styling =
-            section(
+            sectionBlock(
                 tr("样式", "Styling"),
                 tr(
                     "用 ::part(link) 定制链接本身，外部链接可以额外加类名区分（本页样式表把 .external 做成强调色）。",
@@ -324,11 +325,11 @@ internal class SideNavPage : DemoPage() {
                 },
             )
         stylingNav.style.setProperty("width", "100%")
-        styling.body.append(example(null, stylingNav))
+        styling.body.append(exampleBox(null, stylingNav))
         body.append(styling.root)
 
         val keyboard =
-            section(
+            sectionBlock(
                 tr("键盘操作", "Keyboard usage"),
                 tr(
                     "列表项之间用 Tab 移动；有子项时 Tab 还会落到展开/折叠按钮上；Enter 或空格切换展开状态，" +
@@ -338,7 +339,7 @@ internal class SideNavPage : DemoPage() {
                 ),
             )
         keyboard.body.append(
-            example(
+            exampleBox(
                 null,
                 bulletList(listOf(
                         tr("Tab：在列表项之间移动焦点，父项的展开按钮也是单独的焦点停靠点。", "Tab: moves the focus between items; a parent's toggle button is a separate stop."),

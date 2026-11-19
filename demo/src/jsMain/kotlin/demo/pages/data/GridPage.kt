@@ -1,5 +1,10 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -20,13 +25,8 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.grid
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
@@ -101,7 +101,7 @@ internal fun newGridPage(): GridPage {
 
 private fun appendBasicGrid(page: DemoPage) {
     val basic =
-        section(
+        sectionBlock(
             tr("基本用法", "Basic usage"),
             tr(
                 "列用 path 绑定 items 里的字段；选择列把选中项写进 selectedItems。",
@@ -135,13 +135,13 @@ private fun appendBasicGrid(page: DemoPage) {
     // `cell-activate` only fires for user interaction (double click / Enter), so the log starts
     // empty instead of recording the events the grid fires while it initialises.
     grid.listen(GridEvents.cellActivate) { log.add("cell-activate") }
-    basic.body.append(example(null, column(grid, row(selection.root), log.root)))
+    basic.body.append(exampleBox(null, kitCol(grid, kitRow(selection.root), log.root)))
     page.body.append(basic.root)
 }
 
 private fun appendGridColumns(page: DemoPage) {
     val columns =
-        section(
+        sectionBlock(
             tr("列", "Columns"),
             tr(
                 "列宽、对齐、冻结、分组、表头表尾渲染与可见性都由列元素自身的属性控制。",
@@ -179,7 +179,7 @@ private fun appendGridColumns(page: DemoPage) {
         },
     )
     columns.body.append(
-        example(
+        exampleBox(
             tr("列宽", "Column width") + " · width / auto-width / flex-grow",
             widths,
         ),
@@ -210,7 +210,7 @@ private fun appendGridColumns(page: DemoPage) {
         },
     )
     columns.body.append(
-        example(
+        exampleBox(
             tr(
                 "列对齐 · 日期与右对齐的金额",
                 "Column alignment · dates and right-aligned amounts",
@@ -255,7 +255,7 @@ private fun appendGridColumns(page: DemoPage) {
         },
     )
     columns.body.append(
-        example(
+        exampleBox(
             tr(
                 "列冻结 · 首列与末列固定在左右两侧",
                 "Column freezing · first and last column stay pinned",
@@ -287,7 +287,7 @@ private fun appendGridColumns(page: DemoPage) {
             )
         },
     )
-    columns.body.append(example(tr("列分组", "Column grouping"), grouped))
+    columns.body.append(exampleBox(tr("列分组", "Column grouping"), grouped))
 
     // Custom header and footer rendering.
     val headed = newGrid("16rem")
@@ -325,7 +325,7 @@ private fun appendGridColumns(page: DemoPage) {
                                                       }) }
         },
     )
-    columns.body.append(example(tr("表头与表尾", "Column headers and footers"), headed))
+    columns.body.append(exampleBox(tr("表头与表尾", "Column headers and footers"), headed))
 
     // Column reordering and resizing.
     val rearrange = newGrid("16rem")
@@ -352,7 +352,7 @@ private fun appendGridColumns(page: DemoPage) {
         },
     )
     columns.body.append(
-        example(
+        exampleBox(
             tr(
                 "列重排与调整大小 · 拖动表头换位，拖动列边界改宽",
                 "Reordering and resizing · drag a header to move, drag the edge to resize",
@@ -374,7 +374,7 @@ private fun appendGridColumns(page: DemoPage) {
         streetColumn,
     )
     val toggles =
-        row(
+        kitRow(
             createCheckbox { label = tr("邮箱", "Email"); checked = true }.apply {
                 listen(CheckboxEvents.checkedChanged) { emailColumn.hiddenProperty = !checked }
             },
@@ -386,12 +386,12 @@ private fun appendGridColumns(page: DemoPage) {
             },
         )
     columns.body.append(
-        example(
+        exampleBox(
             tr(
                 "列可见性 · hidden 隐藏整列",
                 "Column visibility · hidden removes the whole column",
             ),
-            column(visibility, toggles),
+            kitCol(visibility, toggles),
         ),
     )
 
@@ -400,7 +400,7 @@ private fun appendGridColumns(page: DemoPage) {
 
 private fun appendGridDataBinding(page: DemoPage) {
     val binding =
-        section(
+        sectionBlock(
             tr("绑定数据", "Data binding"),
             tr(
                 "items 接受本地数组；dataProvider 按 page / pageSize / sortOrders 取数，适合大数据集。",
@@ -433,12 +433,12 @@ private fun appendGridDataBinding(page: DemoPage) {
         providerGrid.clearCache()
     }
     binding.body.append(
-        example(
+        exampleBox(
             tr(
                 "自定义数据提供者 · 分页、排序与搜索都在 dataProvider 里完成",
                 "Custom data provider · paging, sorting and searching happen inside the dataProvider",
             ),
-            column(row(searchField), providerGrid),
+            kitCol(kitRow(searchField), providerGrid),
         ),
     )
 
@@ -462,12 +462,12 @@ private fun appendGridDataBinding(page: DemoPage) {
         externalGrid.fill(filterPeople(sourcePeople, externalSearch.value.trim()))
     }
     binding.body.append(
-        example(
+        exampleBox(
             tr(
                 "外部筛选 · 输入框替换整个 items 数组",
                 "External filtering · the field replaces the whole items array",
             ),
-            column(row(externalSearch), externalGrid),
+            kitCol(kitRow(externalSearch), externalGrid),
         ),
     )
 
@@ -485,7 +485,7 @@ private fun appendGridDataBinding(page: DemoPage) {
         createGridFilterColumn { path = "profession" },
     )
     binding.body.append(
-        example(
+        exampleBox(
             tr("列内筛选 · filter-column 自带筛选输入框", "Column filtering · filter-column adds its own field"),
             filterGrid,
         ),
@@ -543,14 +543,14 @@ private fun appendGridDataBinding(page: DemoPage) {
     }
     slicePage()
     binding.body.append(
-        example(
+        exampleBox(
             tr(
                 "手动分页 · all-rows-visible 配合按钮切换页码",
                 "Manual pagination · all-rows-visible with buttons that switch the page",
             ),
-            column(
+            kitCol(
                 pagedGrid,
-                row(HtmlTagName.span {
+                kitRow(HtmlTagName.span {
                         textContent = tr("每页", "Page size")
                     }, pageSizeSelect, firstButton, previousButton, pageReadout.root, nextButton, lastButton),
             ),
@@ -610,12 +610,12 @@ private fun appendGridDataBinding(page: DemoPage) {
         }
     }
     binding.body.append(
-        example(
+        exampleBox(
             tr(
                 "动态高度 · all-rows-visible 让表格随行数增高",
                 "Dynamic height · all-rows-visible lets the grid grow with its rows",
             ),
-            column(row(invitedCombo, inviteButton), emptyInvite, inviteGrid),
+            kitCol(kitRow(invitedCombo, inviteButton), emptyInvite, inviteGrid),
         ),
     )
 
@@ -624,7 +624,7 @@ private fun appendGridDataBinding(page: DemoPage) {
 
 private fun appendGridSorting(page: DemoPage) {
     val sorting =
-        section(
+        sectionBlock(
             tr("排序", "Sorting"),
             tr(
                 "sort-column 点击表头在升序 / 降序 / 无序之间切换；multi-sort 支持多列排序。",
@@ -646,7 +646,7 @@ private fun appendGridSorting(page: DemoPage) {
         createGridSortColumn { path = "profession" },
         createGridSortColumn { header = tr("生日", "Birthday"); path = "birthday" },
     )
-    sorting.body.append(example(tr("基本排序", "Sorting"), sorted))
+    sorting.body.append(exampleBox(tr("基本排序", "Sorting"), sorted))
 
     val multi = newGrid("16rem")
     multi.fill(people(8))
@@ -659,7 +659,7 @@ private fun appendGridSorting(page: DemoPage) {
         createGridSortColumn { header = tr("生日", "Birthday"); path = "birthday" },
     )
     sorting.body.append(
-        example(
+        exampleBox(
             tr(
                 "多列排序 · 按住 Shift 点击表头追加排序条件",
                 "Multi-column sorting · Shift-click a header to append a sort order",
@@ -677,11 +677,11 @@ private fun appendGridSorting(page: DemoPage) {
     )
     val directionReadout = Readout(tr("排序方向：未排序", "Sort direction: none"))
     sorting.body.append(
-        example(
+        exampleBox(
             tr("程序化排序 · 直接设置 direction", "Programmatic sorting · set direction from code"),
-            column(
+            kitCol(
                 programmatic,
-                row(
+                kitRow(
                     createButton { textContent = tr("升序", "Ascending") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             programmaticColumn.direction = GridSorterDirections.asc

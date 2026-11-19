@@ -1,5 +1,9 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,11 +19,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupItem
 import io.github.shijianjs.ktjs.vaadin.avatargroup.createAvatarGroup
@@ -79,7 +80,7 @@ internal class AvatarGroupPage : DemoPage() {
 
         // --- Basic usage (avatar/avatar-group-basic.ts) ---------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "items 里每个对象描述一个头像；官方示例把后端返回的三个人名映射成 items，这里是固定数据。",
@@ -91,12 +92,12 @@ internal class AvatarGroupPage : DemoPage() {
         val group = createAvatarGroup()
         group.dataset["test"] = "avatar-group"
         group.items = three.toTypedArray()
-        basic.body.append(example(null, group))
+        basic.body.append(exampleBox(null, group))
         body.append(basic.root)
 
         // --- Maximum number of items (avatar/avatar-group-max-items.ts) -----------------------------
         val limit =
-            section(
+            sectionBlock(
                 tr("最多显示数量", "Maximum number of items"),
                 tr(
                     "maxItemsVisible 把多出来的头像折叠成一个可展开的 +N 头像；0 与 1 都按 2 处理，至少显示两个头像。",
@@ -122,12 +123,12 @@ internal class AvatarGroupPage : DemoPage() {
             limited.maxItemsVisible = visible.toDouble()
             limitReadout.set("maxItemsVisible = $visible")
         }
-        limit.body.append(example(null, column(limited, slider, limitReadout.root)))
+        limit.body.append(exampleBox(null, kitCol(limited, slider, limitReadout.root)))
         body.append(limit.root)
 
         // --- Background colour (avatar/avatar-group-bg-color.ts) -----------------------------------
         val colours =
-            section(
+            sectionBlock(
                 tr("背景颜色", "Background colour"),
                 tr(
                     "给每个 item 设置 colorIndex，头像使用不同的用户色板颜色。",
@@ -139,12 +140,12 @@ internal class AvatarGroupPage : DemoPage() {
             SIMULATED_PEOPLE.mapIndexed { index, name ->
                 groupItem(name = name, colorIndex = index.toDouble())
             }.toTypedArray()
-        colours.body.append(example(null, coloured))
+        colours.body.append(exampleBox(null, coloured))
         body.append(colours.root)
 
         // --- Internationalisation (avatar/avatar-group-internationalisation.ts) --------------------
         val i18n =
-            section(
+            sectionBlock(
                 tr("本地化", "Internationalisation"),
                 tr(
                     "i18n 覆盖匿名用户的提示、组的无障碍标签（activeUsers，{count} 会被替换），以及成员增减时" +
@@ -190,7 +191,7 @@ internal class AvatarGroupPage : DemoPage() {
                 memberToggle.textContent = tr("添加成员", "Add member")
             }
         }
-        i18n.body.append(example(null, column(localised, memberToggle)))
+        i18n.body.append(exampleBox(null, kitCol(localised, memberToggle)))
         body.append(i18n.root)
 
     }

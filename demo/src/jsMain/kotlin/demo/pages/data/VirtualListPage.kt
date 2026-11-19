@@ -1,5 +1,10 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,12 +21,8 @@ import demo.pages.fixtures.people
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -59,7 +60,7 @@ internal class VirtualListPage : DemoPage() {
         configureFrame(virtualListEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "renderer 只对可见行调用，滚动时复用容器节点；每一行是一张人员卡片，展开联系方式后" +
@@ -164,11 +165,11 @@ internal class VirtualListPage : DemoPage() {
             container.replaceChildren(card)
         }
         list.style.setProperty("height", "20rem")
-        basic.body.append(example(null, list))
+        basic.body.append(exampleBox(null, list))
         body.append(basic.root)
 
         val jump =
-            section(
+            sectionBlock(
                 tr("定位", "Scrolling to an index"),
                 tr("scrollToIndex 直接跳到指定行。", "scrollToIndex jumps straight to the given row."),
             )
@@ -182,11 +183,11 @@ internal class VirtualListPage : DemoPage() {
         }
         jumpList.style.setProperty("height", "12rem")
         jump.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     jumpList,
-                    row(
+                    kitRow(
                         createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
                             clickEvent.addHandler { jumpList.scrollToIndex(0.0) }
                         },

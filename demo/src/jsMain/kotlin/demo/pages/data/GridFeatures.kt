@@ -1,5 +1,11 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
@@ -15,13 +21,8 @@ import demo.pages.fixtures.people
 import demo.tr
 import demo.ui.EventLog
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.grid
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.cssom.Display
 import web.cssom.FlexWrap
@@ -131,7 +132,7 @@ internal fun newPersonDetails(item: JsAny?): PersonDetails {
 
 private fun appendGridRowDetails(page: DemoPage) {
     val details =
-        section(
+        sectionBlock(
             tr("行详情", "Item details"),
             tr(
                 "rowDetailsRenderer 渲染展开区；detailsOpenedItems 决定哪一行展开。",
@@ -157,7 +158,7 @@ private fun appendGridRowDetails(page: DemoPage) {
         }
     }
     details.body.append(
-        example(
+        exampleBox(
             tr("点击行展开详情", "Details open for the active row"),
             clickGrid,
         ),
@@ -193,7 +194,7 @@ private fun appendGridRowDetails(page: DemoPage) {
         createGridColumn { path = "profession" },
     )
     details.body.append(
-        example(
+        exampleBox(
             tr(
                 "详情切换按钮 · 冻结列里逐行控制",
                 "Details toggle · a frozen column controls each row",
@@ -207,7 +208,7 @@ private fun appendGridRowDetails(page: DemoPage) {
 
 private fun appendGridEmptyState(page: DemoPage) {
     val empty =
-        section(
+        sectionBlock(
             tr("空状态", "Empty state"),
             tr(
                 "没有 items 时显示 empty-state 插槽的内容。",
@@ -224,7 +225,7 @@ private fun appendGridEmptyState(page: DemoPage) {
             textContent = tr("没有找到员工。", "No employees found.")
         }.apply { slot = "empty-state" },
     )
-    empty.body.append(example(null, grid))
+    empty.body.append(exampleBox(null, grid))
     page.body.append(empty.root)
 }
 
@@ -233,7 +234,7 @@ private fun menuItems(vararg labels: String): Array<ContextMenuItemData> =
 
 private fun appendGridMenus(page: DemoPage) {
     val menus =
-        section(
+        sectionBlock(
             tr("右键菜单与工具提示", "Context menu and tooltips"),
             tr(
                 "表格单元格也能挂上下文菜单与 tooltip：先用 getEventContext 判断点在哪个单元格上。",
@@ -268,12 +269,12 @@ private fun appendGridMenus(page: DemoPage) {
     }
     menu.append(menuGrid)
     menus.body.append(
-        example(
+        exampleBox(
             tr(
                 "行上的右键菜单 · 表头不弹出菜单",
                 "Context menu on rows · the header does not open it",
             ),
-            column(menu, copyReadout.root),
+            kitCol(menu, copyReadout.root),
         ),
     )
 
@@ -307,7 +308,7 @@ private fun appendGridMenus(page: DemoPage) {
     }
     tooltipGrid.append(tooltip)
     menus.body.append(
-        example(
+        exampleBox(
             tr(
                 "工具提示生成器 · 按列决定 tooltip 文本",
                 "Tooltip generator · the column decides the tooltip text",
@@ -321,7 +322,7 @@ private fun appendGridMenus(page: DemoPage) {
 
 private fun appendGridFocusAndScroll(page: DemoPage) {
     val focusSection =
-        section(
+        sectionBlock(
             tr("单元格焦点与滚动", "Cell focus and scrolling"),
             tr(
                 "cell-focus 配合 getEventContext 读出焦点所在的区块、行与列；scrollToIndex 直接定位到某一行。",
@@ -354,12 +355,12 @@ private fun appendGridFocusAndScroll(page: DemoPage) {
         focusInfo.value = "Section: $section\nRow: $row\nColumn: $column\nPerson: $name"
     }
     focusSection.body.append(
-        example(
+        exampleBox(
             tr(
                 "单元格焦点 · 用方向键移动后读出上下文",
                 "Cell focus · move with the arrow keys and read the context",
             ),
-            column(focusGrid, focusInfo),
+            kitCol(focusGrid, focusInfo),
         ),
     )
 
@@ -369,11 +370,11 @@ private fun appendGridFocusAndScroll(page: DemoPage) {
     scrollGrid.append(createGridColumn { header = tr("名称", "Name"); path = "name" })
     val scrollLog = EventLog(4)
     focusSection.body.append(
-        example(
+        exampleBox(
             tr("程序化滚动 · scrollToIndex", "Programmatic scrolling · scrollToIndex"),
-            column(
+            kitCol(
                 scrollGrid,
-                row(
+                kitRow(
                     createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             scrollGrid.scrollToIndex(0.0)
@@ -403,7 +404,7 @@ private fun appendGridFocusAndScroll(page: DemoPage) {
 
 private fun appendGridDragAndDrop(page: DemoPage) {
     val drag =
-        section(
+        sectionBlock(
             tr("拖放", "Drag and drop"),
             tr(
                 "rowsDraggable 打开拖拽；dropMode 决定落点，grid-dragstart / grid-drop 里更新 items。" +
@@ -443,7 +444,7 @@ private fun appendGridDragAndDrop(page: DemoPage) {
         reorderGrid.dropMode = null
     }
     drag.body.append(
-        example(
+        exampleBox(
             tr(
                 "行重排 · dropMode = between",
                 "Row reordering · dropMode = between",
@@ -469,12 +470,12 @@ private fun appendGridDragAndDrop(page: DemoPage) {
     firstPanel.listen(GridEvents.gridDrop) { moveBetween(panelTwo, panelOne) }
     secondPanel.listen(GridEvents.gridDrop) { moveBetween(panelOne, panelTwo) }
     drag.body.append(
-        example(
+        exampleBox(
             tr(
                 "跨表拖拽 · dropMode = on-grid",
                 "Dragging between grids · dropMode = on-grid",
             ),
-            row(firstPanel, secondPanel),
+            kitRow(firstPanel, secondPanel),
         ),
     )
 
@@ -490,7 +491,7 @@ private fun appendGridDragAndDrop(page: DemoPage) {
         createGridColumn { header = tr("订阅", "Subscriber"); path = "subscriber" },
     )
     drag.body.append(
-        example(
+        exampleBox(
             tr(
                 "拖拽过滤 · dragFilter 只放行部分行，dropFilter 限制落点",
                 "Drag filters · dragFilter allows some rows, dropFilter restricts the drop targets",
@@ -524,7 +525,7 @@ private fun dragGrid(items: MutableList<Person>, onDragStart: (Int) -> Unit): Gr
 
 private fun appendGridSelection(page: DemoPage) {
     val selection =
-        section(
+        sectionBlock(
             tr("选择", "Selection"),
             tr(
                 "单选用 active-item-changed 维护 selectedItems；多选加选择列；按住 Shift 点击可扩展区间。",
@@ -552,9 +553,9 @@ private fun appendGridSelection(page: DemoPage) {
         }
     }
     selection.body.append(
-        example(
+        exampleBox(
             tr("单选 · 点击行切换", "Single selection · clicking a row toggles it"),
-            column(singleGrid, singleReadout.root),
+            kitCol(singleGrid, singleReadout.root),
         ),
     )
 
@@ -574,9 +575,9 @@ private fun appendGridSelection(page: DemoPage) {
         )
     }
     selection.body.append(
-        example(
+        exampleBox(
             tr("多选 · 选择列与全选", "Multi-selection · the selection column and select all"),
-            column(multiGrid, multiReadout.root),
+            kitCol(multiGrid, multiReadout.root),
         ),
     )
 
@@ -616,12 +617,12 @@ private fun appendGridSelection(page: DemoPage) {
         rangeReadout.set(tr("区间：${rangeSelected.size} 行", "Range: ${rangeSelected.size} rows"))
     }
     selection.body.append(
-        example(
+        exampleBox(
             tr(
                 "区间选择 · Shift + 点击扩展选择范围",
                 "Range selection · Shift-click extends the selection",
             ),
-            column(rangeGrid, rangeReadout.root),
+            kitCol(rangeGrid, rangeReadout.root),
         ),
     )
 
@@ -642,7 +643,7 @@ private fun themedGrid(theme: String): GridElement {
 
 private fun appendGridStyling(page: DemoPage) {
     val styling =
-        section(
+        sectionBlock(
             tr("样式", "Styling"),
             tr(
                 "主题变体改变行高与边框；单元格、表头与表尾还能通过 part 名单独着色。",
@@ -652,14 +653,14 @@ private fun appendGridStyling(page: DemoPage) {
         )
 
     styling.body.append(
-        example(
+        exampleBox(
             tr("主题变体", "Theme variants"),
-            grid(
-                column(paragraph("row-stripes"), themedGrid("row-stripes")),
-                column(paragraph("no-row-borders"), themedGrid("no-row-borders")),
-                column(paragraph("column-borders"), themedGrid("column-borders")),
-                column(paragraph("no-border"), themedGrid("no-border")),
-                column(paragraph("compact"), themedGrid("compact")),
+            kitGrid(260, 
+                kitCol(paragraph("row-stripes"), themedGrid("row-stripes")),
+                kitCol(paragraph("no-row-borders"), themedGrid("no-row-borders")),
+                kitCol(paragraph("column-borders"), themedGrid("column-borders")),
+                kitCol(paragraph("no-border"), themedGrid("no-border")),
+                kitCol(paragraph("compact"), themedGrid("compact")),
             ),
         ),
     )
@@ -679,7 +680,7 @@ private fun appendGridStyling(page: DemoPage) {
         },
     )
     styling.body.append(
-        example(
+        exampleBox(
             tr("换行 · wrap-cell-content", "Wrapping · wrap-cell-content"),
             wrapped,
         ),
@@ -708,7 +709,7 @@ private fun appendGridStyling(page: DemoPage) {
         parts
     }
     styling.body.append(
-        example(
+        exampleBox(
             tr(
                 "动态行样式 · cellPartNameGenerator 给高分 / 低分单元格加 part",
                 "Dynamic row styling · cellPartNameGenerator adds parts for high and low ratings",
@@ -734,7 +735,7 @@ private fun appendGridStyling(page: DemoPage) {
         },
     )
     styling.body.append(
-        example(
+        exampleBox(
             tr(
                 "表头与表尾样式 · header-part-name / footer-part-name",
                 "Header and footer styling · header-part-name / footer-part-name",
@@ -760,7 +761,7 @@ private fun fixed2(value: Double): String = js("(value) => value.toFixed(2)")(va
 
 private fun appendGridLazyColumns(page: DemoPage) {
     val lazy =
-        section(
+        sectionBlock(
             tr("懒列渲染", "Lazy column rendering"),
             tr(
                 "列很多时把 columnRendering 设为 lazy，只渲染视口内的单元格。",
@@ -785,6 +786,6 @@ private fun appendGridLazyColumns(page: DemoPage) {
             }
     }
     grid.append(*columns.toTypedArray())
-    lazy.body.append(example(null, grid))
+    lazy.body.append(exampleBox(null, grid))
     page.body.append(lazy.root)
 }

@@ -1,5 +1,10 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,12 +20,8 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
 import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
@@ -60,7 +61,7 @@ internal class CheckboxGroupPage : DemoPage() {
         configureFrame(checkboxGroupEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "checkbox-group 的 value 是数组，子项通过 value 属性区分。",
@@ -92,11 +93,11 @@ internal class CheckboxGroupPage : DemoPage() {
         group.listen(CheckboxGroupEvents.valueChanged) {
             readout.set("value = ", joinValues(group.value).ifEmpty { "[]" })
         }
-        basic.body.append(example(null, column(group, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(group, readout.root)))
         body.append(basic.root)
 
         val preset =
-            section(
+            sectionBlock(
                 tr("预设值与校验", "Preset values and validation"),
                 tr(
                     "value 可以预先赋值；required 在空选择时让 validate() 失败。",
@@ -134,11 +135,11 @@ internal class CheckboxGroupPage : DemoPage() {
         skills.listen(CheckboxGroupEvents.valueChanged) {
             result.set(tr("已选：", "Selected: "), joinValues(skills.value).ifEmpty { "[]" })
         }
-        preset.body.append(example(null, column(skills, row(validateButton, result.root))))
+        preset.body.append(exampleBox(null, kitCol(skills, kitRow(validateButton, result.root))))
         body.append(preset.root)
 
         val features =
-            section(
+            sectionBlock(
                 tr("标签、辅助信息与提示", "Label, helper text and tooltip"),
                 tr(
                     "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
@@ -167,9 +168,9 @@ internal class CheckboxGroupPage : DemoPage() {
             },
         )
         features.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     createCheckbox {
                         label = tr("标签", "Label")
                         helperText = tr("辅助信息", "Helper text")
@@ -180,7 +181,7 @@ internal class CheckboxGroupPage : DemoPage() {
         )
         body.append(features.root)
 
-        val states = section(tr("只读与禁用", "Read-only and disabled"))
+        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
         val readonlyGroup =
             createCheckboxGroup { label = tr("只读", "Read-only") }.addTheme("vertical")
         readonlyGroup.readonly = true
@@ -210,7 +211,7 @@ internal class CheckboxGroupPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        states.body.append(example(null, row(readonlyGroup, disabledGroup)))
+        states.body.append(exampleBox(null, kitRow(readonlyGroup, disabledGroup)))
         body.append(states.root)
 
     }

@@ -37,12 +37,8 @@ import demo.ui.EventLog
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -439,7 +435,7 @@ internal class ButtonPage : DemoPage() {
             leftButton.append(createIcon { icon = "vaadin:arrow-left" }.apply { slot = "prefix" })
             rightButton.append(createIcon { icon = "vaadin:arrow-right" }.apply { slot = "suffix" })
         }
-        section.body.append(exampleBox(null, row(addItemButton, closeButton, leftButton, rightButton)))
+        section.body.append(exampleBox(null, kitRow(addItemButton, closeButton, leftButton, rightButton)))
         return section.root
     }
 
@@ -458,7 +454,7 @@ internal class ButtonPage : DemoPage() {
         texts.bind(section.title, { it.disabledTitle })
         texts.bind(section.hint, { it.disabledHint })
         // The three disabled variants carry the variant names themselves — those are the values, not copy.
-        val disabledVariants = row(
+        val disabledVariants = kitRow(
             createButton { textContent = "primary" }.addTheme("primary").apply { disabled = true },
             createButton { textContent = "secondary" }.addTheme("secondary").apply { disabled = true },
             createButton { textContent = "tertiary" }.addTheme("tertiary").apply { disabled = true },
@@ -471,7 +467,7 @@ internal class ButtonPage : DemoPage() {
         val section = sectionBlock()
         texts.bind(section.title, { it.focusTitle })
         texts.bind(section.hint, { it.focusHint })
-        section.body.append(exampleBox(null, row(focusButton, plainFocusButton)))
+        section.body.append(exampleBox(null, kitRow(focusButton, plainFocusButton)))
         return section.root
     }
 
@@ -497,7 +493,7 @@ internal class ButtonPage : DemoPage() {
             ),
             exampleBox(
                 texts.current.dialogFooter,
-                row(dialogDeleteButton, dialogCancelButton, dialogCreateButton),
+                kitRow(dialogDeleteButton, dialogCancelButton, dialogCreateButton),
             ),
         )
         return section.root
@@ -518,7 +514,7 @@ internal class ButtonPage : DemoPage() {
         section.body.append(
             exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = "Large" }.addTheme("large"),
                     createButton { textContent = "Normal" }.addTheme("normal"),
                     createButton { textContent = "Small" }.addTheme("small"),
@@ -532,7 +528,7 @@ internal class ButtonPage : DemoPage() {
         val section = sectionBlock()
         texts.bind(section.title, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
-        val variants = row(
+        val variants = kitRow(
             createButton { textContent = "Primary" }.addTheme("primary"),
             createButton { textContent = "Secondary" }.addTheme("secondary"),
             createButton { textContent = "Tertiary" }.addTheme("tertiary"),
@@ -555,7 +551,7 @@ internal class ButtonPage : DemoPage() {
             section.body.append(
                 exampleBox(
                     variant,
-                    row(
+                    kitRow(
                         createButton { textContent = "Primary" }.addTheme("primary", variant),
                         createButton { textContent = "Secondary" }.addTheme("secondary", variant),
                         createButton { textContent = "Tertiary" }.addTheme("tertiary", variant),

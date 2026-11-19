@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
@@ -16,9 +19,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.splitlayout.SplitLayoutOrientations
@@ -53,7 +53,7 @@ internal class SplitLayoutPage : DemoPage() {
         configureFrame(splitLayoutEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "两个子元素之间有一条可拖动的分隔条；不指定宽度时两者平分。",
@@ -64,11 +64,11 @@ internal class SplitLayoutPage : DemoPage() {
         val horizontal = createSplitLayout()
         horizontal.style.setProperty("max-height", "17rem")
         horizontal.append(newSplitMaster(), newSplitDetail())
-        basic.body.append(example(null, horizontal))
+        basic.body.append(exampleBox(null, horizontal))
         body.append(basic.root)
 
         val position =
-            section(
+            sectionBlock(
                 tr("分隔条位置", "Splitter position"),
                 tr(
                     "给两个子元素设置宽度或 flex，就能决定初始的分隔位置。",
@@ -81,11 +81,11 @@ internal class SplitLayoutPage : DemoPage() {
             newSplitMaster().apply { style.setProperty("width", "70%") },
             newSplitDetail().apply { style.setProperty("width", "30%") },
         )
-        position.body.append(example(null, positioned))
+        position.body.append(exampleBox(null, positioned))
         body.append(position.root)
 
         val minMax =
-            section(
+            sectionBlock(
                 tr("最小与最大尺寸", "Minimum and maximum size"),
                 tr(
                     "min-width / max-width 限制拖动能到达的范围。",
@@ -101,22 +101,22 @@ internal class SplitLayoutPage : DemoPage() {
             },
             newSplitDetail(),
         )
-        minMax.body.append(example(null, bounded))
+        minMax.body.append(exampleBox(null, bounded))
         body.append(minMax.root)
 
         val orientation =
-            section(
+            sectionBlock(
                 tr("方向", "Orientation"),
                 tr("orientation 设为 vertical 后分隔条水平放置，两侧变成上下两个区域。", "With orientation set to vertical the divider is horizontal and the two areas stack."),
             )
         val vertical = createSplitLayout { this.orientation = SplitLayoutOrientations.vertical }
         vertical.style.setProperty("max-height", "22rem")
         vertical.append(newSplitMaster(), newSplitDetail())
-        orientation.body.append(example(null, vertical))
+        orientation.body.append(exampleBox(null, vertical))
         body.append(orientation.root)
 
         val themes =
-            section(
+            sectionBlock(
                 tr("主题", "Theme variants"),
                 tr(
                     "minimal 隐藏分隔条的底色，small 缩窄分隔条。",
@@ -133,11 +133,11 @@ internal class SplitLayoutPage : DemoPage() {
             style.setProperty("max-height", "17rem")
             append(newSplitMaster(), newSplitDetail())
         }
-        themes.body.append(example("minimal", minimal), example("small", small))
+        themes.body.append(exampleBox("minimal", minimal), exampleBox("small", small))
         body.append(themes.root)
 
         val toggle =
-            section(
+            sectionBlock(
                 tr("折叠侧栏", "Collapsing a sidebar"),
                 tr(
                     "把按钮放进侧栏，点击时只改侧栏与详情区的宽度，模拟侧栏的展开与折叠。",
@@ -176,7 +176,7 @@ internal class SplitLayoutPage : DemoPage() {
         applyCollapsed()
         sidebar.append(collapseButton, newSplitMaster().apply { style.setProperty("clear", "right") })
         layout.append(sidebar, detail)
-        toggle.body.append(example(null, layout))
+        toggle.body.append(exampleBox(null, layout))
         body.append(toggle.root)
 
     }

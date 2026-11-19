@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,10 +19,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputEvents
 import io.github.shijianjs.ktjs.vaadin.messageinput.createMessageInput
@@ -58,7 +59,7 @@ internal class MessageInputPage : DemoPage() {
         configureFrame(messageInputEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "回车或点击发送触发 submit；value 不会自动清空，由调用方决定。文档示例把收到的内容用 " +
@@ -81,11 +82,11 @@ internal class MessageInputPage : DemoPage() {
             )
             input.value = ""
         }
-        basic.body.append(example(null, column(input, readout.root, log.root)))
+        basic.body.append(exampleBox(null, kitCol(input, readout.root, log.root)))
         body.append(basic.root)
 
         val combined =
-            section(
+            sectionBlock(
                 tr("与消息列表组合", "With a message list"),
                 tr(
                     "items 是普通数组，替换后列表局部更新；这里把输入框提交的内容追加进列表，" +
@@ -125,17 +126,17 @@ internal class MessageInputPage : DemoPage() {
                 liveInput.value = ""
             }
         }
-        combined.body.append(example(null, column(liveList, liveInput, liveLog.root)))
+        combined.body.append(exampleBox(null, kitCol(liveList, liveInput, liveLog.root)))
         body.append(combined.root)
 
         val disabled =
-            section(
+            sectionBlock(
                 tr("禁用", "Disabled"),
                 tr("disabled 同时锁住文本域和发送按钮。", "disabled locks both the text area and the send button."),
             )
         val disabledInput = createMessageInput()
         disabledInput.disabled = true
-        disabled.body.append(example(null, disabledInput))
+        disabled.body.append(exampleBox(null, disabledInput))
         body.append(disabled.root)
 
     }

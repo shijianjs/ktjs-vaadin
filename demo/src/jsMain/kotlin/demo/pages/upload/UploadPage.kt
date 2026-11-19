@@ -1,5 +1,10 @@
 package demo.pages.upload
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -18,12 +23,8 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
-import demo.ui.grid
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.html.HTMLElement
 import web.cssom.AlignItems
@@ -107,7 +108,7 @@ private fun <T : HTMLElement> fullWidth(node: T): T = node.apply { style.setProp
 
 private fun appendBasic(page: DemoPage) {
     val basic =
-        section(
+        sectionBlock(
             tr("基本用法", "Basic usage"),
             tr(
                 "target 指向处理上传的 URL；files 里每个条目用 status / progress / error 描述上传状态。" +
@@ -130,13 +131,13 @@ private fun appendBasic(page: DemoPage) {
             ]
             """.trimIndent(),
         )
-    basic.body.append(example(null, upload))
+    basic.body.append(exampleBox(null, upload))
     page.body.append(basic.root)
 }
 
 private fun appendDragAndDrop(page: DemoPage) {
     val dragAndDrop =
-        section(
+        sectionBlock(
             tr("拖放", "Drag & drop"),
             tr(
                 "拖放在桌面端默认启用、触摸设备默认禁用；把 nodrop 显式设成 false 或 true 会同时作用于桌面与移动端。",
@@ -149,13 +150,13 @@ private fun appendDragAndDrop(page: DemoPage) {
     val dropDisabled = mockedUpload { nodrop = true }
     dropDisabled.dataset["test"] = "upload-drop-disabled"
     dragAndDrop.body.append(
-        example(
+        exampleBox(
             null,
-            grid(
-                column(HtmlTagName.strong {
+            kitGrid(260, 
+                kitCol(HtmlTagName.strong {
                            textContent = tr("拖放已启用", "Drag and drop enabled")
                        }, dropEnabled),
-                column(HtmlTagName.strong {
+                kitCol(HtmlTagName.strong {
                            textContent = tr("拖放已禁用", "Drag and drop disabled")
                        }, dropDisabled),
             ),
@@ -166,7 +167,7 @@ private fun appendDragAndDrop(page: DemoPage) {
 
 private fun appendAutoUpload(page: DemoPage) {
     val autoUpload =
-        section(
+        sectionBlock(
             tr("自动上传", "Auto-upload"),
             tr(
                 "默认选中文件后立即排队上传；noAuto 打开后文件停留在列表里，需要点每个文件的启动按钮、" +
@@ -187,7 +188,7 @@ private fun appendAutoUpload(page: DemoPage) {
         }
     manual.files = heldFiles("Workflow.pdf")
     autoUpload.body.append(
-        example(
+        exampleBox(
             tr("关闭自动上传", "Auto-upload disabled"),
             manual,
         ),
@@ -217,9 +218,9 @@ private fun appendAutoUpload(page: DemoPage) {
     startAll.addTheme("primary")
     startAll.clickEvent.addHandler { uploadAll.uploadFiles() }
     autoUpload.body.append(
-        example(
+        exampleBox(
             tr("一次性开始全部上传", "Starting all uploads at once"),
-            column(uploadAll, startAll, readout.root),
+            kitCol(uploadAll, startAll, readout.root),
         ),
     )
     page.body.append(autoUpload.root)
@@ -227,7 +228,7 @@ private fun appendAutoUpload(page: DemoPage) {
 
 private fun appendRestrictions(page: DemoPage) {
     val restrictions =
-        section(
+        sectionBlock(
             tr("上传限制", "Upload restrictions"),
             tr(
                 "格式、数量与大小都在客户端先校验，被拒绝的文件不会进入列表；file-reject 事件带着原因，" +
@@ -254,9 +255,9 @@ private fun appendRestrictions(page: DemoPage) {
         }
     report.listen(UploadEvents.fileReject) { event -> showRejection(event) }
     restrictions.body.append(
-        example(
+        exampleBox(
             null,
-            column(
+            kitCol(
                 heading(4, tr("上传报告", "Upload report")),
                 HtmlTagName.p {
                     className = MUTED
@@ -275,9 +276,9 @@ private fun appendRestrictions(page: DemoPage) {
         }
     count.listen(UploadEvents.fileReject) { event -> showRejection(event) }
     restrictions.body.append(
-        example(
+        exampleBox(
             null,
-            column(
+            kitCol(
                 heading(4, tr("上传文件", "Upload files")),
                 HtmlTagName.p {
                     className = MUTED
@@ -299,9 +300,9 @@ private fun appendRestrictions(page: DemoPage) {
         }
     size.listen(UploadEvents.fileReject) { event -> showRejection(event) }
     restrictions.body.append(
-        example(
+        exampleBox(
             null,
-            column(
+            kitCol(
                 heading(4, tr("上传文件", "Upload file")),
                 HtmlTagName.p {
                     className = MUTED
@@ -316,7 +317,7 @@ private fun appendRestrictions(page: DemoPage) {
 
 private fun appendFileActions(page: DemoPage) {
     val actions =
-        section(
+        sectionBlock(
             tr("文件操作", "File actions"),
             tr(
                 "每个文件始终带清除按钮；失败时出现重试按钮，队列中的文件出现启动按钮。示例直接构造对应状态的文件。",
@@ -336,7 +337,7 @@ private fun appendFileActions(page: DemoPage) {
             ]
             """.trimIndent(),
         )
-    actions.body.append(example(tr("清除 / 移除", "Clear / Remove"), inProgress))
+    actions.body.append(exampleBox(tr("清除 / 移除", "Clear / Remove"), inProgress))
 
     val failed = mockedUpload()
     failed.dataset["test"] = "upload-retry"
@@ -346,18 +347,18 @@ private fun appendFileActions(page: DemoPage) {
             [{"name": "Financials.xlsx", "error": "${tr("出了点问题，请重试", "Something went wrong, please try again")}"}]
             """.trimIndent(),
         )
-    actions.body.append(example(tr("重试", "Retry"), failed))
+    actions.body.append(exampleBox(tr("重试", "Retry"), failed))
 
     val queued = mockedUpload()
     queued.dataset["test"] = "upload-start"
     queued.files = heldFiles("Workflow.pdf")
-    actions.body.append(example(tr("启动", "Start"), queued))
+    actions.body.append(exampleBox(tr("启动", "Start"), queued))
     page.body.append(actions.root)
 }
 
 private fun appendInternationalization(page: DemoPage) {
     val i18n =
-        section(
+        sectionBlock(
             tr("国际化", "Internationalization"),
             tr(
                 "所有按钮、状态与错误文案都能通过 i18n 替换；示例换成芬兰语，覆盖拖放区、按钮、错误、" +
@@ -403,13 +404,13 @@ private fun appendInternationalization(page: DemoPage) {
             }
             """.trimIndent(),
         ).unsafeCast<UploadI18n>()
-    i18n.body.append(example(null, upload))
+    i18n.body.append(exampleBox(null, upload))
     page.body.append(i18n.root)
 }
 
 private fun appendCustomization(page: DemoPage) {
     val customization =
-        section(
+        sectionBlock(
             tr("自定义", "Customization"),
             tr(
                 "默认上传按钮可以换成插槽里的自定义按钮（例如更强的 primary 主题），拖放区的图标与文案也由插槽提供。",
@@ -441,9 +442,9 @@ private fun appendCustomization(page: DemoPage) {
         )
     }
     customization.body.append(
-        example(
+        exampleBox(
             tr("自定义上传按钮", "Custom upload button"),
-            column(
+            kitCol(
                 HtmlTagName.p {
                     className = MUTED
                     textContent = tr("达到数量上限后按钮会被禁用；选错文件时用 Notification 给出原因。", "The button is disabled once the file limit is reached; a rejected file is reported through a Notification.")
@@ -467,13 +468,13 @@ private fun appendCustomization(page: DemoPage) {
             )
         },
     )
-    customization.body.append(example(tr("自定义拖放区文案与图标", "Custom drop label and icon"), dropLabel))
+    customization.body.append(exampleBox(tr("自定义拖放区文案与图标", "Custom drop label and icon"), dropLabel))
     page.body.append(customization.root)
 }
 
 private fun appendListeners(page: DemoPage) {
     val listeners =
-        section(
+        sectionBlock(
             tr("监听器", "Listeners"),
             tr(
                 "一次上传依次触发 upload-start、upload-progress、upload-success，失败时触发 upload-error；" +
@@ -496,13 +497,13 @@ private fun appendListeners(page: DemoPage) {
     val start = createButton { textContent = tr("开始上传", "Start upload") }
     start.addTheme("primary")
     start.clickEvent.addHandler { upload.uploadFiles() }
-    listeners.body.append(example(null, column(upload, start, log.root)))
+    listeners.body.append(exampleBox(null, kitCol(upload, start, log.root)))
     page.body.append(listeners.root)
 }
 
 private fun appendBestPractices(page: DemoPage) {
     val bestPractices =
-        section(
+        sectionBlock(
             tr("最佳实践", "Best practices"),
             tr(
                 "按钮与提示文案写清楚要传什么、格式与大小限制是什么，用户才能一次选对文件。",
@@ -527,7 +528,7 @@ private fun appendBestPractices(page: DemoPage) {
                 }
         }
     labelled.listen(UploadEvents.fileReject) { event -> showRejection(event) }
-    bestPractices.body.append(example(tr("按钮文案", "Button labelling"), labelled))
+    bestPractices.body.append(exampleBox(tr("按钮文案", "Button labelling"), labelled))
 
     val spreadsheet = mockedUpload {
         maxFiles = 1.0
@@ -552,9 +553,9 @@ private fun appendBestPractices(page: DemoPage) {
         }
     spreadsheet.listen(UploadEvents.fileReject) { event -> showRejection(event) }
     bestPractices.body.append(
-        example(
+        exampleBox(
             tr("辅助说明", "Helper text"),
-            column(
+            kitCol(
                 heading(4, tr("上传表格", "Upload spreadsheet")),
                 HtmlTagName.p {
                     className = MUTED
@@ -573,7 +574,7 @@ private fun appendBestPractices(page: DemoPage) {
 
 private fun appendErrorMessages(page: DemoPage) {
     val errorMessages =
-        section(
+        sectionBlock(
             tr("错误消息", "Error messages"),
             tr(
                 "同样的失败状态，文案不同效果也不同：只写「服务器错误」不够有用，告诉用户接下来能做什么才好。" +
@@ -609,13 +610,13 @@ private fun appendErrorMessages(page: DemoPage) {
             """[{"name": "Financials.xlsx", "error": "${tr("文件未能上传，请稍后重试", "File couldn't be uploaded, try again later")}"}]""",
         )
     errorMessages.body.append(
-        example(
+        exampleBox(
             null,
-            grid(
-                column(HtmlTagName.strong {
+            kitGrid(260, 
+                kitCol(HtmlTagName.strong {
                            textContent = tr("不推荐", "Caution")
                        }, caution),
-                column(HtmlTagName.strong {
+                kitCol(HtmlTagName.strong {
                            textContent = tr("推荐", "Recommended")
                        }, recommended),
             ),
@@ -626,7 +627,7 @@ private fun appendErrorMessages(page: DemoPage) {
 
 private fun appendModular(page: DemoPage) {
     val modular =
-        section(
+        sectionBlock(
             tr("模块化上传", "Modular upload"),
             tr(
                 "UploadManager 把校验、队列与请求从界面里拆出来；上传按钮、拖放区与文件列表通过 manager 属性" +
@@ -662,9 +663,9 @@ private fun appendModular(page: DemoPage) {
     basicList.manager = basicManager
     fullWidth(basicList)
     modular.body.append(
-        example(
+        exampleBox(
             tr("基本用法", "Basic usage"),
-            column(basicButton, basicList),
+            kitCol(basicButton, basicList),
         ),
     )
 
@@ -701,9 +702,9 @@ private fun appendModular(page: DemoPage) {
     zoneList.manager = zoneManager
     fullWidth(zoneList)
     modular.body.append(
-        example(
+        exampleBox(
             tr("拖放区", "Drop zone"),
-            column(dropZone, zoneList),
+            kitCol(dropZone, zoneList),
         ),
     )
 
@@ -725,9 +726,9 @@ private fun appendModular(page: DemoPage) {
     thumbnailsList.addTheme("thumbnails")
     fullWidth(thumbnailsList)
     modular.body.append(
-        example(
+        exampleBox(
             tr("缩略图", "Thumbnails"),
-            column(thumbnailsButton, thumbnailsList),
+            kitCol(thumbnailsButton, thumbnailsList),
         ),
     )
     page.body.append(modular.root)
@@ -735,7 +736,7 @@ private fun appendModular(page: DemoPage) {
 
 private fun appendDisabled(page: DemoPage) {
     val disabled =
-        section(
+        sectionBlock(
             tr("禁用", "Disabled"),
             tr(
                 "禁用整份上传界面用 disabled；模块化上传里应同时禁用 manager，只禁用按钮挡不住直接发来的请求。",
@@ -748,7 +749,7 @@ private fun appendDisabled(page: DemoPage) {
         this.disabled = true
     }
     upload.dataset["test"] = "upload-disabled"
-    disabled.body.append(example(null, upload))
+    disabled.body.append(exampleBox(null, upload))
 
     val lockedManager = createUploadManager(unsafeJso<UploadManagerOptions> { target = "/api/fileupload" })
     lockedManager.disabled = true
@@ -758,7 +759,7 @@ private fun appendDisabled(page: DemoPage) {
     lockedList.manager = lockedManager
     lockedList.disabled = true
     fullWidth(lockedList)
-    disabled.body.append(example(tr("禁用的管理器", "Disabled manager"), column(lockedButton, lockedList)))
+    disabled.body.append(exampleBox(tr("禁用的管理器", "Disabled manager"), kitCol(lockedButton, lockedList)))
     page.body.append(disabled.root)
 }
 

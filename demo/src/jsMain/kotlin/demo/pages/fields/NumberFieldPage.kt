@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,11 +21,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormItem
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
@@ -63,7 +64,7 @@ internal class NumberFieldPage : DemoPage() {
 
         // --- Basic ----------------------------------------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "value 始终是字符串；前缀 / 后缀插槽放货币符号这类固定内容，" +
@@ -99,12 +100,12 @@ internal class NumberFieldPage : DemoPage() {
                 autoRows = true
             }
         basicLayout.append(balance, balanceEur)
-        basic.body.append(example(null, column(basicLayout, balanceReadout.root)))
+        basic.body.append(exampleBox(null, kitCol(basicLayout, balanceReadout.root)))
         body.append(basic.root)
 
         // --- Step buttons ---------------------------------------------------------------------------
         val stepButtons =
-            section(
+            sectionBlock(
                 tr("步进按钮", "Step buttons"),
                 tr(
                     "step-buttons-visible 在字段两侧加上减 / 加按钮，min 与 max 同时限制按钮的可用状态。",
@@ -173,12 +174,12 @@ internal class NumberFieldPage : DemoPage() {
                 autoResponsive = true
             }
         guestLayout.append(adultsItem, childrenItem, infantsItem)
-        stepButtons.body.append(example(null, column(guestLayout, guestsReadout.root)))
+        stepButtons.body.append(exampleBox(null, kitCol(guestLayout, guestsReadout.root)))
         body.append(stepButtons.root)
 
         // --- Validation -----------------------------------------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "validated 事件没有 detail；上游示例读取 inputElement.validity 的原生约束状态来区分" +
@@ -213,12 +214,12 @@ internal class NumberFieldPage : DemoPage() {
             quantity.errorMessage = message
             validationReadout.set(tr("validated · valid = ", "validated · valid = "), if (validity.valid) "true" else "false")
         }
-        validation.body.append(example(null, column(quantity, validationReadout.root)))
+        validation.body.append(exampleBox(null, kitCol(quantity, validationReadout.root)))
         body.append(validation.root)
 
         // --- Step -----------------------------------------------------------------------------------
         val fractional =
-            section(
+            sectionBlock(
                 tr("步进小数", "Fractional step"),
                 tr(
                     "step 同时决定步进按钮的增量与原生 validity：不是 step 的整数倍时 validity.stepMismatch 为真。",
@@ -246,12 +247,12 @@ internal class NumberFieldPage : DemoPage() {
             duration.errorMessage = message
             stepReadout.set(tr("validated · valid = ", "validated · valid = "), if (validity.valid) "true" else "false")
         }
-        fractional.body.append(example(null, column(duration, stepReadout.root)))
+        fractional.body.append(exampleBox(null, kitCol(duration, stepReadout.root)))
         body.append(fractional.root)
 
         // --- Number type variants -------------------------------------------------------------------
         val variants =
-            section(
+            sectionBlock(
                 tr("数字类型变体", "Number type variants"),
                 tr(
                     "Integer Field 只解析整数，用于件数、年龄这类数量；BigDecimal 用例只存在于 Java API" +
@@ -276,12 +277,12 @@ internal class NumberFieldPage : DemoPage() {
                 value = "3910"
             },
         )
-        variants.body.append(example(null, variantLayout))
+        variants.body.append(exampleBox(null, variantLayout))
         body.append(variants.root)
 
         // --- Basic features -------------------------------------------------------------------------
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "label / helper-text / placeholder 与清除按钮、工具提示插槽、前缀后缀插槽可以同时使用。",
@@ -304,12 +305,12 @@ internal class NumberFieldPage : DemoPage() {
             }.apply { slot = "prefix" },
             createIcon { icon = "vaadin:dollar" }.apply { slot = "suffix" },
         )
-        features.body.append(example(null, featured))
+        features.body.append(exampleBox(null, featured))
         body.append(features.root)
 
         // --- Read-only and disabled -----------------------------------------------------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 仍可聚焦与复制，disabled 让字段完全不可交互。",
@@ -332,12 +333,12 @@ internal class NumberFieldPage : DemoPage() {
                 disabled = true
             },
         )
-        states.body.append(example(null, statesLayout))
+        states.body.append(exampleBox(null, statesLayout))
         body.append(states.root)
 
         // --- Custom range validation ----------------------------------------------------------------
         val range =
-            section(
+            sectionBlock(
                 tr("自定义范围校验", "Custom range validation"),
                 tr(
                     "min / max 只约束步进与输入提示，不会让 validate() 自动失败；" +
@@ -368,12 +369,12 @@ internal class NumberFieldPage : DemoPage() {
                     priceResult.set(tr("校验结果：", "Result: "), if (valid) tr("通过", "Valid") else tr("失败", "Failed"))
                 }
             }
-        range.body.append(example(null, column(price, row(validateButton, priceResult.root))))
+        range.body.append(exampleBox(null, kitCol(price, kitRow(validateButton, priceResult.root))))
         body.append(range.root)
 
         // --- Value change modes ---------------------------------------------------------------------
         val modes =
-            section(
+            sectionBlock(
                 tr("值变更模式", "Value change modes"),
                 tr(
                     "on change / eager / lazy / timeout 是服务端 ValueChangeMode 的概念，浏览器端对应" +
@@ -401,12 +402,12 @@ internal class NumberFieldPage : DemoPage() {
         onInput.listen(NumberFieldEvents.input) {
             inputReadout.set(tr("input：", "input: "), onInput.value)
         }
-        modes.body.append(example(null, column(row(onChange, onInput), row(changeReadout.root, inputReadout.root))))
+        modes.body.append(exampleBox(null, kitCol(kitRow(onChange, onInput), kitRow(changeReadout.root, inputReadout.root))))
         body.append(modes.root)
 
         // --- Styles ---------------------------------------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Styles"),
                 tr(
                     "align-right 让数字右对齐（数位对齐），small 收紧尺寸，helper-above-field 把说明文字移到字段上方。",
@@ -415,7 +416,7 @@ internal class NumberFieldPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createNumberField {
                     label = tr("标签", "Label")

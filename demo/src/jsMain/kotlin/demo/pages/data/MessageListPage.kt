@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,10 +21,7 @@ import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.CSSStyleSheet
 import web.cssom.FontWeight
@@ -89,7 +90,7 @@ internal class MessageListPage : DemoPage() {
         addSheet(MESSAGE_SHEET)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "items 里每条消息提供 text / userName / time / userImg / userColorIndex；" +
@@ -121,11 +122,11 @@ internal class MessageListPage : DemoPage() {
                     userColorIndex = 2,
                 ),
             )
-        basic.body.append(example(null, messages))
+        basic.body.append(exampleBox(null, messages))
         body.append(basic.root)
 
         val markdownSection =
-            section(
+            sectionBlock(
                 tr("Markdown", "Markdown"),
                 tr(
                     "markdown 打开后消息文本按 Markdown 渲染；组件会自动净化内容，HTML 标签也允许写。",
@@ -172,11 +173,11 @@ internal class MessageListPage : DemoPage() {
                     userName = "Sam Rivera",
                 ),
             )
-        markdownSection.body.append(example(null, markdownList))
+        markdownSection.body.append(exampleBox(null, markdownList))
         body.append(markdownSection.root)
 
         val attachmentsSection =
-            section(
+            sectionBlock(
                 tr("附件", "Attachments"),
                 tr(
                     "附件有 name / url / type；image/* 显示缩略图，其余显示文件图标。点击附件触发 " +
@@ -215,11 +216,11 @@ internal class MessageListPage : DemoPage() {
         attachmentList.listen(MessageListEvents.attachmentClick) {
             attachmentReadout.set(tr("已点击：", "Clicked: "), attachmentName(it))
         }
-        attachmentsSection.body.append(example(null, column(attachmentList, attachmentReadout.root)))
+        attachmentsSection.body.append(exampleBox(null, kitCol(attachmentList, attachmentReadout.root)))
         body.append(attachmentsSection.root)
 
         val bubbleSection =
-            section(
+            sectionBlock(
                 tr("聊天气泡", "Chat bubbles"),
                 tr(
                     "列表主题 bubble 把消息渲染成气泡；单条消息的 self 主题表示当前用户，靠右对齐并去掉头像和姓名。",
@@ -250,11 +251,11 @@ internal class MessageListPage : DemoPage() {
                     userColorIndex = 3,
                 ),
             )
-        bubbleSection.body.append(example(null, bubbles))
+        bubbleSection.body.append(exampleBox(null, bubbles))
         body.append(bubbleSection.root)
 
         val oneToOneSection =
-            section(
+            sectionBlock(
                 tr("一对一对话", "One-to-one conversations"),
                 tr(
                     "bubble + one-to-one 隐藏所有头像和姓名；助手这类长回复用 full-width 去掉气泡和宽度限制，" +
@@ -302,11 +303,11 @@ internal class MessageListPage : DemoPage() {
                     theme = "full-width",
                 ),
             )
-        oneToOneSection.body.append(example(null, oneToOne))
+        oneToOneSection.body.append(exampleBox(null, oneToOne))
         body.append(oneToOneSection.root)
 
         val classNameSection =
-            section(
+            sectionBlock(
                 tr("单条消息样式", "Styling individual messages"),
                 tr(
                     "给单条消息加 className，再用普通 CSS 选中 vaadin-message 即可改样式；消息挂在列表的 light DOM 里，" +
@@ -332,11 +333,11 @@ internal class MessageListPage : DemoPage() {
                     className = "$CURRENT_USER",
                 ),
             )
-        classNameSection.body.append(example(null, classNameList))
+        classNameSection.body.append(exampleBox(null, classNameList))
         body.append(classNameSection.root)
 
         val aiSection =
-            section(
+            sectionBlock(
                 tr("AI 对话", "Usage for AI chats"),
                 tr(
                     "文档示例把 Message List 与 Message Input 组合成 AI 聊天界面，并按 token 追加助手回复。" +
@@ -388,11 +389,11 @@ internal class MessageListPage : DemoPage() {
                 }
             }
         }
-        aiSection.body.append(example(null, column(announcement, chat, chatInput)))
+        aiSection.body.append(exampleBox(null, kitCol(announcement, chat, chatInput)))
         body.append(aiSection.root)
 
         val typingSection =
-            section(
+            sectionBlock(
                 tr("打字指示器", "Typing indicator"),
                 tr(
                     "打字指示器（setTypingUsers / setTypingIndicatorType）目前只在 Flow 中提供，Web Component 没有对应 API，" +

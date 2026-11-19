@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -17,11 +22,7 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.dialog.DialogEvents
 import io.github.shijianjs.ktjs.vaadin.dialog.createDialog
@@ -59,7 +60,7 @@ internal class DialogPage : DemoPage() {
         configureFrame(dialogEntry)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "内容通过 renderer 注入浮层；footerRenderer 放操作按钮。",
@@ -70,7 +71,7 @@ internal class DialogPage : DemoPage() {
         val dialog = createDialog()
         dialog.dataset["test"] = "dialog-basic"
         val content =
-            column(
+            kitCol(
                 paragraph(
                     tr(
                         "对话框内容由 renderer 提供：renderer(root, dialog) 里向 root 追加节点。",
@@ -105,11 +106,11 @@ internal class DialogPage : DemoPage() {
                 }
             }
         // The dialog element itself has to be in the document; it renders its content into an overlay.
-        basic.body.append(example(null, column(openButton, dialog, log.root)))
+        basic.body.append(exampleBox(null, kitCol(openButton, dialog, log.root)))
         body.append(basic.root)
 
         val formSection =
-            section(
+            sectionBlock(
                 tr("表单内容", "Form content"),
                 tr(
                     "表单放进 renderer 里，取消与确认按钮放进 footerRenderer。",
@@ -134,9 +135,9 @@ internal class DialogPage : DemoPage() {
         formDialog.renderer = { root, _ -> root.append(employeeForm) }
         formDialog.footerRenderer = { root, _ -> root.append(cancelButton, addButton) }
         formSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开表单对话框", "Open form dialog") }.apply {
                         clickEvent.addHandler { formDialog.opened = true }
                     },
@@ -147,7 +148,7 @@ internal class DialogPage : DemoPage() {
         body.append(formSection.root)
 
         val options =
-            section(
+            sectionBlock(
                 tr("尺寸与关闭行为", "Size and closing behaviour"),
                 tr(
                     "width / height 控制浮层尺寸，noCloseOnEsc 与 noCloseOnOutsideClick 关闭默认的两种关闭方式。",
@@ -177,10 +178,10 @@ internal class DialogPage : DemoPage() {
         modelessDialog.footerRenderer = { root, _ -> root.append(modelessClose) }
 
         options.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
-                    row(
+                kitCol(
+                    kitRow(
                         createButton { textContent = tr("打开（自定义尺寸）", "Open (custom size)") }
                             .addTheme("tertiary").apply {
                                 clickEvent.addHandler { configured.opened = true }
@@ -199,7 +200,7 @@ internal class DialogPage : DemoPage() {
         body.append(options.root)
 
         val draggableSection =
-            section(
+            sectionBlock(
                 tr("可拖动", "Draggable"),
                 tr(
                     "draggable 让用户拖动浮层；非模态时对话框不会抢走焦点。",
@@ -228,9 +229,9 @@ internal class DialogPage : DemoPage() {
         noteDialog.renderer = { root, _ -> root.append(noteForm) }
         noteDialog.footerRenderer = { root, _ -> root.append(noteCancel, noteAdd) }
         draggableSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开可拖动对话框", "Open draggable dialog") }.apply {
                         clickEvent.addHandler { noteDialog.opened = true }
                     },
@@ -241,7 +242,7 @@ internal class DialogPage : DemoPage() {
         body.append(draggableSection.root)
 
         val headerSection =
-            section(
+            sectionBlock(
                 tr("自定义头部", "Custom header"),
                 tr(
                     "headerRenderer 放在标题右侧，适合放关闭按钮等附加操作。",
@@ -280,9 +281,9 @@ internal class DialogPage : DemoPage() {
         )
         userDialog.renderer = { root, _ -> root.append(detailForm) }
         headerSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开用户详情", "Open user details") }.apply {
                         clickEvent.addHandler { userDialog.opened = true }
                     },
@@ -293,7 +294,7 @@ internal class DialogPage : DemoPage() {
         body.append(headerSection.root)
 
         val footerSection =
-            section(
+            sectionBlock(
                 tr("底部按钮布局", "Footer layout"),
                 tr(
                     "footerRenderer 里的按钮按添加顺序排列，用 marginInlineEnd: auto 把危险操作推到左边。",
@@ -311,9 +312,9 @@ internal class DialogPage : DemoPage() {
         deleteDialog.renderer = { root, _ -> root.append(deleteText) }
         deleteDialog.footerRenderer = { root, _ -> root.append(deleteButton, keepButton) }
         footerSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("删除用户", "Delete user") }.addTheme("error").apply {
                         clickEvent.addHandler { deleteDialog.opened = true }
                     },
@@ -324,7 +325,7 @@ internal class DialogPage : DemoPage() {
         body.append(footerSection.root)
 
         val noPaddingSection =
-            section(
+            sectionBlock(
                 tr("无内边距", "No padding"),
                 tr(
                     "theme=\"no-padding\" 去掉内容区的内边距，适合放表格这类自带留白的组件。",
@@ -339,9 +340,9 @@ internal class DialogPage : DemoPage() {
         filterButton.clickEvent.addHandler { filterDialog.opened = false }
         filterDialog.footerRenderer = { root, _ -> root.append(filterButton) }
         noPaddingSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开筛选对话框", "Open filter dialog") }.apply {
                         clickEvent.addHandler { filterDialog.opened = true }
                     },
@@ -352,7 +353,7 @@ internal class DialogPage : DemoPage() {
         body.append(noPaddingSection.root)
 
         val resizableSection =
-            section(
+            sectionBlock(
                 tr("可调整大小", "Resizable"),
                 tr(
                     "resizable 允许拖动边角改变尺寸；最小值通过 ::part(overlay) 上的 CSS 指定。",
@@ -366,9 +367,9 @@ internal class DialogPage : DemoPage() {
         val employeeGrid = personGrid(people(8))
         employeeDialog.renderer = { root, _ -> root.append(employeeGrid) }
         resizableSection.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createButton { textContent = tr("打开可调整对话框", "Open resizable dialog") }.apply {
                         clickEvent.addHandler { employeeDialog.opened = true }
                     },

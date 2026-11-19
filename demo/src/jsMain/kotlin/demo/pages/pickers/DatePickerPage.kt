@@ -1,5 +1,10 @@
 package demo.pages.pickers
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -16,13 +21,9 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
@@ -79,7 +80,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 1. Basic usage (date-picker-basic.ts) -------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "value 是 YYYY-MM-DD 字符串；清空按钮把值置为空，输入非法日期触发 unparsable-change。",
@@ -104,14 +105,14 @@ internal class DatePickerPage : DemoPage() {
         }
         basicPicker.listen(DatePickerEvents.unparsableChange) { basicLog.add("unparsable-change") }
         basic.body.append(
-            example(null, column(basicPicker, basicValue.root)),
-            example(tr("事件流", "Event stream"), basicLog.root),
+            exampleBox(null, kitCol(basicPicker, basicValue.root)),
+            exampleBox(tr("事件流", "Event stream"), basicLog.root),
         )
         body.append(basic.root)
 
         // --- 2. Validation (date-picker-validation.ts) ---------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "min / max 与 isDateDisabled 共同决定可选日期；validated 事件里按值设置 errorMessage，" +
@@ -157,11 +158,11 @@ internal class DatePickerPage : DemoPage() {
                 clickEvent.addHandler { validatedPicker.validate() }
             }
         validation.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     validatedPicker,
-                    row(validateDate, validatedError.root),
+                    kitRow(validateDate, validatedError.root),
                 ),
             ),
         )
@@ -169,7 +170,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 3. Custom validation (date-picker-custom-validation.ts) --------------------------------
         val weekday =
-            section(
+            sectionBlock(
                 tr("自定义校验", "Custom validation"),
                 tr(
                     "文档示例用 Binder 的验证器限制工作日；这里在同一次 validate() 里做同样的判断，结果写回 " +
@@ -202,11 +203,11 @@ internal class DatePickerPage : DemoPage() {
             )
         }
         weekday.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     weekdayPicker,
-                    row(createButton { textContent = tr("校验", "Validate") }.apply {
+                    kitRow(createButton { textContent = tr("校验", "Validate") }.apply {
                         clickEvent.addHandler { weekdayPicker.validate() }
                     }, weekdayError.root),
                 ),
@@ -216,7 +217,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 4. Date metadata (date-picker-date-metadata.ts) ----------------------------------------
         val metadata =
-            section(
+            sectionBlock(
                 tr("单个日期的配置", "Configuring individual dates"),
                 tr(
                     "dateMetadataProvider 按整个月的范围批量返回元数据：disabled 关闭日期，part 给日期加上自定义 " +
@@ -274,12 +275,12 @@ internal class DatePickerPage : DemoPage() {
                 metadataPicker.value.ifEmpty { tr("（空）", "(empty)") },
             )
         }
-        metadata.body.append(example(null, column(metadataPicker, metadataReadout.root)))
+        metadata.body.append(exampleBox(null, kitCol(metadataPicker, metadataReadout.root)))
         body.append(metadata.root)
 
         // --- 5. Week numbers (date-picker-week-numbers.ts) ------------------------------------------
         val weekNumbers =
-            section(
+            sectionBlock(
                 tr("周数", "Week numbers"),
                 tr(
                     "showWeekNumbers 显示 ISO 周数，i18n.firstDayOfWeek 必须是 1（周一）才会生效。",
@@ -292,12 +293,12 @@ internal class DatePickerPage : DemoPage() {
                 showWeekNumbers = true
                 i18n = unsafeJso<DatePickerI18n> { firstDayOfWeek = 1.0 }
             }
-        weekNumbers.body.append(example(null, weekPicker))
+        weekNumbers.body.append(exampleBox(null, weekPicker))
         body.append(weekNumbers.root)
 
         // --- 6. Initial position (date-picker-initial-position.ts) ----------------------------------
         val initial =
-            section(
+            sectionBlock(
                 tr("初始月份", "Initial position"),
                 tr(
                     "initialPosition 决定没有值时日历打开到哪一天：这里定位到本年的最后一天。",
@@ -311,12 +312,12 @@ internal class DatePickerPage : DemoPage() {
                 label = tr("第四季度截止日期", "Q4 deadline")
                 initialPosition = initialIso
             }
-        initial.body.append(example(null, column(initialPicker, Readout("initialPosition = $initialIso").root)))
+        initial.body.append(exampleBox(null, kitCol(initialPicker, Readout("initialPosition = $initialIso").root)))
         body.append(initial.root)
 
         // --- 7. Auto open (date-picker-auto-open.ts) ------------------------------------------------
         val autoOpen =
-            section(
+            sectionBlock(
                 tr("自动展开", "Auto open"),
                 tr(
                     "autoOpenDisabled 关闭「聚焦即弹出日历」，下拉仍可以用按钮从外部打开和关闭。",
@@ -336,11 +337,11 @@ internal class DatePickerPage : DemoPage() {
             autoOpened.set("opened = ${autoPicker.opened}")
         }
         autoOpen.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     autoPicker,
-                    row(
+                    kitRow(
                         createButton { textContent = tr("打开", "Open") }.addTheme("tertiary").apply {
                             clickEvent.addHandler { autoPicker.open() }
                         },
@@ -356,7 +357,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 8. Internationalization (date-picker-internationalization.ts) --------------------------
         val localization =
-            section(
+            sectionBlock(
                 tr("本地化", "Internationalization"),
                 tr(
                     "i18n 覆盖月份、星期、今天 / 取消按钮等文案；只给出需要改的字段，其余与默认值合并。",
@@ -391,12 +392,12 @@ internal class DatePickerPage : DemoPage() {
                         cancel = "Abbrechen"
                     }
             }
-        localization.body.append(example(tr("德语（Deutsch）", "German (Deutsch)"), germanPicker))
+        localization.body.append(exampleBox(tr("德语（Deutsch）", "German (Deutsch)"), germanPicker))
         body.append(localization.root)
 
         // --- 9. Basic features (date-picker-basic-features.ts) --------------------------------------
         val basics =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "helperText 与 placeholder 提供输入提示，clearButtonVisible 加清空按钮；prefix 插槽放图标，" +
@@ -414,12 +415,12 @@ internal class DatePickerPage : DemoPage() {
             }
         featuredPicker.append(createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" })
         featuredPicker.append(createIcon { icon = "vaadin:vaadin-h" }.apply { slot = "prefix" })
-        basics.body.append(example(null, featuredPicker))
+        basics.body.append(exampleBox(null, featuredPicker))
         body.append(basics.root)
 
         // --- 10. Read-only and disabled (date-picker-readonly-and-disabled.ts) ----------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 可以聚焦和复制但不能修改；disabled 关闭全部交互。",
@@ -427,9 +428,9 @@ internal class DatePickerPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createDatePicker {
                         label = tr("只读", "Read-only")
                         value = "2020-06-12"
@@ -443,7 +444,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 11. Date range (date-picker-date-range.ts) ---------------------------------------------
         val range =
-            section(
+            sectionBlock(
                 tr("日期区间", "Date range"),
                 tr(
                     "两个选择器互相约束：返回日期不早于出发日期，出发日期不晚于返回日期。",
@@ -465,12 +466,12 @@ internal class DatePickerPage : DemoPage() {
         }
         departurePicker.listen(DatePickerEvents.valueChanged) { syncRange() }
         returnPicker.listen(DatePickerEvents.valueChanged) { syncRange() }
-        range.body.append(example(null, column(row(departurePicker, returnPicker), rangeValue.root)))
+        range.body.append(exampleBox(null, kitCol(kitRow(departurePicker, returnPicker), rangeValue.root)))
         body.append(range.root)
 
         // --- 12. Individual input fields (date-picker-individual-input-fields.ts) -------------------
         val individual =
-            section(
+            sectionBlock(
                 tr("分开的年月日字段", "Individual input fields"),
                 tr(
                     "文档示例用三个 combo-box 取代日历：年、月决定天数，日选项随之重建。浏览器没有日期选择能力时" +
@@ -555,12 +556,12 @@ internal class DatePickerPage : DemoPage() {
             selectedDay = joinValues(dayCombo.selectedItem).toIntOrNull()
             syncIndividual()
         }
-        individual.body.append(example(null, column(row(yearCombo, monthCombo, dayCombo), individualValue.root)))
+        individual.body.append(exampleBox(null, kitCol(kitRow(yearCombo, monthCombo, dayCombo), individualValue.root)))
         body.append(individual.root)
 
         // --- 13. Show the date format (date-picker-date-format-indicator.ts) -------------------------
         val formatHint =
-            section(
+            sectionBlock(
                 tr("显示日期格式", "Show the date format"),
                 tr(
                     "把期望的格式写进 placeholder 与 helperText，用户不必猜输入方式。",
@@ -569,7 +570,7 @@ internal class DatePickerPage : DemoPage() {
                 ),
             )
         formatHint.body.append(
-            example(
+            exampleBox(
                 null,
                 createDatePicker {
                     label = tr("开始日期", "Start date")
@@ -582,7 +583,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 14. Styles (date-picker-styles.ts) -----------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "align-right 右对齐文本，small 缩小尺寸，helper-above-field 把辅助文本放到字段上方。",
@@ -591,7 +592,7 @@ internal class DatePickerPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createDatePicker {
                     label = tr("标签", "Label")
@@ -604,7 +605,7 @@ internal class DatePickerPage : DemoPage() {
 
         // --- 15. Custom format functions (date-formats.adoc, custom-functions.ts) -------------------
         val customFunctions =
-            section(
+            sectionBlock(
                 tr("自定义格式化函数", "Custom format functions"),
                 tr(
                     "i18n.formatDate / i18n.parseDate 接管文本与日期的互转；这里用 Kotlin 重新实现了 ISO 8601，" +
@@ -629,12 +630,12 @@ internal class DatePickerPage : DemoPage() {
         customFunctionsPicker.listen(DatePickerEvents.valueChanged) {
             customFunctionsText.set(tr("输入框文本：", "Input text: "), customFunctionsPicker.value)
         }
-        customFunctions.body.append(example(null, column(customFunctionsPicker, customFunctionsText.root)))
+        customFunctions.body.append(exampleBox(null, kitCol(customFunctionsPicker, customFunctionsText.root)))
         body.append(customFunctions.root)
 
         // --- 16. Custom parse formats (date-formats.adoc, custom-format.ts, Flow only) -------------
         val customFormats =
-            section(
+            sectionBlock(
                 tr("多种输入格式", "Multiple input formats"),
                 tr(
                     "Flow 示例（date-picker-custom-format）配置一个显示格式和多个解析格式；Web Component 只有一个" +
@@ -656,12 +657,12 @@ internal class DatePickerPage : DemoPage() {
                         parseDate = { text -> parseFlexibleDate(text) }
                     }
             }
-        customFormats.body.append(example(null, customFormatsPicker))
+        customFormats.body.append(exampleBox(null, customFormatsPicker))
         body.append(customFormats.root)
 
         // --- 17. Locale (date-formats.adoc, locale.ts, Flow only) -----------------------------------
         val locale =
-            section(
+            sectionBlock(
                 tr("区域设置", "Locale"),
                 tr(
                     "Flow 示例（date-picker-locale）切换到芬兰语区域；浏览器端没有 Locale 属性，这里用 i18n 的" +
@@ -688,7 +689,7 @@ internal class DatePickerPage : DemoPage() {
                         parseDate = { text -> parseFinnishDate(text) }
                     }
             }
-        locale.body.append(example(null, localePicker))
+        locale.body.append(exampleBox(null, localePicker))
         body.append(locale.root)
 
     }

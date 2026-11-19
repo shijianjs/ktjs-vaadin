@@ -1,5 +1,10 @@
 package demo.pages.pickers
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,11 +20,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.Date
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -69,7 +70,7 @@ internal class DateTimePickerPage : DemoPage() {
 
         // --- 1. Basic usage (date-time-picker-basic.ts) ---------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "value 是 YYYY-MM-DDTHH:mm 字符串；日期与时间两段分别有自己的占位符，只有两段都填好才算完整。",
@@ -88,12 +89,12 @@ internal class DateTimePickerPage : DemoPage() {
         picker.listen(DateTimePickerEvents.valueChanged) {
             readout.set(tr("当前值：", "Current value: "), picker.value.ifEmpty { tr("（空）", "(empty)") })
         }
-        basic.body.append(example(null, column(picker, readout.root)))
+        basic.body.append(exampleBox(null, kitCol(picker, readout.root)))
         body.append(basic.root)
 
         // --- 2. Minutes step (date-time-picker-minutes-step.ts) -------------------------------------
         val minutesStep =
-            section(
+            sectionBlock(
                 tr("分钟步进", "Minutes step"),
                 tr(
                     "step 以秒为单位作用在时间部分，1800 表示每 30 分钟一档。",
@@ -106,12 +107,12 @@ internal class DateTimePickerPage : DemoPage() {
                 value = "2020-06-12T12:30"
                 step = 1800.0
             }
-        minutesStep.body.append(example(null, minutesPicker))
+        minutesStep.body.append(exampleBox(null, minutesPicker))
         body.append(minutesStep.root)
 
         // --- 3. Seconds step (date-time-picker-seconds-step.ts) -------------------------------------
         val secondsStep =
-            section(
+            sectionBlock(
                 tr("秒级步进", "Seconds step"),
                 tr(
                     "step = 1 时时间部分精确到秒。",
@@ -124,12 +125,12 @@ internal class DateTimePickerPage : DemoPage() {
                 value = "2020-06-12T15:45:08"
                 step = 1.0
             }
-        secondsStep.body.append(example(null, secondsPicker))
+        secondsStep.body.append(exampleBox(null, secondsPicker))
         body.append(secondsStep.root)
 
         // --- 4. Auto open (date-time-picker-auto-open.ts) -------------------------------------------
         val autoOpen =
-            section(
+            sectionBlock(
                 tr("自动展开", "Auto open"),
                 tr(
                     "autoOpenDisabled 同时关闭日期与时间两个下拉的自动展开，用户需要点击各自的切换按钮。",
@@ -142,12 +143,12 @@ internal class DateTimePickerPage : DemoPage() {
                 label = tr("会议日期与时间", "Meeting date and time")
                 autoOpenDisabled = true
             }
-        autoOpen.body.append(example(null, autoPicker))
+        autoOpen.body.append(exampleBox(null, autoPicker))
         body.append(autoOpen.root)
 
         // --- 5. Validation (date-time-picker-validation.ts) -----------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "required 与 min / max 由 validate() 检查；validated 里分别检查日期和时间的原始输入，" +
@@ -188,11 +189,11 @@ internal class DateTimePickerPage : DemoPage() {
             )
         }
         validation.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     validatedPicker,
-                    row(createButton { textContent = tr("校验", "Validate") }.apply {
+                    kitRow(createButton { textContent = tr("校验", "Validate") }.apply {
                         clickEvent.addHandler { validatedPicker.validate() }
                     }, validatedError.root),
                 ),
@@ -202,7 +203,7 @@ internal class DateTimePickerPage : DemoPage() {
 
         // --- 6. Custom validation (date-time-picker-custom-validation.ts) ---------------------------
         val customValidation =
-            section(
+            sectionBlock(
                 tr("自定义校验", "Custom validation"),
                 tr(
                     "文档示例用两个 Binder 验证器限制工作日与营业时间；这里在同一次校验里判断日期部分和时间部分。",
@@ -237,11 +238,11 @@ internal class DateTimePickerPage : DemoPage() {
             )
         }
         customValidation.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     customPicker,
-                    row(createButton { textContent = tr("校验", "Validate") }.apply {
+                    kitRow(createButton { textContent = tr("校验", "Validate") }.apply {
                         clickEvent.addHandler { customPicker.validate() }
                     }, customError.root),
                 ),
@@ -251,7 +252,7 @@ internal class DateTimePickerPage : DemoPage() {
 
         // --- 7. Week numbers (date-time-picker-week-numbers.ts) -------------------------------------
         val weekNumbers =
-            section(
+            sectionBlock(
                 tr("周数", "Week numbers"),
                 tr(
                     "showWeekNumbers 作用于日期部分的日历，需要 i18n.firstDayOfWeek = 1。",
@@ -264,12 +265,12 @@ internal class DateTimePickerPage : DemoPage() {
                 showWeekNumbers = true
                 i18nProperty = unsafeJso<DateTimePickerI18n> { firstDayOfWeek = 1.0 }
             }
-        weekNumbers.body.append(example(null, weekPicker))
+        weekNumbers.body.append(exampleBox(null, weekPicker))
         body.append(weekNumbers.root)
 
         // --- 8. Initial position (date-time-picker-initial-position.ts) -----------------------------
         val initial =
-            section(
+            sectionBlock(
                 tr("初始月份", "Initial position"),
                 tr(
                     "initialPosition 指定没有值时日历打开到的日期：这里定位到下个月的第一天。",
@@ -283,12 +284,12 @@ internal class DateTimePickerPage : DemoPage() {
                 label = tr("会议日期与时间", "Meeting date and time")
                 initialPosition = initialIso
             }
-        initial.body.append(example(null, column(initialPicker, Readout("initialPosition = $initialIso").root)))
+        initial.body.append(exampleBox(null, kitCol(initialPicker, Readout("initialPosition = $initialIso").root)))
         body.append(initial.root)
 
         // --- 9. Default time (date-time-picker-default-time.ts) -------------------------------------
         val defaultTimeSection =
-            section(
+            sectionBlock(
                 tr("默认时间", "Default time"),
                 tr(
                     "defaultTime 在用户只提交日期、时间部分还空着时补上时间；程序化赋值不会触发。",
@@ -301,12 +302,12 @@ internal class DateTimePickerPage : DemoPage() {
                 label = tr("预约", "Appointment")
                 defaultTime = "09:00"
             }
-        defaultTimeSection.body.append(example(null, defaultTimePicker))
+        defaultTimeSection.body.append(exampleBox(null, defaultTimePicker))
         body.append(defaultTimeSection.root)
 
         // --- 10. Internationalization (date-time-picker-internationalization.ts) --------------------
         val localization =
-            section(
+            sectionBlock(
                 tr("本地化", "Internationalization"),
                 tr(
                     "日期和时间两段的文案一起由 i18n 提供；dateLabel / timeLabel 是两个子字段的无障碍标签。",
@@ -343,12 +344,12 @@ internal class DateTimePickerPage : DemoPage() {
                         timeLabel = "zeit"
                     }
             }
-        localization.body.append(example(tr("德语（Deutsch）", "German (Deutsch)"), germanPicker))
+        localization.body.append(exampleBox(tr("德语（Deutsch）", "German (Deutsch)"), germanPicker))
         body.append(localization.root)
 
         // --- 11. Basic features (date-time-picker-basic-features.ts) --------------------------------
         val basics =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "helperText、datePlaceholder 与 timePlaceholder 描述两段输入；tooltip 插槽提供悬停说明。",
@@ -364,12 +365,12 @@ internal class DateTimePickerPage : DemoPage() {
                 timePlaceholder = tr("时间", "Time")
             }
         featuredPicker.append(createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" })
-        basics.body.append(example(null, featuredPicker))
+        basics.body.append(exampleBox(null, featuredPicker))
         body.append(basics.root)
 
         // --- 12. Read-only and disabled (date-time-picker-readonly-and-disabled.ts) -----------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 显示值但不能编辑；disabled 关闭全部交互。两个字段放在自适应表单布局里。",
@@ -390,12 +391,12 @@ internal class DateTimePickerPage : DemoPage() {
             },
             createDateTimePicker { label = tr("禁用", "Disabled") }.apply { disabled = true },
         )
-        states.body.append(example(null, statesLayout))
+        states.body.append(exampleBox(null, statesLayout))
         body.append(states.root)
 
         // --- 13. Date time range (date-time-picker-range.ts) ----------------------------------------
         val range =
-            section(
+            sectionBlock(
                 tr("日期时间区间", "Date-time range"),
                 tr(
                     "结束时间的 min 跟随开始时间，开始时间的值也写回来显示；布局使用自动列宽的表单布局。",
@@ -435,12 +436,12 @@ internal class DateTimePickerPage : DemoPage() {
                     "Start: ${startPicker.value.ifEmpty { "(empty)" }} · End: ${endPicker.value.ifEmpty { "(empty)" }}"),
             )
         }
-        range.body.append(example(null, column(rangeLayout, rangeValue.root)))
+        range.body.append(exampleBox(null, kitCol(rangeLayout, rangeValue.root)))
         body.append(range.root)
 
         // --- 14. Input format (date-time-picker-input-format.ts) ------------------------------------
         val inputFormat =
-            section(
+            sectionBlock(
                 tr("输入格式提示", "Input format"),
                 tr(
                     "用 i18n 把日期改成 dd/MM/yyyy 并同步调整占位符与辅助文本，日期、时间两段各自提示自己的格式。",
@@ -460,12 +461,12 @@ internal class DateTimePickerPage : DemoPage() {
                         parseDate = { text -> parseDayMonthYear(text) }
                     }
             }
-        inputFormat.body.append(example(null, inputFormatPicker))
+        inputFormat.body.append(exampleBox(null, inputFormatPicker))
         body.append(inputFormat.root)
 
         // --- 15. Styles (date-time-picker-styles.ts) ------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "align-right、small 与 helper-above-field 同样适用于日期时间选择器。",
@@ -473,7 +474,7 @@ internal class DateTimePickerPage : DemoPage() {
                 ),
             )
         styles.body.append(
-            example(
+            exampleBox(
                 null,
                 createDateTimePicker {
                     label = tr("标签", "Label")

@@ -1,5 +1,10 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -15,11 +20,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
@@ -55,7 +56,7 @@ internal class ProgressBarPage : DemoPage() {
 
         // --- Basic usage (progressbar/progress-bar-basic.ts) --------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "默认范围是 0–1，value 是当前进度；下面的进度条停在 50%。",
@@ -63,12 +64,12 @@ internal class ProgressBarPage : DemoPage() {
                 ),
             )
         val half = createProgressBar { value = 0.5 }
-        basic.body.append(example(null, half))
+        basic.body.append(exampleBox(null, half))
         body.append(basic.root)
 
         // --- Determinate (progressbar/progress-bar-determinate.ts) --------------------------------
         val determinate =
-            section(
+            sectionBlock(
                 tr("确定进度", "Determinate"),
                 tr(
                     "确定模式下 value 按 (value - min) / (max - min) 的比例填充；官方示例只展示静态的 0.5，" +
@@ -98,12 +99,12 @@ internal class ProgressBarPage : DemoPage() {
                     readout.set("value = 0.0")
                 }
             }
-        determinate.body.append(example(null, column(progress, row(increase, reset, readout.root))))
+        determinate.body.append(exampleBox(null, kitCol(progress, kitRow(increase, reset, readout.root))))
         body.append(determinate.root)
 
         // --- Indeterminate (progressbar/progress-bar-indeterminate.ts) ---------------------------
         val indeterminateSection =
-            section(
+            sectionBlock(
                 tr("不确定进度", "Indeterminate"),
                 tr(
                     "indeterminate 优先于 min / max / value：打开后忽略数值，显示循环动画。",
@@ -115,12 +116,12 @@ internal class ProgressBarPage : DemoPage() {
         val toggle = createSwitch { label = "indeterminate" }
         toggle.checked = true
         toggle.listen(SwitchEvents.checkedChanged) { indeterminateBar.indeterminate = toggle.checked }
-        indeterminateSection.body.append(example(null, column(indeterminateBar, toggle)))
+        indeterminateSection.body.append(exampleBox(null, kitCol(indeterminateBar, toggle)))
         body.append(indeterminateSection.root)
 
         // --- Bounds and initial value (progressbar/progress-bar-custom-range.ts) -----------------
         val range =
-            section(
+            sectionBlock(
                 tr("范围与初始值", "Bounds and initial value"),
                 tr(
                     "min / max 不必是 0–1；0–100 配 value=\"50\" 与默认范围的 0.5 等价，只是数值读起来更直观。",
@@ -129,7 +130,7 @@ internal class ProgressBarPage : DemoPage() {
                 ),
             )
         range.body.append(
-            example(
+            exampleBox(
                 null,
                 createProgressBar {
                     min = 0.0
@@ -142,7 +143,7 @@ internal class ProgressBarPage : DemoPage() {
 
         // --- Provide a label (progressbar/progress-bar-label.ts) --------------------------------
         val labelSection =
-            section(
+            sectionBlock(
                 tr("提供标签", "Provide a label"),
                 tr(
                     "进度条没有可见标签：用 aria-labelledby 把外部的 label 关联起来，百分比放在行尾。",
@@ -158,17 +159,17 @@ internal class ProgressBarPage : DemoPage() {
             }
         val labelled = createProgressBar { value = 0.5 }
         labelled.setAttribute("aria-labelledby", labelId)
-        val labelledHeader = row(barLabel, HtmlTagName.span {
+        val labelledHeader = kitRow(barLabel, HtmlTagName.span {
                                                textContent = "50%"
                                            })
         labelledHeader.style.setProperty("justify-content", "space-between")
         labelledHeader.style.setProperty("margin-bottom", "var(--lumo-space-s)")
-        labelSection.body.append(example(null, column(labelledHeader, labelled)))
+        labelSection.body.append(exampleBox(null, kitCol(labelledHeader, labelled)))
         body.append(labelSection.root)
 
         // --- Estimate completion time (progressbar/progress-bar-completion-time.ts) --------------
         val completion =
-            section(
+            sectionBlock(
                 tr("估计完成时间", "Estimate completion time"),
                 tr(
                     "时间未知时用不确定进度，并用 aria-describedby 说明大概要多久；文字提示同时让所有人看到。",
@@ -194,7 +195,7 @@ internal class ProgressBarPage : DemoPage() {
             }.apply {
                 setAttribute("id", hintId)
             }
-        completion.body.append(example(null, column(title, waiting, hint)))
+        completion.body.append(exampleBox(null, kitCol(title, waiting, hint)))
         body.append(completion.root)
 
     }

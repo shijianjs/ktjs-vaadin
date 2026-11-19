@@ -1,5 +1,10 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -19,11 +24,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -74,7 +75,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         val crew = people(6)
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情" +
@@ -127,7 +128,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
                     name = person.displayName
                     img = person.pictureUrl
                 }.addTheme("small"),
-                column(HtmlTagName.span {
+                kitCol(HtmlTagName.span {
                            className = MASTER_LIST_NAME
                            textContent = person.displayName
                        }, HtmlTagName.span {
@@ -142,11 +143,11 @@ internal class MasterDetailLayoutPage : DemoPage() {
         }
         select(crew.first(), rows.first())
         layout.append(master, detail)
-        basic.body.append(example(null, layout))
+        basic.body.append(exampleBox(null, layout))
         body.append(basic.root)
 
         val sizes =
-            section(
+            sectionBlock(
                 tr("尺寸与扩展", "Sizes and expansion"),
                 tr(
                     "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / expandDetail " +
@@ -183,11 +184,11 @@ internal class MasterDetailLayoutPage : DemoPage() {
             sized.expandDetail = expandDetailSwitch.checked
             describeSizes()
         }
-        sizes.body.append(example(null, column(sized, row(expandMasterSwitch, expandDetailSwitch, sizeReadout.root))))
+        sizes.body.append(exampleBox(null, kitCol(sized, kitRow(expandMasterSwitch, expandDetailSwitch, sizeReadout.root))))
         body.append(sizes.root)
 
         val orientationSection =
-            section(
+            sectionBlock(
                 tr("方向", "Orientation"),
                 tr(
                     "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
@@ -222,11 +223,11 @@ internal class MasterDetailLayoutPage : DemoPage() {
                     oriented.recalculateLayout()
                 }
             }
-        orientationSection.body.append(example(null, column(oriented, row(orientationButton, orientationReadout.root))))
+        orientationSection.body.append(exampleBox(null, kitCol(oriented, kitRow(orientationButton, orientationReadout.root))))
         body.append(orientationSection.root)
 
         val overlaySection =
-            section(
+            sectionBlock(
                 tr("浮层", "Overlay"),
                 tr(
                     "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment 决定浮层" +
@@ -284,15 +285,15 @@ internal class MasterDetailLayoutPage : DemoPage() {
                 }
         }
         overlaySection.body.append(
-            example(
+            exampleBox(
                 tr("浮层只覆盖布局本身；切到 page 后会遮住整个页面。", "The overlay covers the layout; page containment covers the viewport."),
-                column(overlayLayout, row(forceOverlaySwitch, fullOverlaySwitch, containmentSelect)),
+                kitCol(overlayLayout, kitRow(forceOverlaySwitch, fullOverlaySwitch, containmentSelect)),
             ),
         )
         body.append(overlaySection.root)
 
         val placeholderSection =
-            section(
+            sectionBlock(
                 tr("详情占位", "Detail placeholder"),
                 tr(
                     "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
@@ -334,11 +335,11 @@ internal class MasterDetailLayoutPage : DemoPage() {
                 textContent = tr("选择左侧成员查看详情", "Select a member to see the details")
             },
         )
-        placeholderSection.body.append(example(null, column(placeholderLayout, detailToggle)))
+        placeholderSection.body.append(exampleBox(null, kitCol(placeholderLayout, detailToggle)))
         body.append(placeholderSection.root)
 
         val nestingSection =
-            section(
+            sectionBlock(
                 tr("嵌套", "Nesting"),
                 tr(
                     "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
@@ -367,7 +368,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
             newBox(tr("一级主区", "Outer master")),
             HtmlTagName.div().apply { slot = "detail"; append(inner) },
         )
-        nestingSection.body.append(example(null, outer))
+        nestingSection.body.append(exampleBox(null, outer))
         body.append(nestingSection.root)
 
     }

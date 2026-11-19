@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,10 +21,7 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
-import demo.ui.section
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
@@ -77,7 +78,7 @@ internal class DetailsPage : DemoPage() {
         registerVaadinIcons()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
@@ -90,18 +91,18 @@ internal class DetailsPage : DemoPage() {
             opened = true
         }
         details.dataset["test"] = "details"
-        details.append(column(HtmlTagName.span {
+        details.append(kitCol(HtmlTagName.span {
                                   textContent = "Sophia Williams"
                               }, HtmlTagName.span {
                                      textContent = "sophia.williams@company.com"
                                  }, HtmlTagName.span {
                                         textContent = "(501) 555-9128"
                                     }))
-        basic.body.append(example(null, details))
+        basic.body.append(exampleBox(null, details))
         body.append(basic.root)
 
         val contentSection =
-            section(
+            sectionBlock(
                 tr("内容", "Content"),
                 tr(
                     "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
@@ -115,9 +116,9 @@ internal class DetailsPage : DemoPage() {
                 tr("财务", "Finances") to listOf(tr("发票", "Invoices"), tr("交易", "Transactions"), tr("对账单", "Statements")),
             )
         contentSection.body.append(
-            example(
+            exampleBox(
                 null,
-                column(
+                kitCol(
                     *links
                         .map { (summary, items) ->
                             linkDetails(summary, items)
@@ -128,7 +129,7 @@ internal class DetailsPage : DemoPage() {
         body.append(contentSection.root)
 
         val summarySection =
-            section(
+            sectionBlock(
                 tr("自定义 summary", "Custom summary"),
                 tr(
                     "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
@@ -182,11 +183,11 @@ internal class DetailsPage : DemoPage() {
             )
         form.append(addressField, zipField, cityField, countryComboBox(tr("国家", "Country")))
         custom.append(summaryNode, form)
-        summarySection.body.append(example(null, custom))
+        summarySection.body.append(exampleBox(null, custom))
         body.append(summarySection.root)
 
         val disabledSection =
-            section(
+            sectionBlock(
                 tr("禁用", "Disabling"),
                 tr(
                     "disabled 让区块无法展开，标题也不会响应点击与键盘。",
@@ -211,11 +212,11 @@ internal class DetailsPage : DemoPage() {
                 ),
             ),
         )
-        disabledSection.body.append(example(null, disabledDetails))
+        disabledSection.body.append(exampleBox(null, disabledDetails))
         body.append(disabledSection.root)
 
         val themes =
-            section(
+            sectionBlock(
                 tr("主题变体", "Theme variants"),
                 tr(
                     "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
@@ -223,9 +224,9 @@ internal class DetailsPage : DemoPage() {
                 ),
             )
         themes.body.append(
-            example("filled", membersDetails(theme = "filled")),
-            example("reverse", membersDetails(theme = "reverse")),
-            example("small", membersDetails(theme = "small")),
+            exampleBox("filled", membersDetails(theme = "filled")),
+            exampleBox("reverse", membersDetails(theme = "reverse")),
+            exampleBox("small", membersDetails(theme = "small")),
         )
         body.append(themes.root)
 
@@ -251,7 +252,7 @@ private fun linkDetails(summary: String, items: List<String>) =
         this.summary = summary
         opened = true
     }.apply {
-        append(column(*items.map { kitAnchor(it, "#/details") }.toTypedArray()))
+        append(kitCol(*items.map { kitAnchor(it, "#/details") }.toTypedArray()))
     }
 
 /**

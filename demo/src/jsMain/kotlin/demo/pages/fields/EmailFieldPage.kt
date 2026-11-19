@@ -1,5 +1,10 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -17,11 +22,7 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldEvents
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -58,7 +59,7 @@ internal class EmailFieldPage : DemoPage() {
 
         // --- Basic usage (email-field-basic.ts) -----------------------------------------------------
         val basic =
-            section(
+            sectionBlock(
                 tr("基本用法", "Basic usage"),
                 tr(
                     "Email Field 继承 Text Field 的全部功能，并按 RFC 5322 校验邮箱格式；值无效时字段高亮并" +
@@ -108,14 +109,14 @@ internal class EmailFieldPage : DemoPage() {
         emailField.listen(EmailFieldEvents.change) { syncValidity() }
         syncValidity()
         basic.body.append(
-            example(tr("合法与非法邮箱", "Valid and invalid addresses"), row(validEmail, invalidEmail)),
-            example(tr("实时校验结果", "Validity while typing"), column(emailField, readout.root)),
+            exampleBox(tr("合法与非法邮箱", "Valid and invalid addresses"), kitRow(validEmail, invalidEmail)),
+            exampleBox(tr("实时校验结果", "Validity while typing"), kitCol(emailField, readout.root)),
         )
         body.append(basic.root)
 
         // --- Basic features (email-field-basic-features.ts) -----------------------------------------
         val features =
-            section(
+            sectionBlock(
                 tr("基本特性", "Basic features"),
                 tr(
                     "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
@@ -134,12 +135,12 @@ internal class EmailFieldPage : DemoPage() {
             createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" },
             createIcon { icon = "vaadin:envelope" }.apply { slot = "prefix" },
         )
-        features.body.append(example(null, featureField))
+        features.body.append(exampleBox(null, featureField))
         body.append(features.root)
 
         // --- Validation (email-field-validation.ts) -------------------------------------------------
         val validation =
-            section(
+            sectionBlock(
                 tr("校验", "Validation"),
                 tr(
                     "内置的邮箱格式校验之外，pattern 可以进一步限制域名。示例只接受 example.com 地址，并在" +
@@ -172,12 +173,12 @@ internal class EmailFieldPage : DemoPage() {
                 if (message.isEmpty()) tr("通过", "passed") else tr("未通过", "failed"),
             )
         }
-        validation.body.append(example(null, column(restricted, restrictedResult.root)))
+        validation.body.append(exampleBox(null, kitCol(restricted, restrictedResult.root)))
         body.append(validation.root)
 
         // --- Read-only and disabled (email-field-readonly-and-disabled.ts) --------------------------
         val states =
-            section(
+            sectionBlock(
                 tr("只读与禁用", "Read-only and disabled"),
                 tr(
                     "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
@@ -186,9 +187,9 @@ internal class EmailFieldPage : DemoPage() {
                 ),
             )
         states.body.append(
-            example(
+            exampleBox(
                 null,
-                row(
+                kitRow(
                     createEmailField {
                         label = tr("只读", "Read-only")
                         value = "example@example.com"
@@ -204,7 +205,7 @@ internal class EmailFieldPage : DemoPage() {
 
         // --- Style variants (email-field-styles.ts) -------------------------------------------------
         val styles =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
@@ -218,7 +219,7 @@ internal class EmailFieldPage : DemoPage() {
                 helperText = tr("辅助文本", "Helper text")
                 value = "foo@bar.com"
             }.addTheme("align-right", "small", "helper-above-field")
-        styles.body.append(example(null, styledField))
+        styles.body.append(exampleBox(null, styledField))
         body.append(styles.root)
 
         // --- Value change modes (email-field-value-change-mode.ts, Flow-only example) ---------------

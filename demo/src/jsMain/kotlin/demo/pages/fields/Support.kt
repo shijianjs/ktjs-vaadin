@@ -1,11 +1,12 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 import demo.tr
 import demo.ui.Readout
-import demo.ui.Section
-import demo.ui.section
-import demo.ui.column
-import demo.ui.example
 import demo.ui.listen
 import js.objects.unsafeJso
 import kotlin.js.js
@@ -120,7 +121,7 @@ private fun valueChangeModes(
     }
     field.listen(change) { showSynced() }
 
-    return column(modes, field, typed.root, synced.root)
+    return kitCol(modes, field, typed.root, synced.root)
 }
 
 /** Section wrapper around [valueChangeModes], shared by the four field pages. */
@@ -129,9 +130,9 @@ internal fun valueChangeModesSection(
     valueChanged: EventType<Event>,
     change: EventType<Event>,
     readValue: () -> String,
-): Section {
+): SectionBlock {
     val modes =
-        section(
+        sectionBlock(
             tr("值变化模式", "Value change modes"),
             tr(
                 "ValueChangeMode 是 Flow 的服务端 API，Web Component 没有对应属性；这里用本地定时器模拟" +
@@ -141,6 +142,6 @@ internal fun valueChangeModesSection(
                     "shows the value the server would end up with.",
             ),
         )
-    modes.body.append(example(null, valueChangeModes(field, valueChanged, change, readValue)))
+    modes.body.append(exampleBox(null, valueChangeModes(field, valueChanged, change, readValue)))
     return modes
 }

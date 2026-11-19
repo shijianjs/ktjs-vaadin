@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,10 +21,7 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.configureFrame
-import demo.ui.example
-import demo.ui.grid
 import demo.ui.listen
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.AlignItems
 import web.cssom.Flex
@@ -89,7 +90,7 @@ internal class CardPage : DemoPage() {
         registerVaadinIcons()
 
         val content =
-            section(
+            sectionBlock(
                 tr("内容", "Content"),
                 tr(
                     "默认插槽里的节点组成卡片正文，可以是任意 DOM 片段。",
@@ -98,10 +99,10 @@ internal class CardPage : DemoPage() {
             )
         val contentCard = createCard()
         contentCard.append(paragraph(laplandLongText()), paragraph(laplandSamiText()))
-        content.body.append(example(null, contentCard))
+        content.body.append(exampleBox(null, contentCard))
 
         val titles =
-            section(
+            sectionBlock(
                 tr("标题与副标题", "Title and subtitle"),
                 tr(
                     "title / subtitle 插槽放自定义的标题节点；cardTitle 属性则直接生成标题元素，标题层级由 " +
@@ -123,11 +124,11 @@ internal class CardPage : DemoPage() {
         propertyTitle.append(HtmlTagName.div().apply { textContent = laplandShortText() })
         slotTitles.className = CARD_DEMO
         propertyTitle.className = CARD_DEMO
-        titles.body.append(example(null, grid(slotTitles, propertyTitle)))
+        titles.body.append(exampleBox(null, kitGrid(260, slotTitles, propertyTitle)))
         body.append(titles.root)
 
         val header =
-            section(
+            sectionBlock(
                 tr("头部区域", "Header area"),
                 tr(
                     "header 插槽替换默认的标题行，header-prefix / header-suffix 在标题两侧各放一个节点，常见的是" +
@@ -152,11 +153,11 @@ internal class CardPage : DemoPage() {
             createBadge { textContent = tr("北极圈", "Arctic") }.addTheme("success").apply { slot = "header-suffix" },
             HtmlTagName.div().apply { textContent = laplandShortText() },
         )
-        header.body.append(example(null, grid(headerCard, prefixCard, suffixCard)))
+        header.body.append(exampleBox(null, kitGrid(260, headerCard, prefixCard, suffixCard)))
         body.append(header.root)
 
         val media =
-            section(
+            sectionBlock(
                 tr("媒体", "Media"),
                 tr(
                     "media 插槽放图片、图标或头像；宽高由卡片根据当前变体决定。",
@@ -173,11 +174,11 @@ internal class CardPage : DemoPage() {
             createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
             HtmlTagName.div().apply { textContent = laplandShortText() },
         )
-        media.body.append(example(null, grid(imageCard, iconCard, avatarCard)))
+        media.body.append(exampleBox(null, kitGrid(260, imageCard, iconCard, avatarCard)))
         body.append(media.root)
 
         val footer =
-            section(
+            sectionBlock(
                 tr("底部操作", "Footer"),
                 tr(
                     "footer 插槽里的按钮固定在卡片底部，配合固定高度的卡片使用。",
@@ -193,11 +194,11 @@ internal class CardPage : DemoPage() {
             createButton { textContent = tr("了解更多", "Learn More") }.apply { slot = "footer" },
         )
         footerCard.className = CARD_DEMO
-        footer.body.append(example(null, footerCard))
+        footer.body.append(exampleBox(null, footerCard))
         body.append(footer.root)
 
         val variants =
-            section(
+            sectionBlock(
                 tr("样式变体", "Style variants"),
                 tr(
                     "默认样式之外，outlined 加边框，elevated 加阴影（更适合有底色的背景）。",
@@ -206,9 +207,9 @@ internal class CardPage : DemoPage() {
                 ),
             )
         variants.body.append(
-            example(
+            exampleBox(
                 null,
-                grid(
+                kitGrid(260, 
                     createCard { cardTitle = "Default" }.apply { append(HtmlTagName.div().apply { textContent = tr("默认卡片样式。", "This is the default card style.") }) },
                     createCard { cardTitle = "Outlined" }.addTheme("outlined").apply {
                         append(HtmlTagName.div().apply { textContent = tr("在卡片四周加一圈实线边框。", "Adds a solid outline around the card.") })
@@ -222,7 +223,7 @@ internal class CardPage : DemoPage() {
         body.append(variants.root)
 
         val combined =
-            section(
+            sectionBlock(
                 tr("组合变体", "Combining variants"),
                 tr(
                     "horizontal 让媒体与内容并排，stretch-media 拉伸媒体填满剩余空间，cover-media 让媒体铺满卡片" +
@@ -256,11 +257,11 @@ internal class CardPage : DemoPage() {
             newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
             HtmlTagName.div().apply { textContent = laplandShortText() },
         )
-        combined.body.append(example(null, grid(combinedCard, stretchCard, horizontalCard)))
+        combined.body.append(exampleBox(null, kitGrid(260, combinedCard, stretchCard, horizontalCard)))
         body.append(combined.root)
 
         val playgroundSection =
-            section(
+            sectionBlock(
                 tr("交互式配置", "Interactive configuration"),
                 tr(
                     "勾选插槽与样式变体、切换媒体与正文内容，预览会就地更新：节点只被摘下来或重新挂回去，" +
@@ -269,7 +270,7 @@ internal class CardPage : DemoPage() {
                         "place: nodes are only detached and reattached, the card is never rebuilt.",
                 ),
             )
-        playgroundSection.body.append(example(null, newCardPlayground()))
+        playgroundSection.body.append(exampleBox(null, newCardPlayground()))
         body.append(playgroundSection.root)
 
     }

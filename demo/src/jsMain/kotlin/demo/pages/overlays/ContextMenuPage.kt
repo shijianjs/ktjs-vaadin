@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
+
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -20,13 +25,9 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.configureFrame
 import demo.ui.Readout
-import demo.ui.column
-import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.row
-import demo.ui.section
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.CSSStyleSheet
 import web.cssom.Color
@@ -116,7 +117,7 @@ internal class ContextMenuPage : DemoPage() {
             ).unsafeCast<Array<ContextMenuItemData>>()
 
         val basic =
-            section(
+            sectionBlock(
                 tr("右键打开", "Open on right-click"),
                 tr(
                     "openOn 默认是 contextmenu；listenOn 指向接收事件的元素。",
@@ -141,11 +142,11 @@ internal class ContextMenuPage : DemoPage() {
         menu.items = items
         menu.listen(ContextMenuEvents.itemSelected) { log.add("item-selected") }
         menu.listen(ContextMenuEvents.openedChanged) { log.add("opened-changed · ${menu.opened}") }
-        basic.body.append(example(null, column(surface, log.root, menu)))
+        basic.body.append(exampleBox(null, kitCol(surface, log.root, menu)))
         body.append(basic.root)
 
         val gridSection =
-            section(
+            sectionBlock(
                 tr("表格行菜单", "Menu on grid rows"),
                 tr(
                     "把 grid 放进 context-menu，右键任意一行都能对这个区域设置菜单。",
@@ -165,11 +166,11 @@ internal class ContextMenuPage : DemoPage() {
             ).unsafeCast<Array<ContextMenuItemData>>()
         val rowGrid = personGrid(people(5))
         rowMenu.append(rowGrid)
-        gridSection.body.append(example(null, rowMenu))
+        gridSection.body.append(exampleBox(null, rowMenu))
         body.append(gridSection.root)
 
         val checkable =
-            section(
+            sectionBlock(
                 tr("勾选条目", "Checkable items"),
                 tr(
                     "items 里的 checked 表示当前选中项；item-selected 里更新后在界面上回读。",
@@ -200,11 +201,11 @@ internal class ContextMenuPage : DemoPage() {
             assigneeValue.textContent = chosen
             assigneeReadout.set(tr("负责人：", "Assignee: "), chosen)
         }
-        checkable.body.append(example(null, column(assigneeMenu, assigneeReadout.root)))
+        checkable.body.append(exampleBox(null, kitCol(assigneeMenu, assigneeReadout.root)))
         body.append(checkable.root)
 
         val classNames =
-            section(
+            sectionBlock(
                 tr("自定义类名", "Custom class name"),
                 tr(
                     "className 加到条目元素上，配合页面样式表达危险操作。",
@@ -223,11 +224,11 @@ internal class ContextMenuPage : DemoPage() {
                 """.trimIndent(),
             ).unsafeCast<Array<ContextMenuItemData>>()
         classMenu.append(createButton { textContent = tr("操作", "Actions") }.addTheme("tertiary"))
-        classNames.body.append(example(null, classMenu))
+        classNames.body.append(exampleBox(null, classMenu))
         body.append(classNames.root)
 
         val customData =
-            section(
+            sectionBlock(
                 tr("自定义条目数据", "Custom item data"),
                 tr(
                     "条目可以带任意字段；item-selected 的 detail.value 就是被点击的条目对象。",
@@ -243,16 +244,16 @@ internal class ContextMenuPage : DemoPage() {
                 copyMenuItem(tr("复制为 HTML", "Copy as HTML"), "<h1>Context Menu</h1>"),
                 copyMenuItem(tr("复制为 Markdown", "Copy as Markdown"), "# Context Menu"),
             ).unsafeCast<Array<ContextMenuItemData>>()
-        copyMenu.append(column(heading(2, "Context Menu"), paragraph(tr("右键这段文字复制它的格式。", "Right-click this text to copy it in a format."))))
+        copyMenu.append(kitCol(heading(2, "Context Menu"), paragraph(tr("右键这段文字复制它的格式。", "Right-click this text to copy it in a format."))))
         copyMenu.listen(ContextMenuEvents.itemSelected) {
             val value = js("(event) => event.detail.value.value")(it.unsafeCast<JsAny>()) as String?
             copyReadout.set(tr("已复制：", "Copied: "), value ?: "")
         }
-        customData.body.append(example(null, column(copyMenu, copyReadout.root)))
+        customData.body.append(exampleBox(null, kitCol(copyMenu, copyReadout.root)))
         body.append(customData.root)
 
         val dividers =
-            section(
+            sectionBlock(
                 tr("分隔线与层级", "Dividers and hierarchy"),
                 tr(
                     "component 设成 \"hr\" 的条目渲染成分隔线；children 生成子菜单。",
@@ -283,11 +284,11 @@ internal class ContextMenuPage : DemoPage() {
             ).unsafeCast<Array<ContextMenuItemData>>()
         val dividerGrid = personGrid(people(4))
         dividerMenu.append(dividerGrid)
-        dividers.body.append(example(null, dividerMenu))
+        dividers.body.append(exampleBox(null, dividerMenu))
         body.append(dividers.root)
 
         val leftClick =
-            section(
+            sectionBlock(
                 tr("左键打开", "Open on click"),
                 tr(
                     "openOn 设为 click 时用左键展开，适合做「操作」按钮。",
@@ -299,11 +300,11 @@ internal class ContextMenuPage : DemoPage() {
         clickMenu.openOn = "click"
         clickMenu.listenOn = actionsButton
         clickMenu.items = items
-        leftClick.body.append(example(null, row(actionsButton, clickMenu)))
+        leftClick.body.append(exampleBox(null, kitRow(actionsButton, clickMenu)))
         body.append(leftClick.root)
 
         val customItems =
-            section(
+            sectionBlock(
                 tr("自定义条目呈现", "Custom item rendering"),
                 tr(
                     "component 接受元素，可以直接放图标和头像。",
@@ -366,11 +367,11 @@ internal class ContextMenuPage : DemoPage() {
             )
         val presentGrid = personGrid(people(4))
         presentMenu.append(presentGrid)
-        customItems.body.append(example(null, presentMenu))
+        customItems.body.append(exampleBox(null, presentMenu))
         body.append(customItems.root)
 
         val tooltips =
-            section(
+            sectionBlock(
                 tr("条目提示", "Item tooltips"),
                 tr(
                     "条目数据里的 tooltip / tooltipPosition 配合 context-menu 里的 tooltip 插槽生效。",
@@ -394,11 +395,11 @@ internal class ContextMenuPage : DemoPage() {
         tooltipMenu.append(createTooltip().also { it.slot = "tooltip" })
         val tooltipGrid = personGrid(people(4))
         tooltipMenu.append(tooltipGrid)
-        tooltips.body.append(example(null, tooltipMenu))
+        tooltips.body.append(exampleBox(null, tooltipMenu))
         body.append(tooltips.root)
 
         val bestPractice =
-            section(
+            sectionBlock(
                 tr("表格中的操作", "Actions inside a grid"),
                 tr(
                     "行内操作按钮用 Menu Bar 表达，同一个 items 数组既服务右键菜单也服务行内按钮。",
@@ -450,7 +451,7 @@ internal class ContextMenuPage : DemoPage() {
             },
         )
         filesMenu.append(filesGrid)
-        bestPractice.body.append(example(null, filesMenu))
+        bestPractice.body.append(exampleBox(null, filesMenu))
         body.append(bestPractice.root)
 
     }
