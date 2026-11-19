@@ -59,6 +59,14 @@ class CatalogEntry(
     val group: Group,
     val meta: PageMeta,
     private val builder: (PageMeta) -> PageView,
+    /**
+     * The same page built on `ktjs-demo-kit` blocks, once it has been converted.
+     *
+     * Both builders exist while the migration runs: a converted page is picked from here and the
+     * legacy one stays compiled as the fallback until the whole catalog has moved over. A page that
+     * is not migrated yet leaves this `null`.
+     */
+    val kitPage: (() -> io.github.shijianjs.ktjs.demo.nav.Page)? = null,
 ) {
     /** Builds a fresh instance of the page. The shell caches one per route. */
     fun create(): web.html.HTMLElement {

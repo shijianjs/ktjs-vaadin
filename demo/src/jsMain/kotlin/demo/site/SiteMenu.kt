@@ -51,9 +51,13 @@ fun siteMenu(): DemoMenu {
         catalog.map { entry ->
             val group = groups.getValue(entry.group.id)
             Entry(entry.id, group, group.icon) {
-                // The overview is the first page converted to kit blocks; it carries its own
-                // `Translations` table and rewrites copy in place, so it does not need the legacy host.
-                if (entry.id == "overview") OverviewPage() else LegacyPage(entry)
+                // The overview and the pages already converted carry their own `Translations` table and
+                // rewrite copy in place; everything else still goes through the legacy host.
+                when {
+                    entry.id == "overview" -> OverviewPage()
+                    entry.kitPage != null -> entry.kitPage.invoke()
+                    else -> LegacyPage(entry)
+                }
             }
         },
     )

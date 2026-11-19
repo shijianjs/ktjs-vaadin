@@ -3,20 +3,90 @@ package demo.pages.selection
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
+import demo.Language
+import demo.LanguageState
 import demo.bi
+import demo.componentApiUrl
 import demo.tr
-import demo.ui.EventLog
 import demo.ui.PageMeta
+import demo.ui.REPO_SOURCE_ROOT
 import demo.ui.PageView
 import demo.ui.column
 import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
+import io.github.shijianjs.ktjs.demo.nav.Page
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.Readout
+import io.github.shijianjs.ktjs.demo.page.anchor
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.newPage
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.item.createItem
 import web.dom.clickEvent
 import web.events.addHandler
+import web.html.HTMLAnchorElement
+
+/** Every string this page shows, in one language. */
+private class ItemTexts(
+    val docsLink: String,
+    val sourceLink: String,
+    val apiLink: String,
+    val basicTitle: String,
+    val basicHint: String,
+    val itemLabel: String,
+    val itemSlot: String,
+    val itemDisabled: String,
+    val selectedTitle: String,
+    val selectedHint: String,
+    val selectedItem: String,
+    val toggle: String,
+)
+
+private val itemEnglish: ItemTexts = ItemTexts(
+    docsLink = "Vaadin documentation",
+    sourceLink = "Kotlin source",
+    apiLink = "Kotlin API reference",
+    basicTitle = "Standalone use",
+    basicHint = "vaadin-item is usually created inside List Box / Select / Context Menu; this page shows " +
+        "its properties on its own.",
+    itemLabel = "Item with a label",
+    itemSlot = "Default slot text",
+    itemDisabled = "Disabled",
+    selectedTitle = "Selected state",
+    selectedHint = "selected is purely visual; the item does not maintain selection logic itself.",
+    selectedItem = "Selected item",
+    toggle = "Toggle selected",
+)
+
+private val itemChinese: ItemTexts = ItemTexts(
+    docsLink = "Vaadin 官方文档",
+    sourceLink = "查看 Kotlin 源码",
+    apiLink = "Kotlin API 文档",
+    basicTitle = "独立使用",
+    basicHint = "vaadin-item 通常由 List Box / Select / Context Menu 内部创建；这里单独展示它的属性。",
+    itemLabel = "带 label 的条目",
+    itemSlot = "默认插槽文本",
+    itemDisabled = "已禁用",
+    selectedTitle = "选中状态",
+    selectedHint = "selected 只是视觉状态，条目本身不维护选中逻辑。",
+    selectedItem = "被选中的条目",
+    toggle = "切换 selected",
+)
+
+private val itemTexts: Translations<ItemTexts> = texts(
+    Langs.EN to itemEnglish,
+    Langs.ZH_HANS to itemChinese,
+)
 
 val itemEntry: CatalogEntry =
     CatalogEntry(
@@ -39,8 +109,15 @@ val itemEntry: CatalogEntry =
                 sourcePath = "pages/selection/ItemPage.kt",
             ),
         builder = ::buildItemPage,
+        kitPage = ::ItemPage,
     )
 
+/**
+ * The legacy builder, kept until the whole catalog has moved to kit blocks.
+ *
+ * Every migrated page keeps its old builder for one reason: reverting a page that turns out to
+ * render wrong is then deleting one line from the catalog instead of rewriting the page again.
+ */
 private fun buildItemPage(meta: PageMeta): PageView {
     val view = page(meta)
 
@@ -53,7 +130,6 @@ private fun buildItemPage(meta: PageMeta): PageView {
                     "properties on its own.",
             ),
         )
-    val log = EventLog(4)
     val items =
         row(
             createItem {
@@ -82,15 +158,98 @@ private fun buildItemPage(meta: PageMeta): PageView {
             textContent = tr("被选中的条目", "Selected item")
             selected = true
         }
-    val toggleButton =
-        createButton { textContent = tr("切换 selected", "Toggle selected") }.apply {
-            clickEvent.addHandler {
-                selectedItem.selected = !selectedItem.selected
-                log.add("selected = ${selectedItem.selected}")
-            }
-        }
-    selection.body.append(example(null, column(selectedItem, toggleButton, log.root)))
+    selection.body.append(
+        example(
+            null,
+            column(
+                selectedItem,
+                createButton { textContent = tr("切换 selected", "Toggle selected") }.apply {
+                    clickEvent.addHandler {
+                        selectedItem.selected = !selectedItem.selected
+                    }
+                },
+            ),
+        ),
+    )
     view.body.append(selection.root)
 
     return view
+}
+
+/**
+ * The same page on kit blocks.
+ *
+ * The nodes are created once and the switch only rewrites their text, so a language change keeps the
+ * examples' state — the item someone toggled stays toggled.
+ */
+internal class ItemPage : Page {
+    private val meta: PageMeta = itemEntry.meta
+
+    private val page: DemoPage = newPage()
+
+    private val texts = Binder(itemTexts)
+
+    private val readout = Readout("selected = true")
+
+    private val itemOne = createItem { value = "one" }.apply {
+        dataset["test"] = "item-one"
+        texts.bind(this) { it.itemLabel }
+    }
+
+    private val itemTwo = createItem()
+
+    private val itemThree = createItem { disabled = true }
+
+    private val selectedItem = createItem { selected = true }
+
+    private val links = mutableListOf<HTMLAnchorElement>()
+
+    override val node get() = page
+
+    init {
+        val docs = anchor("", meta.docsUrl, external = true)
+        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
+        val api = anchor("", componentApiUrl(itemEntry.id), external = true)
+        links += docs
+        links += source
+        links += api
+        page.addLink(texts.bind(docs, { it.docsLink }))
+        page.addLink(texts.bind(source, { it.sourceLink }))
+        page.addLink(texts.bind(api, { it.apiLink }))
+
+        val basic = sectionBlock()
+        texts.bind(basic.title, { it.basicTitle })
+        texts.bind(basic.hint, { it.basicHint })
+        texts.bind(itemTwo, { it.itemSlot })
+        texts.bind(itemThree, { it.itemDisabled })
+        basic.body.append(exampleBox(null, kitRow(itemOne, itemTwo, itemThree)))
+        page.body.append(basic.root)
+
+        val selection = sectionBlock()
+        texts.bind(selection.title, { it.selectedTitle })
+        texts.bind(selection.hint, { it.selectedHint })
+        texts.bind(selectedItem, { it.selectedItem })
+        val toggle = createButton()
+        texts.bind(toggle, { it.toggle })
+        toggle.clickEvent.addHandler {
+            selectedItem.selected = !selectedItem.selected
+            readout.set("selected = ${selectedItem.selected}")
+        }
+        selection.body.append(
+            exampleBox(null, kitCol(selectedItem, toggle)),
+            readout.root,
+        )
+        page.body.append(selection.root)
+
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        texts.apply(lang)
+        val language = if (lang == Langs.EN) Language.EN else Language.ZH
+        page.setTitle(meta.titleFor(language))
+        page.setSummary(meta.summaryFor(language))
+        // The docs URL itself follows the language (`/latest/zh/` vs `/latest/`).
+        links.first().href = meta.docsUrl
+    }
 }

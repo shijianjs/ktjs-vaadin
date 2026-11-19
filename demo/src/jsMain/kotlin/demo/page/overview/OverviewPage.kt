@@ -154,16 +154,24 @@ internal class OverviewPage : Page {
                 flexDirection = FlexDirection.column
                 rowGap = 20.px
             }
+            // The section body aligns children to the start; the index spans the page so the grids
+            // below it do too.
+            style.setProperty("width", "100%")
         }
 
         catalogGroups.filter { group -> group != Groups.OVERVIEW }.forEach { group ->
             val groupTitle = heading(3, group.labelFor(LanguageState.current))
+            // Cards flow in as many columns as the width allows: a component name plus its one-line
+            // summary reads well in a card, and a vertical list of fifty-nine of them is a wall.
             val list = HtmlTagName.div {
-                inlineStyle.apply {
-                    display = Display.flex
-                    flexDirection = FlexDirection.column
-                    rowGap = 8.px
-                }
+                inlineStyle.display = Display.grid
+                // Track sizing is one declarative string (`repeat(auto-fill, minmax(…)`); the typed
+                // vocabulary has no counterpart for the function forms, so it stays a declaration.
+                style.setProperty("grid-template-columns", "repeat(auto-fill, minmax(240px, 1fr))")
+                style.setProperty("gap", "8px")
+                // The section body is a column layout that sizes children to their content; without
+                // this the grid picks its column count from its narrowest possible width.
+                style.setProperty("width", "100%")
             }
             val groupCards = catalogEntriesOf(group).map { entry ->
                 val card = card(entry)
