@@ -38,7 +38,8 @@ fun siteMenu(): DemoMenu {
         catalog.map { entry ->
             val group = groups.getValue(entry.group.id)
             Entry(entry.id, group) {
-                // The overview and the pages already converted carry their own `Translations` table and`r`n                // rewrite copy in place; the rest is rebuilt by its slot when the language changes.
+                // The overview and the pages already converted carry their own `Translations` table and
+                // rewrite it in place; the rest is rebuilt by its slot when the language changes.
                 entry.kitPage?.invoke() ?: RebuiltPage(entry)
             }
         },
