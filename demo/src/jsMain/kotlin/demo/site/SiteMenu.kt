@@ -37,8 +37,10 @@ const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
  * The site, derived from [catalog]: one drawer group per catalog group and one entry per page.
  *
  * The catalog already carries the declarations (route id, group, bilingual title, builder), so the
- * menu is a projection of it rather than a second list that can drift. Icons are the only thing the
- * catalog does not know about, and they are per group, not per page.
+ * menu is a projection of it rather than a second list that can drift. Icons belong to the group
+ * row only: a page has no icon of its own, and repeating the group's mark on every page under it
+ * would say nothing about the page while making the column of identical glyphs the loudest thing
+ * in the drawer.
  *
  * The same [Group] instance has to be reused across its entries: groups are derived from the entry
  * list by identity, so a fresh instance per entry would split one group into sixty.
@@ -50,7 +52,7 @@ fun siteMenu(): DemoMenu {
     return DemoMenu(
         catalog.map { entry ->
             val group = groups.getValue(entry.group.id)
-            Entry(entry.id, group, group.icon) {
+            Entry(entry.id, group) {
                 // The overview and the pages already converted carry their own `Translations` table and`r`n                // rewrite copy in place; the rest is rebuilt by its slot when the language changes.
                 entry.kitPage?.invoke() ?: RebuiltPage(entry)
             }
