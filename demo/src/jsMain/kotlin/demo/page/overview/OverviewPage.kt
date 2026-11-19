@@ -107,15 +107,23 @@ private val overviewTexts: Translations<OverviewTexts> = texts(
 private val COMPONENT_CARD: ClassName = ClassName("component-card")
 
 /**
- * The single rule the index needs: an `<a>` wrapped around a card must stop painting text the way a
- * link paints it. The anchor keeps the navigation and its keyboard / new-tab behaviour, while colour
- * and decoration go back to the card, which draws itself.
+ * What the index needs from the wrapper: an `<a>` around a card must stop painting text the way a
+ * link paints it, and must pass the row's height through to the card inside it.
  */
 private val INDEX_SHEET: CSSStyleSheet = cssSheet {
     // `:not([hidden])`, because a `display` declared here would otherwise beat the `hidden` attribute
-    // the filter sets - the same trap as an inline display.
+    // the filter sets - the same trap as an inline display. `flex` rather than `block`: the link is
+    // the grid item, so the row stretches it to the tallest card, and a flex box carries that height
+    // into the card instead of leaving it at its own content height.
     ".component-card:not([hidden])" {
-        display = Display.block
+        display = Display.flex
+    }
+
+    // cssom has no numeric `flex` shorthand; the card takes the whole cell width and the height it
+    // was stretched to. Working in `zh` (two lines) and `en` (three lines) in the same row depends on
+    // exactly this, since the tallest card decides the row.
+    ".component-card > vaadin-card" {
+        flex = js("""("1")""")
     }
 
     ".component-card" {
