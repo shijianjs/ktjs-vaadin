@@ -1,5 +1,8 @@
 package demo.pages.theming
 
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import web.html.HTMLAnchorElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -15,11 +18,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -92,7 +93,7 @@ val themingEntry: CatalogEntry =
                 docsUrl = "$STYLING_BASE/themes/lumo",
                 sourcePath = "pages/theming/ThemingPage.kt",
             ),
-        kitPage = ::ThemingPage,
+        kitPage = { newThemingPage() },
     )
 
 /** A colour chip bound to one Lumo custom property. */
@@ -306,10 +307,9 @@ private val themingTexts: Translations<ThemingTexts> = texts(
  * the event log and the styled button all stay as they were, because nothing is rebuilt — only the
  * text of the nodes is rewritten.
  */
-internal class ThemingPage : Page {
+internal class ThemingPage : DemoPage() {
     private val meta: PageMeta = themingEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(themingTexts)
 
@@ -343,10 +343,9 @@ internal class ThemingPage : Page {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-    override val node get() = page
 
     init {
-        page.addSheet(THEMING_SHEET)
+        addSheet(THEMING_SHEET)
 
         val docs = kitAnchor("", meta.docsUrl)
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
@@ -354,9 +353,9 @@ internal class ThemingPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
         buildSwitch()
         buildTokens()
@@ -396,7 +395,7 @@ internal class ThemingPage : Page {
         section.body.append(
             exampleBox(null, kitCol(kitRow(lightButton, darkButton, toggleButton), readout.root, log.root)),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildTokens() {
@@ -417,7 +416,7 @@ internal class ThemingPage : Page {
             kitCol(swatchChip(variable), label, codeText(variable))
         }
         section.body.append(exampleBox(null, kitRow(*nodes.toTypedArray())))
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildEntryPoints() {
@@ -437,7 +436,7 @@ internal class ThemingPage : Page {
                 ),
             ),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildVariants() {
@@ -458,7 +457,7 @@ internal class ThemingPage : Page {
             exampleBox(null, kitRow(compactField, helperField)),
             exampleBox(null, elevatedCard),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildProperties() {
@@ -480,7 +479,7 @@ internal class ThemingPage : Page {
                 ),
             ),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildParts() {
@@ -494,7 +493,7 @@ internal class ThemingPage : Page {
                 kitCol(partButton, codeText(".theming-part::part(label) { color: var(--lumo-primary-color); }")),
             ),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildUtilities() {
@@ -509,7 +508,7 @@ internal class ThemingPage : Page {
                 kitCol(utilityBox, codeText("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")),
             ),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildBuiltInCopy() {
@@ -519,7 +518,7 @@ internal class ThemingPage : Page {
         val note = HtmlTagName.p { className = MUTED_SMALL }
         texts.bind(note, { it.i18nText })
         section.body.append(exampleBox(null, note))
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     private fun buildInternals() {
@@ -540,14 +539,14 @@ internal class ThemingPage : Page {
                 ),
             ),
         )
-        page.body.append(section.root)
+        body.append(section.root)
     }
 
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
         val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(language))
-        page.setSummary(meta.summaryFor(language))
+        setTitle(meta.titleFor(language))
+        setSummary(meta.summaryFor(language))
         links.first().href = meta.docsUrl
         sync()
     }
@@ -575,4 +574,19 @@ internal class ThemingPage : Page {
         style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
         style.setProperty("background", "var($cssVariable)")
     }
+
+    companion object : CustomElementReference<ThemingPage>(ThemingPage::class.js) {
+        val NAME: TagName<ThemingPage> = TagName("vaadin-demo-theming-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-theming-page>`. */
+internal fun newThemingPage(): ThemingPage {
+    ThemingPage.define()
+    return ThemingPage.NAME()
+}
+

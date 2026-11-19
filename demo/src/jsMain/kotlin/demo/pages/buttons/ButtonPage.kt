@@ -1,5 +1,8 @@
 package demo.pages.buttons
 
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.Language
@@ -13,11 +16,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -81,7 +82,7 @@ val buttonEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/button",
                 sourcePath = "pages/buttons/ButtonPage.kt",
             ),
-        kitPage = ::ButtonPage,
+        kitPage = { newButtonPage() },
     )
 
 /** Every string this page shows, in one language. */
@@ -324,10 +325,9 @@ private val buttonTexts: Translations<ButtonTexts> = texts(
  * language switch only rewrites the text and every one of those states survives.
  */
 
-internal class ButtonPage : Page {
+internal class ButtonPage : DemoPage() {
     private val meta: PageMeta = buttonEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(buttonTexts)
 
@@ -389,7 +389,6 @@ internal class ButtonPage : Page {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-    override val node get() = page
 
     init {
         registerVaadinIcons()
@@ -399,11 +398,11 @@ internal class ButtonPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
-        page.body.append(
+        body.append(
             basicSection(),
             iconsSection(),
             imagesSection(),
@@ -588,8 +587,8 @@ internal class ButtonPage : Page {
         texts.apply(lang)
         val copy = texts.current
         val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(language))
-        page.setSummary(meta.summaryFor(language))
+        setTitle(meta.titleFor(language))
+        setSummary(meta.summaryFor(language))
         links.first().href = meta.docsUrl
 
         clickCounter.buttonLabel = copy.saveChanges
@@ -646,4 +645,19 @@ internal class ButtonPage : Page {
         dialogCancelButton.textContent = copy.cancel
         dialogCreateButton.textContent = copy.createAccount
     }
+
+    companion object : CustomElementReference<ButtonPage>(ButtonPage::class.js) {
+        val NAME: TagName<ButtonPage> = TagName("vaadin-demo-button-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-button-page>`. */
+internal fun newButtonPage(): ButtonPage {
+    ButtonPage.define()
+    return ButtonPage.NAME()
+}
+

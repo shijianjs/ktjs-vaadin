@@ -1,5 +1,9 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -22,12 +26,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -109,7 +111,7 @@ val itemEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/selection/ItemPage.kt",
             ),
-        kitPage = ::ItemPage,
+        kitPage = { newItemPage() },
     )
 
 /**
@@ -124,10 +126,9 @@ val itemEntry: CatalogEntry =
  * The nodes are created once and the switch only rewrites their text, so a language change keeps the
  * examples' state — the item someone toggled stays toggled.
  */
-internal class ItemPage : Page {
+internal class ItemPage : DemoPage() {
     private val meta: PageMeta = itemEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(itemTexts)
 
@@ -146,7 +147,6 @@ internal class ItemPage : Page {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-    override val node get() = page
 
     init {
         val docs = kitAnchor("", meta.docsUrl)
@@ -155,9 +155,9 @@ internal class ItemPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
         val basic = sectionBlock()
         texts.bind(basic.title, { it.basicTitle })
@@ -165,7 +165,7 @@ internal class ItemPage : Page {
         texts.bind(itemTwo, { it.itemSlot })
         texts.bind(itemThree, { it.itemDisabled })
         basic.body.append(exampleBox(null, kitRow(itemOne, itemTwo, itemThree)))
-        page.body.append(basic.root)
+        body.append(basic.root)
 
         val selection = sectionBlock()
         texts.bind(selection.title, { it.selectedTitle })
@@ -181,7 +181,7 @@ internal class ItemPage : Page {
             exampleBox(null, kitCol(selectedItem, toggle)),
             readout.root,
         )
-        page.body.append(selection.root)
+        body.append(selection.root)
 
         applyTranslation(Langs.EN)
     }
@@ -189,9 +189,24 @@ internal class ItemPage : Page {
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
         val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(language))
-        page.setSummary(meta.summaryFor(language))
+        setTitle(meta.titleFor(language))
+        setSummary(meta.summaryFor(language))
         // The docs URL itself follows the language (`/latest/zh/` vs `/latest/`).
         links.first().href = meta.docsUrl
     }
+
+    companion object : CustomElementReference<ItemPage>(ItemPage::class.js) {
+        val NAME: TagName<ItemPage> = TagName("vaadin-demo-item-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-item-page>`. */
+internal fun newItemPage(): ItemPage {
+    ItemPage.define()
+    return ItemPage.NAME()
+}
+

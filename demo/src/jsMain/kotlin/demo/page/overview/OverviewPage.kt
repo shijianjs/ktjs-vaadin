@@ -1,5 +1,9 @@
 package demo.page.overview
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -17,13 +21,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.grid
 import io.github.shijianjs.ktjs.demo.page.heading
 import io.github.shijianjs.ktjs.demo.page.icon
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.page.row
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -173,9 +175,7 @@ private class GroupSection(val title: HTMLElement, val label: HTMLElement, val c
  * The index is filterable so the 60 entries stay reachable without scrolling; filtering only toggles
  * `hidden` on the cards that are already in the DOM, and a language switch only rewrites their copy.
  */
-internal class OverviewPage : Page {
-    private val page = newPage()
-
+internal class OverviewPage : DemoPage() {
     private val texts = Binder(overviewTexts)
 
     private val counter = Readout()
@@ -191,12 +191,11 @@ internal class OverviewPage : Page {
     private val groups = mutableListOf<GroupSection>()
     private var language: Language = Language.EN
 
-    override val node get() = page
 
     init {
-        page.addLink(texts.bind(kitAnchor("", DOCS_BASE), { it.docsLink }))
-        page.addLink(texts.bind(kitAnchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt"), { it.sourceLink }))
-        page.addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
+        addLink(texts.bind(kitAnchor("", DOCS_BASE), { it.docsLink }))
+        addLink(texts.bind(kitAnchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt"), { it.sourceLink }))
+        addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
 
         val what = sectionBlock()
         texts.bind(what.title, { it.whatHeading })
@@ -207,8 +206,8 @@ internal class OverviewPage : Page {
         texts.bind(index.hint, { it.indexHint })
         index.body.append(row(search, counter.root), *buildIndex().toTypedArray())
 
-        page.addSheet(INDEX_SHEET)
-        page.body.append(what.root, index.root)
+        addSheet(INDEX_SHEET)
+        body.append(what.root, index.root)
 
         search.listen(TextFieldEvents.input) { filter() }
     }
@@ -286,8 +285,8 @@ internal class OverviewPage : Page {
     override fun applyTranslation(lang: Lang) {
         val current = overviewTexts[lang]
         language = languageOf(lang)
-        page.setTitle(current.title)
-        page.setSummary(current.summary)
+        setTitle(current.title)
+        setSummary(current.summary)
         texts.apply(lang)
 
         search.label = current.findLabel
@@ -305,4 +304,19 @@ internal class OverviewPage : Page {
     }
 
     private fun langOf(language: Language): Lang = if (language == Language.EN) Langs.EN else Langs.ZH_HANS
+
+    companion object : CustomElementReference<OverviewPage>(OverviewPage::class.js) {
+        val NAME: TagName<OverviewPage> = TagName("vaadin-demo-overview-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-overview-page>`. */
+internal fun newOverviewPage(): OverviewPage {
+    OverviewPage.define()
+    return OverviewPage.NAME()
+}
+

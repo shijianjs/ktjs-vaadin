@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -20,12 +24,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -48,7 +50,7 @@ val markdownEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/markdown",
                 sourcePath = "pages/data/MarkdownPage.kt",
             ),
-        kitPage = ::MarkdownPage,
+        kitPage = { newMarkdownPage() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -187,10 +189,9 @@ private val markdownTexts: Translations<MarkdownTexts> = texts(
  * and lets the component re-render it — no page rebuild, and the two line-break examples stay next
  * to each other.
  */
-internal class MarkdownPage : Page {
+internal class MarkdownPage : DemoPage() {
     private val meta: PageMeta = markdownEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(markdownTexts)
 
@@ -212,7 +213,6 @@ internal class MarkdownPage : Page {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-    override val node get() = page
 
     init {
         val docs = kitAnchor("", "$DOCS_BASE/markdown")
@@ -221,15 +221,15 @@ internal class MarkdownPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
         basic.body.append(exampleBox(null, rich))
-        page.body.append(basic.root)
+        body.append(basic.root)
 
         lineBreaks.body.append(exampleBox(null, kitCol(caption, kitRow(withBreaks, withoutBreaks))))
-        page.body.append(lineBreaks.root)
+        body.append(lineBreaks.root)
 
         applyTranslation(Langs.EN)
     }
@@ -244,8 +244,23 @@ internal class MarkdownPage : Page {
         withoutBreaks.content = copy.letterContent
         caption.textContent = copy.lineCaption
         val pageLanguage = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(pageLanguage))
-        page.setSummary(meta.summaryFor(pageLanguage))
+        setTitle(meta.titleFor(pageLanguage))
+        setSummary(meta.summaryFor(pageLanguage))
         links.first().href = meta.docsUrl
     }
+
+    companion object : CustomElementReference<MarkdownPage>(MarkdownPage::class.js) {
+        val NAME: TagName<MarkdownPage> = TagName("vaadin-demo-markdown-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-markdown-page>`. */
+internal fun newMarkdownPage(): MarkdownPage {
+    MarkdownPage.define()
+    return MarkdownPage.NAME()
+}
+

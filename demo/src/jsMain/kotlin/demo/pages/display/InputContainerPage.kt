@@ -1,5 +1,8 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.paragraph
@@ -24,11 +27,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
@@ -65,7 +66,7 @@ val inputContainerEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/display/InputContainerPage.kt",
             ),
-        kitPage = ::InputContainerPage,
+        kitPage = { newInputContainerPage() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -187,10 +188,9 @@ private class StateExample(readOnly: Boolean = false, invalid: Boolean = false, 
  * The three state containers carry no text of their own except what a reader typed; their labels are
  * the captions below them, and the input's value repeats the caption so the state is legible.
  */
-internal class InputContainerPage : Page {
+internal class InputContainerPage : DemoPage() {
     private val meta: PageMeta = inputContainerEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(inputContainerTexts)
 
@@ -209,7 +209,6 @@ internal class InputContainerPage : Page {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-    override val node get() = page
 
     init {
         val docs = kitAnchor("", meta.docsUrl)
@@ -218,15 +217,15 @@ internal class InputContainerPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
         val basic = sectionBlock()
         texts.bind(basic.title, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         basic.body.append(exampleBox(null, basicContainer))
-        page.body.append(basic.root)
+        body.append(basic.root)
 
         val states = sectionBlock()
         texts.bind(states.title, { it.statesTitle })
@@ -235,7 +234,7 @@ internal class InputContainerPage : Page {
         texts.bind(invalid.caption, { it.invalid })
         texts.bind(disabled.caption, { it.disabled })
         states.body.append(exampleBox(null, kitRow(readOnly.root, invalid.root, disabled.root)))
-        page.body.append(states.root)
+        body.append(states.root)
 
         applyTranslation(Langs.EN)
     }
@@ -247,9 +246,23 @@ internal class InputContainerPage : Page {
         invalid.input.value = copy.invalid
         disabled.input.value = copy.disabled
         val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(language))
-        page.setSummary(meta.summaryFor(language))
+        setTitle(meta.titleFor(language))
+        setSummary(meta.summaryFor(language))
         links.first().href = meta.docsUrl
     }
+
+    companion object : CustomElementReference<InputContainerPage>(InputContainerPage::class.js) {
+        val NAME: TagName<InputContainerPage> = TagName("vaadin-demo-input-container-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-input-container-page>`. */
+internal fun newInputContainerPage(): InputContainerPage {
+    InputContainerPage.define()
+    return InputContainerPage.NAME()
 }
 

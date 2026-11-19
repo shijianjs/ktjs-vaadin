@@ -4,7 +4,7 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.page.overview.OverviewPage
+import demo.page.overview.newOverviewPage
 import demo.ui.PageMeta
 
 /**
@@ -30,5 +30,8 @@ val overviewEntry: CatalogEntry =
                 docsNote = bi("官方文档的组件索引页", "Component index of the official documentation"),
                 sourcePath = "page/overview/OverviewPage.kt",
             ),
-        kitPage = ::OverviewPage,
+        kitPage = { newOverviewPage() },
     )
+
+
+

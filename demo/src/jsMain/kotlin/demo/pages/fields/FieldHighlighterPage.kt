@@ -1,5 +1,9 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
@@ -28,12 +32,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
@@ -69,7 +71,7 @@ val fieldHighlighterEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/fields/FieldHighlighterPage.kt",
             ),
-        kitPage = ::FieldHighlighterPage,
+        kitPage = { newFieldHighlighterPage() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -164,10 +166,9 @@ private val fieldHighlighterTexts: Translations<FieldHighlighterTexts> = texts(
  * switch therefore rewrites the copy and leaves the state alone: a field Alice marked stays marked,
  * and the readout still names her.
  */
-internal class FieldHighlighterPage : Page {
+internal class FieldHighlighterPage : DemoPage() {
     private val meta: PageMeta = fieldHighlighterEntry.meta
 
-    private val page: DemoPage = newPage()
 
     private val texts = Binder(fieldHighlighterTexts)
 
@@ -213,7 +214,6 @@ internal class FieldHighlighterPage : Page {
     /** Whether the marker still shows progress. */
     private var generating: Boolean = true
 
-    override val node get() = page
 
     init {
         val docs = kitAnchor("", meta.docsUrl)
@@ -222,9 +222,9 @@ internal class FieldHighlighterPage : Page {
         links += docs
         links += source
         links += api
-        page.addLink(texts.bind(docs, { it.docsLink }))
-        page.addLink(texts.bind(source, { it.sourceLink }))
-        page.addLink(texts.bind(api, { it.apiLink }))
+        addLink(texts.bind(docs, { it.docsLink }))
+        addLink(texts.bind(source, { it.sourceLink }))
+        addLink(texts.bind(api, { it.apiLink }))
 
         addAlice.clickEvent.addHandler { markEditing(editing + "Alice", alice) }
         addBob.clickEvent.addHandler { markEditing(editing + "Bob", bob) }
@@ -240,10 +240,10 @@ internal class FieldHighlighterPage : Page {
         collab.body.append(
             exampleBox(null, kitCol(field, kitRow(addAlice, addBob, removeAll), readout.root)),
         )
-        page.body.append(collab.root)
+        body.append(collab.root)
 
         ai.body.append(exampleBox(null, kitCol(aiField, toggleGeneration)))
-        page.body.append(ai.root)
+        body.append(ai.root)
 
         applyTranslation(Langs.EN)
     }
@@ -292,9 +292,23 @@ internal class FieldHighlighterPage : Page {
         setEditing(editing)
         setGenerating(generating)
         val pageLanguage = if (lang == Langs.EN) Language.EN else Language.ZH
-        page.setTitle(meta.titleFor(pageLanguage))
-        page.setSummary(meta.summaryFor(pageLanguage))
+        setTitle(meta.titleFor(pageLanguage))
+        setSummary(meta.summaryFor(pageLanguage))
         links.first().href = meta.docsUrl
     }
+
+    companion object : CustomElementReference<FieldHighlighterPage>(FieldHighlighterPage::class.js) {
+        val NAME: TagName<FieldHighlighterPage> = TagName("vaadin-demo-field-highlighter-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-field-highlighter-page>`. */
+internal fun newFieldHighlighterPage(): FieldHighlighterPage {
+    FieldHighlighterPage.define()
+    return FieldHighlighterPage.NAME()
 }
 
