@@ -109,7 +109,6 @@ val itemEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/selection/ItemPage.kt",
             ),
-        builder = ::buildItemPage,
         kitPage = ::ItemPage,
     )
 
@@ -119,64 +118,6 @@ val itemEntry: CatalogEntry =
  * Every migrated page keeps its old builder for one reason: reverting a page that turns out to
  * render wrong is then deleting one line from the catalog instead of rewriting the page again.
  */
-private fun buildItemPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("独立使用", "Standalone use"),
-            tr(
-                "vaadin-item 通常由 List Box / Select / Context Menu 内部创建；这里单独展示它的属性。",
-                "vaadin-item is usually created inside List Box / Select / Context Menu; this page shows its " +
-                    "properties on its own.",
-            ),
-        )
-    val items =
-        row(
-            createItem {
-                label = tr("带 label 的条目", "Item with a label")
-                value = "one"
-            }.apply { dataset["test"] = "item-one" },
-            createItem { textContent = tr("默认插槽文本", "Default slot text") },
-            createItem {
-                textContent = tr("已禁用", "Disabled")
-                disabled = true
-            },
-        )
-    basic.body.append(example(null, items))
-    view.body.append(basic.root)
-
-    val selection =
-        section(
-            tr("选中状态", "Selected state"),
-            tr(
-                "selected 只是视觉状态，条目本身不维护选中逻辑。",
-                "selected is purely visual; the item does not maintain selection logic itself.",
-            ),
-        )
-    val selectedItem =
-        createItem {
-            textContent = tr("被选中的条目", "Selected item")
-            selected = true
-        }
-    selection.body.append(
-        example(
-            null,
-            column(
-                selectedItem,
-                createButton { textContent = tr("切换 selected", "Toggle selected") }.apply {
-                    clickEvent.addHandler {
-                        selectedItem.selected = !selectedItem.selected
-                    }
-                },
-            ),
-        ),
-    )
-    view.body.append(selection.root)
-
-    return view
-}
-
 /**
  * The same page on kit blocks.
  *

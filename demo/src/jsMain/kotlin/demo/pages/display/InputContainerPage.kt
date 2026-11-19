@@ -65,56 +65,12 @@ val inputContainerEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/display/InputContainerPage.kt",
             ),
-        builder = ::buildInputContainerPage,
         kitPage = ::InputContainerPage,
     )
 
 // ---------------------------------------------------------------------------------------------
 // Input container (internal element, documented under Text Field)
 // ---------------------------------------------------------------------------------------------
-
-private fun buildInputContainerPage(meta: PageMeta): PageView {
-    val view = page(meta)
-
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
-                "The container only handles layout and state; the input element is supplied by the caller. " +
-                    "The prefix/suffix slots hold icons or buttons.",
-            ),
-        )
-    val container = createInputContainer()
-    container.dataset["test"] = "input-container"
-    val input = containerInput()
-    container.append(createIcon { icon = "lumo:search" }.apply { slot = "prefix" }, input)
-    container.append(createIcon { icon = "lumo:checkmark" }.apply { slot = "suffix" })
-    basic.body.append(example(null, container))
-    view.body.append(basic.root)
-
-    val states =
-        section(
-            tr("状态", "States"),
-            tr(
-                "readonly / invalid / disabled 三个属性直接对应视觉状态。",
-                "The readonly / invalid / disabled properties map directly to visual states.",
-            ),
-        )
-    states.body.append(
-        example(
-            null,
-            row(
-                plainContainer(tr("只读", "Read-only"), readonly = true),
-                plainContainer(tr("无效", "Invalid"), invalid = true),
-                plainContainer(tr("禁用", "Disabled"), disabled = true),
-            ),
-        ),
-    )
-    view.body.append(states.root)
-
-    return view
-}
 
 /** Builds an input container with a plain text input inside, for the state examples. */
 private fun plainContainer(label: String, readonly: Boolean = false, invalid: Boolean = false, disabled: Boolean = false): HTMLElement {
