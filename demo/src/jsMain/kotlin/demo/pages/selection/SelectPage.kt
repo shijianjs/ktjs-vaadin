@@ -19,7 +19,6 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.span
-import demo.ui.withClass
 import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
@@ -253,7 +252,7 @@ private fun buildSelectPage(meta: PageMeta): PageView {
                     column(
                         span(person.displayName),
                         span(person.profession),
-                    ).withClass("person-item"),
+                    ),
                 )
             },
         )
@@ -285,7 +284,7 @@ private fun buildSelectPage(meta: PageMeta): PageView {
                             img = person.pictureUrl
                         },
                         column(span(person.displayName), span(person.profession)),
-                    ).withClass("person-item"),
+                    ),
                 )
             },
         )

@@ -29,6 +29,9 @@ import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+import web.cssom.ClassName
+
+private val EXAMPLE: ClassName = ClassName("example")
 
 val tooltipEntry: CatalogEntry =
     CatalogEntry(
@@ -96,7 +99,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
                 "Outside a component, point for at the id of the target element; position picks the side.",
             ),
         )
-    val target = div("example").apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
+    val target = div(EXAMPLE).apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
     target.id = ElementId("tooltip-target")
     target.style.setProperty("padding", "var(--lumo-space-m)")
     val tooltip = createTooltip { text = tr("关联到任意元素的提示", "Hint linked to any element") }

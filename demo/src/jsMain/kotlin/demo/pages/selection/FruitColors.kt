@@ -1,7 +1,13 @@
 package demo.pages.selection
 
 import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.compound
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.CSSStyleSheet
+import web.cssom.ClassName
 import web.cssom.Color
 
 /**
@@ -12,18 +18,19 @@ import web.cssom.Color
  * covers both pages; it is adopted by each of them through `view.addSheet(...)`.
  */
 internal val FRUIT_SHEET: CSSStyleSheet = cssSheet {
-    "vaadin-combo-box-item.coral" { color = Color("coral") }
-    "vaadin-combo-box-item.gold" { color = Color("gold") }
-    "vaadin-combo-box-item.orange" { color = Color("orange") }
-    "vaadin-combo-box-item.yellowgreen" { color = Color("yellowgreen") }
+    // One `ClassName` + colour per fruit, so each name is declared once and the three item tags
+    // reuse it instead of spelling the class name out three times.
+    val fruitNames: List<Pair<ClassName, Color>> =
+        listOf(
+            ClassName("coral") to Color("coral"),
+            ClassName("gold") to Color("gold"),
+            ClassName("orange") to Color("orange"),
+            ClassName("yellowgreen") to Color("yellowgreen"),
+        )
 
-    "vaadin-multi-select-combo-box-item.coral" { color = Color("coral") }
-    "vaadin-multi-select-combo-box-item.gold" { color = Color("gold") }
-    "vaadin-multi-select-combo-box-item.orange" { color = Color("orange") }
-    "vaadin-multi-select-combo-box-item.yellowgreen" { color = Color("yellowgreen") }
-
-    "vaadin-multi-select-combo-box-chip.coral" { backgroundColor = Color("coral") }
-    "vaadin-multi-select-combo-box-chip.gold" { backgroundColor = Color("gold") }
-    "vaadin-multi-select-combo-box-chip.orange" { backgroundColor = Color("orange") }
-    "vaadin-multi-select-combo-box-chip.yellowgreen" { backgroundColor = Color("yellowgreen") }
+    fruitNames.forEach { (fruit, colour) ->
+        compound(tag(VaadinTagName.comboBoxItem), className(fruit)).invoke { color = colour }
+        compound(tag(VaadinTagName.multiSelectComboBoxItem), className(fruit)).invoke { color = colour }
+        compound(tag(VaadinTagName.multiSelectComboBoxChip), className(fruit)).invoke { backgroundColor = colour }
+    }
 }

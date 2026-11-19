@@ -32,12 +32,25 @@ import web.cssom.Color
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+import demo.ui.SMALL
+import demo.ui.MUTED_SMALL
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
+import web.cssom.ident
+
+/** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
+private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
 
 /**
  * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
  * component, and nothing in the kit's blocks can express it. Declared here, next to the example that
  * needs it, instead of in a site-wide stylesheet.
  */
+/** The class the example puts on the button so its label part can be reached. */
+private val THEMING_PART: ClassName = ClassName("theming-part")
+
 private val THEMING_SHEET: CSSStyleSheet = cssSheet {
     ".theming-part::part(label)" {
         color = Color("var(--lumo-primary-color)")
@@ -167,7 +180,7 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                             "with a Gradle task, then index.html loads it as a plain stylesheet — " +
                             "LumoInjectionMixin reads the @media lumo_* rules from document.styleSheets.",
                     ),
-                    "small muted",
+                    MUTED_SMALL,
                 ),
             ),
         ),
@@ -252,7 +265,7 @@ private fun buildThemingPage(meta: PageMeta): PageView {
             ),
         )
     val partButton = createButton { textContent = tr("用 ::part 着色的标签", "A label styled through ::part") }
-    partButton.classList.add(ClassName("theming-part"))
+    partButton.classList.add(THEMING_PART)
     parts.body.append(
         example(
             null,
@@ -272,12 +285,12 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                     "can be applied to plain elements without writing extra CSS; this page loads utility.css.",
             ),
         )
-    val utilityBox = div("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
+    val utilityBox = div(UTILITY_BOX)
     utilityBox.append(
         createIcon { icon = "lumo:info" },
         paragraph(
             tr("这个盒子只用了工具类排布。", "This box is styled with utility classes only."),
-            "small",
+            SMALL,
         ),
     )
     utilities.body.append(
@@ -316,7 +329,7 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                         "assertions of the upstream documentation, while the page prose follows the " +
                         "selected language.",
                 ),
-                "small muted",
+                MUTED_SMALL,
             ),
         ),
     )
@@ -345,7 +358,7 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                         "这些包的公开 API 通过其他页面的示例间接覆盖：",
                         "These packages are covered indirectly by examples on other pages:",
                     ),
-                    "small",
+                    SMALL,
                 ),
                 entryPoint(
                     "io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin",
@@ -377,9 +390,9 @@ private fun swatch(cssVariable: String, label: String): HTMLElement {
         style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
         style.setProperty("background", "var($cssVariable)")
     }
-    return column(chip, paragraph(label, "small muted"), code(cssVariable))
+    return column(chip, paragraph(label, MUTED_SMALL), code(cssVariable))
 }
 
 /** Shows a stylesheet entry-point constant and its value. */
 private fun entryPoint(name: String, value: String): HTMLElement =
-    row(paragraph(name, "small"), code(value))
+    row(paragraph(name, SMALL), code(value))

@@ -18,10 +18,13 @@ import web.dom.Node
 import web.dom.TagName
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudoClass
 
 /** The slot's own rule: it spans the column it is placed in. */
 private val HOST_SHEET: CSSStyleSheet = cssSheet {
-    ":host" {
+    pseudo(pseudoClass("host")).invoke {
         display = Display.block
         width = 100.pct
     }

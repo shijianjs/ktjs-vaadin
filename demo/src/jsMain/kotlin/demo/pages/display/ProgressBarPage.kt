@@ -24,6 +24,7 @@ import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
+import demo.ui.MUTED_SMALL
 
 val progressBarEntry: CatalogEntry =
     CatalogEntry(
@@ -179,7 +180,7 @@ private fun buildProgressBarPage(meta: PageMeta): PageView {
     waiting.setAttribute("aria-describedby", hintId)
     waiting.style.setProperty("margin", "var(--lumo-space-s) 0")
     val hint =
-        span(tr("处理可能需要十分钟以上", "Process can take upwards of 10 minutes"), "small muted").apply {
+        span(tr("处理可能需要十分钟以上", "Process can take upwards of 10 minutes"), MUTED_SMALL).apply {
             setAttribute("id", hintId)
         }
     completion.body.append(example(null, column(title, waiting, hint)))

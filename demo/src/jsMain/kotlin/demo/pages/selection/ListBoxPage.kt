@@ -18,7 +18,6 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.span
-import demo.ui.withClass
 import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.item.createItem
@@ -163,7 +162,7 @@ private fun buildListBoxPage(meta: PageMeta): PageView {
                             img = person.pictureUrl
                         },
                         column(span(person.displayName), span(person.profession)),
-                    ).withClass("person-item"),
+                    ),
                 )
             }
         }.toTypedArray(),

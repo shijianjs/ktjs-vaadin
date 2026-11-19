@@ -21,7 +21,6 @@ import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import demo.ui.span
-import demo.ui.withClass
 import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -423,6 +422,6 @@ private fun renderPersonItem(container: HTMLElement, model: ComboBoxItemModel, p
                 img = person.pictureUrl
             },
             column(span(person.displayName), span(person.profession)),
-        ).withClass("person-item"),
+        ),
     )
 }

@@ -43,6 +43,12 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItem
 import io.github.shijianjs.ktjs.vaadin.menubar.createMenuBar
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.compound
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
+import web.cssom.ClassName
 
 val contextMenuEntry: CatalogEntry =
     CatalogEntry(
@@ -76,8 +82,11 @@ private fun copyMenuItem(text: String, value: String): CopyMenuItem =
  * `className` from the menu items API lands on the light-DOM item element, so the rule is a plain
  * attribute class selector inside the page's shadow tree.
  */
+/** The class this page puts on the "delete" item through the menu data. */
+private val CUSTOM: ClassName = ClassName("custom")
+
 private val MENU_SHEET: CSSStyleSheet = cssSheet {
-    "vaadin-context-menu-item.custom" { color = Color("var(--lumo-error-text-color)") }
+    compound(tag(VaadinTagName.contextMenuItem), className(CUSTOM)).invoke { color = Color("var(--lumo-error-text-color)") }
 }
 
 private fun buildContextMenuPage(meta: PageMeta): PageView {

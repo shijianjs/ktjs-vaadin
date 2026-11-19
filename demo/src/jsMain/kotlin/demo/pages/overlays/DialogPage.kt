@@ -16,7 +16,6 @@ import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withClass
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.dialog.DialogEvents
@@ -355,7 +354,6 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     val employeeDialog = createDialog { headerTitle = tr("员工列表", "Employee list") }
     employeeDialog.resizable = true
     employeeDialog.draggable = true
-    employeeDialog.withClass("resizable-dialog")
     employeeDialog.width = "40rem"
     val employeeGrid = personGrid(people(8))
     employeeDialog.renderer = { root, _ -> root.append(employeeGrid) }

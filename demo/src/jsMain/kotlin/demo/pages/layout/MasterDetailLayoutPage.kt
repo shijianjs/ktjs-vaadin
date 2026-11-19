@@ -36,6 +36,12 @@ import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+import web.cssom.ClassName
+import demo.ui.MUTED_SMALL
+
+private val MASTER_LIST: ClassName = ClassName("master-list")
+private val MASTER_LIST_ITEM: ClassName = ClassName("master-list__item")
+private val MASTER_LIST_NAME: ClassName = ClassName("master-list__name")
 
 val masterDetailLayoutEntry: CatalogEntry =
     CatalogEntry(
@@ -102,15 +108,15 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
         show(person)
     }
 
-    val master = div("master-list")
+    val master = div(MASTER_LIST)
     crew.forEach { person ->
-        val row = div("master-list__item")
+        val row = div(MASTER_LIST_ITEM)
         row.append(
             createAvatar {
                 name = person.displayName
                 img = person.pictureUrl
             }.withTheme("small"),
-            column(span(person.displayName, "master-list__name"), span(person.profession, "muted small")),
+            column(span(person.displayName, MASTER_LIST_NAME), span(person.profession, MUTED_SMALL)),
         )
         row.setAttribute("aria-current", "false")
         row.clickEvent.addHandler { select(person, row) }
@@ -296,9 +302,9 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
         placeholderLayout.recalculateLayout()
     }
     placeholderLayout.append(
-        div("master-list").apply {
+        div(MASTER_LIST).apply {
             repeat(3) { index ->
-                append(div("master-list__item").apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
+                append(div(MASTER_LIST_ITEM).apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
             }
         },
         div().apply {

@@ -22,6 +22,7 @@ import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.rowStart
 import demo.ui.section
+import demo.ui.strong
 import demo.ui.span
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
@@ -232,9 +233,13 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     cvvPopover.position = "top"
     cvvPopover.append(
         heading(3, tr("卡片验证码", "Card Verification Value")).apply { style.setProperty("font-size", "1rem") },
-        div(tr("通常印在卡片背面签名条旁边或末尾的三到四位数。", "A three or four digit code, usually printed on the back of the card, next to or at the end of the signature strip.")).apply {
-            style.setProperty("max-width", "300px")
-        },
+        paragraph(
+            tr(
+                "通常印在卡片背面签名条旁边或末尾的三到四位数。",
+                "A three or four digit code, usually printed on the back of the card, next to or at the end " +
+                    "of the signature strip.",
+            ),
+        ).apply { style.setProperty("max-width", "20rem") },
         anchor(tr("查看不同卡片上的 CVV 位置", "See where to find CVV on different cards"), "https://www.cvvnumber.com/cvv.html", external = true),
     )
     interactive.body.append(example(null, cvvField))
@@ -494,7 +499,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     }
     columnsPopover.append(
         column(
-            div(tr("配置列", "Configure columns")).apply { style.setProperty("font-weight", "600") },
+            strong(tr("配置列", "Configure columns")),
             columnGroup,
             columnsActions,
         ),

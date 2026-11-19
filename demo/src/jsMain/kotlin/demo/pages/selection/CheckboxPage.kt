@@ -17,7 +17,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withClass
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
@@ -233,7 +232,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
             textContent = tr("已取消", "Cancelled")
         },
     )
-    val adjacent = column(manufacturers, statuses).withClass("example-stack")
+    val adjacent = column(manufacturers, statuses)
     orientation.body.append(
         example(null, horizontal),
         example(null, vertical),

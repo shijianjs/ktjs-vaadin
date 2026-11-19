@@ -23,6 +23,15 @@ import io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputEvents
 import io.github.shijianjs.ktjs.vaadin.messageinput.createMessageInput
 import io.github.shijianjs.ktjs.vaadin.messagelist.MessageListEvents
 import io.github.shijianjs.ktjs.vaadin.messagelist.createMessageList
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.compound
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
+import web.cssom.ClassName
+import web.cssom.ident
 
 val messageListEntry: CatalogEntry =
     CatalogEntry(
@@ -51,13 +60,20 @@ val messageListEntry: CatalogEntry =
 // The typing indicator is Flow-only and is described instead of rendered.
 // ---------------------------------------------------------------------------------------------
 
+/** The class that marks the message sent by the reader. */
+private val CURRENT_USER: ClassName = ClassName("current-user")
+
 /**
  * Marks the message the page sends as its own: the docs example puts the author's name in bold for
  * the signed-in user. `className` lands on the light-DOM message element, and the name is a part
- * inside its shadow tree, so the rule is one `::part()` selector.
+ * inside its shadow tree, so it joins the host compound as `::part(name)`.
  */
 private val MESSAGE_SHEET: CSSStyleSheet = cssSheet {
-    "vaadin-message.current-user::part(name)" { fontWeight = FontWeight.bold }
+    compound(
+        tag(VaadinTagName.message),
+        className(CURRENT_USER),
+        pseudo(pseudoElement("part"), ident("name")),
+    ).invoke { fontWeight = FontWeight.bold }
 }
 
 private fun buildMessageListPage(meta: PageMeta): PageView {
@@ -305,7 +321,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
                 time = tr("50 分钟前", "50 minutes ago"),
                 userName = "Linsey Listy",
                 userColorIndex = 2,
-                className = "current-user",
+                className = "$CURRENT_USER",
             ),
         )
     classNameSection.body.append(example(null, classNameList))

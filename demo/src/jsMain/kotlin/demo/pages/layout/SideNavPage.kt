@@ -16,9 +16,19 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
 import demo.ui.span
-import demo.ui.withClass
 import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.dom.css.dsl.Pseudos
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.compound
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.child
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
+import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.CSSStyleSheet
+import web.cssom.ident
+import web.cssom.ClassName
 import web.cssom.Color
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
@@ -52,14 +62,26 @@ val sideNavEntry: CatalogEntry =
         builder = ::buildSideNavPage,
     )
 
+/** The emphasis colour this page gives an external link; the sheet and the item share it. */
+private val EXTERNAL: ClassName = ClassName("external")
+
+/** The accent colour of that link. */
+private val ACCENT: Color = Color("deepskyblue")
+
 /**
  * The styling example: the link of an item tagged `external` and its icon are drawn in an accent
  * colour. `::part(link)` is the only entry into the link's own shadow tree.
  */
 private val SIDE_NAV_SHEET: CSSStyleSheet = cssSheet {
-    "vaadin-side-nav-item.external::part(link)" { color = Color("deepskyblue") }
-    "vaadin-side-nav-item.external:hover::part(link)" { color = Color("deepskyblue") }
-    "vaadin-side-nav-item.external > vaadin-icon" { color = Color("deepskyblue") }
+    // `::part(link)` is the only entry into the link's own shadow tree. A part is a pseudo-element
+    // of the host, so it joins the compound instead of following a combinator; the icon is a
+    // light-DOM child, so it is a plain child selector.
+    val externalItem = compound(tag(VaadinTagName.sideNavItem), className(EXTERNAL))
+    val linkPart = pseudo(pseudoElement("part"), ident("link"))
+
+    compound(externalItem, linkPart).invoke { color = ACCENT }
+    compound(externalItem, pseudo(Pseudos.hover), linkPart).invoke { color = ACCENT }
+    (externalItem child tag(VaadinTagName.icon)).invoke { color = ACCENT }
 }
 
 private fun buildSideNavPage(meta: PageMeta): PageView {
@@ -285,7 +307,7 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
             navItem(tr("仪表盘", "Dashboard"), "vaadin:dashboard", "/dashboard"),
             navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox"),
             navItem(tr("Vaadin 官网", "Vaadin website"), "vaadin:vaadin-h", "https://vaadin.com").apply {
-                withClass("external")
+                classList.add(EXTERNAL)
                 target = "_blank"
             },
         )

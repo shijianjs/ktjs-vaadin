@@ -47,6 +47,7 @@ import io.github.shijianjs.ktjs.vaadin.upload.createUploadManager
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
+import demo.ui.MUTED
 
 val uploadEntry: CatalogEntry =
     CatalogEntry(
@@ -236,7 +237,7 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传报告", "Upload report")),
-                paragraph(tr("可接受的文件格式：PDF（.pdf）", "Accepted file formats: PDF (.pdf)"), "muted"),
+                paragraph(tr("可接受的文件格式：PDF（.pdf）", "Accepted file formats: PDF (.pdf)"), MUTED),
                 report,
             ),
         ),
@@ -254,7 +255,7 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传文件", "Upload files")),
-                paragraph(tr("最多允许 3 个文件", "Maximum of 3 files allowed"), "muted"),
+                paragraph(tr("最多允许 3 个文件", "Maximum of 3 files allowed"), MUTED),
                 count,
             ),
         ),
@@ -275,7 +276,7 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传文件", "Upload file")),
-                paragraph(tr("最大文件大小：10 MB", "Maximum file size: 10 MB"), "muted"),
+                paragraph(tr("最大文件大小：10 MB", "Maximum file size: 10 MB"), MUTED),
                 size,
             ),
         ),
@@ -415,7 +416,7 @@ private fun appendCustomization(view: PageView) {
             column(
                 paragraph(
                     tr("达到数量上限后按钮会被禁用；选错文件时用 Notification 给出原因。", "The button is disabled once the file limit is reached; a rejected file is reported through a Notification."),
-                    "muted",
+                    MUTED,
                 ),
                 buttonUpload,
             ),
@@ -523,8 +524,8 @@ private fun appendBestPractices(view: PageView) {
             tr("辅助说明", "Helper text"),
             column(
                 heading(4, tr("上传表格", "Upload spreadsheet")),
-                paragraph(tr("文件大小不超过 1 MB。", "File size must be less than or equal to 1 MB."), "muted"),
-                paragraph(tr("仅接受 Excel 与 CSV 文件。", "Only Excel and CSV files are accepted."), "muted"),
+                paragraph(tr("文件大小不超过 1 MB。", "File size must be less than or equal to 1 MB."), MUTED),
+                paragraph(tr("仅接受 Excel 与 CSV 文件。", "Only Excel and CSV files are accepted."), MUTED),
                 spreadsheet,
             ),
         ),

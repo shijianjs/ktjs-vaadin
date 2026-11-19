@@ -17,10 +17,17 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.setHidden
 import demo.ui.span
-import demo.ui.withClass
 import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.descendant
+import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
 import io.github.shijianjs.ktjs.demo.style.Palette
 import web.cssom.CSSStyleSheet
+import web.cssom.ClassName
+import web.html.HtmlTagName
 import web.cssom.Display
 import web.cssom.FlexDirection
 import web.cssom.px
@@ -59,20 +66,18 @@ val radioGroupEntry: CatalogEntry =
         builder = ::buildRadioGroupPage,
     )
 
+/** The option box of the custom-label example; the sheet and the three options share it. */
+private val RADIO_OPTION: ClassName = ClassName("radio-option")
+
 /**
  * The card-style options of the "custom label" example: two lines of text per option, the second
- * one muted. The option boxes themselves come from the kit's `col` block.
+ * one muted. The boxes themselves are `column(...)`, so only the muted second line needs a rule.
  */
 private val RADIO_SHEET: CSSStyleSheet = cssSheet {
-    ".radio-option" {
-        display = Display.flex
-        flexDirection = FlexDirection.column
-        rowGap = 2.px
-    }
-
-    ".radio-option span + span" {
+    // The boxes themselves are `column(...)` (a vertical layout), so the sheet only says that the
+    // second line of an option is the muted one.
+    ((className(RADIO_OPTION) descendant tag(HtmlTagName.span)) nextSibling tag(HtmlTagName.span)).invoke {
         color = Palette.muted
-        fontSize = 13.px
     }
 }
 
@@ -291,7 +296,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
                 )
             }
         }
-    val statesRow = row(readonly, disabled).withClass("example-stack")
+    val statesRow = row(readonly, disabled)
     required.body.append(
         example(null, column(payment, row(validateButton, result.root))),
         example(null, statesRow),
@@ -311,12 +316,12 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup { label = tr("付款方式", "Payment method") }.withTheme("vertical")
     val visa =
         createRadioButton { value = "visa" }.apply {
-            append(column(span(tr("Visa · 账户 1234", "Visa · account 1234")), span(tr("有效期 12/28", "Expires 12/28"))).withClass("radio-option"))
+            append(column(span(tr("Visa · 账户 1234", "Visa · account 1234")), span(tr("有效期 12/28", "Expires 12/28"))).apply { classList.add(RADIO_OPTION) })
         }
     visa.firstElementChild?.setAttribute("slot", "label")
     val other =
         createRadioButton { value = "-1" }.apply {
-            append(column(span(tr("其他", "Other")), span(tr("手动输入卡号", "Enter the card number manually"))).withClass("radio-option"))
+            append(column(span(tr("其他", "Other")), span(tr("手动输入卡号", "Enter the card number manually"))).apply { classList.add(RADIO_OPTION) })
         }
     other.firstElementChild?.setAttribute("slot", "label")
     cardGroup.append(visa, other)
@@ -380,7 +385,10 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
                         span(tr("账户 ${person.id}", "Account ${person.id}")),
                         span(tr("持卡人 ${person.displayName}", "Holder ${person.displayName}")),
                         span(tr("有效期 12/28", "Expires 12/28")),
-                    ).withClass("radio-option").apply { setAttribute("slot", "label") },
+                    ).apply {
+                        classList.add(RADIO_OPTION)
+                        setAttribute("slot", "label")
+                    },
                 )
                 if (index == 0) checked = true
             }

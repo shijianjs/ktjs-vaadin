@@ -19,6 +19,7 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.inputcontainer.createInputContainer
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import demo.ui.MUTED_SMALL
 
 val inputContainerEntry: CatalogEntry =
     CatalogEntry(
@@ -114,6 +115,6 @@ private fun plainContainer(label: String, readonly: Boolean = false, invalid: Bo
     container.append(input)
     return div().apply {
         style.setProperty("width", "12rem")
-        append(container, paragraph(label, "small muted"))
+        append(container, paragraph(label, MUTED_SMALL))
     }
 }

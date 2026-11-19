@@ -239,6 +239,17 @@ object VaadinTagName {
     inline val messageList: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.messagelist.MessageListElement>
         get() = web.dom.TagName("vaadin-message-list")
 
+    /** `<vaadin-combo-box-item>` — the row a combo box renders into its overlay. */
+    inline val comboBoxItem: web.dom.TagName<web.html.HTMLElement>
+        get() = web.dom.TagName("vaadin-combo-box-item")
+
+    /** `<vaadin-multi-select-combo-box-item>` — the row a multi-select combo box renders. */
+    inline val multiSelectComboBoxItem: web.dom.TagName<web.html.HTMLElement>
+        get() = web.dom.TagName("vaadin-multi-select-combo-box-item")
+
+    /** `<vaadin-multi-select-combo-box-chip>` — a selected value's chip inside the field. */
+    inline val multiSelectComboBoxChip: web.dom.TagName<web.html.HTMLElement>
+        get() = web.dom.TagName("vaadin-multi-select-combo-box-chip")
     /** `<vaadin-multi-select-combo-box>` */
     inline val multiSelectComboBox: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.multiselectcombobox.MultiSelectComboBoxElement>
         get() = web.dom.TagName("vaadin-multi-select-combo-box")

@@ -27,6 +27,7 @@ import web.html.HTMLElement
 import web.svg.SVGGElement
 import web.svg.SVG_NAMESPACE
 import web.svg.SvgTagName
+import demo.ui.MUTED_SMALL
 
 val iconsEntry: CatalogEntry =
     CatalogEntry(
@@ -154,7 +155,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
                     "用开发者工具的无障碍面板查看两者的名称。",
                     "Check both accessible names in the accessibility pane of the devtools.",
                 ),
-                "small muted",
+                MUTED_SMALL,
             ),
         ),
     )

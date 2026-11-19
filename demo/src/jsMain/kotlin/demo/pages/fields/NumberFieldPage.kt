@@ -31,6 +31,8 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
+import demo.ui.SMALL
+import demo.ui.MUTED_SMALL
 
 val numberFieldEntry: CatalogEntry =
     CatalogEntry(
@@ -137,7 +139,7 @@ private fun buildNumberFieldPage(meta: PageMeta): PageView {
     childrenItem.append(
         element(HtmlTagName.label).apply {
             slot = "label"
-            append(div("small", span(tr("儿童", "Children"))), div("small muted", span(tr("2-12 岁", "Age 2-12"))))
+            append(div(SMALL, span(tr("儿童", "Children"))), div(MUTED_SMALL, span(tr("2-12 岁", "Age 2-12"))))
         },
         children,
     )

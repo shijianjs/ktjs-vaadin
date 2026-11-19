@@ -46,6 +46,7 @@ import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.cssom.TextAlign
 import web.dom.clickEvent
 import web.events.addHandler
+import demo.ui.MUTED
 
 val gridEntry: CatalogEntry =
     CatalogEntry(
@@ -540,7 +541,7 @@ private fun appendGridDataBinding(view: PageView) {
     val emptyInvite =
         paragraph(
             tr("尚未发出邀请", "No invitation has been sent"),
-            "muted",
+            MUTED,
         )
     inviteGrid.append(
         createGridColumn { header = tr("姓名", "Name"); path = "displayName"; autoWidth = true },

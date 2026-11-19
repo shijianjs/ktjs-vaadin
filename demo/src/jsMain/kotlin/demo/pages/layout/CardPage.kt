@@ -17,7 +17,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.paragraph
 import demo.ui.section
-import demo.ui.withClass
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.AlignItems
@@ -41,6 +40,19 @@ import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
 import io.github.shijianjs.ktjs.vaadin.select.createSelect
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import web.cssom.ClassName
+import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.css.dsl.descendant
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.vaadin.VaadinTagName
+
+/** The single-card width the docs examples use; the sheet keys on this same object. */
+private val CARD_DEMO: ClassName = ClassName("card-demo")
+
+private val CARD_PLAYGROUND: ClassName = ClassName("card-playground")
+private val CARD_PLAYGROUND_PREVIEW: ClassName = ClassName("card-playground__preview")
+private val CARD_PLAYGROUND_OPTIONS: ClassName = ClassName("card-playground__options")
 
 val cardEntry: CatalogEntry =
     CatalogEntry(
@@ -68,10 +80,10 @@ val cardEntry: CatalogEntry =
 private val CARD_SHEET: CSSStyleSheet = cssSheet {
     // A single card keeps the width the documentation examples use instead of filling the box; the
     // multi-card examples use the kit's grid block and need no rule of their own.
-    ".card-demo" { maxWidth = 20.rem }
+    CARD_DEMO { maxWidth = 20.rem }
 
     // Playground: preview on the left, the slot / media / theme controls on the right.
-    ".card-playground" {
+    CARD_PLAYGROUND {
         display = Display.flex
         flexWrap = FlexWrap.wrap
         alignItems = AlignItems.flexStart
@@ -79,16 +91,16 @@ private val CARD_SHEET: CSSStyleSheet = cssSheet {
         rowGap = 24.px
     }
 
-    ".card-playground__preview" {
+    CARD_PLAYGROUND_PREVIEW {
         // grow 1, shrink 1, basis 20rem: cssom has the three-argument `Flex` factory, and `20.rem`
         // (a `Length`) is a `FlexBasis` through `LengthType : LengthProperty`.
         flex = Flex(number(1.0), number(1.0), 20.rem)
         minWidth = 18.rem
     }
 
-    ".card-playground__preview vaadin-card" { maxWidth = 24.rem }
+    (className(CARD_PLAYGROUND_PREVIEW) descendant tag(VaadinTagName.card)).invoke { maxWidth = 24.rem }
 
-    ".card-playground__options" {
+    CARD_PLAYGROUND_OPTIONS {
         display = Display.flex
         flexDirection = FlexDirection.column
         rowGap = 16.px
@@ -134,7 +146,9 @@ private fun buildCardPage(meta: PageMeta): PageView {
         titleHeadingLevel = 3.0
     }
     propertyTitle.append(div().apply { textContent = laplandShortText() })
-    titles.body.append(example(null, cardGrid(slotTitles.withClass("card-demo"), propertyTitle.withClass("card-demo"))))
+    slotTitles.classList.add(CARD_DEMO)
+    propertyTitle.classList.add(CARD_DEMO)
+    titles.body.append(example(null, cardGrid(slotTitles, propertyTitle)))
     view.body.append(titles.root)
 
     val header =
@@ -203,7 +217,8 @@ private fun buildCardPage(meta: PageMeta): PageView {
         createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
         createButton { textContent = tr("了解更多", "Learn More") }.apply { slot = "footer" },
     )
-    footer.body.append(example(null, footerCard.withClass("card-demo")))
+    footerCard.classList.add(CARD_DEMO)
+    footer.body.append(example(null, footerCard))
     view.body.append(footer.root)
 
     val variants =
@@ -378,10 +393,10 @@ private fun cardPlayground(): HTMLElement {
         if ("content" in slotGroup.value) playground.append(next)
     }
 
-    return div("card-playground").apply {
+    return div(CARD_PLAYGROUND).apply {
         append(
-            div("card-playground__preview", playground),
-            div("card-playground__options", slotGroup, mediaSelect, contentSelect, themeGroup),
+            div(CARD_PLAYGROUND_PREVIEW, playground),
+            div(CARD_PLAYGROUND_OPTIONS, slotGroup, mediaSelect, contentSelect, themeGroup),
         )
     }
 }

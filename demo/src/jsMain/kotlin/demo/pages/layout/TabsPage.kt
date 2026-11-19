@@ -24,6 +24,9 @@ import io.github.shijianjs.ktjs.vaadin.tabs.TabsElement
 import io.github.shijianjs.ktjs.vaadin.tabs.TabsEvents
 import io.github.shijianjs.ktjs.vaadin.tabs.createTab
 import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
+import web.cssom.ClassName
+
+private val TABS_CONTENT_TEXT: ClassName = ClassName("tabs-content__text")
 
 val tabsEntry: CatalogEntry =
     CatalogEntry(
@@ -252,7 +255,7 @@ private fun buildTabsPage(meta: PageMeta): PageView {
     val pageNames = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
     val contentTabs = tabsOf(*pageNames.toTypedArray())
     contentTabs.dataset["test"] = "tabs-content"
-    val content = paragraph(tr("这是仪表盘的内容。", "This is the Dashboard content."), "tabs-content__text")
+    val content = paragraph(tr("这是仪表盘的内容。", "This is the Dashboard content."), TABS_CONTENT_TEXT)
     contentTabs.listen(TabsEvents.selectedChanged) {
         val name = pageNames[contentTabs.selected.toInt()]
         content.textContent = tr("这是“$name”的内容。", "This is the $name content.")
