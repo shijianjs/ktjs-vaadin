@@ -312,7 +312,17 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
         )
     val chat = createMessageList()
     chat.markdown = true
-    val announcement = div("screen-reader-only").apply { setAttribute("aria-live", "polite") }
+    val announcement =
+        div().apply {
+            setAttribute("aria-live", "polite")
+            // Announced to assistive technology only: a one-pixel box clipped out of the layout.
+            style.setProperty("position", "absolute")
+            style.setProperty("clip", "rect(0, 0, 0, 0)")
+            style.setProperty("width", "1px")
+            style.setProperty("height", "1px")
+            style.setProperty("overflow", "hidden")
+            style.setProperty("white-space", "nowrap")
+        }
     val chatItems =
         mutableListOf(
             message(

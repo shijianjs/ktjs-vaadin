@@ -17,6 +17,11 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import web.cssom.Display
+import web.cssom.FlexWrap
+import web.cssom.Gap
+import web.cssom.px
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -75,7 +80,13 @@ private fun detailItems(event: Event, key: String): Array<JsAny> =
 // endregion
 
 private fun personDetails(item: JsAny?): HTMLElement =
-    div("details-form").apply {
+    div().apply {
+        // Six read-only fields, wrapping into rows: the same flex-wrap rule the docs use.
+        inlineStyle.apply {
+            display = Display.flex
+            flexWrap = FlexWrap.wrap
+        }
+        style.setProperty("gap", "8px")
         append(
             createTextField { label = tr("邮箱地址", "Email address"); value = itemPathText(item, "email"); readonly = true },
             createTextField { label = tr("电话", "Phone number"); value = itemPathText(item, "address.phone"); readonly = true },

@@ -242,7 +242,7 @@ class DataTest {
     fun `icon renders an inline svg from the lumo set`(page: Page) {
         page.navigate("/#/icon")
 
-        val icon = page.locator(".page vaadin-icon").first()
+        val icon = page.locator("ktjs-demo-page vaadin-icon").first()
         assertThat(icon).hasAttribute("icon", "lumo:checkmark")
         assertThat(icon.locator("svg")).hasCount(1)
     }

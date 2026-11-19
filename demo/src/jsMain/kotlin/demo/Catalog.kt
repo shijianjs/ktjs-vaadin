@@ -58,24 +58,26 @@ class CatalogEntry(
     val id: String,
     val group: Group,
     val meta: PageMeta,
-    private val builder: (PageMeta) -> PageView,
+    /** The pre-kit builder; `null` once a page exists only on kit blocks. */
+    private val builder: ((PageMeta) -> PageView)? = null,
     /**
      * The same page built on `ktjs-demo-kit` blocks, once it has been converted.
      *
-     * Both builders exist while the migration runs: a converted page is picked from here and the
-     * legacy one stays compiled as the fallback until the whole catalog has moved over. A page that
-     * is not migrated yet leaves this `null`.
+     * While the migration runs a page can carry both: the shell picks [kitPage], and the legacy
+     * builder stays compiled as the fallback until the whole catalog has moved over.
      */
     val kitPage: (() -> io.github.shijianjs.ktjs.demo.nav.Page)? = null,
 ) {
     /** Builds a fresh instance of the page. The shell caches one per route. */
     fun create(): web.html.HTMLElement {
-        val view = builder(meta)
-        view.links.append(
+        val legacyBuild = builder ?: error("page `$id` has no legacy builder; it is built on kit blocks")
+        val view = legacyBuild(meta)
+        // The API link is the same for every page: the frame takes the anchor, the catalog knows where
+        // the Dokka page of this component lives.
+        view.addLink(
             anchor(
                 tr("Kotlin API 文档", "Kotlin API reference"),
                 componentApiUrl(id),
-                "page__link",
                 external = true,
             ),
         )

@@ -24,6 +24,10 @@ import demo.ui.rowStart
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.px
 import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
@@ -389,8 +393,13 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     userPopover.setAttribute("aria-label", tr("用户菜单", "User menu"))
     val nickName = "@${user.firstName}${user.lastName}".lowercase()
     val userCard =
-        div("person-item").apply {
-            style.setProperty("padding", "var(--vaadin-padding-s)")
+        div().apply {
+            inlineStyle.apply {
+                display = Display.flex
+                alignItems = AlignItems.center
+                columnGap = 8.px
+                padding = 8.px
+            }
             append(
                 createAvatar {
                     img = user.pictureUrl

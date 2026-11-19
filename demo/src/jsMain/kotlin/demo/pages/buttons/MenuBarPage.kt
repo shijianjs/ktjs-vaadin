@@ -16,6 +16,7 @@ import demo.ui.example
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
+import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import demo.ui.withTheme
@@ -442,9 +443,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
     split.style.setProperty("height", "6rem")
     split.append(
         createMenuBar { items = sharedMenuItems() },
-        div("col").apply {
-            textContent = tr("拖动分隔条观察溢出", "Move the splitter to see overflow")
-        },
+        paragraph(tr("拖动分隔条观察溢出", "Move the splitter to see overflow")),
     )
     overflow.body.append(example(null, split))
     view.body.append(overflow.root)

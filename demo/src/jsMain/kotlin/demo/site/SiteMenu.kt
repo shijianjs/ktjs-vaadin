@@ -51,13 +51,8 @@ fun siteMenu(): DemoMenu {
         catalog.map { entry ->
             val group = groups.getValue(entry.group.id)
             Entry(entry.id, group, group.icon) {
-                // The overview and the pages already converted carry their own `Translations` table and
-                // rewrite copy in place; everything else still goes through the legacy host.
-                when {
-                    entry.id == "overview" -> OverviewPage()
-                    entry.kitPage != null -> entry.kitPage.invoke()
-                    else -> LegacyPage(entry)
-                }
+                // The overview and the pages already converted carry their own `Translations` table and`r`n                // rewrite copy in place; the rest is rebuilt by its slot when the language changes.
+                entry.kitPage?.invoke() ?: RebuiltPage(entry)
             }
         },
     )

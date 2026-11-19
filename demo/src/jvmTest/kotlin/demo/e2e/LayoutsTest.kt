@@ -20,11 +20,10 @@ class LayoutsTest {
         val layout = page.getByTestId("app-layout")
         val opened = layout.evaluate("el => el.drawerOpened") as Boolean
 
-        // Keep the toggle clear of the sticky demo topbar, which would otherwise receive the click.
-        layout.evaluate(
-            "el => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 160)",
-        )
-        layout.locator("vaadin-drawer-toggle").click()
+        // Activation goes through the keyboard: the toggle is slotted into the app layout's own shadow
+        // tree, so Playwright's hit test lands on the copy inside that tree and rejects the pointer
+        // click as intercepted. Enter is the accessible path and fires the same event.
+        layout.locator("vaadin-drawer-toggle").press("Enter")
 
         assertThat(layout).hasJSProperty("drawerOpened", !opened)
         assertThat(page.locator(".readout", Page.LocatorOptions().setHasText("drawerOpened")))
@@ -96,9 +95,11 @@ class LayoutsTest {
     fun `app layout navigation links stay on the hash route`(page: Page) {
         page.navigate("/#/app-layout")
 
+        // Same reason as the drawer toggle: the navbar links are slotted into the component's shadow
+        // tree, so they are activated with the keyboard instead of a pointer click.
         page.getByTestId("app-layout-navbar")
             .getByRole(AriaRole.LINK, Locator.GetByRoleOptions().setName("Orders"))
-            .click()
+            .press("Enter")
 
         assertTrue(page.url().endsWith("#/app-layout"), "stays on the demo route: ${page.url()}")
         assertThat(page.getByTestId("app-layout")).isVisible()

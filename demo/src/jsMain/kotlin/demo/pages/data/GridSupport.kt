@@ -7,10 +7,16 @@ import demo.ui.jsArray
 import demo.ui.row
 import demo.ui.span
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.demo.style.Palette
 import kotlin.js.Date
 import kotlin.js.JsAny
 import kotlin.js.js
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import web.cssom.AlignItems
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.px
 import io.github.shijianjs.ktjs.vaadin.grid.GridElement
 import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirection
 import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirections
@@ -135,14 +141,31 @@ internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorter
 
 /** Avatar + name + email, the two-line cell the docs render through a Lit renderer. */
 internal fun personCell(item: JsAny?): HTMLElement =
-    div("person-item").apply {
+    div().apply {
+        inlineStyle.apply {
+            display = Display.flex
+            alignItems = AlignItems.center
+            columnGap = 8.px
+        }
         append(
             createAvatar {
                 name = "${itemText(item, "firstName")} ${itemText(item, "lastName")}"
                 img = itemText(item, "pictureUrl")
             },
-            div("person-item__text").apply {
-                append(span(itemText(item, "displayName"), "person-item__name"), span(itemText(item, "email"), "person-item__email"))
+            div().apply {
+                inlineStyle.apply {
+                    display = Display.flex
+                    flexDirection = FlexDirection.column
+                }
+                append(
+                    span(itemText(item, "displayName")).apply { style.setProperty("font-weight", "600") },
+                    span(itemText(item, "email")).apply {
+                        inlineStyle.apply {
+                            color = Palette.muted
+                            fontSize = 12.px
+                        }
+                    },
+                )
             },
         )
     }

@@ -4,7 +4,19 @@ import demo.Bilingual
 import demo.Language
 import demo.LanguageState
 import demo.tr
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.EventLog as KitEventLog
+import io.github.shijianjs.ktjs.demo.page.Readout as KitReadout
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
+import io.github.shijianjs.ktjs.demo.page.newPage
+import io.github.shijianjs.ktjs.demo.page.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import kotlin.js.Date
+import web.cssom.CSSStyleSheet
 import web.dom.Node
 import web.html.HTMLElement
 import web.html.HtmlTagName
@@ -51,28 +63,48 @@ class PageMeta(
     }
 }
 
-/** The built page: [root] is mounted by the shell, [body] receives the demo sections. */
-class PageView(val root: HTMLElement, val body: HTMLElement, val links: HTMLElement)
+/**
+ * The built page: [root] is mounted by the shell, [body] receives the demo sections and [addLink]
+ * appends to the header's link row.
+ *
+ * The frame itself belongs to `ktjs-demo-kit` (`<ktjs-demo-page>`): title, summary, links and the body
+ * column are its business, so a page here only fills the body.
+ */
+class PageView(
+    val root: HTMLElement,
+    val body: HTMLElement,
+    val addLink: (Node) -> Unit,
+    /** Adopts one more sheet into the page's shadow tree, for rules this page owns. */
+    val addSheet: (CSSStyleSheet) -> Unit,
+)
 
 internal const val REPO_SOURCE_ROOT = "https://github.com/shijianjs/ktjs-vaadin/blob/main/demo/src/jsMain/kotlin/demo"
 
 /**
  * Builds the common frame of a component page: title, summary, the official documentation link and
  * the link to the Kotlin source of the page itself.
+ *
+ * Pages that are not converted to `Translations` yet are still built for the language that is active
+ * when the shell creates them, and rebuilt when the language changes.
  */
 fun page(meta: PageMeta): PageView {
-    val body = div("page__body")
-    val links = div("page__links")
-
-    links.append(anchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, "page__link", external = true))
-    links.append(
-        anchor(tr("查看 Kotlin 源码", "Kotlin source"), "$REPO_SOURCE_ROOT/${meta.sourcePath}", "page__link", external = true),
+    val demoPage: DemoPage = newPage()
+    demoPage.setTitle(meta.title)
+    demoPage.setSummary(meta.summary)
+    demoPage.addLink(kitAnchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, external = true))
+    demoPage.addLink(
+        kitAnchor(
+            tr("查看 Kotlin 源码", "Kotlin source"),
+            "$REPO_SOURCE_ROOT/${meta.sourcePath}",
+            external = true,
+        ),
     )
-    meta.docsNote?.let { links.append(span(it, "page__link-note")) }
-
-    val root = element(HtmlTagName.section, "page")
-    root.append(heading(1, meta.title, "page__title"), paragraph(meta.summary, "page__summary"), links, body)
-    return PageView(root, body, links)
+    meta.docsNote?.let { note ->
+        // The note explains the docs link rather than being one, so it belongs in the body; the link
+        // row accepts anchors only and gives every node it takes the link class.
+        demoPage.body.append(paragraph(note))
+    }
+    return PageView(demoPage, demoPage.body, demoPage::addLink, demoPage::addSheet)
 }
 
 /** One titled block of a page; [body] receives the individual examples. */
@@ -80,68 +112,61 @@ class Section(val root: HTMLElement, val body: HTMLElement)
 
 /** Creates a section with [title] and an optional [description]. */
 fun section(title: String, description: String = ""): Section {
-    val body = div("section__body")
-    val root = div("section")
-    root.append(heading(2, title, "section__title"))
-    if (description.isNotEmpty()) root.append(paragraph(description, "section__desc"))
-    root.append(body)
-    return Section(root, body)
+    val block: SectionBlock = sectionBlock(title, description)
+    return Section(block.root, block.body)
 }
 
-/** A bordered area holding one runnable example, optionally captioned. */
-fun example(caption: String? = null, vararg children: Node): HTMLElement {
-    val box = div("example")
-    if (caption != null) box.append(paragraph(caption, "example__caption"))
-    box.append(*children)
-    return box
-}
+/** One example box: a card, optionally captioned. */
+fun example(caption: String? = null, vararg children: Node): HTMLElement = exampleBox(caption, *children)
 
 /** Horizontal group of controls or components. */
-fun row(vararg children: Node): HTMLElement = div("row", *children)
+fun row(vararg children: Node): HTMLElement = kitRow(*children)
 
 /** Horizontal group aligned to the top, for cards of different height. */
-fun rowStart(vararg children: Node): HTMLElement = div("row row--start", *children)
+fun rowStart(vararg children: Node): HTMLElement = kitRow(*children).apply {
+    style.setProperty("align-items", "flex-start")
+}
 
 /** Vertical group. */
-fun column(vararg children: Node): HTMLElement = div("col", *children)
+fun column(vararg children: Node): HTMLElement = kitCol(*children)
 
 /** Responsive grid of [children]. */
-fun grid(vararg children: Node): HTMLElement = div("grid", *children)
+fun grid(vararg children: Node): HTMLElement = kitGrid(260, *children)
 
-/** Text that is updated in place, showing the current state of an example. */
+/**
+ * Text that is updated in place, showing the current state of an example.
+ *
+ * The box and its colour come from the kit; the `prefix / value / suffix` form is this demo's
+ * convention for state lines, so it stays here.
+ */
 class Readout(initial: String) {
-    val root: HTMLElement = paragraph(initial, "readout")
+    private val readout = KitReadout(initial)
+
+    val root: HTMLElement get() = readout.root
 
     fun set(text: String) {
-        root.textContent = text
+        readout.set(text)
     }
 
     /** Renders `prefix value suffix`, with [value] emphasised. */
     fun set(prefix: String, value: String, suffix: String = "") {
-        root.replaceChildren(span(prefix), strong(value), span(suffix))
+        readout.root.replaceChildren(span(prefix), strong(value), span(suffix))
     }
 }
 
-/** Rolling log of the events fired by one example. */
-class EventLog(private val maxEntries: Int = 8) {
-    val root: HTMLElement = element(HtmlTagName.ul, "event-log")
+/**
+ * Rolling log of the events fired by one example.
+ *
+ * The box, its monospace type and the line cap belong to the kit; this demo prefixes each line with
+ * the wall-clock time, which is only meaningful while a reader is clicking around.
+ */
+class EventLog(maxEntries: Int = 8) {
+    private val log = KitEventLog(maxEntries, tr("尚未触发事件", "No events yet"))
 
-    private val placeholder =
-        element(HtmlTagName.li, "event-log__empty").apply { textContent = tr("尚未触发事件", "No events yet") }
-
-    init {
-        root.append(placeholder)
-    }
+    val root: HTMLElement get() = log.root
 
     fun add(message: String) {
-        placeholder.remove()
-        val entry = element(HtmlTagName.li)
-        entry.append(span(timestamp(), "event-log__time"), span(message))
-        root.append(entry)
-        while (root.childElementCount > maxEntries) {
-            root.firstElementChild?.remove()
-        }
-        root.scrollTop = root.scrollHeight.toDouble()
+        log.add("${timestamp()} $message")
     }
 
     private fun timestamp(): String {

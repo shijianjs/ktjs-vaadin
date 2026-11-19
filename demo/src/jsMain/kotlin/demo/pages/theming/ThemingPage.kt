@@ -25,10 +25,24 @@ import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoThemes
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.CSSStyleSheet
 import web.cssom.ClassName
+import web.cssom.Color
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+
+/**
+ * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
+ * component, and nothing in the kit's blocks can express it. Declared here, next to the example that
+ * needs it, instead of in a site-wide stylesheet.
+ */
+private val THEMING_SHEET: CSSStyleSheet = cssSheet {
+    ".theming-part::part(label)" {
+        color = Color("var(--lumo-primary-color)")
+    }
+}
 
 val themingEntry: CatalogEntry =
     CatalogEntry(
@@ -51,6 +65,7 @@ val themingEntry: CatalogEntry =
 
 private fun buildThemingPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(THEMING_SHEET)
 
     // --- Light / dark ---------------------------------------------------------------------------
     val switching =
@@ -231,9 +246,9 @@ private fun buildThemingPage(meta: PageMeta): PageView {
             tr("阴影部件", "Shadow parts"),
             tr(
                 "组件把内部结构声明为 part，宿主样式表用 ::part() 选中它；这里给按钮的 label 部件换颜色，" +
-                    "规则写在 demo.css 里并只作用于本示例。",
+                    "规则由本页自己声明（一个 `::part()` 选择器），只作用于本示例。",
                 "Components expose their internals as parts that a host stylesheet selects with ::part(); " +
-                    "this example recolours the label part, scoped to the demo class in demo.css.",
+                    "this example recolours the label part with a rule the page declares itself.",
             ),
         )
     val partButton = createButton { textContent = tr("用 ::part 着色的标签", "A label styled through ::part") }
