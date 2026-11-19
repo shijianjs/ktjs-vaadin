@@ -223,7 +223,7 @@ private fun wizardStep(
 }
 
 private fun customerForm(): HTMLElement =
-    wizardLayout(
+    newWizardLayout(
         textField(tr("名", "First name")),
         textField(tr("姓", "Last name")),
         emailField(tr("邮箱地址", "Email address")).apply { setAttribute("colspan", "2") },
@@ -231,7 +231,7 @@ private fun customerForm(): HTMLElement =
     )
 
 private fun billingForm(): HTMLElement =
-    wizardLayout(
+    newWizardLayout(
         textField(tr("地址", "Address")).apply { setAttribute("colspan", "2") },
         textField(tr("邮政编码", "ZIP code")),
         textField(tr("城市", "City")),
@@ -239,7 +239,7 @@ private fun billingForm(): HTMLElement =
     )
 
 private fun paymentForm(): HTMLElement =
-    wizardLayout(
+    newWizardLayout(
         textField(tr("卡号", "Card number")).apply { setAttribute("colspan", "2") },
         textField(tr("有效期", "Expiry date")),
         textField("CVV"),

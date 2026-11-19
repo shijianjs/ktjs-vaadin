@@ -325,7 +325,7 @@ private fun appNavbar(title: String): HTMLElement =
 private fun appDrawer(): HTMLElement =
     createScroller().apply {
         slot = "drawer"
-        append(appSideNav())
+        append(newAppSideNav())
     }
 
 /** Content area filler for the app layout examples. */

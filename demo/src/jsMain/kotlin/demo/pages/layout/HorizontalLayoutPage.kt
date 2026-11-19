@@ -56,7 +56,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 "theme=\"spacing padding\"",
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -78,7 +78,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("height", "7rem")
                     style.setProperty("align-items", "center")
-                    append(box(tr("项目 1", "Item 1"), "2.5rem"), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3"), "4rem"))
+                    append(newBox(tr("项目 1", "Item 1"), "2.5rem"), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3"), "4rem"))
                 },
             ),
             example(
@@ -87,7 +87,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("height", "7rem")
                     style.setProperty("align-items", "end")
-                    append(box(tr("项目 1", "Item 1"), "2.5rem"), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3"), "4rem"))
+                    append(newBox(tr("项目 1", "Item 1"), "2.5rem"), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3"), "4rem"))
                 },
             ),
         )
@@ -109,9 +109,9 @@ internal class HorizontalLayoutPage : DemoPage() {
                     style.setProperty("height", "8rem")
                     style.setProperty("align-items", "stretch")
                     append(
-                        box(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "start") },
-                        box(tr("项目 2", "Item 2")),
-                        box(tr("项目 3", "Item 3")).apply { style.setProperty("align-self", "end") },
+                        newBox(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "start") },
+                        newBox(tr("项目 2", "Item 2")),
+                        newBox(tr("项目 3", "Item 3")).apply { style.setProperty("align-self", "end") },
                     )
                 },
             ),
@@ -134,9 +134,9 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
                     append(
-                        box(tr("开始", "Start")),
-                        box(tr("中间", "Middle")).apply { slot = "middle" },
-                        box(tr("末尾", "End")).apply { slot = "end" },
+                        newBox(tr("开始", "Start")),
+                        newBox(tr("中间", "Middle")).apply { slot = "middle" },
+                        newBox(tr("末尾", "End")).apply { slot = "end" },
                     )
                 },
             ),
@@ -145,7 +145,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
                     style.setProperty("justify-content", "center")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -161,14 +161,14 @@ internal class HorizontalLayoutPage : DemoPage() {
                 tr("没有 spacing", "Without spacing"),
                 createHorizontalLayout().apply {
                     addTheme("padding")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
             example(
                 tr("有 spacing", "With spacing"),
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -184,14 +184,14 @@ internal class HorizontalLayoutPage : DemoPage() {
                 tr("没有 padding", "Without padding"),
                 createHorizontalLayout().apply {
                     addTheme("spacing")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
             example(
                 tr("有 padding", "With padding"),
                 createHorizontalLayout().apply {
                     addTheme("padding", "spacing")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -210,7 +210,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                     append(
                         createHorizontalLayout().apply {
                             addTheme("spacing", "padding")
-                            append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                         },
                     )
                 },
@@ -222,7 +222,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                     append(
                         createHorizontalLayout().apply {
                             addTheme("margin", "spacing", "padding")
-                            append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                         },
                     )
                 },
@@ -244,7 +244,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("spacing", "margin", "padding")
                     style.setProperty("width", "22rem")
-                    append(*(1..5).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(*(1..5).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
                 },
             ),
             example(
@@ -252,7 +252,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("wrap", "spacing", "margin", "padding")
                     style.setProperty("width", "22rem")
-                    append(*(1..5).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(*(1..5).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
                 },
             ),
         )
@@ -275,17 +275,17 @@ internal class HorizontalLayoutPage : DemoPage() {
                     append(
                         createHorizontalLayout().apply {
                             addTheme("spacing", "padding")
-                            append(box(tr("开始", "Start")), box(tr("开始", "Start")))
+                            append(newBox(tr("开始", "Start")), newBox(tr("开始", "Start")))
                         },
                         createHorizontalLayout().apply {
                             slot = "middle"
                             addTheme("spacing", "padding")
-                            append(box(tr("中间", "Middle")), box(tr("中间", "Middle")), box(tr("中间", "Middle")))
+                            append(newBox(tr("中间", "Middle")), newBox(tr("中间", "Middle")), newBox(tr("中间", "Middle")))
                         },
                         createHorizontalLayout().apply {
                             slot = "end"
                             addTheme("spacing", "padding")
-                            append(box(tr("末尾", "End")), box(tr("末尾", "End")))
+                            append(newBox(tr("末尾", "End")), newBox(tr("末尾", "End")))
                         },
                     )
                 },
@@ -307,9 +307,9 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("padding", "spacing")
                     append(
-                        box(tr("项目 1", "Item 1")).apply { style.setProperty("flex-grow", "1") },
-                        box(tr("项目 2", "Item 2")),
-                        box(tr("项目 3", "Item 3")),
+                        newBox(tr("项目 1", "Item 1")).apply { style.setProperty("flex-grow", "1") },
+                        newBox(tr("项目 2", "Item 2")),
+                        newBox(tr("项目 3", "Item 3")),
                     )
                 },
             ),

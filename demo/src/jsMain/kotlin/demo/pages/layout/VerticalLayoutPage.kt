@@ -52,9 +52,9 @@ internal class VerticalLayoutPage : DemoPage() {
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
                     append(
-                        box(tr("项目 1", "Item 1")),
-                        box(tr("项目 2", "Item 2")),
-                        box(tr("项目 3", "Item 3")),
+                        newBox(tr("项目 1", "Item 1")),
+                        newBox(tr("项目 2", "Item 2")),
+                        newBox(tr("项目 3", "Item 3")),
                     )
                 },
             ),
@@ -77,9 +77,9 @@ internal class VerticalLayoutPage : DemoPage() {
                     style.setProperty("height", "12rem")
                     style.setProperty("justify-content", "center")
                     append(
-                        box(tr("项目 1", "Item 1")),
-                        box(tr("项目 2", "Item 2")),
-                        box(tr("项目 3", "Item 3")),
+                        newBox(tr("项目 1", "Item 1")),
+                        newBox(tr("项目 2", "Item 2")),
+                        newBox(tr("项目 3", "Item 3")),
                     )
                 },
             ),
@@ -101,9 +101,9 @@ internal class VerticalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("align-items", "center")
                     append(
-                        box(tr("项目 1", "Item 1")),
-                        box(tr("项目 2", "Item 2")),
-                        box(tr("项目 3", "Item 3")),
+                        newBox(tr("项目 1", "Item 1")),
+                        newBox(tr("项目 2", "Item 2")),
+                        newBox(tr("项目 3", "Item 3")),
                     )
                 },
             ),
@@ -125,9 +125,9 @@ internal class VerticalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("align-items", "start")
                     append(
-                        box(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "end") },
-                        box(tr("项目 2", "Item 2")).apply { style.setProperty("align-self", "center") },
-                        box(tr("项目 3", "Item 3")),
+                        newBox(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "end") },
+                        newBox(tr("项目 2", "Item 2")).apply { style.setProperty("align-self", "center") },
+                        newBox(tr("项目 3", "Item 3")),
                     )
                 },
             ),
@@ -144,14 +144,14 @@ internal class VerticalLayoutPage : DemoPage() {
                 tr("没有 spacing", "Without spacing"),
                 createVerticalLayout().apply {
                     addTheme("padding")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
             example(
                 tr("有 spacing", "With spacing"),
                 createVerticalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -167,14 +167,14 @@ internal class VerticalLayoutPage : DemoPage() {
                 tr("没有 padding", "Without padding"),
                 createVerticalLayout().apply {
                     addTheme("spacing")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
             example(
                 tr("有 padding", "With padding"),
                 createVerticalLayout().apply {
                     addTheme("padding", "spacing")
-                    append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                 },
             ),
         )
@@ -193,7 +193,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     append(
                         createVerticalLayout().apply {
                             addTheme("spacing", "padding")
-                            append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                         },
                     )
                 },
@@ -205,7 +205,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     append(
                         createVerticalLayout().apply {
                             addTheme("margin", "spacing", "padding")
-                            append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
+                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
                         },
                     )
                 },
@@ -228,7 +228,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("height", "10rem")
                     style.setProperty("align-items", "stretch")
-                    append(*(1..4).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(*(1..4).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
                 },
             ),
             example(
@@ -237,7 +237,7 @@ internal class VerticalLayoutPage : DemoPage() {
                     addTheme("wrap", "spacing", "padding")
                     style.setProperty("height", "10rem")
                     style.setProperty("align-items", "stretch")
-                    append(*(1..4).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(*(1..4).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
                 },
             ),
         )

@@ -1,0 +1,109 @@
+package demo.pages.layout
+
+import demo.ui.Images
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import web.components.CustomElementReference
+import web.dom.TagName
+import web.html.HTMLImageElement
+import web.html.HtmlTagName
+
+/**
+ * `<demo-card-media-image>`: the card's media slot filled with the official Lapland photo.
+ *
+ * The image keeps its 100px width, which is what the plain media example shows; a card that stretches or
+ * covers its media takes the host's box, and the image fills it. The slot name sits on the host, because
+ * that is the node the card reads.
+ */
+internal class CardMediaImage : CustomElementAdapter() {
+    private val image: HTMLImageElement = HtmlTagName.img().apply {
+        src = Images.lapland
+        alt = ""
+        style.setProperty("display", "block")
+        style.setProperty("width", "100%")
+        style.setProperty("height", "100%")
+        style.setProperty("object-fit", "cover")
+    }
+
+    private var fixedWidth: Int? = null
+
+    init {
+        attachShadowRoot().append(image)
+    }
+
+    /**
+     * The host is the slot the card reads; an attribute may not be set before the element connects.
+     *
+     * A card that stretches or covers its media sizes the host, and the image follows it. The plain
+     * media example pins [fixedWidth] instead, so the thumbnail keeps the size the docs show.
+     */
+    override fun connectedCallback() {
+        slot = "media"
+        style.setProperty("display", "block")
+        show(fixedWidth)
+    }
+
+    /** Pins the thumbnail's width; without one the host takes the box the card gives its media. */
+    fun show(width: Int?) {
+        fixedWidth = width
+        if (width != null) {
+            style.setProperty("width", "${width}px")
+            style.setProperty("height", "auto")
+        } else {
+            style.setProperty("width", "100%")
+            style.setProperty("height", "100%")
+        }
+    }
+
+    companion object : CustomElementReference<CardMediaImage>(CardMediaImage::class.js) {
+        val NAME: TagName<CardMediaImage> = TagName("demo-card-media-image")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<demo-card-media-image>`; [width] pins the thumbnail, absent lets the card size it. */
+internal fun newCardMediaImage(width: Int? = null): CardMediaImage {
+    CardMediaImage.define()
+    return CardMediaImage.NAME().also { it.show(width) }
+}
+
+/**
+ * `<demo-card-media-icon>`: the card's media slot filled with the photo icon, tinted so it reads as an
+ * image rather than as a button.
+ */
+internal class CardMediaIcon : CustomElementAdapter() {
+    private val icon = createIcon {
+        icon = "lumo:photo"
+        style.setProperty("background", "var(--lumo-primary-color-10pct)")
+        style.setProperty("color", "var(--lumo-primary-color)")
+    }
+
+    init {
+        attachShadowRoot().append(icon)
+    }
+
+    /** The host is the slot the card reads; an attribute may not be set before the element connects. */
+    override fun connectedCallback() {
+        slot = "media"
+    }
+
+    companion object : CustomElementReference<CardMediaIcon>(CardMediaIcon::class.js) {
+        val NAME: TagName<CardMediaIcon> = TagName("demo-card-media-icon")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<demo-card-media-icon>`. */
+internal fun newCardMediaIcon(): CardMediaIcon {
+    CardMediaIcon.define()
+    return CardMediaIcon.NAME()
+}

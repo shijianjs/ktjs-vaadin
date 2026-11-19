@@ -161,7 +161,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         }
         sized.dataset["test"] = "master-detail-sizes"
         sized.append(
-            box(tr("master · 12rem", "master · 12rem")),
+            newBox(tr("master · 12rem", "master · 12rem")),
             HtmlTagName.div().apply {
                 slot = "detail"
                 style.setProperty("padding", "var(--lumo-space-m)")
@@ -200,7 +200,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
             style.setProperty("height", "16rem")
         }
         oriented.append(
-            box(tr("master", "master")),
+            newBox(tr("master", "master")),
             HtmlTagName.div().apply {
                 slot = "detail"
                 style.setProperty("padding", "var(--lumo-space-m)")
@@ -241,7 +241,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         }
         overlayLayout.dataset["test"] = "master-detail-overlay"
         overlayLayout.append(
-            box(tr("master", "master")),
+            newBox(tr("master", "master")),
             HtmlTagName.div().apply {
                 slot = "detail"
                 style.setProperty("padding", "var(--lumo-space-m)")
@@ -350,7 +350,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
             style.setProperty("height", "100%")
         }
         inner.append(
-            box(tr("二级主区", "Inner master")),
+            newBox(tr("二级主区", "Inner master")),
             HtmlTagName.div().apply {
                 slot = "detail"
                 style.setProperty("padding", "var(--lumo-space-s)")
@@ -363,7 +363,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
             style.setProperty("height", "16rem")
         }
         outer.append(
-            box(tr("一级主区", "Outer master")),
+            newBox(tr("一级主区", "Outer master")),
             HtmlTagName.div().apply { slot = "detail"; append(inner) },
         )
         nestingSection.body.append(example(null, outer))

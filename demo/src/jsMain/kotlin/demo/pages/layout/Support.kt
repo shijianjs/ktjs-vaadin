@@ -1,52 +1,14 @@
 package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import demo.tr
-import demo.ui.Images
 import js.objects.unsafeJso
+import demo.tr
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
-import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
-import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
-import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
-import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
-import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
-import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
-import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
-import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
-import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
 import web.html.HTMLElement
-import web.html.HtmlTagName
 
-/** The seven top-level destinations shared by the app layout examples. */
-internal fun appSideNav(): SideNavElement =
-    createSideNav().apply {
-        style.setProperty("margin", "var(--lumo-space-s)")
-        append(
-            appNavItem("vaadin:dashboard", tr("仪表盘", "Dashboard")),
-            appNavItem("vaadin:cart", tr("订单", "Orders")),
-            appNavItem("vaadin:user-heart", tr("客户", "Customers")),
-            appNavItem("vaadin:package", tr("产品", "Products")),
-            appNavItem("vaadin:records", tr("文档", "Documents")),
-            appNavItem("vaadin:list", tr("任务", "Tasks")),
-            appNavItem("vaadin:chart", tr("分析", "Analytics")),
-        )
-    }
-
-/**
- * A side navigation item without `path`: the demo is a hash-routed single page, so items render as
- * plain text instead of links that would navigate away.
- */
-private fun appNavItem(icon: String, label: String): SideNavItemElement =
-    createSideNavItem().apply {
-        append(createIcon { this.icon = icon }.apply { slot = "prefix" }, HtmlTagName.span {
-                                                                              textContent = label
-                                                                          })
-    }
 
 internal fun playgroundCheckbox(value: String, label: String) = createCheckbox { this.value = value; this.label = label }
 
@@ -59,55 +21,7 @@ internal fun selectOptions(vararg entries: String): Array<SelectItemData> =
             }
         }.toTypedArray()
 
-internal fun cardMediaAvatar(abbr: String): HTMLElement = createAvatar { this.abbr = abbr }.addTheme("large").apply { slot = "media" }
 
-internal fun cardContentText(): HTMLElement = HtmlTagName.div().apply { textContent = laplandShortText() }
-
-internal fun cardContentScroller(): HTMLElement =
-    createScroller { addTheme("overflow-indicators") }.apply {
-        style.setProperty("max-height", "100px")
-        style.setProperty("min-height", "100%")
-        append(HtmlTagName.div().apply { textContent = "${laplandLongText()} ${laplandSamiText()}" })
-    }
-
-internal fun cardContentImage(): HTMLElement =
-    HtmlTagName.div().apply {
-        append(
-            HtmlTagName.img().apply {
-            src = Images.lapland
-                alt = ""
-                style.setProperty("max-width", "100%")
-                style.setProperty("border-radius", "var(--lumo-border-radius-m)")
-            },
-            HtmlTagName.div().apply { textContent = laplandShortText() },
-        )
-    }
-
-internal fun wizardLayout(vararg fields: HTMLElement): HTMLElement =
-    createFormLayout().apply {
-        responsiveSteps =
-            arrayOf(
-                unsafeJso<FormLayoutResponsiveStep> {
-                    minWidth = StringOrDouble(0.0)
-                    columns = 1.0
-                },
-                unsafeJso<FormLayoutResponsiveStep> {
-                    minWidth = StringOrDouble("20em")
-                    columns = 2.0
-                },
-            )
-        append(*fields)
-    }
-
-/** A tinted placeholder box used by the layout examples. */
-internal fun box(text: String, height: String? = null): HTMLElement =
-    HtmlTagName.div().apply {
-        textContent = text
-        style.setProperty("padding", "var(--lumo-space-s) var(--lumo-space-m)")
-        style.setProperty("border-radius", "var(--lumo-border-radius-m)")
-        style.setProperty("background", "var(--lumo-primary-color-10pct)")
-        if (height != null) style.setProperty("height", height)
-    }
 
 internal fun emailField(label: String): HTMLElement = createEmailField { this.label = label }
 
