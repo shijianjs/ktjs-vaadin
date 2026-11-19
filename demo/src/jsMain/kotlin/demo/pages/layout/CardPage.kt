@@ -26,6 +26,7 @@ import web.cssom.CSSStyleSheet
 import web.cssom.Display
 import web.cssom.FlexDirection
 import web.cssom.FlexWrap
+import web.cssom.number
 import web.cssom.px
 import web.cssom.rem
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -79,8 +80,9 @@ private val CARD_SHEET: CSSStyleSheet = cssSheet {
     }
 
     ".card-playground__preview" {
-        // No `Flex(basis)` constructor exists for a `rem` basis; the string is the only way in.
-        flex = js("""("1 1 20rem")""")
+        // grow 1, shrink 1, basis 20rem: cssom has the three-argument `Flex` factory, and `20.rem`
+        // (a `Length`) is a `FlexBasis` through `LengthType : LengthProperty`.
+        flex = Flex(number(1.0), number(1.0), 20.rem)
         minWidth = 18.rem
     }
 
