@@ -63,9 +63,22 @@ class ShowcaseTest {
         assertThat(page.locator(".page__title")).hasText("Component overview")
 
         val groups = page.locator("vaadin-side-nav-item:not([data-route])").allTextContents()
-        assertTrue(groups.size >= 9, "drawer groups: $groups")
+        assertTrue(groups.size >= 8, "drawer groups: $groups")
         assertTrue(groups.any { it.startsWith("Input fields") })
         assertTrue(groups.any { it.startsWith("Data display") })
+
+        // A group holding a single page is flattened: it would be a parent row whose only job is to
+        // hold the page under it, so the page moves up and keeps the group's mark. The overview and
+        // the theming page are those two, and neither may come back as a group row.
+        assertTrue(groups.none { it.startsWith("Overview") }, "flattened overview group: $groups")
+        assertTrue(groups.none { it.startsWith("Theming") }, "flattened theming group: $groups")
+        assertThat(page.locator(navItem("overview"))).hasCount(1)
+        assertThat(page.locator(navItem("theming"))).hasCount(1)
+
+        // A top-level row must not declare `slot=children`, or the drawer would project it into the
+        // previous group's body instead of placing it beside the groups.
+        assertThat(page.locator("${navItem("overview")}[slot]")).hasCount(0)
+        assertThat(page.locator("${navItem("overview")} iconify-icon")).hasCount(1)
 
         // Every component has a card in the index and an entry in the drawer. The overview is the page
         // itself, so the index lists the other pages.
@@ -137,16 +150,17 @@ class ShowcaseTest {
 
     @RetryingTest(maxAttempts = 2)
     fun `drawer groups fold and reopening shows their pages again`(page: Page) {
-        val overviewGroup = groupItem(page, "Overview")
+        // A multi-page group: single-page groups carry no parent row at all, so they cannot fold.
+        val actionsGroup = groupItem(page, "Buttons & actions")
 
         // Every group starts expanded, so no page is more than one click away.
-        assertThat(page.locator(navItem("overview"))).isVisible()
+        assertThat(page.locator(navItem("button"))).isVisible()
 
-        toggleGroup(overviewGroup)
-        assertThat(page.locator(navItem("overview"))).not().isVisible()
+        toggleGroup(actionsGroup)
+        assertThat(page.locator(navItem("button"))).not().isVisible()
 
-        toggleGroup(overviewGroup)
-        assertThat(page.locator(navItem("overview"))).isVisible()
+        toggleGroup(actionsGroup)
+        assertThat(page.locator(navItem("button"))).isVisible()
 
         // A route change highlights its own row and keeps the group open.
         page.evaluate("() => { window.location.hash = '#/text-field' }")
