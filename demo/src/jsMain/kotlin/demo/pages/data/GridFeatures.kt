@@ -1,5 +1,6 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -8,7 +9,6 @@ import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
 import demo.tr
 import demo.ui.EventLog
-import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
@@ -49,15 +49,15 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.pointer.PointerEvent
 
-internal fun appendGridFeatures(view: PageView) {
-    appendGridRowDetails(view)
-    appendGridEmptyState(view)
-    appendGridMenus(view)
-    appendGridFocusAndScroll(view)
-    appendGridDragAndDrop(view)
-    appendGridSelection(view)
-    appendGridStyling(view)
-    appendGridLazyColumns(view)
+internal fun appendGridFeatures(page: DemoPage) {
+    appendGridRowDetails(page)
+    appendGridEmptyState(page)
+    appendGridMenus(page)
+    appendGridFocusAndScroll(page)
+    appendGridDragAndDrop(page)
+    appendGridSelection(page)
+    appendGridStyling(page)
+    appendGridLazyColumns(page)
 }
 
 // region Event detail readers
@@ -97,7 +97,7 @@ private fun personDetails(item: JsAny?): HTMLElement =
         )
     }
 
-private fun appendGridRowDetails(view: PageView) {
+private fun appendGridRowDetails(page: DemoPage) {
     val details =
         section(
             tr("行详情", "Item details"),
@@ -170,10 +170,10 @@ private fun appendGridRowDetails(view: PageView) {
         ),
     )
 
-    view.body.append(details.root)
+    page.body.append(details.root)
 }
 
-private fun appendGridEmptyState(view: PageView) {
+private fun appendGridEmptyState(page: DemoPage) {
     val empty =
         section(
             tr("空状态", "Empty state"),
@@ -193,13 +193,13 @@ private fun appendGridEmptyState(view: PageView) {
         }.apply { slot = "empty-state" },
     )
     empty.body.append(example(null, grid))
-    view.body.append(empty.root)
+    page.body.append(empty.root)
 }
 
 private fun menuItems(vararg labels: String): Array<ContextMenuItemData> =
     labels.map { unsafeJso<ContextMenuItemData> { text = it } }.toTypedArray()
 
-private fun appendGridMenus(view: PageView) {
+private fun appendGridMenus(page: DemoPage) {
     val menus =
         section(
             tr("右键菜单与工具提示", "Context menu and tooltips"),
@@ -284,10 +284,10 @@ private fun appendGridMenus(view: PageView) {
         ),
     )
 
-    view.body.append(menus.root)
+    page.body.append(menus.root)
 }
 
-private fun appendGridFocusAndScroll(view: PageView) {
+private fun appendGridFocusAndScroll(page: DemoPage) {
     val focusSection =
         section(
             tr("单元格焦点与滚动", "Cell focus and scrolling"),
@@ -366,10 +366,10 @@ private fun appendGridFocusAndScroll(view: PageView) {
         ),
     )
 
-    view.body.append(focusSection.root)
+    page.body.append(focusSection.root)
 }
 
-private fun appendGridDragAndDrop(view: PageView) {
+private fun appendGridDragAndDrop(page: DemoPage) {
     val drag =
         section(
             tr("拖放", "Drag and drop"),
@@ -467,7 +467,7 @@ private fun appendGridDragAndDrop(view: PageView) {
         ),
     )
 
-    view.body.append(drag.root)
+    page.body.append(drag.root)
 }
 
 private fun dragGrid(items: MutableList<Person>, onDragStart: (Int) -> Unit): GridElement {
@@ -490,7 +490,7 @@ private fun dragGrid(items: MutableList<Person>, onDragStart: (Int) -> Unit): Gr
     return grid
 }
 
-private fun appendGridSelection(view: PageView) {
+private fun appendGridSelection(page: DemoPage) {
     val selection =
         section(
             tr("选择", "Selection"),
@@ -593,7 +593,7 @@ private fun appendGridSelection(view: PageView) {
         ),
     )
 
-    view.body.append(selection.root)
+    page.body.append(selection.root)
 }
 
 private fun themedGrid(theme: String): GridElement {
@@ -608,7 +608,7 @@ private fun themedGrid(theme: String): GridElement {
     return grid
 }
 
-private fun appendGridStyling(view: PageView) {
+private fun appendGridStyling(page: DemoPage) {
     val styling =
         section(
             tr("样式", "Styling"),
@@ -711,7 +711,7 @@ private fun appendGridStyling(view: PageView) {
         ),
     )
 
-    view.body.append(styling.root)
+    page.body.append(styling.root)
 }
 
 private fun itemRating(item: JsAny?): Double =
@@ -726,7 +726,7 @@ private fun headerStartsWith(column: GridColumnElement, prefix: String): Boolean
 
 private fun fixed2(value: Double): String = js("(value) => value.toFixed(2)")(value) as String
 
-private fun appendGridLazyColumns(view: PageView) {
+private fun appendGridLazyColumns(page: DemoPage) {
     val lazy =
         section(
             tr("懒列渲染", "Lazy column rendering"),
@@ -754,5 +754,5 @@ private fun appendGridLazyColumns(view: PageView) {
     }
     grid.append(*columns.toTypedArray())
     lazy.body.append(example(null, grid))
-    view.body.append(lazy.root)
+    page.body.append(lazy.root)
 }

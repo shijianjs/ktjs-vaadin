@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -10,10 +14,9 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.PageMeta
-import demo.ui.PageView
+import demo.ui.configureFrame
 import demo.ui.column
 import demo.ui.example
-import demo.ui.page
 import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordion
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionHeading
@@ -43,99 +46,116 @@ val accordionEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/accordion",
                 sourcePath = "pages/layout/AccordionPage.kt",
             ),
-        builder = ::buildAccordionPage,
+        kitPage = { newAccordionPage() },
+        rebuildsOnLanguage = true,
     )
 
-private fun buildAccordionPage(meta: PageMeta): PageView {
-    val view = page(meta)
-    registerVaadinIcons()
+internal class AccordionPage : DemoPage() {
 
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "每个 panel 用 summary 定义标题，子节点是展开后的内容；同一时间只展开一个面板（手风琴模式）。",
-                "Each panel defines its header through summary and the children are the expanded content; only " +
-                    "one panel stays open at a time.",
-            ),
+    init {
+        configureFrame(accordionEntry)
+        registerVaadinIcons()
+
+        val basic =
+            section(
+                tr("基本用法", "Basic usage"),
+                tr(
+                    "每个 panel 用 summary 定义标题，子节点是展开后的内容；同一时间只展开一个面板（手风琴模式）。",
+                    "Each panel defines its header through summary and the children are the expanded content; only " +
+                        "one panel stays open at a time.",
+                ),
+            )
+        val accordion = infoAccordion()
+        accordion.headingLevel = 3.0
+        accordion.dataset["test"] = "accordion"
+        basic.body.append(example(null, accordion))
+        body.append(basic.root)
+
+        val summarySection =
+            section(
+                tr("自定义 summary", "Custom summary"),
+                tr(
+                    "summary 插槽里可以放 accordion-heading 与任意节点；下方向导用 vaadin:check 图标标记已完成的" +
+                        "步骤，并在点击按钮后展开下一步。",
+                    "The summary slot takes an accordion-heading with any content; the wizard below marks completed " +
+                        "steps with a vaadin:check icon and opens the next one from its buttons.",
+                ),
+            )
+        val wizard = createAccordion { opened = 0.0 }
+        wizard.dataset["test"] = "accordion-wizard"
+        val customerIcon = completionIcon()
+        val billingIcon = completionIcon()
+        val paymentIcon = completionIcon()
+        wizard.append(
+            wizardStep(tr("客户信息", "Customer details"), customerIcon, customerForm(), tr("继续", "Continue")) {
+                customerIcon.toggleAttribute("hidden", false)
+                wizard.opened = 1.0
+            },
+            wizardStep(tr("账单地址", "Billing address"), billingIcon, billingForm(), tr("继续", "Continue")) {
+                billingIcon.toggleAttribute("hidden", false)
+                wizard.opened = 2.0
+            },
+            wizardStep(tr("付款方式", "Payment"), paymentIcon, paymentForm(), tr("完成", "Finish")) {
+                paymentIcon.toggleAttribute("hidden", false)
+                wizard.opened = -1.0
+            },
         )
-    val accordion = infoAccordion()
-    accordion.headingLevel = 3.0
-    accordion.dataset["test"] = "accordion"
-    basic.body.append(example(null, accordion))
-    view.body.append(basic.root)
+        summarySection.body.append(example(null, wizard))
+        body.append(summarySection.root)
 
-    val summarySection =
-        section(
-            tr("自定义 summary", "Custom summary"),
-            tr(
-                "summary 插槽里可以放 accordion-heading 与任意节点；下方向导用 vaadin:check 图标标记已完成的" +
-                    "步骤，并在点击按钮后展开下一步。",
-                "The summary slot takes an accordion-heading with any content; the wizard below marks completed " +
-                    "steps with a vaadin:check icon and opens the next one from its buttons.",
-            ),
+        val contentSection =
+            section(
+                tr("内容", "Content"),
+                tr(
+                    "面板内容可以是链接列表之类的任意节点，展开状态由 opened 控制。",
+                    "Panel content can be any nodes, such as a list of links; opened controls the expanded state.",
+                ),
+            )
+        contentSection.body.append(example(null, linksAccordion()))
+        body.append(contentSection.root)
+
+        val disabledSection =
+            section(
+                tr("禁用面板", "Disabled panels"),
+                tr(
+                    "给 panel 设 disabled 后标题不可点击，也无法通过键盘或程序展开。",
+                    "A disabled panel cannot be toggled by pointer, keyboard or programmatic changes.",
+                ),
+            )
+        disabledSection.body.append(example(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
+        body.append(disabledSection.root)
+
+        val themes =
+            section(
+                tr("主题变体", "Theme variants"),
+                tr(
+                    "filled、no-padding、reverse、small 是 panel 上的主题变体，可以逐面板设置。",
+                    "filled, no-padding, reverse and small are panel theme variants and are set per panel.",
+                ),
+            )
+        themes.body.append(
+            example("filled", infoAccordion(theme = "filled")),
+            example("no-padding", infoAccordion(theme = "no-padding")),
+            example("reverse", infoAccordion(theme = "reverse")),
+            example("small", infoAccordion(theme = "small")),
         )
-    val wizard = createAccordion { opened = 0.0 }
-    wizard.dataset["test"] = "accordion-wizard"
-    val customerIcon = completionIcon()
-    val billingIcon = completionIcon()
-    val paymentIcon = completionIcon()
-    wizard.append(
-        wizardStep(tr("客户信息", "Customer details"), customerIcon, customerForm(), tr("继续", "Continue")) {
-            customerIcon.toggleAttribute("hidden", false)
-            wizard.opened = 1.0
-        },
-        wizardStep(tr("账单地址", "Billing address"), billingIcon, billingForm(), tr("继续", "Continue")) {
-            billingIcon.toggleAttribute("hidden", false)
-            wizard.opened = 2.0
-        },
-        wizardStep(tr("付款方式", "Payment"), paymentIcon, paymentForm(), tr("完成", "Finish")) {
-            paymentIcon.toggleAttribute("hidden", false)
-            wizard.opened = -1.0
-        },
-    )
-    summarySection.body.append(example(null, wizard))
-    view.body.append(summarySection.root)
+        body.append(themes.root)
 
-    val contentSection =
-        section(
-            tr("内容", "Content"),
-            tr(
-                "面板内容可以是链接列表之类的任意节点，展开状态由 opened 控制。",
-                "Panel content can be any nodes, such as a list of links; opened controls the expanded state.",
-            ),
-        )
-    contentSection.body.append(example(null, linksAccordion()))
-    view.body.append(contentSection.root)
+    }
 
-    val disabledSection =
-        section(
-            tr("禁用面板", "Disabled panels"),
-            tr(
-                "给 panel 设 disabled 后标题不可点击，也无法通过键盘或程序展开。",
-                "A disabled panel cannot be toggled by pointer, keyboard or programmatic changes.",
-            ),
-        )
-    disabledSection.body.append(example(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
-    view.body.append(disabledSection.root)
+    companion object : CustomElementReference<AccordionPage>(AccordionPage::class.js) {
+        val NAME: TagName<AccordionPage> = TagName("vaadin-demo-accordion-page")
 
-    val themes =
-        section(
-            tr("主题变体", "Theme variants"),
-            tr(
-                "filled、no-padding、reverse、small 是 panel 上的主题变体，可以逐面板设置。",
-                "filled, no-padding, reverse and small are panel theme variants and are set per panel.",
-            ),
-        )
-    themes.body.append(
-        example("filled", infoAccordion(theme = "filled")),
-        example("no-padding", infoAccordion(theme = "no-padding")),
-        example("reverse", infoAccordion(theme = "reverse")),
-        example("small", infoAccordion(theme = "small")),
-    )
-    view.body.append(themes.root)
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
 
-    return view
+/** Creates a defined `<vaadin-demo-accordion-page>`. */
+internal fun newAccordionPage(): AccordionPage {
+    AccordionPage.define()
+    return AccordionPage.NAME()
 }
 
 /** Three information panels with the content of the upstream basic example. */
@@ -224,3 +244,4 @@ private fun paymentForm(): HTMLElement =
         textField(tr("有效期", "Expiry date")),
         textField("CVV"),
     )
+

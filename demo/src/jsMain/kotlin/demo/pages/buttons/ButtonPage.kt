@@ -35,13 +35,11 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.Images
 import demo.ui.PageMeta
-import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import js.objects.unsafeJso
@@ -660,4 +658,5 @@ internal fun newButtonPage(): ButtonPage {
     ButtonPage.define()
     return ButtonPage.NAME()
 }
+
 

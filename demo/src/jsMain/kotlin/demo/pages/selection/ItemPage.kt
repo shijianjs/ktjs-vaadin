@@ -15,10 +15,8 @@ import demo.componentApiUrl
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.PageView
 import demo.ui.column
 import demo.ui.example
-import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -209,4 +207,5 @@ internal fun newItemPage(): ItemPage {
     ItemPage.define()
     return ItemPage.NAME()
 }
+
 

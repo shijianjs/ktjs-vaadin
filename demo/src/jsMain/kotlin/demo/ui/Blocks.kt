@@ -3,8 +3,10 @@ package demo.ui
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.Bilingual
+import demo.CatalogEntry
 import demo.Language
 import demo.LanguageState
+import demo.componentApiUrl
 import demo.tr
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.EventLog as KitEventLog
@@ -14,11 +16,9 @@ import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import kotlin.js.Date
-import web.cssom.CSSStyleSheet
 import web.dom.Node
 import web.html.HTMLElement
 import web.html.HtmlTagName
@@ -65,49 +65,37 @@ class PageMeta(
     }
 }
 
-/**
- * The built page: [root] is mounted by the shell, [body] receives the demo sections and [addLink]
- * appends to the header's link row.
- *
- * The frame itself belongs to `ktjs-demo-kit` (`<ktjs-demo-page>`): title, summary, links and the body
- * column are its business, so a page here only fills the body.
- */
-class PageView(
-    val root: HTMLElement,
-    val body: HTMLElement,
-    val addLink: (Node) -> Unit,
-    /** Adopts one more sheet into the page's shadow tree, for rules this page owns. */
-    val addSheet: (CSSStyleSheet) -> Unit,
-)
-
 internal const val REPO_SOURCE_ROOT = "https://github.com/shijianjs/ktjs-vaadin/blob/main/demo/src/jsMain/kotlin/demo"
 
 /**
- * Builds the common frame of a component page: title, summary, the official documentation link and
- * the link to the Kotlin source of the page itself.
+ * Fills this page's frame from [entry]: title, summary, the official documentation link, the link to
+ * the Kotlin source of the page itself and the Dokka page of the component.
+ *
+ * A page is its own `vaadin-demo-…-page` element, so the frame is the element's own frame (`body`,
+ * `setTitle`, `addLink`); there is no separate "view" object standing between the router and the page.
  *
  * Pages that are not converted to `Translations` yet are still built for the language that is active
  * when the shell creates them, and rebuilt when the language changes.
  */
-fun page(meta: PageMeta): PageView {
-    val demoPage: DemoPage = newPage()
-    demoPage.addSheet(TEXT_SHEET)
-    demoPage.setTitle(meta.title)
-    demoPage.setSummary(meta.summary)
-    demoPage.addLink(kitAnchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, external = true))
-    demoPage.addLink(
+fun DemoPage.configureFrame(entry: CatalogEntry) {
+    val meta = entry.meta
+    addSheet(TEXT_SHEET)
+    setTitle(meta.title)
+    setSummary(meta.summary)
+    addLink(kitAnchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, external = true))
+    addLink(
         kitAnchor(
             tr("查看 Kotlin 源码", "Kotlin source"),
             "$REPO_SOURCE_ROOT/${meta.sourcePath}",
             external = true,
         ),
     )
+    addLink(kitAnchor(tr("Kotlin API 文档", "Kotlin API reference"), componentApiUrl(entry.id)))
     meta.docsNote?.let { note ->
         // The note explains the docs link rather than being one, so it belongs in the body; the link
         // row accepts anchors only and gives every node it takes the link class.
-        demoPage.body.append(paragraph(note))
+        body.append(paragraph(note))
     }
-    return PageView(demoPage, demoPage.body, demoPage::addLink, demoPage::addSheet)
 }
 
 /** One titled block of a page; [body] receives the individual examples. */

@@ -1,5 +1,9 @@
 package demo.pages.upload
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
@@ -11,14 +15,13 @@ import demo.bi
 import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
-import demo.ui.PageView
+import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
 import demo.ui.grid
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.page
 import demo.ui.section
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.html.HTMLElement
@@ -61,30 +64,47 @@ val uploadEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/upload",
                 sourcePath = "pages/upload/UploadPage.kt",
             ),
-        builder = ::buildUploadPage,
+        kitPage = { newUploadPage() },
+        rebuildsOnLanguage = true,
     )
 
-private fun buildUploadPage(meta: PageMeta): PageView {
-    val view = page(meta)
-    appendBasic(view)
-    appendDragAndDrop(view)
-    appendAutoUpload(view)
-    appendRestrictions(view)
-    appendFileActions(view)
-    appendInternationalization(view)
-    appendCustomization(view)
-    appendListeners(view)
-    appendBestPractices(view)
-    appendErrorMessages(view)
-    appendModular(view)
-    appendDisabled(view)
-    return view
+internal class UploadPage : DemoPage() {
+
+    init {
+        configureFrame(uploadEntry)
+        appendBasic(this)
+        appendDragAndDrop(this)
+        appendAutoUpload(this)
+        appendRestrictions(this)
+        appendFileActions(this)
+        appendInternationalization(this)
+        appendCustomization(this)
+        appendListeners(this)
+        appendBestPractices(this)
+        appendErrorMessages(this)
+        appendModular(this)
+        appendDisabled(this)
+    }
+
+    companion object : CustomElementReference<UploadPage>(UploadPage::class.js) {
+        val NAME: TagName<UploadPage> = TagName("vaadin-demo-upload-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
+}
+
+/** Creates a defined `<vaadin-demo-upload-page>`. */
+internal fun newUploadPage(): UploadPage {
+    UploadPage.define()
+    return UploadPage.NAME()
 }
 
 /** Gives [node] the full width of the example box: an upload list is meant to fill it. */
 private fun <T : HTMLElement> fullWidth(node: T): T = node.apply { style.setProperty("width", "100%") }
 
-private fun appendBasic(view: PageView) {
+private fun appendBasic(page: DemoPage) {
     val basic =
         section(
             tr("基本用法", "Basic usage"),
@@ -110,10 +130,10 @@ private fun appendBasic(view: PageView) {
             """.trimIndent(),
         )
     basic.body.append(example(null, upload))
-    view.body.append(basic.root)
+    page.body.append(basic.root)
 }
 
-private fun appendDragAndDrop(view: PageView) {
+private fun appendDragAndDrop(page: DemoPage) {
     val dragAndDrop =
         section(
             tr("拖放", "Drag & drop"),
@@ -140,10 +160,10 @@ private fun appendDragAndDrop(view: PageView) {
             ),
         ),
     )
-    view.body.append(dragAndDrop.root)
+    page.body.append(dragAndDrop.root)
 }
 
-private fun appendAutoUpload(view: PageView) {
+private fun appendAutoUpload(page: DemoPage) {
     val autoUpload =
         section(
             tr("自动上传", "Auto-upload"),
@@ -201,10 +221,10 @@ private fun appendAutoUpload(view: PageView) {
             column(uploadAll, startAll, readout.root),
         ),
     )
-    view.body.append(autoUpload.root)
+    page.body.append(autoUpload.root)
 }
 
-private fun appendRestrictions(view: PageView) {
+private fun appendRestrictions(page: DemoPage) {
     val restrictions =
         section(
             tr("上传限制", "Upload restrictions"),
@@ -290,10 +310,10 @@ private fun appendRestrictions(view: PageView) {
             ),
         ),
     )
-    view.body.append(restrictions.root)
+    page.body.append(restrictions.root)
 }
 
-private fun appendFileActions(view: PageView) {
+private fun appendFileActions(page: DemoPage) {
     val actions =
         section(
             tr("文件操作", "File actions"),
@@ -331,10 +351,10 @@ private fun appendFileActions(view: PageView) {
     queued.dataset["test"] = "upload-start"
     queued.files = heldFiles("Workflow.pdf")
     actions.body.append(example(tr("启动", "Start"), queued))
-    view.body.append(actions.root)
+    page.body.append(actions.root)
 }
 
-private fun appendInternationalization(view: PageView) {
+private fun appendInternationalization(page: DemoPage) {
     val i18n =
         section(
             tr("国际化", "Internationalization"),
@@ -383,10 +403,10 @@ private fun appendInternationalization(view: PageView) {
             """.trimIndent(),
         ).unsafeCast<UploadI18n>()
     i18n.body.append(example(null, upload))
-    view.body.append(i18n.root)
+    page.body.append(i18n.root)
 }
 
-private fun appendCustomization(view: PageView) {
+private fun appendCustomization(page: DemoPage) {
     val customization =
         section(
             tr("自定义", "Customization"),
@@ -447,10 +467,10 @@ private fun appendCustomization(view: PageView) {
         },
     )
     customization.body.append(example(tr("自定义拖放区文案与图标", "Custom drop label and icon"), dropLabel))
-    view.body.append(customization.root)
+    page.body.append(customization.root)
 }
 
-private fun appendListeners(view: PageView) {
+private fun appendListeners(page: DemoPage) {
     val listeners =
         section(
             tr("监听器", "Listeners"),
@@ -476,10 +496,10 @@ private fun appendListeners(view: PageView) {
     start.addTheme("primary")
     start.clickEvent.addHandler { upload.uploadFiles() }
     listeners.body.append(example(null, column(upload, start, log.root)))
-    view.body.append(listeners.root)
+    page.body.append(listeners.root)
 }
 
-private fun appendBestPractices(view: PageView) {
+private fun appendBestPractices(page: DemoPage) {
     val bestPractices =
         section(
             tr("最佳实践", "Best practices"),
@@ -547,10 +567,10 @@ private fun appendBestPractices(view: PageView) {
             ),
         ),
     )
-    view.body.append(bestPractices.root)
+    page.body.append(bestPractices.root)
 }
 
-private fun appendErrorMessages(view: PageView) {
+private fun appendErrorMessages(page: DemoPage) {
     val errorMessages =
         section(
             tr("错误消息", "Error messages"),
@@ -600,10 +620,10 @@ private fun appendErrorMessages(view: PageView) {
             ),
         ),
     )
-    view.body.append(errorMessages.root)
+    page.body.append(errorMessages.root)
 }
 
-private fun appendModular(view: PageView) {
+private fun appendModular(page: DemoPage) {
     val modular =
         section(
             tr("模块化上传", "Modular upload"),
@@ -709,10 +729,10 @@ private fun appendModular(view: PageView) {
             column(thumbnailsButton, thumbnailsList),
         ),
     )
-    view.body.append(modular.root)
+    page.body.append(modular.root)
 }
 
-private fun appendDisabled(view: PageView) {
+private fun appendDisabled(page: DemoPage) {
     val disabled =
         section(
             tr("禁用", "Disabled"),
@@ -738,5 +758,6 @@ private fun appendDisabled(view: PageView) {
     lockedList.disabled = true
     fullWidth(lockedList)
     disabled.body.append(example(tr("禁用的管理器", "Disabled manager"), column(lockedButton, lockedList)))
-    view.body.append(disabled.root)
+    page.body.append(disabled.root)
 }
+

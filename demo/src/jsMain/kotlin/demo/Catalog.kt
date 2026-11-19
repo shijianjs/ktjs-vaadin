@@ -1,6 +1,5 @@
 package demo
 
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.pages.buttons.buttonsEntries
 import demo.pages.data.dataEntries
 import demo.pages.display.displayEntries
@@ -13,7 +12,6 @@ import demo.pages.selection.selectionEntries
 import demo.pages.theming.themingEntries
 import demo.pages.upload.uploadEntries
 import demo.ui.PageMeta
-import demo.ui.PageView
 
 /** Base URL of the Vaadin component documentation. Every page links to its own page below it. */
 const val DOCS_BASE = "https://vaadin.com/docs/latest/zh/components"
@@ -58,32 +56,31 @@ object Groups {
 
 /**
  * One entry of the showcase: the route id, the sidebar group it belongs to, the page metadata and
- * the builder that produces the page DOM.
+ * the page element that renders it.
+ *
+ * A page is a custom element like every other component of this demo: the entry holds a factory for
+ * its tag, not a function that assembles DOM. A `buildXxxPage(meta): PageView` was the shape this
+ * architecture does not allow — DOM only ever grows inside the element that owns it.
  */
 class CatalogEntry(
     val id: String,
     val group: Group,
     val meta: PageMeta,
-    /** The pre-kit builder; `null` once a page exists only on kit blocks. */
-    private val builder: ((PageMeta) -> PageView)? = null,
-    /**
-     * The same page built on `ktjs-demo-kit` blocks, once it has been converted.
-     *
-     * While the migration runs a page can carry both: the shell picks [kitPage], and the legacy
-     * builder stays compiled as the fallback until the whole catalog has moved over.
-     */
+    /** Creates the page element; the router mounts [Page.node] and caches one per route. */
     val kitPage: (() -> io.github.shijianjs.ktjs.demo.nav.Page)? = null,
+    /**
+     * `true` while the page resolves its copy with `tr()` as it builds.
+     *
+     * Such a page has no text of its own to rewrite, so a language switch replaces it instead of
+     * calling `applyTranslation`; the slot stays and only the page inside it changes. Pages that own a
+     * `Translations` table rewrite their copy in place and leave this `false`.
+     */
+    val rebuildsOnLanguage: Boolean = false,
 ) {
     /** Builds a fresh instance of the page. The shell caches one per route. */
     fun create(): web.html.HTMLElement {
-        val legacyBuild = builder ?: error("page `$id` has no legacy builder; it is built on kit blocks")
-        val view = legacyBuild(meta)
-        // The API link is the same for every page: the frame takes the anchor, the catalog knows where
-        // the Dokka page of this component lives.
-        view.addLink(
-            kitAnchor(tr("Kotlin API 文档", "Kotlin API reference"), componentApiUrl(id)),
-        )
-        return view.root
+        val page = kitPage ?: error("page `$id` has no element factory")
+        return page().node
     }
 }
 
@@ -133,3 +130,4 @@ fun catalogEntry(id: String): CatalogEntry? = catalogById[id]
 
 /** Entries of one sidebar group, in declaration order. */
 fun catalogEntriesOf(group: Group): List<CatalogEntry> = catalog.filter { it.group == group }
+

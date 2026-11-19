@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -10,12 +14,11 @@ import demo.bi
 import demo.pages.fixtures.people
 import demo.tr
 import demo.ui.PageMeta
-import demo.ui.PageView
+import demo.ui.configureFrame
 import demo.ui.column
 import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import kotlin.js.JsAny
@@ -45,152 +48,170 @@ val virtualListEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/virtual-list",
                 sourcePath = "pages/data/VirtualListPage.kt",
             ),
-        builder = ::buildVirtualListPage,
+        kitPage = { newVirtualListPage() },
+        rebuildsOnLanguage = true,
     )
 
-private fun buildVirtualListPage(meta: PageMeta): PageView {
-    val view = page(meta)
+internal class VirtualListPage : DemoPage() {
 
-    val basic =
-        section(
-            tr("基本用法", "Basic usage"),
-            tr(
-                "renderer 只对可见行调用，滚动时复用容器节点；每一行是一张人员卡片，展开联系方式后" +
-                    "滚动离开再回来仍保持展开。",
-                "The renderer is called only for visible rows and container nodes are reused while scrolling. " +
-                    "Each row is a person card, and an expanded contact block stays open across scrolling.",
-            ),
-        )
-    val base =
-        listOf(
-            PersonCard(
-                "Ada",
-                "Lovelace",
-                tr("数学家", "Mathematician"),
-                "ada.lovelace@example.com",
-                "+44 20 7946 0101",
-                0,
-            ),
-            PersonCard(
-                "Grace",
-                "Hopper",
-                tr("计算机科学家", "Computer scientist"),
-                "grace.hopper@example.com",
-                "+1 202 555 0142",
-                1,
-            ),
-            PersonCard(
-                "Alan",
-                "Turing",
-                tr("密码学家", "Cryptanalyst"),
-                "alan.turing@example.com",
-                "+44 20 7946 0193",
-                2,
-            ),
-            PersonCard(
-                "Katherine",
-                "Johnson",
-                tr("航空航天工程师", "Aerospace engineer"),
-                "katherine.johnson@example.com",
-                "+1 202 555 0177",
-                3,
-            ),
-            PersonCard(
-                "Edsger",
-                "Dijkstra",
-                tr("计算机科学家", "Computer scientist"),
-                "edsger.dijkstra@example.com",
-                "+31 20 555 0124",
-                4,
-            ),
-        )
-    // The docs load a hundred people; repeating the fixed set is enough to show row reuse.
-    val people = List(200) { index -> base[index % base.size] }
-    val expanded = mutableSetOf<Int>()
+    init {
+        configureFrame(virtualListEntry)
 
-    val list = createVirtualList()
-    list.dataset["test"] = "virtual-list"
-    list.items = jsArray<JsAny>((0 until people.size).joinToString(",", "[", "]"))
-    list.renderer = { container, _, model ->
-        val index = model.index.toInt()
-        val person = people[index]
+        val basic =
+            section(
+                tr("基本用法", "Basic usage"),
+                tr(
+                    "renderer 只对可见行调用，滚动时复用容器节点；每一行是一张人员卡片，展开联系方式后" +
+                        "滚动离开再回来仍保持展开。",
+                    "The renderer is called only for visible rows and container nodes are reused while scrolling. " +
+                        "Each row is a person card, and an expanded contact block stays open across scrolling.",
+                ),
+            )
+        val base =
+            listOf(
+                PersonCard(
+                    "Ada",
+                    "Lovelace",
+                    tr("数学家", "Mathematician"),
+                    "ada.lovelace@example.com",
+                    "+44 20 7946 0101",
+                    0,
+                ),
+                PersonCard(
+                    "Grace",
+                    "Hopper",
+                    tr("计算机科学家", "Computer scientist"),
+                    "grace.hopper@example.com",
+                    "+1 202 555 0142",
+                    1,
+                ),
+                PersonCard(
+                    "Alan",
+                    "Turing",
+                    tr("密码学家", "Cryptanalyst"),
+                    "alan.turing@example.com",
+                    "+44 20 7946 0193",
+                    2,
+                ),
+                PersonCard(
+                    "Katherine",
+                    "Johnson",
+                    tr("航空航天工程师", "Aerospace engineer"),
+                    "katherine.johnson@example.com",
+                    "+1 202 555 0177",
+                    3,
+                ),
+                PersonCard(
+                    "Edsger",
+                    "Dijkstra",
+                    tr("计算机科学家", "Computer scientist"),
+                    "edsger.dijkstra@example.com",
+                    "+31 20 555 0124",
+                    4,
+                ),
+            )
+        // The docs load a hundred people; repeating the fixed set is enough to show row reuse.
+        val people = List(200) { index -> base[index % base.size] }
+        val expanded = mutableSetOf<Int>()
 
-        val details =
-            createDetails {
-                summary = tr("联系方式", "Contact information")
-                opened = expanded.contains(index)
+        val list = createVirtualList()
+        list.dataset["test"] = "virtual-list"
+        list.items = jsArray<JsAny>((0 until people.size).joinToString(",", "[", "]"))
+        list.renderer = { container, _, model ->
+            val index = model.index.toInt()
+            val person = people[index]
+
+            val details =
+                createDetails {
+                    summary = tr("联系方式", "Contact information")
+                    opened = expanded.contains(index)
+                }
+            details.listen(DetailsEvents.openedChanged) {
+                if (details.opened) expanded.add(index) else expanded.remove(index)
             }
-        details.listen(DetailsEvents.openedChanged) {
-            if (details.opened) expanded.add(index) else expanded.remove(index)
+            details.append(
+                createVerticalLayout().apply {
+                    append(HtmlTagName.span {
+                               textContent = person.email
+                           }, HtmlTagName.span {
+                                  textContent = person.phone
+                              })
+                    addTheme("spacing")
+                },
+            )
+
+            val text =
+                createVerticalLayout().apply {
+                    append(HtmlTagName.strong {
+                               textContent = person.fullName
+                           }, HtmlTagName.span {
+                                                        textContent = person.profession
+                                                    }, details)
+                    addTheme("spacing")
+                }
+            val card =
+                createHorizontalLayout().apply {
+                    append(
+                        createAvatar {
+                            name = person.fullName
+                            img = person.photo
+                        }.addTheme("xlarge"),
+                        text,
+                    )
+                    addTheme("spacing", "margin")
+                }
+            container.replaceChildren(card)
         }
-        details.append(
-            createVerticalLayout().apply {
-                append(HtmlTagName.span {
-                           textContent = person.email
-                       }, HtmlTagName.span {
-                              textContent = person.phone
-                          })
-                addTheme("spacing")
-            },
-        )
+        list.style.setProperty("height", "20rem")
+        basic.body.append(example(null, list))
+        body.append(basic.root)
 
-        val text =
-            createVerticalLayout().apply {
-                append(HtmlTagName.strong {
-                           textContent = person.fullName
-                       }, HtmlTagName.span {
-                                                    textContent = person.profession
-                                                }, details)
-                addTheme("spacing")
-            }
-        val card =
-            createHorizontalLayout().apply {
-                append(
-                    createAvatar {
-                        name = person.fullName
-                        img = person.photo
-                    }.addTheme("xlarge"),
-                    text,
-                )
-                addTheme("spacing", "margin")
-            }
-        container.replaceChildren(card)
-    }
-    list.style.setProperty("height", "20rem")
-    basic.body.append(example(null, list))
-    view.body.append(basic.root)
-
-    val jump =
-        section(
-            tr("定位", "Scrolling to an index"),
-            tr("scrollToIndex 直接跳到指定行。", "scrollToIndex jumps straight to the given row."),
-        )
-    val jumpList = createVirtualList()
-    jumpList.items = jsArray<JsAny>((1..500).joinToString(",", "[", "]"))
-    jumpList.renderer = { container, _, model ->
-        val row = HtmlTagName.span {
-                      textContent = tr("行 ${model.index + 1}", "Row ${model.index + 1}")
-                  }
-        container.replaceChildren(row)
-    }
-    jumpList.style.setProperty("height", "12rem")
-    jump.body.append(
-        example(
-            null,
-            column(
-                jumpList,
-                row(
-                    createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler { jumpList.scrollToIndex(0.0) }
-                    },
-                    createButton { textContent = tr("跳到第 300 行", "Go to row 300") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler { jumpList.scrollToIndex(299.0) }
-                    },
+        val jump =
+            section(
+                tr("定位", "Scrolling to an index"),
+                tr("scrollToIndex 直接跳到指定行。", "scrollToIndex jumps straight to the given row."),
+            )
+        val jumpList = createVirtualList()
+        jumpList.items = jsArray<JsAny>((1..500).joinToString(",", "[", "]"))
+        jumpList.renderer = { container, _, model ->
+            val row = HtmlTagName.span {
+                          textContent = tr("行 ${model.index + 1}", "Row ${model.index + 1}")
+                      }
+            container.replaceChildren(row)
+        }
+        jumpList.style.setProperty("height", "12rem")
+        jump.body.append(
+            example(
+                null,
+                column(
+                    jumpList,
+                    row(
+                        createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
+                            clickEvent.addHandler { jumpList.scrollToIndex(0.0) }
+                        },
+                        createButton { textContent = tr("跳到第 300 行", "Go to row 300") }.addTheme("tertiary").apply {
+                            clickEvent.addHandler { jumpList.scrollToIndex(299.0) }
+                        },
+                    ),
                 ),
             ),
-        ),
-    )
-    view.body.append(jump.root)
+        )
+        body.append(jump.root)
 
-    return view
+    }
+
+    companion object : CustomElementReference<VirtualListPage>(VirtualListPage::class.js) {
+        val NAME: TagName<VirtualListPage> = TagName("vaadin-demo-virtual-list-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
+
+/** Creates a defined `<vaadin-demo-virtual-list-page>`. */
+internal fun newVirtualListPage(): VirtualListPage {
+    VirtualListPage.define()
+    return VirtualListPage.NAME()
+}
+

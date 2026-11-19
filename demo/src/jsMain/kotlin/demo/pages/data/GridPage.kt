@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -13,14 +17,13 @@ import demo.pages.fixtures.people
 import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
-import demo.ui.PageView
+import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
 import demo.ui.grid
 import demo.ui.jsObject
 import demo.ui.listen
-import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import kotlin.js.unsafeCast
@@ -63,22 +66,39 @@ val gridEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/grid",
                 sourcePath = "pages/data/GridPage.kt",
             ),
-        builder = ::buildGridPage,
+        kitPage = { newGridPage() },
+        rebuildsOnLanguage = true,
     )
 
 // endregion
 
-private fun buildGridPage(meta: PageMeta): PageView {
-    val view = page(meta)
-    appendBasicGrid(view)
-    appendGridColumns(view)
-    appendGridDataBinding(view)
-    appendGridSorting(view)
-    appendGridFeatures(view)
-    return view
+internal class GridPage : DemoPage() {
+
+    init {
+        configureFrame(gridEntry)
+        appendBasicGrid(this)
+        appendGridColumns(this)
+        appendGridDataBinding(this)
+        appendGridSorting(this)
+        appendGridFeatures(this)
+    }
+
+    companion object : CustomElementReference<GridPage>(GridPage::class.js) {
+        val NAME: TagName<GridPage> = TagName("vaadin-demo-grid-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
+    }
 }
 
-private fun appendBasicGrid(view: PageView) {
+/** Creates a defined `<vaadin-demo-grid-page>`. */
+internal fun newGridPage(): GridPage {
+    GridPage.define()
+    return GridPage.NAME()
+}
+
+private fun appendBasicGrid(page: DemoPage) {
     val basic =
         section(
             tr("基本用法", "Basic usage"),
@@ -115,10 +135,10 @@ private fun appendBasicGrid(view: PageView) {
     // empty instead of recording the events the grid fires while it initialises.
     grid.listen(GridEvents.cellActivate) { log.add("cell-activate") }
     basic.body.append(example(null, column(grid, row(selection.root), log.root)))
-    view.body.append(basic.root)
+    page.body.append(basic.root)
 }
 
-private fun appendGridColumns(view: PageView) {
+private fun appendGridColumns(page: DemoPage) {
     val columns =
         section(
             tr("列", "Columns"),
@@ -374,10 +394,10 @@ private fun appendGridColumns(view: PageView) {
         ),
     )
 
-    view.body.append(columns.root)
+    page.body.append(columns.root)
 }
 
-private fun appendGridDataBinding(view: PageView) {
+private fun appendGridDataBinding(page: DemoPage) {
     val binding =
         section(
             tr("绑定数据", "Data binding"),
@@ -598,10 +618,10 @@ private fun appendGridDataBinding(view: PageView) {
         ),
     )
 
-    view.body.append(binding.root)
+    page.body.append(binding.root)
 }
 
-private fun appendGridSorting(view: PageView) {
+private fun appendGridSorting(page: DemoPage) {
     val sorting =
         section(
             tr("排序", "Sorting"),
@@ -685,5 +705,6 @@ private fun appendGridSorting(view: PageView) {
         ),
     )
 
-    view.body.append(sorting.root)
+    page.body.append(sorting.root)
 }
+

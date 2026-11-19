@@ -32,11 +32,9 @@ import demo.bi
 import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
-import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
 import demo.ui.example
-import demo.ui.page
 import demo.ui.row
 import demo.ui.section
 import io.github.shijianjs.ktjs.vaadin.aura.Aura
@@ -589,4 +587,5 @@ internal fun newThemingPage(): ThemingPage {
     ThemingPage.define()
     return ThemingPage.NAME()
 }
+
 
