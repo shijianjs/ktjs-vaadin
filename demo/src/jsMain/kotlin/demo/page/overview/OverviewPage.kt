@@ -29,12 +29,17 @@ import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.card.CardElement
-import io.github.shijianjs.ktjs.vaadin.lumoutility.LumoUtility
 import io.github.shijianjs.ktjs.vaadin.card.CardVariants
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.ClassName
+import web.cssom.Color
+import web.cssom.CSSStyleSheet
+import web.cssom.TextDecorationLine
+import web.cssom.Display
 import web.cssom.px
 import web.dom.Node
 import web.html.HTMLAnchorElement
@@ -98,14 +103,36 @@ private val overviewTexts: Translations<OverviewTexts> = texts(
     Langs.ZH_HANS to overviewChinese,
 )
 
+/** The class the index cards are found by in tests; it carries no style of its own. */
+private val COMPONENT_CARD: ClassName = ClassName("component-card")
+
+/**
+ * The single rule the index needs: an `<a>` wrapped around a card must stop painting text the way a
+ * link paints it. The anchor keeps the navigation and its keyboard / new-tab behaviour, while colour
+ * and decoration go back to the card, which draws itself.
+ */
+private val INDEX_SHEET: CSSStyleSheet = cssSheet {
+    // `:not([hidden])`, because a `display` declared here would otherwise beat the `hidden` attribute
+    // the filter sets - the same trap as an inline display.
+    ".component-card:not([hidden])" {
+        display = Display.block
+    }
+
+    ".component-card" {
+        color = Color("inherit")
+        // cssom models `text-decoration-line` without a `none` value (it only has the drawing ones),
+        // so the keyword goes in as a cast - the only hand-written value in this file.
+        textDecorationLine = js("""("none")""")
+    }
+}
+
 private fun languageOf(lang: Lang): Language = if (lang == Langs.EN) Language.EN else Language.ZH
 
-/** The card, the link in its title slot and the two nodes a language switch rewrites. */
+/** The card and the link around it; a language switch rewrites the title and the summary. */
 private class Card(
     val entry: CatalogEntry,
     val node: CardElement,
     val link: HTMLAnchorElement,
-    val name: HTMLElement,
     val summary: HTMLElement,
 )
 
@@ -155,6 +182,7 @@ internal class OverviewPage : Page {
         texts.bind(index.hint, { it.indexHint })
         index.body.append(row(search, counter.root), *buildIndex().toTypedArray())
 
+        page.addSheet(INDEX_SHEET)
         page.body.append(what.root, index.root)
 
         search.listen(TextFieldEvents.input) { filter() }
@@ -175,7 +203,7 @@ internal class OverviewPage : Page {
             val list = grid(240)
             val groupCards = catalogEntriesOf(group).map { entry ->
                 val card = card(entry)
-                list.append(card.node)
+                list.append(card.link)
                 cards += card
                 card
             }
@@ -187,28 +215,29 @@ internal class OverviewPage : Page {
     }
 
     /**
-     * One component entry: a Vaadin card, elevated so the surface comes from the component instead of
-     * from four hand-written declarations, with the page name as its title link and the summary as
-     * its subtitle.
+     * One component entry: a plain `vaadin-card` inside the link that makes the entry navigable.
      *
-     * The link is the title, not the whole card: a link is what makes the entry clickable, reachable
-     * by keyboard and openable in a new tab, and `vaadin-card` slots the title where the component
-     * expects a heading.
+     * The card is left exactly as the component draws itself — the generated title, its own padding,
+     * its own typography — and the link wraps the whole card, so the entire surface is clickable and
+     * the keyboard / new-tab behaviour comes from the anchor rather than from a click handler.
      */
     private fun card(entry: CatalogEntry): Card {
-        val name = HtmlTagName.span()
-        val link = anchor("", "#/${entry.id}").apply {
-            setAttribute("slot", "title")
-            append(name)
-        }
-        val summary = HtmlTagName.span().apply { setAttribute("slot", "subtitle") }
+        val summary = HtmlTagName.div().apply { textContent = entry.meta.summaryFor(language) }
         val node = createCard {
+            // `elevated` is the component's own variant for a card that has to read as a card on a
+            // plain background; nothing else is set by hand.
             addTheme(CardVariants.elevated)
-            classList.add(web.cssom.ClassName("component-card"))
-            dataset["route"] = entry.id
-            append(link, summary)
+            cardTitle = entry.meta.titleFor(language)
+            titleHeadingLevel = 4.0
+            append(summary)
         }
-        return Card(entry, node, link, name, summary)
+        val link = HtmlTagName.a {
+            href = "#/${entry.id}"
+            classList.add(COMPONENT_CARD)
+            dataset["route"] = entry.id
+            append(node)
+        }
+        return Card(entry, node, link, summary)
     }
 
     private fun filter() {
@@ -218,14 +247,14 @@ internal class OverviewPage : Page {
                 card.entry.meta.titleFor(language).lowercase().contains(needle) ||
                 card.entry.id.contains(needle) ||
                 card.entry.meta.summaryFor(language).lowercase().contains(needle)
-            // The card is a component with no display value of its own to fight with, so filtering
-            // only flips `hidden`; the entries stay in the DOM and a language switch keeps them.
-            card.node.toggleAttribute("hidden", !matches)
+            // Filtering only flips `hidden` on the link that holds the whole card, so the entries
+            // stay in the DOM and a language switch keeps them.
+            card.link.toggleAttribute("hidden", !matches)
         }
         groups.forEach { section ->
-            section.title.toggleAttribute("hidden", section.cards.none { !it.node.hasAttribute("hidden") })
+            section.title.toggleAttribute("hidden", section.cards.none { !it.link.hasAttribute("hidden") })
         }
-        val visible = cards.count { !it.node.hasAttribute("hidden") }
+        val visible = cards.count { !it.link.hasAttribute("hidden") }
         counter.set(overviewTexts[langOf(language)].showing(visible, cards.size))
     }
 
@@ -241,7 +270,7 @@ internal class OverviewPage : Page {
 
         // Every card's copy comes from the catalog, not from this page's table: one place per page name.
         cards.forEach { card ->
-            card.name.textContent = card.entry.meta.titleFor(language)
+            card.node.cardTitle = card.entry.meta.titleFor(language)
             card.summary.textContent = card.entry.meta.summaryFor(language)
         }
         groups.forEach { section ->
