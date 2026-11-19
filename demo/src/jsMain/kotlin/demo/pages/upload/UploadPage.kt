@@ -23,7 +23,13 @@ import demo.ui.paragraph
 import demo.ui.section
 import demo.ui.span
 import demo.ui.strong
-import demo.ui.withClass
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import web.html.HTMLElement
+import web.cssom.AlignItems
+
+import web.cssom.Display
+import web.cssom.JustifyContent
+import web.cssom.px
 import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
@@ -77,6 +83,9 @@ private fun buildUploadPage(meta: PageMeta): PageView {
     appendDisabled(view)
     return view
 }
+
+/** Gives [node] the full width of the example box: an upload list is meant to fill it. */
+private fun <T : HTMLElement> fullWidth(node: T): T = node.apply { style.setProperty("width", "100%") }
 
 private fun appendBasic(view: PageView) {
     val basic =
@@ -608,7 +617,7 @@ private fun appendModular(view: PageView) {
     basicButton.manager = basicManager
     val basicList = createUploadFileList()
     basicList.manager = basicManager
-    basicList.withClass("full-width")
+    fullWidth(basicList)
     modular.body.append(
         example(
             tr("基本用法", "Basic usage"),
@@ -623,9 +632,19 @@ private fun appendModular(view: PageView) {
     browseButton.manager = zoneManager
     val dropZone = createUploadDropZone()
     dropZone.manager = zoneManager
-    dropZone.withClass("upload-drop-zone")
+    dropZone.style.setProperty("box-sizing", "border-box")
+    dropZone.style.setProperty("width", "100%")
+    dropZone.style.setProperty("padding", "var(--lumo-space-l)")
+    dropZone.style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
+    dropZone.style.setProperty("border-radius", "var(--lumo-border-radius-l)")
     dropZone.append(
-        div("upload-drop-zone__content").apply {
+        div().apply {
+            inlineStyle.apply {
+                display = Display.flex
+                alignItems = AlignItems.center
+                justifyContent = JustifyContent.center
+                columnGap = 8.px
+            }
             append(
                 createIcon { icon = "vaadin:upload" },
                 span(tr("把文件拖到这里，或", "Drop files here or")),
@@ -635,7 +654,7 @@ private fun appendModular(view: PageView) {
     )
     val zoneList = createUploadFileList()
     zoneList.manager = zoneManager
-    zoneList.withClass("full-width")
+    fullWidth(zoneList)
     modular.body.append(
         example(
             tr("拖放区", "Drop zone"),
@@ -659,7 +678,7 @@ private fun appendModular(view: PageView) {
     val thumbnailsList = createUploadFileList()
     thumbnailsList.manager = thumbnailsManager
     thumbnailsList.withTheme("thumbnails")
-    thumbnailsList.withClass("full-width")
+    fullWidth(thumbnailsList)
     modular.body.append(
         example(
             tr("缩略图", "Thumbnails"),
@@ -693,7 +712,7 @@ private fun appendDisabled(view: PageView) {
     val lockedList = createUploadFileList()
     lockedList.manager = lockedManager
     lockedList.disabled = true
-    lockedList.withClass("full-width")
+    fullWidth(lockedList)
     disabled.body.append(example(tr("禁用的管理器", "Disabled manager"), column(lockedButton, lockedList)))
     view.body.append(disabled.root)
 }

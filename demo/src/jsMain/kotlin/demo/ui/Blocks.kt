@@ -89,6 +89,7 @@ internal const val REPO_SOURCE_ROOT = "https://github.com/shijianjs/ktjs-vaadin/
  */
 fun page(meta: PageMeta): PageView {
     val demoPage: DemoPage = newPage()
+    demoPage.addSheet(TEXT_SHEET)
     demoPage.setTitle(meta.title)
     demoPage.setSummary(meta.summary)
     demoPage.addLink(kitAnchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, external = true))

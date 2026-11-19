@@ -23,6 +23,9 @@ import demo.ui.row
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.CSSStyleSheet
+import web.cssom.Color
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -69,8 +72,17 @@ private fun copyMenuItem(text: String, value: String): CopyMenuItem =
 
 // region Context menu
 
+/**
+ * `className` from the menu items API lands on the light-DOM item element, so the rule is a plain
+ * attribute class selector inside the page's shadow tree.
+ */
+private val MENU_SHEET: CSSStyleSheet = cssSheet {
+    "vaadin-context-menu-item.custom" { color = Color("var(--lumo-error-text-color)") }
+}
+
 private fun buildContextMenuPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(MENU_SHEET)
 
     val items: Array<ContextMenuItemData> =
         jsObject(
@@ -96,7 +108,16 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
             ),
         )
     val log = EventLog(5)
-    val surface = div("example").apply { textContent = tr("在这个区域点击右键", "Right-click in this area") }
+    // The right-click target: a dashed box that reads as "click me", inline because nothing else on
+    // the page shares it.
+    val surface =
+        div().apply {
+            textContent = tr("在这个区域点击右键", "Right-click in this area")
+            style.setProperty("padding", "var(--lumo-space-l)")
+            style.setProperty("border", "1px dashed var(--lumo-contrast-20pct)")
+            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            style.setProperty("text-align", "center")
+        }
     surface.dataset["test"] = "context-menu-surface"
     val menu = createContextMenu()
     menu.openOn = "contextmenu"

@@ -18,6 +18,12 @@ import demo.ui.section
 import demo.ui.setHidden
 import demo.ui.span
 import demo.ui.withClass
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.demo.style.Palette
+import web.cssom.CSSStyleSheet
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.px
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
@@ -53,8 +59,26 @@ val radioGroupEntry: CatalogEntry =
         builder = ::buildRadioGroupPage,
     )
 
+/**
+ * The card-style options of the "custom label" example: two lines of text per option, the second
+ * one muted. The option boxes themselves come from the kit's `col` block.
+ */
+private val RADIO_SHEET: CSSStyleSheet = cssSheet {
+    ".radio-option" {
+        display = Display.flex
+        flexDirection = FlexDirection.column
+        rowGap = 2.px
+    }
+
+    ".radio-option span + span" {
+        color = Palette.muted
+        fontSize = 13.px
+    }
+}
+
 private fun buildRadioGroupPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(RADIO_SHEET)
 
     val basic =
         section(

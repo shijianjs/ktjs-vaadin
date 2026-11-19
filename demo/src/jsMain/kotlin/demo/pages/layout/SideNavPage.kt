@@ -17,6 +17,9 @@ import demo.ui.page
 import demo.ui.section
 import demo.ui.span
 import demo.ui.withClass
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.CSSStyleSheet
+import web.cssom.Color
 import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -49,8 +52,19 @@ val sideNavEntry: CatalogEntry =
         builder = ::buildSideNavPage,
     )
 
+/**
+ * The styling example: the link of an item tagged `external` and its icon are drawn in an accent
+ * colour. `::part(link)` is the only entry into the link's own shadow tree.
+ */
+private val SIDE_NAV_SHEET: CSSStyleSheet = cssSheet {
+    "vaadin-side-nav-item.external::part(link)" { color = Color("deepskyblue") }
+    "vaadin-side-nav-item.external:hover::part(link)" { color = Color("deepskyblue") }
+    "vaadin-side-nav-item.external > vaadin-icon" { color = Color("deepskyblue") }
+}
+
 private fun buildSideNavPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(SIDE_NAV_SHEET)
     registerVaadinIcons()
 
     val log = EventLog(4)

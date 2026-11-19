@@ -540,7 +540,7 @@ private fun appendGridDataBinding(view: PageView) {
     val emptyInvite =
         paragraph(
             tr("尚未发出邀请", "No invitation has been sent"),
-            "grid-empty-message",
+            "muted",
         )
     inviteGrid.append(
         createGridColumn { header = tr("姓名", "Name"); path = "displayName"; autoWidth = true },

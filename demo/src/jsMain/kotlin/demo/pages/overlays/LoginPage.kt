@@ -300,7 +300,14 @@ private fun buildLoginPage(meta: PageMeta): PageView {
     val richForm = createLoginForm()
     richForm.noAutofocus = true
     richForm.withTheme("dark")
-    val richHost = div("login-rich-content", richForm)
+    // A full-bleed gradient behind the form: the login page's own backdrop, nothing else uses it.
+    val richHost =
+        div().apply {
+            style.setProperty("padding", "var(--lumo-space-l)")
+            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            style.setProperty("background", "linear-gradient(135deg, #1f4e9c, #7a3f8f)")
+            append(richForm)
+        }
     rich.body.append(example(null, richHost))
     view.body.append(rich.root)
 

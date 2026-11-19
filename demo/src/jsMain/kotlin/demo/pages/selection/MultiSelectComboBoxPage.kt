@@ -46,6 +46,7 @@ val multiSelectComboBoxEntry: CatalogEntry =
 
 private fun buildMultiSelectComboBoxPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(FRUIT_SHEET)
 
     val countries = jsArray<JsAny>(COUNTRIES_JSON)
 

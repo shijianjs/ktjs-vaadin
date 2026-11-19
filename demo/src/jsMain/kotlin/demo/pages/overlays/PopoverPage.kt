@@ -409,11 +409,16 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
                 span(nickName),
             )
         }
-    val menuLinks = div("user-menu-links")
+    // Menu rows: the anchor fills the popover width and has no underline, so the whole row is the
+    // target. The popover itself is a `no-padding` one; the padding lives here.
+    val menuLinks = div()
     listOf(tr("用户资料", "User profile"), tr("偏好设置", "Preferences"), tr("退出登录", "Sign out")).forEach { label ->
         menuLinks.append(
             anchor(label, "#").apply {
                 setAttribute("role", "menuitem")
+                style.setProperty("display", "block")
+                style.setProperty("padding", "4px 16px")
+                style.setProperty("text-decoration", "none")
             },
         )
     }

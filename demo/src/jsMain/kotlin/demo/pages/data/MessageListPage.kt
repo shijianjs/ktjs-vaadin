@@ -16,6 +16,9 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.CSSStyleSheet
+import web.cssom.FontWeight
 import io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputEvents
 import io.github.shijianjs.ktjs.vaadin.messageinput.createMessageInput
 import io.github.shijianjs.ktjs.vaadin.messagelist.MessageListEvents
@@ -48,8 +51,18 @@ val messageListEntry: CatalogEntry =
 // The typing indicator is Flow-only and is described instead of rendered.
 // ---------------------------------------------------------------------------------------------
 
+/**
+ * Marks the message the page sends as its own: the docs example puts the author's name in bold for
+ * the signed-in user. `className` lands on the light-DOM message element, and the name is a part
+ * inside its shadow tree, so the rule is one `::part()` selector.
+ */
+private val MESSAGE_SHEET: CSSStyleSheet = cssSheet {
+    "vaadin-message.current-user::part(name)" { fontWeight = FontWeight.bold }
+}
+
 private fun buildMessageListPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(MESSAGE_SHEET)
 
     val basic =
         section(

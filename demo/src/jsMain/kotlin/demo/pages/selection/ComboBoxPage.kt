@@ -79,6 +79,7 @@ private val countryNames: List<String> =
 
 private fun buildComboBoxPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(FRUIT_SHEET)
 
     val basic =
         section(

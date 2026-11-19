@@ -11,6 +11,7 @@ import demo.ui.PageView
 import demo.ui.div
 import demo.ui.element
 import demo.ui.example
+import demo.ui.grid
 import demo.ui.heading
 import demo.ui.listen
 import demo.ui.page
@@ -18,6 +19,15 @@ import demo.ui.paragraph
 import demo.ui.section
 import demo.ui.withClass
 import demo.ui.withTheme
+import io.github.shijianjs.ktjs.dom.css.cssSheet
+import web.cssom.AlignItems
+import web.cssom.Flex
+import web.cssom.CSSStyleSheet
+import web.cssom.Display
+import web.cssom.FlexDirection
+import web.cssom.FlexWrap
+import web.cssom.px
+import web.cssom.rem
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -50,8 +60,43 @@ val cardEntry: CatalogEntry =
         builder = ::buildCardPage,
     )
 
+/**
+ * The page's own layout: a wrapping card grid, single cards capped at the width the docs examples
+ * use, and the playground's preview / controls split. Nothing outside this page uses these names.
+ */
+private val CARD_SHEET: CSSStyleSheet = cssSheet {
+    // A single card keeps the width the documentation examples use instead of filling the box; the
+    // multi-card examples use the kit's grid block and need no rule of their own.
+    ".card-demo" { maxWidth = 20.rem }
+
+    // Playground: preview on the left, the slot / media / theme controls on the right.
+    ".card-playground" {
+        display = Display.flex
+        flexWrap = FlexWrap.wrap
+        alignItems = AlignItems.flexStart
+        columnGap = 24.px
+        rowGap = 24.px
+    }
+
+    ".card-playground__preview" {
+        // No `Flex(basis)` constructor exists for a `rem` basis; the string is the only way in.
+        flex = js("""("1 1 20rem")""")
+        minWidth = 18.rem
+    }
+
+    ".card-playground__preview vaadin-card" { maxWidth = 24.rem }
+
+    ".card-playground__options" {
+        display = Display.flex
+        flexDirection = FlexDirection.column
+        rowGap = 16.px
+        minWidth = 14.rem
+    }
+}
+
 private fun buildCardPage(meta: PageMeta): PageView {
     val view = page(meta)
+    view.addSheet(CARD_SHEET)
     registerVaadinIcons()
 
     val content =
@@ -339,7 +384,7 @@ private fun cardPlayground(): HTMLElement {
     }
 }
 
-private fun cardGrid(vararg cards: HTMLElement): HTMLElement = div("card-grid", *cards)
+private fun cardGrid(vararg cards: HTMLElement): HTMLElement = grid(*cards)
 
 /** A `<div slot="…">` holding [text], for the title / subtitle slots of a card. */
 private fun cardSlotText(slotName: String, text: String): HTMLElement =

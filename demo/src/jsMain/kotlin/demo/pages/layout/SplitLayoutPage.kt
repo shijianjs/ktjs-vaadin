@@ -175,20 +175,55 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
 
 /** A fake master list for the split layout examples: sixteen rows of six cells. */
 private fun splitMaster(): HTMLElement =
-    div("split-master").apply {
+    div().apply {
+        style.setProperty("padding", "var(--lumo-space-s)")
         repeat(16) {
-            val row = div("split-master__row")
-            repeat(6) { row.append(div("split-master__cell")) }
+            // A fake master list: six grey cells per row, the shape the docs example uses.
+            val row =
+                div().apply {
+                    style.setProperty("display", "grid")
+                    style.setProperty("grid-template-columns", "repeat(6, 1fr)")
+                    style.setProperty("gap", "4px")
+                    style.setProperty("margin-bottom", "4px")
+                }
+            repeat(6) {
+                row.append(
+                    div().apply {
+                        style.setProperty("height", "12px")
+                        style.setProperty("border-radius", "2px")
+                        style.setProperty("background", "var(--lumo-contrast-10pct)")
+                    },
+                )
+            }
             append(row)
         }
     }
 
 /** A fake detail form for the split layout examples: ten labelled inputs. */
 private fun splitDetail(): HTMLElement =
-    div("split-detail").apply {
+    div().apply {
+        style.setProperty("padding", "var(--lumo-space-s)")
         repeat(10) {
-            val field = div("split-detail__field")
-            field.append(div("split-detail__label"), div("split-detail__input"))
+            val field =
+                div().apply {
+                    style.setProperty("margin-bottom", "var(--lumo-space-s)")
+                }
+            // Label above input, both grey blocks: enough shape to read as a form.
+            val label =
+                div().apply {
+                    style.setProperty("width", "40%")
+                    style.setProperty("height", "8px")
+                    style.setProperty("margin-bottom", "4px")
+                    style.setProperty("border-radius", "2px")
+                    style.setProperty("background", "var(--lumo-contrast-20pct)")
+                }
+            val input =
+                div().apply {
+                    style.setProperty("height", "24px")
+                    style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
+                    style.setProperty("border-radius", "var(--lumo-border-radius-s)")
+                }
+            field.append(label, input)
             append(field)
         }
     }
