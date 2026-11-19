@@ -1,10 +1,10 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
 import demo.pages.fixtures.personItems
 import demo.tr
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuItemData
 import io.github.shijianjs.ktjs.vaadin.grid.GridElement
@@ -47,7 +47,7 @@ internal val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
 
 internal fun iconButton(name: String, vararg iconNames: String): HTMLElement =
     createButton { textContent = "" }.apply {
-        withTheme("icon")
+        addTheme("icon")
         ariaLabel(name)
         iconNames.forEach { append(createIcon { icon = it }) }
     }

@@ -1,5 +1,8 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -12,11 +15,8 @@ import demo.ui.MUTED_SMALL
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -124,9 +124,12 @@ private fun plainContainer(label: String, readonly: Boolean = false, invalid: Bo
     container.disabled = disabled
     val input = containerInput(label)
     container.append(input)
-    return div().apply {
+    return HtmlTagName.div().apply {
         style.setProperty("width", "12rem")
-        append(container, paragraph(label, MUTED_SMALL))
+        append(container, HtmlTagName.p {
+                              className = MUTED_SMALL
+                              textContent = label
+                          })
     }
 }
 
@@ -140,7 +143,7 @@ private fun plainContainer(label: String, readonly: Boolean = false, invalid: Bo
  * property. Everything else on this element is a typed value.
  */
 private fun containerInput(value: String = "") =
-    element(HtmlTagName.input).apply {
+    HtmlTagName.input().apply {
         this.value = value
         inlineStyle.apply {
             border = Border(0.px, LineStyle.solid)
@@ -216,7 +219,7 @@ private class StateExample(readOnly: Boolean = false, invalid: Boolean = false, 
 
     val caption: HTMLElement = paragraph("")
 
-    val root: HTMLElement = div().apply {
+    val root: HTMLElement = HtmlTagName.div().apply {
         inlineStyle.apply { width = 12.rem }
         append(container, caption)
     }
@@ -253,9 +256,9 @@ internal class InputContainerPage : Page {
     override val node get() = page
 
     init {
-        val docs = anchor("", meta.docsUrl, external = true)
-        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
-        val api = anchor("", componentApiUrl(inputContainerEntry.id), external = true)
+        val docs = kitAnchor("", meta.docsUrl)
+        val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
+        val api = kitAnchor("", componentApiUrl(inputContainerEntry.id))
         links += docs
         links += source
         links += api

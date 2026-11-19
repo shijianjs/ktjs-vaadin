@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -11,18 +16,13 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
-import demo.ui.heading
 import demo.ui.jsArray
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.CSSStyleSheet
 import web.cssom.Color
@@ -120,7 +120,7 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
     // The right-click target: a dashed box that reads as "click me", inline because nothing else on
     // the page shares it.
     val surface =
-        div().apply {
+        HtmlTagName.div().apply {
             textContent = tr("在这个区域点击右键", "Right-click in this area")
             style.setProperty("padding", "var(--lumo-space-l)")
             style.setProperty("border", "1px dashed var(--lumo-contrast-20pct)")
@@ -179,8 +179,12 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
     val assigneeReadout = Readout(tr("负责人：Abigail Lewis", "Assignee: Abigail Lewis"))
     val assigneeMenu = createContextMenu()
     assigneeMenu.items = assignees.toTypedArray()
-    val assigneeLabel = span(tr("负责人：", "Assignee: "))
-    val assigneeValue = span("Abigail Lewis")
+    val assigneeLabel = HtmlTagName.span {
+                            textContent = tr("负责人：", "Assignee: ")
+                        }
+    val assigneeValue = HtmlTagName.span {
+                            textContent = "Abigail Lewis"
+                        }
     assigneeLabel.append(assigneeValue)
     assigneeMenu.append(assigneeLabel)
     assigneeMenu.listen(ContextMenuEvents.itemSelected) {
@@ -211,7 +215,7 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
             ]
             """.trimIndent(),
         ).unsafeCast<Array<ContextMenuItemData>>()
-    classMenu.append(createButton { textContent = tr("操作", "Actions") }.withTheme("tertiary"))
+    classMenu.append(createButton { textContent = tr("操作", "Actions") }.addTheme("tertiary"))
     classNames.body.append(example(null, classMenu))
     view.body.append(classNames.root)
 
@@ -283,7 +287,7 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
                 "With openOn set to click the menu opens on a left click, which suits an actions button.",
             ),
         )
-    val actionsButton = createButton { textContent = tr("操作", "Actions") }.withTheme("tertiary")
+    val actionsButton = createButton { textContent = tr("操作", "Actions") }.addTheme("tertiary")
     val clickMenu = createContextMenu()
     clickMenu.openOn = "click"
     clickMenu.listenOn = actionsButton
@@ -308,7 +312,9 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
                             iconElement.style.setProperty("color", "var(--vaadin-text-color-secondary)")
                             iconElement.style.setProperty("margin-inline-end", "var(--vaadin-gap-s)")
                         })
-                        append(span(label))
+                        append(HtmlTagName.span {
+                                   textContent = label
+                               })
                     },
                 )
         }
@@ -321,7 +327,9 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
                     HTMLElementOrString(
                         createContextMenuItem().apply {
                             append(createIcon { icon = "vaadin:user-check" })
-                            append(span(tr("指派", "Assign")))
+                            append(HtmlTagName.span {
+                                       textContent = tr("指派", "Assign")
+                                   })
                         },
                     )
                 children =
@@ -337,7 +345,9 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
                                                     name = person.displayName
                                                 },
                                             )
-                                            append(span(person.displayName))
+                                            append(HtmlTagName.span {
+                                                       textContent = person.displayName
+                                                   })
                                         },
                                     )
                             }
@@ -426,7 +436,7 @@ private fun buildContextMenuPage(meta: PageMeta): PageView {
             width = "4rem"
             flexGrow = 0.0
             renderer = { container, _, _ ->
-                val menuBar = createMenuBar { withTheme("tertiary") }
+                val menuBar = createMenuBar { addTheme("tertiary") }
                 menuBar.items = fileItems.unsafeCast<Array<MenuBarItem>>()
                 container.append(menuBar)
             }

@@ -1,5 +1,6 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,7 +16,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import io.github.shijianjs.ktjs.vaadin.integerfield.IntegerFieldEvents
@@ -148,7 +148,7 @@ private fun buildIntegerFieldPage(meta: PageMeta): PageView {
                 label = tr("数量", "Quantity")
                 helperText = tr("说明文字", "Helper text")
                 value = "42"
-            }.withTheme("align-right", "small", "helper-above-field"),
+            }.addTheme("align-right", "small", "helper-above-field"),
         ),
     )
     view.body.append(styles.root)

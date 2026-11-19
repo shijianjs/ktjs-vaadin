@@ -1,5 +1,7 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -16,7 +18,6 @@ import demo.Language
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerConfidences
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighter
@@ -103,14 +104,14 @@ private fun buildFieldHighlighterPage(meta: PageMeta): PageView {
             }
         }
     val addBobButton =
-        createButton { textContent = tr("Bob 开始编辑", "Bob starts editing") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("Bob 开始编辑", "Bob starts editing") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 FieldHighlighter.addUser(field, bob)
                 readout.set(tr("正在编辑：", "Editing: "), tr("Alice、Bob", "Alice, Bob"))
             }
         }
     val removeButton =
-        createButton { textContent = tr("全部离开", "Everyone leaves") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("全部离开", "Everyone leaves") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 FieldHighlighter.removeUser(field, alice)
                 FieldHighlighter.removeUser(field, bob)
@@ -278,9 +279,9 @@ internal class FieldHighlighterPage : Page {
 
     private val addAlice: ButtonElement = createButton()
 
-    private val addBob: ButtonElement = createButton().withTheme("tertiary")
+    private val addBob: ButtonElement = createButton().addTheme("tertiary")
 
-    private val removeAll: ButtonElement = createButton().withTheme("tertiary")
+    private val removeAll: ButtonElement = createButton().addTheme("tertiary")
 
     private val aiField: TextFieldElement = createTextField().apply { inlineStyle.width = 100.pct }
 
@@ -301,9 +302,9 @@ internal class FieldHighlighterPage : Page {
     override val node get() = page
 
     init {
-        val docs = anchor("", meta.docsUrl, external = true)
-        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
-        val api = anchor("", componentApiUrl(fieldHighlighterEntry.id), external = true)
+        val docs = kitAnchor("", meta.docsUrl)
+        val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
+        val api = kitAnchor("", componentApiUrl(fieldHighlighterEntry.id))
         links += docs
         links += source
         links += api

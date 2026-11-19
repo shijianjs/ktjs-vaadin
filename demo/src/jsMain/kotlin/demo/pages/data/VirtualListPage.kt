@@ -1,5 +1,8 @@
 package demo.pages.data
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,9 +18,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.strong
-import demo.ui.withTheme
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -125,15 +125,23 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
         }
         details.append(
             createVerticalLayout().apply {
-                append(span(person.email), span(person.phone))
-                withTheme("spacing")
+                append(HtmlTagName.span {
+                           textContent = person.email
+                       }, HtmlTagName.span {
+                              textContent = person.phone
+                          })
+                addTheme("spacing")
             },
         )
 
         val text =
             createVerticalLayout().apply {
-                append(strong(person.fullName), span(person.profession), details)
-                withTheme("spacing")
+                append(HtmlTagName.strong {
+                           textContent = person.fullName
+                       }, HtmlTagName.span {
+                                                    textContent = person.profession
+                                                }, details)
+                addTheme("spacing")
             }
         val card =
             createHorizontalLayout().apply {
@@ -141,10 +149,10 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
                     createAvatar {
                         name = person.fullName
                         img = person.photo
-                    }.withTheme("xlarge"),
+                    }.addTheme("xlarge"),
                     text,
                 )
-                withTheme("spacing", "margin")
+                addTheme("spacing", "margin")
             }
         container.replaceChildren(card)
     }
@@ -160,7 +168,9 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
     val jumpList = createVirtualList()
     jumpList.items = jsArray<JsAny>((1..500).joinToString(",", "[", "]"))
     jumpList.renderer = { container, _, model ->
-        val row = span(tr("行 ${model.index + 1}", "Row ${model.index + 1}"))
+        val row = HtmlTagName.span {
+                      textContent = tr("行 ${model.index + 1}", "Row ${model.index + 1}")
+                  }
         container.replaceChildren(row)
     }
     jumpList.style.setProperty("height", "12rem")
@@ -170,10 +180,10 @@ private fun buildVirtualListPage(meta: PageMeta): PageView {
             column(
                 jumpList,
                 row(
-                    createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { jumpList.scrollToIndex(0.0) }
                     },
-                    createButton { textContent = tr("跳到第 300 行", "Go to row 300") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("跳到第 300 行", "Go to row 300") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { jumpList.scrollToIndex(299.0) }
                     },
                 ),

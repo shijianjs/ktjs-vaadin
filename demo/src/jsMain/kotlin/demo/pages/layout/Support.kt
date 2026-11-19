@@ -1,11 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.tr
 import demo.ui.Images
-import demo.ui.div
-import demo.ui.element
-import demo.ui.span
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -45,7 +43,9 @@ internal fun appSideNav(): SideNavElement =
  */
 private fun appNavItem(icon: String, label: String): SideNavItemElement =
     createSideNavItem().apply {
-        append(createIcon { this.icon = icon }.apply { slot = "prefix" }, span(label))
+        append(createIcon { this.icon = icon }.apply { slot = "prefix" }, HtmlTagName.span {
+                                                                              textContent = label
+                                                                          })
     }
 
 internal fun playgroundCheckbox(value: String, label: String) = createCheckbox { this.value = value; this.label = label }
@@ -59,27 +59,27 @@ internal fun selectOptions(vararg entries: String): Array<SelectItemData> =
             }
         }.toTypedArray()
 
-internal fun cardMediaAvatar(abbr: String): HTMLElement = createAvatar { this.abbr = abbr }.withTheme("large").apply { slot = "media" }
+internal fun cardMediaAvatar(abbr: String): HTMLElement = createAvatar { this.abbr = abbr }.addTheme("large").apply { slot = "media" }
 
-internal fun cardContentText(): HTMLElement = div().apply { textContent = laplandShortText() }
+internal fun cardContentText(): HTMLElement = HtmlTagName.div().apply { textContent = laplandShortText() }
 
 internal fun cardContentScroller(): HTMLElement =
-    createScroller { withTheme("overflow-indicators") }.apply {
+    createScroller { addTheme("overflow-indicators") }.apply {
         style.setProperty("max-height", "100px")
         style.setProperty("min-height", "100%")
-        append(div().apply { textContent = "${laplandLongText()} ${laplandSamiText()}" })
+        append(HtmlTagName.div().apply { textContent = "${laplandLongText()} ${laplandSamiText()}" })
     }
 
 internal fun cardContentImage(): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         append(
-            element(HtmlTagName.img).apply {
+            HtmlTagName.img().apply {
             src = Images.lapland
                 alt = ""
                 style.setProperty("max-width", "100%")
                 style.setProperty("border-radius", "var(--lumo-border-radius-m)")
             },
-            div().apply { textContent = laplandShortText() },
+            HtmlTagName.div().apply { textContent = laplandShortText() },
         )
     }
 
@@ -101,7 +101,7 @@ internal fun wizardLayout(vararg fields: HTMLElement): HTMLElement =
 
 /** A tinted placeholder box used by the layout examples. */
 internal fun box(text: String, height: String? = null): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         textContent = text
         style.setProperty("padding", "var(--lumo-space-s) var(--lumo-space-m)")
         style.setProperty("border-radius", "var(--lumo-border-radius-m)")

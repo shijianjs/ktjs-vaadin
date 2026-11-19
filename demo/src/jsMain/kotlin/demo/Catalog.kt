@@ -1,5 +1,6 @@
 package demo
 
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.pages.buttons.buttonsEntries
 import demo.pages.data.dataEntries
 import demo.pages.display.displayEntries
@@ -13,7 +14,6 @@ import demo.pages.theming.themingEntries
 import demo.pages.upload.uploadEntries
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.anchor
 
 /** Base URL of the Vaadin component documentation. Every page links to its own page below it. */
 const val DOCS_BASE = "https://vaadin.com/docs/latest/zh/components"
@@ -81,11 +81,7 @@ class CatalogEntry(
         // The API link is the same for every page: the frame takes the anchor, the catalog knows where
         // the Dokka page of this component lives.
         view.addLink(
-            anchor(
-                tr("Kotlin API 文档", "Kotlin API reference"),
-                componentApiUrl(id),
-                external = true,
-            ),
+            kitAnchor(tr("Kotlin API 文档", "Kotlin API reference"), componentApiUrl(id)),
         )
         return view.root
     }

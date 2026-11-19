@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,14 +11,10 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.anchor
 import demo.ui.column
 import demo.ui.example
 import demo.ui.page
 import demo.ui.section
-import demo.ui.setHidden
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordion
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionHeading
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
@@ -82,15 +82,15 @@ private fun buildAccordionPage(meta: PageMeta): PageView {
     val paymentIcon = completionIcon()
     wizard.append(
         wizardStep(tr("客户信息", "Customer details"), customerIcon, customerForm(), tr("继续", "Continue")) {
-            customerIcon.setHidden(false)
+            customerIcon.toggleAttribute("hidden", false)
             wizard.opened = 1.0
         },
         wizardStep(tr("账单地址", "Billing address"), billingIcon, billingForm(), tr("继续", "Continue")) {
-            billingIcon.setHidden(false)
+            billingIcon.toggleAttribute("hidden", false)
             wizard.opened = 2.0
         },
         wizardStep(tr("付款方式", "Payment"), paymentIcon, paymentForm(), tr("完成", "Finish")) {
-            paymentIcon.setHidden(false)
+            paymentIcon.toggleAttribute("hidden", false)
             wizard.opened = -1.0
         },
     )
@@ -152,9 +152,11 @@ private fun infoAccordion(theme: String? = null, disabledIndexes: IntArray = int
             )
         entries.forEachIndexed { index, (summary, lines) ->
             val panel = accordionPanel(summary)
-            if (theme != null) panel.withTheme(theme)
+            if (theme != null) panel.addTheme(theme)
             panel.disabled = index in disabledIndexes
-            panel.append(column(*lines.map { span(it) }.toTypedArray()))
+            panel.append(column(*lines.map { HtmlTagName.span {
+                                                 textContent = it
+                                             } }.toTypedArray()))
             append(panel)
         }
     }
@@ -170,7 +172,7 @@ private fun linksAccordion() =
             )
         entries.forEach { (summary, links) ->
             val panel = accordionPanel(summary)
-            panel.append(column(*links.map { anchor(it, "#/accordion") }.toTypedArray()))
+            panel.append(column(*links.map { kitAnchor(it, "#/accordion") }.toTypedArray()))
             append(panel)
         }
     }
@@ -179,7 +181,7 @@ private fun linksAccordion() =
 private fun completionIcon(): HTMLElement =
     createIcon { icon = "vaadin:check" }.apply {
         style.setProperty("--vaadin-icon-size", "1rem")
-        setHidden(true)
+        toggleAttribute("hidden", true)
     }
 
 /** One wizard panel: a custom summary plus a form and its call-to-action button. */
@@ -192,10 +194,12 @@ private fun wizardStep(
 ) = createAccordionPanel().apply {
     val headingNode = createAccordionHeading()
     headingNode.slot = "summary"
-    headingNode.append(createHorizontalLayout { withTheme("spacing") }.apply { append(span(title), icon) })
-    val action = createButton { textContent = actionLabel }.withTheme("primary")
+    headingNode.append(createHorizontalLayout { addTheme("spacing") }.apply { append(HtmlTagName.span {
+                                                                                          textContent = title
+                                                                                      }, icon) })
+    val action = createButton { textContent = actionLabel }.addTheme("primary")
     action.clickEvent.addHandler { onAction() }
-    append(headingNode, createVerticalLayout { withTheme("spacing") }.apply { append(form, action) })
+    append(headingNode, createVerticalLayout { addTheme("spacing") }.apply { append(form, action) })
 }
 
 private fun customerForm(): HTMLElement =

@@ -1,5 +1,6 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -207,9 +208,9 @@ internal class ItemPage : Page {
     override val node get() = page
 
     init {
-        val docs = anchor("", meta.docsUrl, external = true)
-        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
-        val api = anchor("", componentApiUrl(itemEntry.id), external = true)
+        val docs = kitAnchor("", meta.docsUrl)
+        val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
+        val api = kitAnchor("", componentApiUrl(itemEntry.id))
         links += docs
         links += source
         links += api

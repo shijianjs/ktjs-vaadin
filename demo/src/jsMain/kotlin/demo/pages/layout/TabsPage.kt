@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -12,10 +15,7 @@ import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -124,7 +124,7 @@ private fun buildTabsPage(meta: PageMeta): PageView {
             tr("产品", "Products"),
             tr("任务", "Tasks"),
         ).apply {
-            withTheme("hide-scroll-buttons")
+            addTheme("hide-scroll-buttons")
             dataset["test"] = "tabs-hide-scroll-buttons"
             style.setProperty("max-width", "100%")
             style.setProperty("width", "400px")
@@ -167,15 +167,19 @@ private fun buildTabsPage(meta: PageMeta): PageView {
     iconTabEntries().forEach { (iconName, label) ->
         iconTabs.append(
             createTab {
-                withTheme("icon-on-top")
-                append(createIcon { icon = iconName }, span(label))
+                addTheme("icon-on-top")
+                append(createIcon { icon = iconName }, HtmlTagName.span {
+                                                           textContent = label
+                                                       })
             },
         )
     }
     val verticalIconTabs = createTabs { this.orientation = ListOrientations.vertical }
     verticalIconTabs.dataset["test"] = "tabs-icons-vertical"
     iconTabEntries().forEach { (iconName, label) ->
-        verticalIconTabs.append(createTab { append(createIcon { icon = iconName }, span(label)) })
+        verticalIconTabs.append(createTab { append(createIcon { icon = iconName }, HtmlTagName.span {
+                                                                                       textContent = label
+                                                                                   }) })
     }
     val badgeTabs = createTabs()
     badgeTabs.dataset["test"] = "tabs-badges"
@@ -185,7 +189,9 @@ private fun buildTabsPage(meta: PageMeta): PageView {
         tr("已取消", "Cancelled") to 5.0,
     ).forEach { (label, count) ->
         badgeTabs.append(
-            createTab { append(span(label), createBadge { number = count }.withTheme("filled")) },
+            createTab { append(HtmlTagName.span {
+                                   textContent = label
+                               }, createBadge { number = count }.addTheme("filled")) },
         )
     }
     icons.body.append(
@@ -217,7 +223,7 @@ private fun buildTabsPage(meta: PageMeta): PageView {
                 example(
                     label,
                     tabsOf(tr("明细", "Details"), tr("支付", "Payment"), tr("配送", "Shipping")).apply {
-                        withTheme(theme)
+                        addTheme(theme)
                         dataset["test"] = "tabs-theme-$theme"
                     },
                 )
@@ -255,7 +261,10 @@ private fun buildTabsPage(meta: PageMeta): PageView {
     val pageNames = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
     val contentTabs = tabsOf(*pageNames.toTypedArray())
     contentTabs.dataset["test"] = "tabs-content"
-    val content = paragraph(tr("这是仪表盘的内容。", "This is the Dashboard content."), TABS_CONTENT_TEXT)
+    val content = HtmlTagName.p {
+                      className = TABS_CONTENT_TEXT
+                      textContent = tr("这是仪表盘的内容。", "This is the Dashboard content.")
+                  }
     contentTabs.listen(TabsEvents.selectedChanged) {
         val name = pageNames[contentTabs.selected.toInt()]
         content.textContent = tr("这是“$name”的内容。", "This is the $name content.")

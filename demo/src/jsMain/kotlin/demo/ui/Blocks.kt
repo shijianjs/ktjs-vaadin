@@ -1,5 +1,7 @@
 package demo.ui
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.Bilingual
 import demo.Language
 import demo.LanguageState
@@ -27,7 +29,7 @@ class PageMeta(
     summary: Bilingual,
     /** Chinese Vaadin documentation page for the component; the English URL is derived from it. */
     docsUrl: String,
-    /** Set when [docsUrl] is not a page dedicated to this element (internal or merged docs). */
+    /** Set when [docsUrl] is not a page dedicated to this internal or merged docs(). */
     docsNote: Bilingual? = null,
     /** Path of the Kotlin source of the page, relative to `demo/src/jsMain/kotlin/demo`. */
     val sourcePath: String,
@@ -151,7 +153,13 @@ class Readout(initial: String) {
 
     /** Renders `prefix value suffix`, with [value] emphasised. */
     fun set(prefix: String, value: String, suffix: String = "") {
-        readout.root.replaceChildren(span(prefix), strong(value), span(suffix))
+        readout.root.replaceChildren(HtmlTagName.span {
+                                         textContent = prefix
+                                     }, HtmlTagName.strong {
+                                            textContent = value
+                                        }, HtmlTagName.span {
+                                                           textContent = suffix
+                                                       })
     }
 }
 

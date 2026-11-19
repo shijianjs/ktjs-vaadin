@@ -1,5 +1,8 @@
 package demo.pages.data
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,12 +13,10 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.CSSStyleSheet
 import web.cssom.FontWeight
@@ -219,7 +220,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
                     "it as the current user's, aligned to the end without avatar and name.",
             ),
         )
-    val bubbles = createMessageList().withTheme("bubble")
+    val bubbles = createMessageList().addTheme("bubble")
     bubbles.items =
         arrayOf(
             message(
@@ -257,7 +258,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
         )
     val oneToOne =
         createMessageList()
-            .withTheme("bubble", "one-to-one")
+            .addTheme("bubble", "one-to-one")
             .apply { markdown = true }
     oneToOne.items =
         arrayOf(
@@ -342,7 +343,7 @@ private fun buildMessageListPage(meta: PageMeta): PageView {
     val chat = createMessageList()
     chat.markdown = true
     val announcement =
-        div().apply {
+        HtmlTagName.div().apply {
             setAttribute("aria-live", "polite")
             // Announced to assistive technology only: a one-pixel box clipped out of the layout.
             style.setProperty("position", "absolute")

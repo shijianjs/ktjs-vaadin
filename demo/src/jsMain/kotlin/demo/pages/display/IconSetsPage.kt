@@ -1,5 +1,9 @@
 package demo.pages.display
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.codeText
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -9,14 +13,11 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.code
 import demo.ui.column
 import demo.ui.example
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icon.createIconset
@@ -64,7 +65,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
                     "vaadin: prefix.",
             ),
         )
-    val vaadinButton = createButton().withTheme("icon")
+    val vaadinButton = createButton().addTheme("icon")
     vaadinButton.ariaLabel = tr("通知", "Notifications")
     vaadinButton.append(createIcon { icon = "vaadin:bell" })
     vaadinSet.body.append(
@@ -90,7 +91,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
                     "registered by registerLumoIcons().",
             ),
         )
-    val lumoButton = createButton().withTheme("icon")
+    val lumoButton = createButton().addTheme("icon")
     lumoButton.ariaLabel = tr("通知", "Notifications")
     lumoButton.append(createIcon { icon = "lumo:bell" })
     lumoSet.body.append(
@@ -140,7 +141,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
                     "accessible name; when an icon conveys information on its own, add role=\"img\" and aria-label.",
             ),
         )
-    val closeButton = createButton().withTheme("icon")
+    val closeButton = createButton().addTheme("icon")
     closeButton.ariaLabel = tr("关闭对话框", "Close dialog")
     closeButton.append(createIcon { icon = "vaadin:close" })
     val favourite = createIcon { icon = "vaadin:star" }
@@ -150,13 +151,13 @@ private fun buildIconsPage(meta: PageMeta): PageView {
         example(null, row(closeButton, favourite)),
         example(
             tr("第二个图标带 role=\"img\" 与 aria-label=\"收藏\"", "The second icon has role=\"img\" and an aria-label"),
-            paragraph(
-                tr(
+            HtmlTagName.p {
+                className = MUTED_SMALL
+                textContent = tr(
                     "用开发者工具的无障碍面板查看两者的名称。",
                     "Check both accessible names in the accessibility pane of the devtools.",
-                ),
-                MUTED_SMALL,
-            ),
+                )
+            },
         ),
     )
     view.body.append(accessibility.root)
@@ -258,7 +259,7 @@ private fun buildIconsPage(meta: PageMeta): PageView {
         example(
             tr("生成的文件等价于下面的结构", "The generated file is equivalent to the structure below"),
             column(
-                code("<vaadin-iconset name=\"demo\" size=\"24\">…</vaadin-iconset>"),
+                codeText("<vaadin-iconset name=\"demo\" size=\"24\">…</vaadin-iconset>"),
                 row(
                     createIcon { icon = "demo:heart" }.apply { style.color = "crimson" },
                     createIcon { icon = "demo:star" }.apply { style.color = "goldenrod" },

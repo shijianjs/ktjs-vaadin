@@ -1,5 +1,6 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -14,7 +15,6 @@ import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupItem
 import io.github.shijianjs.ktjs.vaadin.avatargroup.createAvatarGroup
@@ -168,7 +168,7 @@ private fun buildAvatarGroupPage(meta: PageMeta): PageView {
     localised.i18n = groupI18n
     localised.items = baseMembers.toTypedArray()
     var extraMember: AvatarGroupItem? = null
-    val memberToggle = createButton { textContent = tr("添加成员", "Add member") }.withTheme("tertiary")
+    val memberToggle = createButton { textContent = tr("添加成员", "Add member") }.addTheme("tertiary")
     memberToggle.clickEvent.addHandler {
         val current = extraMember
         if (current == null) {

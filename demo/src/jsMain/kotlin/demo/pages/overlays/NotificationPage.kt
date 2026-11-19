@@ -1,5 +1,10 @@
 package demo.pages.overlays
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -8,16 +13,12 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.anchor
 import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -68,7 +69,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = tr("右上角", "Top end") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("右上角", "Top end") }.addTheme("tertiary").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("右上角的提示", "Message at the top end"),
@@ -79,7 +80,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                         )
                     }
                 },
-                createButton { textContent = tr("顶部居中", "Top center") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("顶部居中", "Top center") }.addTheme("tertiary").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("顶部居中的提示", "Message at the top center"),
@@ -91,7 +92,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                     }
                 },
                 createButton { textContent = tr("底部居中（默认）", "Bottom center (default)") }
-                    .withTheme("tertiary").apply {
+                    .addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             Notification.show(tr("底部居中的提示", "Message at the bottom center"))
                         }
@@ -128,7 +129,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
             row(
                 *positionNames
                     .map { name ->
-                        createButton { textContent = name }.withTheme("tertiary small").apply {
+                        createButton { textContent = name }.addTheme("tertiary small").apply {
                             clickEvent.addHandler {
                                 Notification.show(
                                     name,
@@ -152,7 +153,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = "success" }.withTheme("success").apply {
+                createButton { textContent = "success" }.addTheme("success").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("保存成功", "Saved successfully"),
@@ -163,7 +164,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                         )
                     }
                 },
-                createButton { textContent = "error" }.withTheme("error").apply {
+                createButton { textContent = "error" }.addTheme("error").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("保存失败", "Save failed"),
@@ -174,7 +175,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                         )
                     }
                 },
-                createButton { textContent = "contrast" }.withTheme("contrast").apply {
+                createButton { textContent = "contrast" }.addTheme("contrast").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("对比色提示", "Contrast message"),
@@ -185,7 +186,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                         )
                     }
                 },
-                createButton { textContent = "info" }.withTheme("tertiary").apply {
+                createButton { textContent = "info" }.addTheme("tertiary").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("新项目计划已就绪", "New project plan available"),
@@ -196,7 +197,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                         )
                     }
                 },
-                createButton { textContent = "warning" }.withTheme("tertiary").apply {
+                createButton { textContent = "warning" }.addTheme("tertiary").apply {
                     clickEvent.addHandler {
                         Notification.show(
                             tr("会话即将过期", "Your session is about to expire"),
@@ -226,7 +227,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     val noteContent =
         row(
             paragraph(tr("这条通知会一直显示，直到点击关闭。", "This notification stays visible until it is closed.")),
-            createButton { textContent = tr("关闭", "Close") }.withTheme("tertiary small").apply {
+            createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary small").apply {
                 clickEvent.addHandler { persistentNote.opened = false }
             },
         )
@@ -239,7 +240,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
                 createButton { textContent = tr("显示常驻通知", "Show persistent notification") }.apply {
                     clickEvent.addHandler { persistentNote.opened = true }
                 },
-                createButton { textContent = tr("关闭", "Close") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary").apply {
                     clickEvent.addHandler { persistentNote.opened = false }
                 },
                 persistentNote,
@@ -262,11 +263,13 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     val successNote = createNotification()
     successNote.duration = 0.0
     successNote.position = "middle"
-    successNote.withTheme("success")
+    successNote.addTheme("success")
     successNote.renderer = { root, _ ->
         val bar = horizontalBar()
         bar.append(createIcon { icon = "vaadin:check-circle" })
-        bar.append(span(tr("申请已提交！", "Application submitted!")))
+        bar.append(HtmlTagName.span {
+                       textContent = tr("申请已提交！", "Application submitted!")
+                   })
         bar.append(slotted("end", createButton { textContent = tr("查看", "View") }))
         bar.append(closeIcon(tr("关闭", "Close")) { successNote.opened = false }.also { it.slot = "end" })
         root.append(bar)
@@ -275,11 +278,13 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     val failedNote = createNotification()
     failedNote.duration = 0.0
     failedNote.position = "middle"
-    failedNote.withTheme("error")
+    failedNote.addTheme("error")
     failedNote.renderer = { root, _ ->
         val bar = horizontalBar()
         bar.append(createIcon { icon = "vaadin:warning" })
-        bar.append(span(tr("报表生成失败", "Failed to generate report")))
+        bar.append(HtmlTagName.span {
+                       textContent = tr("报表生成失败", "Failed to generate report")
+                   })
         bar.append(slotted("end", createButton { textContent = tr("重试", "Retry") }))
         bar.append(closeIcon(tr("关闭", "Close")) { failedNote.opened = false }.also { it.slot = "end" })
         root.append(bar)
@@ -292,8 +297,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         val bar = horizontalBar()
         bar.append(createAvatar { name = "Jason Bailey" })
         bar.append(
-            span(tr("Jason Bailey 在", "Jason Bailey mentioned you in")).apply {
-                append(anchor(tr("项目 Q4", "Project Q4"), "#"))
+            HtmlTagName.span {
+                textContent = tr("Jason Bailey 在", "Jason Bailey mentioned you in")
+            }.apply {
+                append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
             },
         )
         bar.append(closeIcon(tr("关闭", "Close")) { mentionNote.opened = false }.also { it.slot = "end" })
@@ -301,13 +308,13 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     }
     richHost.append(
         row(
-            createButton { textContent = tr("成功通知", "Show rich notification") }.withTheme("success").apply {
+            createButton { textContent = tr("成功通知", "Show rich notification") }.addTheme("success").apply {
                 clickEvent.addHandler { successNote.opened = true }
             },
-            createButton { textContent = tr("错误通知", "error") }.withTheme("error").apply {
+            createButton { textContent = tr("错误通知", "error") }.addTheme("error").apply {
                 clickEvent.addHandler { failedNote.opened = true }
             },
-            createButton { textContent = tr("提及通知", "mention") }.withTheme("tertiary").apply {
+            createButton { textContent = tr("提及通知", "mention") }.addTheme("tertiary").apply {
                 clickEvent.addHandler { mentionNote.opened = true }
             },
         ),
@@ -332,7 +339,9 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     undoNote.position = "middle"
     undoNote.renderer = { root, _ ->
         val bar = horizontalBar()
-        bar.append(span(tr("已删除 5 个任务", "5 tasks deleted")))
+        bar.append(HtmlTagName.span {
+                       textContent = tr("已删除 5 个任务", "5 tasks deleted")
+                   })
         bar.append(
             slotted("end", createButton { textContent = tr("撤销", "Undo") }.apply {
                 clickEvent.addHandler {
@@ -351,8 +360,10 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     linkNote.renderer = { root, _ ->
         val bar = horizontalBar()
         bar.append(
-            span(tr("Jason Bailey 提到了你的", "Jason Bailey mentioned you in")).apply {
-                append(anchor(tr("项目 Q4", "Project Q4"), "#"))
+            HtmlTagName.span {
+                textContent = tr("Jason Bailey 提到了你的", "Jason Bailey mentioned you in")
+            }.apply {
+                append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
             },
         )
         bar.append(closeIcon(tr("关闭", "Close")) { linkNote.opened = false }.also { it.slot = "end" })
@@ -362,10 +373,12 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     val retryNote = createNotification()
     retryNote.duration = 0.0
     retryNote.position = "middle"
-    retryNote.withTheme("error")
+    retryNote.addTheme("error")
     retryNote.renderer = { root, _ ->
         val bar = horizontalBar()
-        bar.append(span(tr("报表生成失败", "Failed to generate report")))
+        bar.append(HtmlTagName.span {
+                       textContent = tr("报表生成失败", "Failed to generate report")
+                   })
         bar.append(
             slotted("end", createButton { textContent = tr("重试", "Retry") }.apply {
                 clickEvent.addHandler {
@@ -383,13 +396,13 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
             null,
             column(
                 row(
-                    createButton { textContent = tr("撤销通知", "Undo notification") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("撤销通知", "Undo notification") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { undoNote.opened = true }
                     },
-                    createButton { textContent = tr("链接通知", "Link notification") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("链接通知", "Link notification") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { linkNote.opened = true }
                     },
-                    createButton { textContent = tr("重试通知", "Retry notification") }.withTheme("error").apply {
+                    createButton { textContent = tr("重试通知", "Retry notification") }.addTheme("error").apply {
                         clickEvent.addHandler { retryNote.opened = true }
                     },
                 ),
@@ -416,7 +429,9 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
     keyboardNote.position = "middle"
     keyboardNote.renderer = { root, _ ->
         val bar = horizontalBar()
-        bar.append(span(tr("已删除 5 个任务", "5 tasks deleted")))
+        bar.append(HtmlTagName.span {
+                       textContent = tr("已删除 5 个任务", "5 tasks deleted")
+                   })
         bar.append(
             slotted("end", createButton { textContent = tr("撤销 Ctrl-Z", "Undo Ctrl-Z") }.apply {
                 clickEvent.addHandler { keyboardNote.opened = false }
@@ -461,8 +476,12 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         val bar = horizontalBar()
         bar.append(
             column(
-                span(tr("Aria Bailey", "Aria Bailey")),
-                span(tr("好的，不过你能帮我……", "Yeah, I know. But could you help me with...")).apply {
+                HtmlTagName.span {
+                    textContent = tr("Aria Bailey", "Aria Bailey")
+                },
+                HtmlTagName.span {
+                    textContent = tr("好的，不过你能帮我……", "Yeah, I know. But could you help me with...")
+                }.apply {
                     style.setProperty("font-size", "0.875rem")
                     style.setProperty("color", "var(--vaadin-text-color-secondary)")
                 },
@@ -486,8 +505,12 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         val bar = horizontalBar()
         bar.append(
             column(
-                span(tr("来自 Aria Bailey 的新消息", "New message from Aria Bailey")),
-                span(longText).apply {
+                HtmlTagName.span {
+                    textContent = tr("来自 Aria Bailey 的新消息", "New message from Aria Bailey")
+                },
+                HtmlTagName.span {
+                    textContent = longText
+                }.apply {
                     style.setProperty("font-size", "0.875rem")
                     style.setProperty("color", "var(--vaadin-text-color-secondary)")
                 },
@@ -500,7 +523,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         example(
             tr("推荐：一行结论 + 一个操作", "Do: outcome plus one action"),
             column(
-                createButton { textContent = tr("显示推荐示例", "Show recommended") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("显示推荐示例", "Show recommended") }.addTheme("tertiary").apply {
                     clickEvent.addHandler { goodNote.opened = true }
                 },
                 goodNote,
@@ -509,7 +532,7 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
         example(
             tr("不推荐：整段对话塞进通知", "Don't: a whole paragraph in a notification"),
             column(
-                createButton { textContent = tr("显示不推荐示例", "Show discouraged") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("显示不推荐示例", "Show discouraged") }.addTheme("tertiary").apply {
                     clickEvent.addHandler { badNote.opened = true }
                 },
                 badNote,
@@ -522,14 +545,14 @@ private fun buildNotificationPage(meta: PageMeta): PageView {
 }
 
 private fun horizontalBar(): HTMLElement {
-    val bar = createHorizontalLayout { withTheme("spacing") }
+    val bar = createHorizontalLayout { addTheme("spacing") }
     bar.style.setProperty("align-items", "center")
     bar.style.setProperty("min-width", "300px")
     return bar
 }
 
 private fun closeIcon(name: String, onClick: () -> Unit): HTMLElement =
-    createButton { textContent = "" }.withTheme("icon").apply {
+    createButton { textContent = "" }.addTheme("icon").apply {
         setAttribute("aria-label", name)
         append(createIcon { icon = "lumo:cross" })
         clickEvent.addHandler { onClick() }

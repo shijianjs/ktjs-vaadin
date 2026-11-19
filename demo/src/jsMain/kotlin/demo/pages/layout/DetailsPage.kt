@@ -1,5 +1,10 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.bulletList
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,15 +12,11 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.anchor
-import demo.ui.bulletList
 import demo.ui.column
 import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.page
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
@@ -82,7 +83,13 @@ private fun buildDetailsPage(meta: PageMeta): PageView {
         opened = true
     }
     details.dataset["test"] = "details"
-    details.append(column(span("Sophia Williams"), span("sophia.williams@company.com"), span("(501) 555-9128")))
+    details.append(column(HtmlTagName.span {
+                              textContent = "Sophia Williams"
+                          }, HtmlTagName.span {
+                                 textContent = "sophia.williams@company.com"
+                             }, HtmlTagName.span {
+                                    textContent = "(501) 555-9128"
+                                }))
     basic.body.append(example(null, details))
     view.body.append(basic.root)
 
@@ -126,15 +133,19 @@ private fun buildDetailsPage(meta: PageMeta): PageView {
     custom.dataset["test"] = "details-custom-summary"
     val summaryNode = createDetailsSummary()
     summaryNode.slot = "summary"
-    val errorBadge = createBadge { number = 2.0 }.withTheme("error")
+    val errorBadge = createBadge { number = 2.0 }.addTheme("error")
     errorBadge.append(
         createIcon { icon = "vaadin:exclamation-circle" }.apply { slot = "icon" },
-        span(tr(" 个错误", " errors")),
+        HtmlTagName.span {
+            textContent = tr(" 个错误", " errors")
+        },
     )
     summaryNode.append(
-        createHorizontalLayout { withTheme("spacing") }.apply {
+        createHorizontalLayout { addTheme("spacing") }.apply {
             style.setProperty("align-items", "center")
-            append(span(tr("联系方式", "Contact information")), errorBadge)
+            append(HtmlTagName.span {
+                       textContent = tr("联系方式", "Contact information")
+                   }, errorBadge)
         },
     )
     val addressField = createTextField {
@@ -206,12 +217,11 @@ private fun linkDetails(summary: String, items: List<String>) =
         this.summary = summary
         opened = true
     }.apply {
-        append(column(*items.map { anchor(it, "#/details") }.toTypedArray()))
+        append(column(*items.map { kitAnchor(it, "#/details") }.toTypedArray()))
     }
 
 private fun membersList(): HTMLElement =
-    bulletList(
-        listOf(
+    bulletList(listOf(
             "Blake Martin",
             "Caroline Clark",
             "Avery Torres",
@@ -220,14 +230,13 @@ private fun membersList(): HTMLElement =
             "Gavin Lewis",
             "Isabella Powell",
             "Zoe Wilson",
-        ),
-    )
+        ))
 
 private fun membersDetails(theme: String) =
     createDetails {
         summary = tr("成员（8）", "Members (8)")
         opened = true
     }.apply {
-        withTheme(theme)
+        addTheme(theme)
         append(membersList())
     }

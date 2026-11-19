@@ -1,5 +1,7 @@
 package demo.pages.buttons
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -13,14 +15,12 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.element
 import demo.ui.example
 import demo.ui.jsArray
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -164,7 +164,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
                 "A disabled button ignores clicks and does not submit forms; toggle it live below.",
             ),
         )
-    val target = createButton { textContent = tr("启用中的按钮", "Enabled button") }.withTheme("primary")
+    val target = createButton { textContent = tr("启用中的按钮", "Enabled button") }.addTheme("primary")
     val stateReadout = Readout(tr("当前状态：启用", "State: enabled"))
     target.clickEvent.addHandler {
         stateReadout.set(tr("当前状态：启用，刚刚被点击", "State: enabled, just clicked"))
@@ -188,9 +188,9 @@ private fun buildButtonPage(meta: PageMeta): PageView {
             null,
             column(
                 row(
-                    createButton { textContent = "primary" }.withTheme("primary").apply { this.disabled = true },
-                    createButton { textContent = "secondary" }.withTheme("secondary").apply { this.disabled = true },
-                    createButton { textContent = "tertiary" }.withTheme("tertiary").apply { this.disabled = true },
+                    createButton { textContent = "primary" }.addTheme("primary").apply { this.disabled = true },
+                    createButton { textContent = "secondary" }.addTheme("secondary").apply { this.disabled = true },
+                    createButton { textContent = "tertiary" }.addTheme("tertiary").apply { this.disabled = true },
                 ),
                 row(target, toggleButton, stateReadout.root),
             ),
@@ -257,14 +257,14 @@ private fun buildButtonPage(meta: PageMeta): PageView {
     )
     val formActions =
         row(
-            createButton { textContent = tr("创建账户", "Create account") }.withTheme("primary"),
-            createButton { textContent = tr("取消", "Cancel") }.withTheme("secondary"),
+            createButton { textContent = tr("创建账户", "Create account") }.addTheme("primary"),
+            createButton { textContent = tr("取消", "Cancel") }.addTheme("secondary"),
         )
     val dialogActions =
         row(
-            createButton { textContent = tr("删除", "Delete") }.withTheme("error"),
+            createButton { textContent = tr("删除", "Delete") }.addTheme("error"),
             createButton { textContent = tr("取消", "Cancel") }.apply { slot = "end" },
-            createButton { textContent = tr("创建账户", "Create account") }.withTheme("primary").apply { slot = "end" },
+            createButton { textContent = tr("创建账户", "Create account") }.addTheme("primary").apply { slot = "end" },
         )
     forms.body.append(
         example(tr("表单操作按钮", "Form actions"), column(form, formActions)),
@@ -319,9 +319,9 @@ private fun buildButtonPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = "Large" }.withTheme("large"),
-                createButton { textContent = "Normal" }.withTheme("normal"),
-                createButton { textContent = "Small" }.withTheme("small"),
+                createButton { textContent = "Large" }.addTheme("large"),
+                createButton { textContent = "Normal" }.addTheme("normal"),
+                createButton { textContent = "Small" }.addTheme("small"),
             ),
         ),
     )
@@ -343,11 +343,11 @@ private fun buildButtonPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = "Primary" }.withTheme("primary"),
-                createButton { textContent = "Secondary" }.withTheme("secondary"),
-                createButton { textContent = "Tertiary" }.withTheme("tertiary"),
-                createButton { textContent = "Tertiary inline" }.withTheme("tertiary-inline"),
-                createButton { textContent = "Contrast" }.withTheme("contrast"),
+                createButton { textContent = "Primary" }.addTheme("primary"),
+                createButton { textContent = "Secondary" }.addTheme("secondary"),
+                createButton { textContent = "Tertiary" }.addTheme("tertiary"),
+                createButton { textContent = "Tertiary inline" }.addTheme("tertiary-inline"),
+                createButton { textContent = "Contrast" }.addTheme("contrast"),
             ),
         ),
         example(
@@ -360,7 +360,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
                     "tertiary-inline" to listOf("tertiary-inline"),
                     "contrast" to listOf("contrast"),
                 ).map { (label, themes) ->
-                    createButton { textContent = label }.withTheme(*themes.toTypedArray()).apply {
+                    createButton { textContent = label }.addTheme(*themes.toTypedArray()).apply {
                         clickEvent.addHandler { variantLog.add("click · $label") }
                     }
                 }.toTypedArray(),
@@ -382,9 +382,9 @@ private fun buildButtonPage(meta: PageMeta): PageView {
         )
     fun colourRow(variant: String): HTMLElement =
         row(
-            createButton { textContent = "Primary" }.withTheme("primary", variant),
-            createButton { textContent = "Secondary" }.withTheme("secondary", variant),
-            createButton { textContent = "Tertiary" }.withTheme("tertiary", variant),
+            createButton { textContent = "Primary" }.addTheme("primary", variant),
+            createButton { textContent = "Secondary" }.addTheme("secondary", variant),
+            createButton { textContent = "Tertiary" }.addTheme("tertiary", variant),
         )
     colours.body.append(
         example(tr("success", "success"), colourRow("success")),
@@ -425,7 +425,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
     val editProfile = createButton { textContent = tr("编辑资料", "Edit profile") }
     val managePermissions = createButton { textContent = tr("管理权限", "Manage permissions") }
     val resetPassword = createButton { textContent = tr("重置密码", "Reset password") }
-    val deleteUser = createButton { textContent = tr("删除", "Delete") }.withTheme("error")
+    val deleteUser = createButton { textContent = tr("删除", "Delete") }.addTheme("error")
     val singleSelection = listOf(editProfile, managePermissions, resetPassword)
     val selectionReadout = Readout(tr("已选 0 行", "0 rows selected"))
     fun syncSelection() {
@@ -436,7 +436,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
     }
     users.listen(GridEvents.selectedItemsChanged) { syncSelection() }
     syncSelection()
-    val usersTitle = element(HtmlTagName.h3).apply { textContent = tr("用户", "Users") }
+    val usersTitle = HtmlTagName.h3().apply { textContent = tr("用户", "Users") }
     val addUser = createButton { textContent = tr("添加用户", "Add user") }
     toolbar.body.append(
         example(
@@ -463,7 +463,7 @@ private fun buildButtonPage(meta: PageMeta): PageView {
         )
     val progress = createProgressBar { value = 0.0 }
     progress.style.setProperty("flex", "1")
-    val perform = createButton { textContent = tr("执行操作", "Perform action") }.withTheme("primary")
+    val perform = createButton { textContent = tr("执行操作", "Perform action") }.addTheme("primary")
     perform.clickEvent.addHandler {
         perform.disabled = true
         progress.value = 0.0

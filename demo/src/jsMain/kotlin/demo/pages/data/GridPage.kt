@@ -1,5 +1,8 @@
 package demo.pages.data
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -18,12 +21,8 @@ import demo.ui.grid
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.setHidden
-import demo.ui.span
-import demo.ui.withTheme
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
@@ -181,7 +180,9 @@ private fun appendGridColumns(view: PageView) {
             header = tr("金额", "Amount")
             textAlign = TextAlign.end
             renderer = { root, _, model ->
-                root.append(span(euroAmount(itemId(model.item))).apply {
+                root.append(HtmlTagName.span {
+                                textContent = euroAmount(itemId(model.item))
+                            }.apply {
                     style.setProperty("font-variant-numeric", "tabular-nums")
                 })
             }
@@ -229,7 +230,7 @@ private fun appendGridColumns(view: PageView) {
             frozenToEnd = true
             autoWidth = true
             flexGrow = 0.0
-            renderer = { root, _, _ -> root.append(createButton { textContent = tr("编辑", "Edit") }.withTheme("tertiary-inline")) }
+            renderer = { root, _, _ -> root.append(createButton { textContent = tr("编辑", "Edit") }.addTheme("tertiary-inline")) }
         },
     )
     columns.body.append(
@@ -274,14 +275,18 @@ private fun appendGridColumns(view: PageView) {
         createGridColumn {
             header = tr("姓名", "Name")
             path = "displayName"
-            footerRenderer = { root, _ -> root.append(span(tr("共 200 位成员", "200 total members"))) }
+            footerRenderer = { root, _ -> root.append(HtmlTagName.span {
+                                                          textContent = tr("共 200 位成员", "200 total members")
+                                                      }) }
         },
         createGridColumn {
             headerRenderer = { root, _ ->
                 root.append(headerWithIcon(tr("订阅", "Subscriber"), "vaadin:info-circle", tr("订阅者是付费客户", "Subscribers are paying customers")))
             }
             renderer = { root, _, model -> root.textContent = if (itemFlag(model.item, "subscriber")) tr("是", "Yes") else tr("否", "No") }
-            footerRenderer = { root, _ -> root.append(span(tr("102 位订阅者", "102 subscribers"))) }
+            footerRenderer = { root, _ -> root.append(HtmlTagName.span {
+                                                          textContent = tr("102 位订阅者", "102 subscribers")
+                                                      }) }
         },
         createGridColumn {
             headerRenderer = { root, _ ->
@@ -294,7 +299,9 @@ private fun appendGridColumns(view: PageView) {
                 )
             }
             path = "membership"
-            footerRenderer = { root, _ -> root.append(span(tr("103 普通、71 高级、66 VIP", "103 regular, 71 premium, 66 VIP"))) }
+            footerRenderer = { root, _ -> root.append(HtmlTagName.span {
+                                                          textContent = tr("103 普通、71 高级、66 VIP", "103 regular, 71 premium, 66 VIP")
+                                                      }) }
         },
     )
     columns.body.append(example(tr("表头与表尾", "Column headers and footers"), headed))
@@ -488,10 +495,10 @@ private fun appendGridDataBinding(view: PageView) {
         createGridColumn { path = "profession" },
     )
     val pageReadout = Readout("")
-    val firstButton = createButton { textContent = "«" }.withTheme("small icon")
-    val previousButton = createButton { textContent = "‹" }.withTheme("small icon")
-    val nextButton = createButton { textContent = "›" }.withTheme("small icon")
-    val lastButton = createButton { textContent = "»" }.withTheme("small icon")
+    val firstButton = createButton { textContent = "«" }.addTheme("small icon")
+    val previousButton = createButton { textContent = "‹" }.addTheme("small icon")
+    val nextButton = createButton { textContent = "›" }.addTheme("small icon")
+    val lastButton = createButton { textContent = "»" }.addTheme("small icon")
 
     fun slicePage() {
         val pageCount = maxOf(1, (allPeople.size + pageSize - 1) / pageSize)
@@ -522,7 +529,9 @@ private fun appendGridDataBinding(view: PageView) {
             ),
             column(
                 pagedGrid,
-                row(span(tr("每页", "Page size")), pageSizeSelect, firstButton, previousButton, pageReadout.root, nextButton, lastButton),
+                row(HtmlTagName.span {
+                        textContent = tr("每页", "Page size")
+                    }, pageSizeSelect, firstButton, previousButton, pageReadout.root, nextButton, lastButton),
             ),
         ),
     )
@@ -539,10 +548,10 @@ private fun appendGridDataBinding(view: PageView) {
     val inviteGrid = newGrid().apply { allRowsVisible = true }
     inviteGrid.style.setProperty("margin-top", "var(--lumo-space-s)")
     val emptyInvite =
-        paragraph(
-            tr("尚未发出邀请", "No invitation has been sent"),
-            MUTED,
-        )
+        HtmlTagName.p {
+            className = MUTED
+            textContent = tr("尚未发出邀请", "No invitation has been sent")
+        }
     inviteGrid.append(
         createGridColumn { header = tr("姓名", "Name"); path = "displayName"; autoWidth = true },
         createGridColumn { path = "email" },
@@ -552,30 +561,30 @@ private fun appendGridDataBinding(view: PageView) {
             renderer = { root, _, model ->
                 val personId = itemId(model.item)
                 root.append(
-                    createButton { textContent = "" }.withTheme("error tertiary icon").apply {
+                    createButton { textContent = "" }.addTheme("error tertiary icon").apply {
                         setAttribute("aria-label", tr("移除", "Remove"))
                         append(createIcon { icon = "vaadin:trash" })
                         clickEvent.addHandler {
                             invited.removeAll { it.id == personId }
                             inviteGrid.fill(invited)
-                            emptyInvite.setHidden(invited.isNotEmpty())
-                            inviteGrid.setHidden(invited.isEmpty())
+                            emptyInvite.toggleAttribute("hidden", invited.isNotEmpty())
+                            inviteGrid.toggleAttribute("hidden", invited.isEmpty())
                         }
                     },
                 )
             }
         },
     )
-    inviteGrid.setHidden(true)
-    val inviteButton = createButton { textContent = tr("发送邀请", "Send invite") }.withTheme("primary")
+    inviteGrid.toggleAttribute("hidden", true)
+    val inviteButton = createButton { textContent = tr("发送邀请", "Send invite") }.addTheme("primary")
     inviteButton.clickEvent.addHandler {
         val id = invitedCombo.value.toIntOrNull() ?: return@addHandler
         val person = people(8).firstOrNull { it.id == id } ?: return@addHandler
         if (invited.none { it.id == id }) {
             invited += person
             inviteGrid.fill(invited)
-            emptyInvite.setHidden(true)
-            inviteGrid.setHidden(false)
+            emptyInvite.toggleAttribute("hidden", true)
+            inviteGrid.toggleAttribute("hidden", false)
             invitedCombo.value = ""
         }
     }
@@ -652,19 +661,19 @@ private fun appendGridSorting(view: PageView) {
             column(
                 programmatic,
                 row(
-                    createButton { textContent = tr("升序", "Ascending") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("升序", "Ascending") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             programmaticColumn.direction = GridSorterDirections.asc
                             directionReadout.set(tr("排序方向：升序", "Sort direction: ascending"))
                         }
                     },
-                    createButton { textContent = tr("降序", "Descending") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("降序", "Descending") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             programmaticColumn.direction = GridSorterDirections.desc
                             directionReadout.set(tr("排序方向：降序", "Sort direction: descending"))
                         }
                     },
-                    createButton { textContent = tr("清除", "Clear") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("清除", "Clear") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             programmaticColumn.direction = null
                             directionReadout.set(tr("排序方向：未排序", "Sort direction: none"))

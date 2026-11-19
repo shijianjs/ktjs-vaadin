@@ -1,5 +1,7 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,14 +12,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.element
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -88,7 +87,9 @@ private fun buildCustomFieldPage(meta: PageMeta): PageView {
             accessibleName = tr("结束日期", "End date")
             placeholder = tr("结束日期", "End date")
         }
-    period.append(startDate, span("–"), endDate)
+    period.append(startDate, HtmlTagName.span {
+                                 textContent = "–"
+                             }, endDate)
 
     val periodReadout = Readout(tr("字段值：（空）", "Field value: (empty)"))
 
@@ -206,12 +207,12 @@ private fun buildCustomFieldPage(meta: PageMeta): PageView {
         createCustomField {
             label = tr("价格", "Price")
             helperText = tr("说明文字", "Helper text")
-        }.withTheme("small", "helper-above-field")
+        }.addTheme("small", "helper-above-field")
     price.dataset["test"] = "custom-field-styles"
     val amount =
         createTextField {
             accessibleName = tr("金额", "Amount")
-        }.withTheme("small")
+        }.addTheme("small")
     val currency =
         createSelect {
             accessibleName = tr("币种", "Currency")
@@ -226,7 +227,7 @@ private fun buildCustomFieldPage(meta: PageMeta): PageView {
                     unsafeJso<SelectItemData> { label = "USD"; value = "usd" },
                 )
             value = "usd"
-        }.withTheme("small")
+        }.addTheme("small")
     currency.style.setProperty("width", "6em")
     price.append(row(amount, currency))
     styles.body.append(example(null, price))
@@ -268,7 +269,7 @@ private fun splitInputs(text: String): Array<JsAny?> =
 
 /** Creates a bare `<input>` with the attributes the native-input example relies on. */
 private fun nativeInput(placeholder: String, pattern: String): HTMLInputElement =
-    element(HtmlTagName.input).apply {
+    HtmlTagName.input().apply {
         setAttribute("type", "text")
         setAttribute("aria-label", placeholder)
         setAttribute("placeholder", placeholder)

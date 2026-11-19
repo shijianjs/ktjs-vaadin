@@ -1,5 +1,11 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
+import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -8,14 +14,11 @@ import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
-import demo.ui.heading
 import demo.ui.jsObject
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.Record
 import kotlin.js.JsAny
 import kotlin.js.JsString
@@ -99,7 +102,9 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
                 "Outside a component, point for at the id of the target element; position picks the side.",
             ),
         )
-    val target = div(EXAMPLE).apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
+    val target = HtmlTagName.div {
+                     className = EXAMPLE
+                 }.apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
     target.id = ElementId("tooltip-target")
     target.style.setProperty("padding", "var(--lumo-space-m)")
     val tooltip = createTooltip { text = tr("关联到任意元素的提示", "Hint linked to any element") }
@@ -128,7 +133,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
         manual = true
     }
     manualTooltip.slot = "tooltip"
-    val infoButton = createButton { textContent = "" }.withTheme("tertiary").apply {
+    val infoButton = createButton { textContent = "" }.addTheme("tertiary").apply {
         style.setProperty("padding", "0")
         style.setProperty("border", "0")
         style.setProperty("min-width", "0")
@@ -179,7 +184,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
         )
     val generatedTargets = mutableListOf<HTMLElement>()
     listOf(tr("图表", "Chart"), tr("表格", "Table"), tr("地图", "Map")).forEachIndexed { index, label ->
-        val element = createButton { textContent = label }.withTheme("tertiary")
+        val element = createButton { textContent = label }.addTheme("tertiary")
         element.id = ElementId("tooltip-generated-$index")
         generatedTargets += element
     }
@@ -205,7 +210,7 @@ private fun buildTooltipPage(meta: PageMeta): PageView {
         )
     val positionedButtons = mutableListOf<HTMLElement>()
     listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
-        val element = iconButton(position, "lumo:info-circle").withTheme("tertiary")
+        val element = iconButton(position, "lumo:info-circle").apply { tokenListAttribute("theme").add("tertiary") }
         element.id = ElementId("tooltip-position-$index")
         val positioned = createTooltip { text = position }
         positioned.`for` = "tooltip-position-$index"

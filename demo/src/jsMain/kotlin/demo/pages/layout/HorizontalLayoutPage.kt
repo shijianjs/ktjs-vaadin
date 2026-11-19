@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,11 +10,9 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
 import demo.ui.example
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 
 val horizontalLayoutEntry: CatalogEntry =
@@ -48,7 +49,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "theme=\"spacing padding\"",
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
@@ -68,7 +69,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "align-items: center",
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("height", "7rem")
                 style.setProperty("align-items", "center")
                 append(box(tr("项目 1", "Item 1"), "2.5rem"), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3"), "4rem"))
@@ -77,7 +78,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "align-items: end",
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("height", "7rem")
                 style.setProperty("align-items", "end")
                 append(box(tr("项目 1", "Item 1"), "2.5rem"), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3"), "4rem"))
@@ -98,7 +99,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             null,
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("height", "8rem")
                 style.setProperty("align-items", "stretch")
                 append(
@@ -125,7 +126,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "slot=\"middle\" / slot=\"end\"",
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 append(
                     box(tr("开始", "Start")),
                     box(tr("中间", "Middle")).apply { slot = "middle" },
@@ -136,7 +137,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "justify-content: center",
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("justify-content", "center")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
@@ -153,14 +154,14 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 spacing", "Without spacing"),
             createHorizontalLayout().apply {
-                withTheme("padding")
+                addTheme("padding")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
         example(
             tr("有 spacing", "With spacing"),
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
@@ -176,14 +177,14 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 padding", "Without padding"),
             createHorizontalLayout().apply {
-                withTheme("spacing")
+                addTheme("spacing")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
         example(
             tr("有 padding", "With padding"),
             createHorizontalLayout().apply {
-                withTheme("padding", "spacing")
+                addTheme("padding", "spacing")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
@@ -198,11 +199,11 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
     margin.body.append(
         example(
             tr("没有 margin", "Without margin"),
-            div().apply {
+            HtmlTagName.div().apply {
                 style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                 append(
                     createHorizontalLayout().apply {
-                        withTheme("spacing", "padding")
+                        addTheme("spacing", "padding")
                         append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
                     },
                 )
@@ -210,11 +211,11 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         ),
         example(
             tr("有 margin", "With margin"),
-            div().apply {
+            HtmlTagName.div().apply {
                 style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                 append(
                     createHorizontalLayout().apply {
-                        withTheme("margin", "spacing", "padding")
+                        addTheme("margin", "spacing", "padding")
                         append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
                     },
                 )
@@ -235,7 +236,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 wrap", "Without wrap"),
             createHorizontalLayout().apply {
-                withTheme("spacing", "margin", "padding")
+                addTheme("spacing", "margin", "padding")
                 style.setProperty("width", "22rem")
                 append(*(1..5).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
             },
@@ -243,7 +244,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("有 wrap", "With wrap"),
             createHorizontalLayout().apply {
-                withTheme("wrap", "spacing", "margin", "padding")
+                addTheme("wrap", "spacing", "margin", "padding")
                 style.setProperty("width", "22rem")
                 append(*(1..5).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
             },
@@ -264,20 +265,20 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             null,
             createHorizontalLayout().apply {
-                withTheme("spacing", "padding", "wrap")
+                addTheme("spacing", "padding", "wrap")
                 append(
                     createHorizontalLayout().apply {
-                        withTheme("spacing", "padding")
+                        addTheme("spacing", "padding")
                         append(box(tr("开始", "Start")), box(tr("开始", "Start")))
                     },
                     createHorizontalLayout().apply {
                         slot = "middle"
-                        withTheme("spacing", "padding")
+                        addTheme("spacing", "padding")
                         append(box(tr("中间", "Middle")), box(tr("中间", "Middle")), box(tr("中间", "Middle")))
                     },
                     createHorizontalLayout().apply {
                         slot = "end"
-                        withTheme("spacing", "padding")
+                        addTheme("spacing", "padding")
                         append(box(tr("末尾", "End")), box(tr("末尾", "End")))
                     },
                 )
@@ -298,7 +299,7 @@ private fun buildHorizontalLayoutPage(meta: PageMeta): PageView {
         example(
             "flex-grow: 1",
             createHorizontalLayout().apply {
-                withTheme("padding", "spacing")
+                addTheme("padding", "spacing")
                 append(
                     box(tr("项目 1", "Item 1")).apply { style.setProperty("flex-grow", "1") },
                     box(tr("项目 2", "Item 2")),

@@ -1,5 +1,8 @@
 package demo.pages.display
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -16,8 +19,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
@@ -86,7 +87,7 @@ private const val SIMULATED_PERMISSIONS =
 
 /** A text badge; [themes] are theme variants such as `success` or `success filled`. */
 private fun textBadge(text: String, vararg themes: String): BadgeElement =
-    createBadge { textContent = text }.withTheme(*themes)
+    createBadge { textContent = text }.addTheme(*themes)
 
 /** The status badge of the reports table. */
 private fun statusBadge(status: String): BadgeElement {
@@ -259,11 +260,11 @@ private fun buildBadgePage(meta: PageMeta): PageView {
                 createBadge {
                     number = 3.0
                     textContent = tr("已完成", "Completed")
-                }.withTheme("success"),
+                }.addTheme("success"),
                 createBadge {
                     number = 1.0
                     textContent = tr("失败", "Failed")
-                }.withTheme("error"),
+                }.addTheme("error"),
             ),
         ),
     )
@@ -286,11 +287,11 @@ private fun buildBadgePage(meta: PageMeta): PageView {
                 createBadge {
                     number = 12.0
                     textContent = tr("新消息", "New messages")
-                }.withTheme("number-only"),
+                }.addTheme("number-only"),
                 createBadge {
                     number = 3.0
                     textContent = tr("提醒", "Alerts")
-                }.withTheme("error", "number-only"),
+                }.addTheme("error", "number-only"),
             ),
         ),
     )
@@ -374,7 +375,7 @@ private fun buildBadgePage(meta: PageMeta): PageView {
     fun addProfession(profession: String) {
         if (chipsByProfession.containsKey(profession)) return
         selectedProfessions.add(profession)
-        val clear = createButton().withTheme("tertiary")
+        val clear = createButton().addTheme("tertiary")
         clear.ariaLabel = tr("清除筛选：$profession", "Clear filter: $profession")
         clear.title = tr("清除筛选：$profession", "Clear filter: $profession")
         clear.style.setProperty("height", "1.5rem")
@@ -385,7 +386,9 @@ private fun buildBadgePage(meta: PageMeta): PageView {
         clear.clickEvent.addHandler { removeProfession(profession) }
         val chip = createBadge()
         chip.style.setProperty("padding-right", "0")
-        chip.append(span(profession), clear)
+        chip.append(HtmlTagName.span {
+                        textContent = profession
+                    }, clear)
         chipsByProfession[profession] = chip
         chips.append(chip)
         syncFilters()
@@ -416,12 +419,14 @@ private fun buildBadgePage(meta: PageMeta): PageView {
     val tabs = createTabs()
     fun counterTab(label: String, count: Double): HTMLElement =
         createTab().apply {
-            append(span(label))
+            append(HtmlTagName.span {
+                       textContent = label
+                   })
             append(
                 createBadge {
                     number = count
                     textContent = tr("未读消息", "unread messages")
-                }.withTheme("filled", "number-only"),
+                }.addTheme("filled", "number-only"),
             )
         }
     tabs.append(
@@ -445,13 +450,13 @@ private fun buildBadgePage(meta: PageMeta): PageView {
                     "over the icon.",
             ),
         )
-    val download = createButton().withTheme("icon")
+    val download = createButton().addTheme("icon")
     download.ariaLabel = tr("下载", "Downloads")
     download.append(createIcon { icon = "lumo:download" })
     val completed = createBadge {
         number = 3.0
         textContent = tr("已完成", "completed")
-    }.withTheme("dot", "success")
+    }.addTheme("dot", "success")
     completed.slot = "suffix"
     completed.style.setProperty("position", "absolute")
     completed.style.setProperty("top", "0.3em")
@@ -484,7 +489,7 @@ private fun buildBadgePage(meta: PageMeta): PageView {
     val liveBadge = createBadge { number = 0.0 }
     liveBadge.dataset["test"] = "badge-live"
     val addOne =
-        createButton { textContent = tr("加一", "Add one") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("加一", "Add one") }.addTheme("tertiary").apply {
             clickEvent.addHandler { liveBadge.number += 1.0 }
         }
     live.body.append(example(null, row(liveBadge, addOne)))

@@ -1,5 +1,7 @@
 package demo.pages.buttons
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,16 +12,12 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -267,7 +265,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                     componentItem(menuBarItemElement(label = tr("创建副本", "Duplicate"), icon = "copy")),
                 )
         }
-    iconBar.withTheme("icon")
+    iconBar.addTheme("icon")
     val iconOnlyBar =
         createMenuBar {
             items =
@@ -289,7 +287,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                     componentItem(menuBarItemElement(label = tr("创建副本", "Duplicate"), icon = "copy")),
                 )
         }
-    iconOnlyBar.withTheme("tertiary-inline")
+    iconOnlyBar.addTheme("tertiary-inline")
     val comboBar =
         createMenuBar {
             items =
@@ -306,7 +304,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                     ),
                 )
         }
-    comboBar.withTheme("icon", "primary")
+    comboBar.addTheme("icon", "primary")
     icons.body.append(
         example(tr("图标加文字", "Icons with text"), iconBar),
         example(tr("只有图标", "Icon-only buttons"), iconOnlyBar),
@@ -425,7 +423,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
     indicators.body.append(
         example(
             null,
-            createMenuBar { items = sharedMenuItems() }.withTheme("dropdown-indicators"),
+            createMenuBar { items = sharedMenuItems() }.addTheme("dropdown-indicators"),
         ),
     )
     view.body.append(indicators.root)
@@ -457,7 +455,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                 "theme=\"end-aligned\" pushes the buttons to the trailing edge, as in a toolbar.",
             ),
         )
-    val rightBar = createMenuBar { items = sharedMenuItems() }.withTheme("end-aligned")
+    val rightBar = createMenuBar { items = sharedMenuItems() }.addTheme("end-aligned")
     rightBar.style.setProperty("width", "100%")
     rightAligned.body.append(example(null, rightBar))
     view.body.append(rightAligned.root)
@@ -477,7 +475,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                 menuItems(
                     """[{"text": "$label", "children": [{"text": "${tr("条目", "Item")}"}]}]""",
                 )
-        }.withTheme(*themes)
+        }.addTheme(*themes)
     styles.body.append(
         example(
             null,
@@ -551,7 +549,7 @@ private fun buildMenuBarPage(meta: PageMeta): PageView {
                     },
                 )
         }
-    tooltipBar.withTheme("icon")
+    tooltipBar.addTheme("icon")
     tooltipBar.append(createTooltip().apply { slot = "tooltip" })
     tooltips.body.append(example(null, tooltipBar))
     view.body.append(tooltips.root)

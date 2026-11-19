@@ -1,5 +1,6 @@
 package demo.pages.pickers
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -14,7 +15,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.Date
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -471,7 +471,7 @@ private fun buildDateTimePickerPage(meta: PageMeta): PageView {
                 label = tr("标签", "Label")
                 helperText = tr("辅助文本", "Helper text")
                 value = "2020-06-12T12:30"
-            }.withTheme("align-right", "small", "helper-above-field"),
+            }.addTheme("align-right", "small", "helper-above-field"),
         ),
     )
     view.body.append(styles.root)

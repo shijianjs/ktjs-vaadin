@@ -1,5 +1,6 @@
 package demo.pages.data
 
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -337,9 +338,9 @@ internal class MarkdownPage : Page {
     override val node get() = page
 
     init {
-        val docs = anchor("", "$DOCS_BASE/markdown", external = true)
-        val source = anchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
-        val api = anchor("", componentApiUrl(markdownEntry.id), external = true)
+        val docs = kitAnchor("", "$DOCS_BASE/markdown")
+        val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
+        val api = kitAnchor("", componentApiUrl(markdownEntry.id))
         links += docs
         links += source
         links += api

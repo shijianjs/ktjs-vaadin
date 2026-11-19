@@ -1,5 +1,6 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -17,7 +18,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxEvents
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
@@ -139,7 +139,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
     val users = people(3)
     val selectAll = createCheckbox { label = tr("通知所有用户", "Notify users") }
     val userGroup =
-        createCheckboxGroup { label = tr("接收通知的用户", "Users to notify") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("接收通知的用户", "Users to notify") }.addTheme("vertical")
     userGroup.append(
         *users.map { person ->
             createCheckbox {
@@ -173,7 +173,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
             ),
         )
     val horizontal =
-        createCheckboxGroup { label = tr("权限", "Permissions") }.withTheme("horizontal")
+        createCheckboxGroup { label = tr("权限", "Permissions") }.addTheme("horizontal")
     horizontal.append(
         createCheckbox {
             value = "read"
@@ -189,7 +189,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
         },
     )
     val vertical =
-        createCheckboxGroup { label = tr("工作日", "Working days") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("工作日", "Working days") }.addTheme("vertical")
     vertical.append(
         *listOf(
             tr("周一", "Monday"),
@@ -207,7 +207,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
         }.toTypedArray(),
     )
     val manufacturers =
-        createCheckboxGroup { label = tr("制造商", "Manufacturer") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("制造商", "Manufacturer") }.addTheme("vertical")
     manufacturers.append(
         *listOf("Akuchi", "Broek", "Wulf").mapIndexed { index, name ->
             createCheckbox {
@@ -217,7 +217,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
         }.toTypedArray(),
     )
     val statuses =
-        createCheckboxGroup { label = tr("状态", "Status") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("状态", "Status") }.addTheme("vertical")
     statuses.append(
         createCheckbox {
             value = "0"
@@ -252,7 +252,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
         createCheckboxGroup {
             label = tr("导出数据", "Export data")
             value = arrayOf("0", "2")
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     exportGroup.append(
         createCheckbox {
             value = "0"
@@ -290,7 +290,7 @@ private fun buildCheckboxPage(meta: PageMeta): PageView {
         createCheckboxGroup {
             label = tr("标签", "Label")
             helperText = tr("辅助信息", "Helper text")
-        }.withTheme("helper-above-field", "vertical")
+        }.addTheme("helper-above-field", "vertical")
     styled.append(
         *listOf("Item 1", "Item 2", "Item 3").map { label ->
             createCheckbox {

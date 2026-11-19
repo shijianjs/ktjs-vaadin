@@ -1,5 +1,8 @@
 package demo.pages.fields
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,8 +18,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -169,7 +170,9 @@ private fun buildTextAreaPage(meta: PageMeta): PageView {
     featureField.append(
         createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" },
         createIcon { icon = "vaadin:vaadin-h" }.apply { slot = "prefix" },
-        span(":)").apply { slot = "suffix" },
+        HtmlTagName.span {
+            textContent = ":)"
+        }.apply { slot = "suffix" },
     )
     features.body.append(example(null, featureField))
     view.body.append(features.root)
@@ -313,7 +316,7 @@ private fun buildTextAreaPage(meta: PageMeta): PageView {
             label = tr("标签", "Label")
             helperText = tr("辅助文本", "Helper text")
             value = tr("值", "Value")
-        }.withTheme("align-right", "small", "helper-above-field")
+        }.addTheme("align-right", "small", "helper-above-field")
     styledArea.style.setProperty("width", "100%")
     styles.body.append(example(null, styledArea))
     view.body.append(styles.root)

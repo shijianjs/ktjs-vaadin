@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -11,15 +15,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
-import demo.ui.heading
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -89,7 +89,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     val phoneField = createTextField { label = tr("电话号码", "Phone number") }
     val detailForm = createFormLayout { autoResponsive = true }
     detailForm.append(firstName, lastName, emailField, phoneField)
-    val detail = div().apply {
+    val detail = HtmlTagName.div().apply {
         slot = "detail"
         style.setProperty("padding", "var(--lumo-space-m)")
         append(detailName, detailForm)
@@ -108,15 +108,25 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
         show(person)
     }
 
-    val master = div(MASTER_LIST)
+    val master = HtmlTagName.div {
+                     className = MASTER_LIST
+                 }
     crew.forEach { person ->
-        val row = div(MASTER_LIST_ITEM)
+        val row = HtmlTagName.div {
+                      className = MASTER_LIST_ITEM
+                  }
         row.append(
             createAvatar {
                 name = person.displayName
                 img = person.pictureUrl
-            }.withTheme("small"),
-            column(span(person.displayName, MASTER_LIST_NAME), span(person.profession, MUTED_SMALL)),
+            }.addTheme("small"),
+            column(HtmlTagName.span {
+                       className = MASTER_LIST_NAME
+                       textContent = person.displayName
+                   }, HtmlTagName.span {
+                          className = MUTED_SMALL
+                          textContent = person.profession
+                      }),
         )
         row.setAttribute("aria-current", "false")
         row.clickEvent.addHandler { select(person, row) }
@@ -146,7 +156,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     sized.dataset["test"] = "master-detail-sizes"
     sized.append(
         box(tr("master · 12rem", "master · 12rem")),
-        div().apply {
+        HtmlTagName.div().apply {
             slot = "detail"
             style.setProperty("padding", "var(--lumo-space-m)")
             textContent = tr("detail · 16rem", "detail · 16rem")
@@ -185,7 +195,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     }
     oriented.append(
         box(tr("master", "master")),
-        div().apply {
+        HtmlTagName.div().apply {
             slot = "detail"
             style.setProperty("padding", "var(--lumo-space-m)")
             textContent = tr("detail", "detail")
@@ -193,7 +203,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     )
     val orientationReadout = Readout("orientation = horizontal")
     val orientationButton =
-        createButton { textContent = tr("切换方向", "Toggle orientation") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("切换方向", "Toggle orientation") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 oriented.orientation =
                     if (oriented.orientation == MasterDetailLayoutOrientations.horizontal) {
@@ -226,7 +236,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     overlayLayout.dataset["test"] = "master-detail-overlay"
     overlayLayout.append(
         box(tr("master", "master")),
-        div().apply {
+        HtmlTagName.div().apply {
             slot = "detail"
             style.setProperty("padding", "var(--lumo-space-m)")
             textContent = tr("detail", "detail")
@@ -288,13 +298,13 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
         style.setProperty("height", "12rem")
     }
     placeholderLayout.dataset["test"] = "master-detail-placeholder"
-    val placeholderDetail = div().apply {
+    val placeholderDetail = HtmlTagName.div().apply {
         slot = "detail"
         style.setProperty("padding", "var(--lumo-space-m)")
         textContent = tr("Ada Lovelace 的详细资料", "The details of Ada Lovelace")
     }
     var detailShown = false
-    val detailToggle = createButton { textContent = tr("显示详情", "Show detail") }.withTheme("tertiary")
+    val detailToggle = createButton { textContent = tr("显示详情", "Show detail") }.addTheme("tertiary")
     detailToggle.clickEvent.addHandler {
         detailShown = !detailShown
         if (detailShown) placeholderLayout.append(placeholderDetail) else placeholderDetail.remove()
@@ -302,12 +312,16 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
         placeholderLayout.recalculateLayout()
     }
     placeholderLayout.append(
-        div(MASTER_LIST).apply {
+        HtmlTagName.div {
+            className = MASTER_LIST
+        }.apply {
             repeat(3) { index ->
-                append(div(MASTER_LIST_ITEM).apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
+                append(HtmlTagName.div {
+                           className = MASTER_LIST_ITEM
+                       }.apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
             }
         },
-        div().apply {
+        HtmlTagName.div().apply {
             slot = "detail-placeholder"
             style.setProperty("padding", "var(--lumo-space-m)")
             textContent = tr("选择左侧成员查看详情", "Select a member to see the details")
@@ -331,7 +345,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     }
     inner.append(
         box(tr("二级主区", "Inner master")),
-        div().apply {
+        HtmlTagName.div().apply {
             slot = "detail"
             style.setProperty("padding", "var(--lumo-space-s)")
             textContent = tr("二级详情", "Inner detail")
@@ -344,7 +358,7 @@ private fun buildMasterDetailPage(meta: PageMeta): PageView {
     }
     outer.append(
         box(tr("一级主区", "Outer master")),
-        div().apply { slot = "detail"; append(inner) },
+        HtmlTagName.div().apply { slot = "detail"; append(inner) },
     )
     nestingSection.body.append(example(null, outer))
     view.body.append(nestingSection.root)

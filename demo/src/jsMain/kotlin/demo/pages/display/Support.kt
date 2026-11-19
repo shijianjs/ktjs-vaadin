@@ -1,7 +1,7 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.tr
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -27,7 +27,7 @@ internal fun permissionBadge(granted: Boolean): BadgeElement =
 /** A badge with an icon in the `icon` slot, before the text. */
 internal fun iconBadge(icon: String, text: String, vararg themes: String): BadgeElement =
     createBadge()
-        .withTheme(*themes)
+        .addTheme(*themes)
         .apply {
             append(createIcon { this.icon = icon }.apply { slot = "icon" })
             append(document.createTextNode(text))

@@ -1,5 +1,6 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,14 +11,12 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.element
 import demo.ui.example
 import demo.ui.joinValues
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
 import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.item.createItem
@@ -61,7 +60,7 @@ private fun buildListBoxPage(meta: PageMeta): PageView {
         createItem { textContent = tr("显示负责人", "Show assignee") },
         createItem { textContent = tr("显示截止日期", "Show due date") },
         createItem { textContent = tr("显示状态", "Show status") },
-        element(HtmlTagName.hr),
+        HtmlTagName.hr(),
         createItem { textContent = tr("显示缩略图", "Show thumbnail") },
         createItem { textContent = tr("显示预览", "Show preview") },
     )
@@ -161,7 +160,11 @@ private fun buildListBoxPage(meta: PageMeta): PageView {
                             name = person.displayName
                             img = person.pictureUrl
                         },
-                        column(span(person.displayName), span(person.profession)),
+                        column(HtmlTagName.span {
+                                   textContent = person.displayName
+                               }, HtmlTagName.span {
+                                      textContent = person.profession
+                                  }),
                     ),
                 )
             }

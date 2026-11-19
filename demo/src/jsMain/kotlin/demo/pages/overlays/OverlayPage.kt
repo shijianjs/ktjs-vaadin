@@ -1,5 +1,7 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,10 +12,8 @@ import demo.ui.PageView
 import demo.ui.column
 import demo.ui.example
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.overlay.createOverlay
@@ -103,7 +103,7 @@ private fun buildOverlayPage(meta: PageMeta): PageView {
             null,
             row(
                 createButton { textContent = tr("打开非模态 overlay", "Open modeless overlay") }
-                    .withTheme("tertiary").apply {
+                    .addTheme("tertiary").apply {
                         clickEvent.addHandler { modelessOverlay.opened = true }
                     },
                 modelessOverlay,
@@ -135,7 +135,7 @@ private fun buildOverlayPage(meta: PageMeta): PageView {
             null,
             row(
                 createButton { textContent = tr("打开固定尺寸 overlay", "Open sized overlay") }
-                    .withTheme("tertiary").apply {
+                    .addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             // `setBounds` writes to the overlay's internal parts, which exist only once
                             // the element has been upgraded and opened.

@@ -1,5 +1,6 @@
 package demo.pages.pickers
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -17,7 +18,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
@@ -333,10 +333,10 @@ private fun buildDatePickerPage(meta: PageMeta): PageView {
             column(
                 autoPicker,
                 row(
-                    createButton { textContent = tr("打开", "Open") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("打开", "Open") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { autoPicker.open() }
                     },
-                    createButton { textContent = tr("关闭", "Close") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { autoPicker.close() }
                     },
                     autoOpened.root,
@@ -589,7 +589,7 @@ private fun buildDatePickerPage(meta: PageMeta): PageView {
                 label = tr("标签", "Label")
                 helperText = tr("辅助文本", "Helper text")
                 value = "2020-06-12"
-            }.withTheme("align-right", "small", "helper-above-field"),
+            }.addTheme("align-right", "small", "helper-above-field"),
         ),
     )
     view.body.append(styles.root)

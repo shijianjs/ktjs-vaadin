@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.bulletList
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -9,13 +13,11 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
-import demo.ui.bulletList
 import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
-import demo.ui.span
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import io.github.shijianjs.ktjs.dom.css.dsl.Pseudos
 import io.github.shijianjs.ktjs.dom.css.dsl.className
@@ -30,7 +32,6 @@ import web.cssom.CSSStyleSheet
 import web.cssom.ident
 import web.cssom.ClassName
 import web.cssom.Color
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -160,7 +161,7 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
         navOf(
             navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox").apply {
                 append(
-                    createBadge { number = 12.0 }.withTheme("filled", "number-only").apply {
+                    createBadge { number = 12.0 }.addTheme("filled", "number-only").apply {
                         slot = "suffix"
                         setAttribute("aria-label", tr("未读消息", "unread messages"))
                     },
@@ -168,7 +169,7 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
             },
             navItem(tr("日历", "Calendar"), "vaadin:calendar", "/calendar").apply {
                 append(
-                    createBadge().withTheme("error", "icon-only").apply {
+                    createBadge().addTheme("error", "icon-only").apply {
                         slot = "suffix"
                         setAttribute("aria-label", tr("即将到来的预约", "Upcoming appointment"))
                         append(createIcon { icon = "vaadin:bell" }.apply { slot = "icon" })
@@ -228,7 +229,9 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
             style.setProperty("width", "100%")
         }
     messagesNav.append(
-        span(tr("消息", "Messages")).apply { slot = "label" },
+        HtmlTagName.span {
+            textContent = tr("消息", "Messages")
+        }.apply { slot = "label" },
         navItem(tr("收件箱", "Inbox"), "vaadin:inbox", "/inbox"),
         navItem(tr("已发送", "Sent"), "vaadin:paperplane", "/sent"),
         navItem(tr("回收站", "Trash"), "vaadin:trash", "/trash"),
@@ -241,7 +244,9 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
         }
     adminNav.dataset["test"] = "side-nav-collapsible"
     adminNav.append(
-        span(tr("管理", "Admin")).apply { slot = "label" },
+        HtmlTagName.span {
+            textContent = tr("管理", "Admin")
+        }.apply { slot = "label" },
         navItem(tr("用户", "Users"), "vaadin:group", "/users"),
         navItem(tr("权限", "Permissions"), "vaadin:key", "/permissions"),
     )
@@ -249,7 +254,7 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
     adminNav.listen(SideNavEvents.collapsedChanged) { collapsed.set("collapsed = ${adminNav.collapsed}") }
     labelled.body.append(
         example(null, createVerticalLayout().apply {
-            withTheme("spacing")
+            addTheme("spacing")
             style.setProperty("width", "100%")
             append(messagesNav, adminNav, collapsed.root)
         }),
@@ -307,7 +312,7 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
             navItem(tr("仪表盘", "Dashboard"), "vaadin:dashboard", "/dashboard"),
             navItem(tr("收件箱", "Inbox"), "vaadin:envelope", "/inbox"),
             navItem(tr("Vaadin 官网", "Vaadin website"), "vaadin:vaadin-h", "https://vaadin.com").apply {
-                classList.add(EXTERNAL)
+                className = EXTERNAL
                 target = "_blank"
             },
         )
@@ -328,13 +333,11 @@ private fun buildSideNavPage(meta: PageMeta): PageView {
     keyboard.body.append(
         example(
             null,
-            bulletList(
-                listOf(
+            bulletList(listOf(
                     tr("Tab：在列表项之间移动焦点，父项的展开按钮也是单独的焦点停靠点。", "Tab: moves the focus between items; a parent's toggle button is a separate stop."),
                     tr("Enter / 空格：展开或折叠子项。", "Enter / Space: expands or collapses the child items."),
                     tr("Enter：触发链接。", "Enter: follows the link."),
-                ),
-            ),
+                )),
         ),
     )
     view.body.append(keyboard.root)

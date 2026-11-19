@@ -1,5 +1,7 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -13,10 +15,8 @@ import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.dialog.DialogEvents
 import io.github.shijianjs.ktjs.vaadin.dialog.createDialog
@@ -76,7 +76,7 @@ private fun buildDialogPage(meta: PageMeta): PageView {
                 ),
             ),
         )
-    val closeButton = createButton { textContent = tr("关闭", "Close") }.withTheme("primary")
+    val closeButton = createButton { textContent = tr("关闭", "Close") }.addTheme("primary")
     closeButton.clickEvent.addHandler { dialog.opened = false }
     dialog.renderer = { root, _ -> root.append(content) }
     dialog.footerRenderer = { root, _ -> root.append(closeButton) }
@@ -121,7 +121,7 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     )
     val cancelButton = createButton { textContent = tr("取消", "Cancel") }
     cancelButton.clickEvent.addHandler { formDialog.opened = false }
-    val addButton = createButton { textContent = tr("添加", "Add") }.withTheme("primary")
+    val addButton = createButton { textContent = tr("添加", "Add") }.addTheme("primary")
     addButton.clickEvent.addHandler { formDialog.opened = false }
     formDialog.renderer = { root, _ -> root.append(employeeForm) }
     formDialog.footerRenderer = { root, _ -> root.append(cancelButton, addButton) }
@@ -174,11 +174,11 @@ private fun buildDialogPage(meta: PageMeta): PageView {
             column(
                 row(
                     createButton { textContent = tr("打开（自定义尺寸）", "Open (custom size)") }
-                        .withTheme("tertiary").apply {
+                        .addTheme("tertiary").apply {
                             clickEvent.addHandler { configured.opened = true }
                         },
                     createButton { textContent = tr("打开（非模态）", "Open (modeless)") }
-                        .withTheme("tertiary").apply {
+                        .addTheme("tertiary").apply {
                             clickEvent.addHandler { modelessDialog.opened = true }
                         },
                 ),
@@ -215,7 +215,7 @@ private fun buildDialogPage(meta: PageMeta): PageView {
     )
     val noteCancel = createButton { textContent = tr("取消", "Cancel") }
     noteCancel.clickEvent.addHandler { noteDialog.opened = false }
-    val noteAdd = createButton { textContent = tr("添加笔记", "Add note") }.withTheme("primary")
+    val noteAdd = createButton { textContent = tr("添加笔记", "Add note") }.addTheme("primary")
     noteAdd.clickEvent.addHandler { noteDialog.opened = false }
     noteDialog.renderer = { root, _ -> root.append(noteForm) }
     noteDialog.footerRenderer = { root, _ -> root.append(noteCancel, noteAdd) }
@@ -242,7 +242,7 @@ private fun buildDialogPage(meta: PageMeta): PageView {
         )
     val user = people(1).first()
     val userDialog = createDialog { headerTitle = tr("用户详情", "User details") }
-    val headerClose = createButton { textContent = "" }.withTheme("tertiary icon").apply {
+    val headerClose = createButton { textContent = "" }.addTheme("tertiary icon").apply {
         append(createIcon { icon = "lumo:cross" })
         clickEvent.addHandler { userDialog.opened = false }
     }
@@ -295,10 +295,10 @@ private fun buildDialogPage(meta: PageMeta): PageView {
         )
     val deleteDialog = createDialog { headerTitle = tr("删除用户「${user.displayName}」？", "Delete user \"${user.displayName}\"?") }
     val deleteText = paragraph(tr("确定要永久删除这个用户吗？", "Are you sure you want to delete this user permanently?"))
-    val deleteButton = createButton { textContent = tr("删除", "Delete") }.withTheme("primary", "error")
+    val deleteButton = createButton { textContent = tr("删除", "Delete") }.addTheme("primary", "error")
     deleteButton.style.setProperty("margin-inline-end", "auto")
     deleteButton.clickEvent.addHandler { deleteDialog.opened = false }
-    val keepButton = createButton { textContent = tr("取消", "Cancel") }.withTheme("tertiary")
+    val keepButton = createButton { textContent = tr("取消", "Cancel") }.addTheme("tertiary")
     keepButton.clickEvent.addHandler { deleteDialog.opened = false }
     deleteDialog.renderer = { root, _ -> root.append(deleteText) }
     deleteDialog.footerRenderer = { root, _ -> root.append(deleteButton, keepButton) }
@@ -306,7 +306,7 @@ private fun buildDialogPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = tr("删除用户", "Delete user") }.withTheme("error").apply {
+                createButton { textContent = tr("删除用户", "Delete user") }.addTheme("error").apply {
                     clickEvent.addHandler { deleteDialog.opened = true }
                 },
                 deleteDialog,
@@ -324,10 +324,10 @@ private fun buildDialogPage(meta: PageMeta): PageView {
             ),
         )
     val filterDialog = createDialog { headerTitle = tr("按用户筛选报表：", "Filter reports by users:") }
-    filterDialog.withTheme("no-padding")
+    filterDialog.addTheme("no-padding")
     val filterGrid = personGrid(withSelection = true)
     filterDialog.renderer = { root, _ -> root.append(filterGrid) }
-    val filterButton = createButton { textContent = tr("筛选", "Filter") }.withTheme("primary")
+    val filterButton = createButton { textContent = tr("筛选", "Filter") }.addTheme("primary")
     filterButton.clickEvent.addHandler { filterDialog.opened = false }
     filterDialog.footerRenderer = { root, _ -> root.append(filterButton) }
     noPaddingSection.body.append(

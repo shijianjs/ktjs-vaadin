@@ -1,5 +1,6 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,7 +16,6 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.Iconset
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -78,7 +78,7 @@ private fun buildIconPage(meta: PageMeta): PageView {
     val iconNames = listOf("lumo:user", "lumo:bell", "vaadin:user", "vaadin:bell")
     var iconIndex = 0
     val nextIcon =
-        createButton { textContent = tr("下一个图标", "Next icon") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("下一个图标", "Next icon") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 iconIndex = (iconIndex + 1) % iconNames.size
                 picker.icon = iconNames[iconIndex]

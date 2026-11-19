@@ -1,5 +1,7 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -9,14 +11,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.element
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
@@ -79,14 +78,14 @@ private fun buildProgressBarPage(meta: PageMeta): PageView {
         }
     val readout = Readout("value = 35")
     val increase =
-        createButton { textContent = "+10" }.withTheme("tertiary").apply {
+        createButton { textContent = "+10" }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 progress.value = (progress.value + 10.0).coerceAtMost(progress.max)
                 readout.set("value = ${progress.value}")
             }
         }
     val reset =
-        createButton { textContent = tr("重置", "Reset") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("重置", "Reset") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 progress.value = 0.0
                 readout.set("value = 0.0")
@@ -146,13 +145,15 @@ private fun buildProgressBarPage(meta: PageMeta): PageView {
         )
     val labelId = "progress-bar-label"
     val barLabel =
-        element(HtmlTagName.label).apply {
+        HtmlTagName.label().apply {
             textContent = tr("正在处理 Financials.xlsx", "Processing Financials.xlsx")
             setAttribute("id", labelId)
         }
     val labelled = createProgressBar { value = 0.5 }
     labelled.setAttribute("aria-labelledby", labelId)
-    val labelledHeader = row(barLabel, span("50%"))
+    val labelledHeader = row(barLabel, HtmlTagName.span {
+                                           textContent = "50%"
+                                       })
     labelledHeader.style.setProperty("justify-content", "space-between")
     labelledHeader.style.setProperty("margin-bottom", "var(--lumo-space-s)")
     labelSection.body.append(example(null, column(labelledHeader, labelled)))
@@ -171,7 +172,7 @@ private fun buildProgressBarPage(meta: PageMeta): PageView {
     val titleId = "progress-bar-title"
     val hintId = "progress-bar-hint"
     val title =
-        element(HtmlTagName.label).apply {
+        HtmlTagName.label().apply {
             textContent = tr("正在生成报表…", "Generating report...")
             setAttribute("id", titleId)
         }
@@ -180,7 +181,10 @@ private fun buildProgressBarPage(meta: PageMeta): PageView {
     waiting.setAttribute("aria-describedby", hintId)
     waiting.style.setProperty("margin", "var(--lumo-space-s) 0")
     val hint =
-        span(tr("处理可能需要十分钟以上", "Process can take upwards of 10 minutes"), MUTED_SMALL).apply {
+        HtmlTagName.span {
+            className = MUTED_SMALL
+            textContent = tr("处理可能需要十分钟以上", "Process can take upwards of 10 minutes")
+        }.apply {
             setAttribute("id", hintId)
         }
     completion.body.append(example(null, column(title, waiting, hint)))

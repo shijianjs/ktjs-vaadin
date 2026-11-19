@@ -1,5 +1,6 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -12,7 +13,6 @@ import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 
 val avatarEntry: CatalogEntry =
@@ -130,11 +130,11 @@ private fun buildAvatarPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createAvatar { name = "Ada Lovelace" }.withTheme("xlarge"),
-                createAvatar { name = "Ada Lovelace" }.withTheme("large"),
+                createAvatar { name = "Ada Lovelace" }.addTheme("xlarge"),
+                createAvatar { name = "Ada Lovelace" }.addTheme("large"),
                 createAvatar { name = "Ada Lovelace" },
-                createAvatar { name = "Ada Lovelace" }.withTheme("small"),
-                createAvatar { name = "Ada Lovelace" }.withTheme("xsmall"),
+                createAvatar { name = "Ada Lovelace" }.addTheme("small"),
+                createAvatar { name = "Ada Lovelace" }.addTheme("xsmall"),
             ),
         ),
     )

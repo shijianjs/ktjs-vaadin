@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,12 +10,10 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
 import demo.ui.example
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.splitlayout.SplitLayoutOrientations
@@ -115,12 +116,12 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
             ),
         )
     val minimal = createSplitLayout().apply {
-        withTheme("minimal")
+        addTheme("minimal")
         style.setProperty("max-height", "17rem")
         append(splitMaster(), splitDetail())
     }
     val small = createSplitLayout().apply {
-        withTheme("small")
+        addTheme("small")
         style.setProperty("max-height", "17rem")
         append(splitMaster(), splitDetail())
     }
@@ -139,7 +140,7 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
     val layout = createSplitLayout()
     layout.dataset["test"] = "split-collapse"
     layout.style.setProperty("max-height", "17rem")
-    val sidebar = div().apply {
+    val sidebar = HtmlTagName.div().apply {
         dataset["test"] = "split-sidebar"
         style.setProperty("overflow", "hidden")
         style.setProperty("width", "40%")
@@ -147,7 +148,7 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
     val detail = splitDetail()
     val collapseButton = createButton().apply {
         dataset["test"] = "split-collapse-button"
-        withTheme("icon", "tertiary")
+        addTheme("icon", "tertiary")
         setAttribute("aria-label", tr("展开或折叠侧栏", "Expand/collapse sidebar"))
         style.setProperty("float", "right")
     }
@@ -175,12 +176,12 @@ private fun buildSplitLayoutPage(meta: PageMeta): PageView {
 
 /** A fake master list for the split layout examples: sixteen rows of six cells. */
 private fun splitMaster(): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         style.setProperty("padding", "var(--lumo-space-s)")
         repeat(16) {
             // A fake master list: six grey cells per row, the shape the docs example uses.
             val row =
-                div().apply {
+                HtmlTagName.div().apply {
                     style.setProperty("display", "grid")
                     style.setProperty("grid-template-columns", "repeat(6, 1fr)")
                     style.setProperty("gap", "4px")
@@ -188,7 +189,7 @@ private fun splitMaster(): HTMLElement =
                 }
             repeat(6) {
                 row.append(
-                    div().apply {
+                    HtmlTagName.div().apply {
                         style.setProperty("height", "12px")
                         style.setProperty("border-radius", "2px")
                         style.setProperty("background", "var(--lumo-contrast-10pct)")
@@ -201,16 +202,16 @@ private fun splitMaster(): HTMLElement =
 
 /** A fake detail form for the split layout examples: ten labelled inputs. */
 private fun splitDetail(): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         style.setProperty("padding", "var(--lumo-space-s)")
         repeat(10) {
             val field =
-                div().apply {
+                HtmlTagName.div().apply {
                     style.setProperty("margin-bottom", "var(--lumo-space-s)")
                 }
             // Label above input, both grey blocks: enough shape to read as a form.
             val label =
-                div().apply {
+                HtmlTagName.div().apply {
                     style.setProperty("width", "40%")
                     style.setProperty("height", "8px")
                     style.setProperty("margin-bottom", "4px")
@@ -218,7 +219,7 @@ private fun splitDetail(): HTMLElement =
                     style.setProperty("background", "var(--lumo-contrast-20pct)")
                 }
             val input =
-                div().apply {
+                HtmlTagName.div().apply {
                     style.setProperty("height", "24px")
                     style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
                     style.setProperty("border-radius", "var(--lumo-border-radius-s)")

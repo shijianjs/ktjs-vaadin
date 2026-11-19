@@ -1,5 +1,8 @@
 package demo.pages.selection
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -18,8 +21,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import kotlin.js.JsAny
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -250,8 +251,12 @@ private fun buildSelectPage(meta: PageMeta): PageView {
             }.apply {
                 append(
                     column(
-                        span(person.displayName),
-                        span(person.profession),
+                        HtmlTagName.span {
+                            textContent = person.displayName
+                        },
+                        HtmlTagName.span {
+                            textContent = person.profession
+                        },
                     ),
                 )
             },
@@ -283,7 +288,11 @@ private fun buildSelectPage(meta: PageMeta): PageView {
                             name = person.displayName
                             img = person.pictureUrl
                         },
-                        column(span(person.displayName), span(person.profession)),
+                        column(HtmlTagName.span {
+                                   textContent = person.displayName
+                               }, HtmlTagName.span {
+                                      textContent = person.profession
+                                  }),
                     ),
                 )
             },
@@ -350,7 +359,7 @@ private fun buildSelectPage(meta: PageMeta): PageView {
                 helperText = tr("辅助信息", "Helper text")
                 value = "recent"
                 items = selectItems(SORT_ITEMS_JSON)
-            }.withTheme("align-right", "small", "helper-above-field"),
+            }.addTheme("align-right", "small", "helper-above-field"),
         ),
     )
     view.body.append(styles.root)

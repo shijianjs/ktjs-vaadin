@@ -1,5 +1,6 @@
 package demo.ui
 
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.style.Palette
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.ClassName

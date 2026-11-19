@@ -1,5 +1,7 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,8 +17,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.setHidden
-import demo.ui.span
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.descendant
@@ -31,7 +31,6 @@ import web.html.HtmlTagName
 import web.cssom.Display
 import web.cssom.FlexDirection
 import web.cssom.px
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
 import io.github.shijianjs.ktjs.vaadin.radiogroup.RadioGroupEvents
@@ -97,7 +96,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("套餐", "Plan")
             value = "standard"
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     group.dataset["test"] = "radio-group"
     group.append(
         createRadioButton {
@@ -129,7 +128,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
                     "independent and their labels name different dimensions.",
             ),
         )
-    val repeat = createRadioGroup { label = tr("重复", "Repeat") }.withTheme("vertical")
+    val repeat = createRadioGroup { label = tr("重复", "Repeat") }.addTheme("vertical")
     repeat.append(
         createRadioButton {
             value = "none"
@@ -164,7 +163,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("状态", "Status")
             value = "pending"
-        }.withTheme("horizontal")
+        }.addTheme("horizontal")
     horizontal.append(
         createRadioButton {
             value = "pending"
@@ -180,7 +179,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         },
     )
     val vertical =
-        createRadioGroup { label = tr("旅行舱位", "Travel class") }.withTheme("vertical")
+        createRadioGroup { label = tr("旅行舱位", "Travel class") }.addTheme("vertical")
     vertical.append(
         createRadioButton {
             value = "economy"
@@ -210,7 +209,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("标签", "Label")
             helperText = tr("辅助信息", "Helper text")
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     labeled.append(
         createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
         createRadioButton {
@@ -258,7 +257,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("只读", "Read-only")
             value = "yes"
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     readonly.readonly = true
     readonly.append(
         createRadioButton {
@@ -274,7 +273,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("禁用", "Disabled")
             value = "inProgress"
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     disabled.disabled = true
     disabled.append(
         createRadioButton {
@@ -313,21 +312,29 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
             ),
         )
     val cardGroup =
-        createRadioGroup { label = tr("付款方式", "Payment method") }.withTheme("vertical")
+        createRadioGroup { label = tr("付款方式", "Payment method") }.addTheme("vertical")
     val visa =
         createRadioButton { value = "visa" }.apply {
-            append(column(span(tr("Visa · 账户 1234", "Visa · account 1234")), span(tr("有效期 12/28", "Expires 12/28"))).apply { classList.add(RADIO_OPTION) })
+            append(column(HtmlTagName.span {
+                              textContent = tr("Visa · 账户 1234", "Visa · account 1234")
+                          }, HtmlTagName.span {
+                                 textContent = tr("有效期 12/28", "Expires 12/28")
+                             }).apply { className = RADIO_OPTION })
         }
     visa.firstElementChild?.setAttribute("slot", "label")
     val other =
         createRadioButton { value = "-1" }.apply {
-            append(column(span(tr("其他", "Other")), span(tr("手动输入卡号", "Enter the card number manually"))).apply { classList.add(RADIO_OPTION) })
+            append(column(HtmlTagName.span {
+                              textContent = tr("其他", "Other")
+                          }, HtmlTagName.span {
+                                 textContent = tr("手动输入卡号", "Enter the card number manually")
+                             }).apply { className = RADIO_OPTION })
         }
     other.firstElementChild?.setAttribute("slot", "label")
     cardGroup.append(visa, other)
     val cardNumber = createTextField { label = tr("卡号", "Card number") }
-    cardNumber.setHidden(true)
-    cardGroup.listen(RadioGroupEvents.valueChanged) { cardNumber.setHidden(cardGroup.value != "-1") }
+    cardNumber.toggleAttribute("hidden", true)
+    cardGroup.listen(RadioGroupEvents.valueChanged) { cardNumber.toggleAttribute("hidden", cardGroup.value != "-1") }
     customOption.body.append(example(null, column(cardGroup, cardNumber)))
     view.body.append(customOption.root)
 
@@ -341,7 +348,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
             ),
         )
     val replyGroup =
-        createRadioGroup { label = tr("默认回复行为", "Default reply behavior") }.withTheme("horizontal")
+        createRadioGroup { label = tr("默认回复行为", "Default reply behavior") }.addTheme("horizontal")
     replyGroup.append(
         createRadioButton {
             value = "reply"
@@ -376,17 +383,23 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("付款方式", "Payment method")
             value = "1"
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     accounts.append(
         *people(3).mapIndexed { index, person ->
             createRadioButton { value = "${person.id}" }.apply {
                 append(
                     column(
-                        span(tr("账户 ${person.id}", "Account ${person.id}")),
-                        span(tr("持卡人 ${person.displayName}", "Holder ${person.displayName}")),
-                        span(tr("有效期 12/28", "Expires 12/28")),
+                        HtmlTagName.span {
+                            textContent = tr("账户 ${person.id}", "Account ${person.id}")
+                        },
+                        HtmlTagName.span {
+                            textContent = tr("持卡人 ${person.displayName}", "Holder ${person.displayName}")
+                        },
+                        HtmlTagName.span {
+                            textContent = tr("有效期 12/28", "Expires 12/28")
+                        },
                     ).apply {
-                        classList.add(RADIO_OPTION)
+                        className = RADIO_OPTION
                         setAttribute("slot", "label")
                     },
                 )
@@ -409,7 +422,7 @@ private fun buildRadioGroupPage(meta: PageMeta): PageView {
         createRadioGroup {
             label = tr("标签", "Label")
             helperText = tr("辅助信息", "Helper text")
-        }.withTheme("helper-above-field", "vertical")
+        }.addTheme("helper-above-field", "vertical")
     styled.append(
         *listOf("Item 1", "Item 2", "Item 3").map { label ->
             createRadioButton {

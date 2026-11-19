@@ -1,5 +1,6 @@
 package demo.pages.selection
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,7 +16,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
 import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
@@ -64,7 +64,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
         createCheckboxGroup {
             label = tr("使用的语言", "Languages used")
             helperText = tr("可以多选", "Multiple answers are allowed")
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     group.dataset["test"] = "checkbox-group"
     group.append(
         createCheckbox {
@@ -142,7 +142,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
         createCheckboxGroup {
             label = tr("标签", "Label")
             helperText = tr("辅助信息", "Helper text")
-        }.withTheme("vertical")
+        }.addTheme("vertical")
     languages.append(
         createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
         createCheckbox {
@@ -174,7 +174,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
 
     val states = section(tr("只读与禁用", "Read-only and disabled"))
     val readonlyGroup =
-        createCheckboxGroup { label = tr("只读", "Read-only") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("只读", "Read-only") }.addTheme("vertical")
     readonlyGroup.readonly = true
     readonlyGroup.value = arrayOf("a")
     readonlyGroup.append(
@@ -188,7 +188,7 @@ private fun buildCheckboxGroupPage(meta: PageMeta): PageView {
         },
     )
     val disabledGroup =
-        createCheckboxGroup { label = tr("禁用", "Disabled") }.withTheme("vertical")
+        createCheckboxGroup { label = tr("禁用", "Disabled") }.addTheme("vertical")
     disabledGroup.disabled = true
     disabledGroup.append(
         *listOf(

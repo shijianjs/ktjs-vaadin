@@ -1,5 +1,10 @@
 package demo.pages.theming
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.codeText
 import demo.CatalogEntry
 import demo.Groups
 import demo.STYLING_BASE
@@ -10,15 +15,11 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
-import demo.ui.code
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.aura.Aura
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
@@ -112,13 +113,13 @@ private fun buildThemingPage(meta: PageMeta): PageView {
         sync()
         log.add("Theme.apply(false)")
     }
-    val dark = createButton { textContent = tr("暗色", "Dark") }.withTheme("primary")
+    val dark = createButton { textContent = tr("暗色", "Dark") }.addTheme("primary")
     dark.clickEvent.addHandler {
         Theme.apply(true)
         sync()
         log.add("Theme.apply(true)")
     }
-    val toggle = createButton { textContent = tr("切换", "Toggle") }.withTheme("tertiary")
+    val toggle = createButton { textContent = tr("切换", "Toggle") }.addTheme("tertiary")
     toggle.clickEvent.addHandler {
         Theme.toggle()
         sync()
@@ -171,17 +172,17 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                 entryPoint("LumoThemes.COMPACT_CSS", LumoThemes.COMPACT_CSS),
                 entryPoint("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS),
                 entryPoint("Aura.CSS", Aura.CSS),
-                paragraph(
-                    tr(
+                HtmlTagName.p {
+                    className = MUTED_SMALL
+                    textContent = tr(
                         "本 Demo 通过 Gradle 任务把 @vaadin/vaadin-lumo-styles 的 dist/lumo.css 复制到页面目录，" +
                             "再由 index.html 以普通样式表引入 —— LumoInjectionMixin 需要从 document.styleSheets " +
                             "读取 @media lumo_* 规则。",
                         "The demo copies dist/lumo.css from @vaadin/vaadin-lumo-styles into the page directory " +
                             "with a Gradle task, then index.html loads it as a plain stylesheet — " +
                             "LumoInjectionMixin reads the @media lumo_* rules from document.styleSheets.",
-                    ),
-                    MUTED_SMALL,
-                ),
+                    )
+                },
             ),
         ),
     )
@@ -203,15 +204,15 @@ private fun buildThemingPage(meta: PageMeta): PageView {
             label = tr("small 变体", "small variant")
             placeholder = tr("更紧凑的输入框", "A more compact field")
         }
-    compactField.withTheme("small")
+    compactField.addTheme("small")
     val helperAbove =
         createTextField {
             label = "helper-above-field"
             helperText = tr("说明文字在字段上方", "The helper text sits above the field")
         }
-    helperAbove.withTheme("helper-above-field")
+    helperAbove.addTheme("helper-above-field")
     val card = createCard { cardTitle = tr("elevated 卡片", "Elevated card") }
-    card.withTheme("elevated")
+    card.addTheme("elevated")
     card.append(
         paragraph(tr("主题变体只影响外观，不改变 API。", "Theme variants only change the look, never the API.")),
     )
@@ -245,9 +246,9 @@ private fun buildThemingPage(meta: PageMeta): PageView {
             null,
             column(
                 styled,
-                code("--vaadin-button-background: var(--lumo-primary-color)"),
-                code("--vaadin-button-text-color: var(--lumo-base-color)"),
-                code("--vaadin-button-border-radius: var(--lumo-border-radius-l)"),
+                codeText("--vaadin-button-background: var(--lumo-primary-color)"),
+                codeText("--vaadin-button-text-color: var(--lumo-base-color)"),
+                codeText("--vaadin-button-border-radius: var(--lumo-border-radius-l)"),
             ),
         ),
     )
@@ -265,11 +266,11 @@ private fun buildThemingPage(meta: PageMeta): PageView {
             ),
         )
     val partButton = createButton { textContent = tr("用 ::part 着色的标签", "A label styled through ::part") }
-    partButton.classList.add(THEMING_PART)
+    partButton.className = THEMING_PART
     parts.body.append(
         example(
             null,
-            column(partButton, code(".theming-part::part(label) { color: var(--lumo-primary-color); }")),
+            column(partButton, codeText(".theming-part::part(label) { color: var(--lumo-primary-color); }")),
         ),
     )
     view.body.append(parts.root)
@@ -285,20 +286,22 @@ private fun buildThemingPage(meta: PageMeta): PageView {
                     "can be applied to plain elements without writing extra CSS; this page loads utility.css.",
             ),
         )
-    val utilityBox = div(UTILITY_BOX)
+    val utilityBox = HtmlTagName.div {
+                         className = UTILITY_BOX
+                     }
     utilityBox.append(
         createIcon { icon = "lumo:info" },
-        paragraph(
-            tr("这个盒子只用了工具类排布。", "This box is styled with utility classes only."),
-            SMALL,
-        ),
+        HtmlTagName.p {
+            className = SMALL
+            textContent = tr("这个盒子只用了工具类排布。", "This box is styled with utility classes only.")
+        },
     )
     utilities.body.append(
         example(
             null,
             column(
                 utilityBox,
-                code("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s"),
+                codeText("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s"),
             ),
         ),
     )
@@ -321,16 +324,16 @@ private fun buildThemingPage(meta: PageMeta): PageView {
     i18n.body.append(
         example(
             null,
-            paragraph(
-                tr(
+            HtmlTagName.p {
+                className = MUTED_SMALL
+                textContent = tr(
                     "本 Demo 保持默认的英文文案，以便和上游文档的截图、断言一一对应；" +
                         "页面自身的说明文字则跟随当前语言。",
                     "The demo keeps each component's default English copy so it matches the screenshots and " +
                         "assertions of the upstream documentation, while the page prose follows the " +
                         "selected language.",
-                ),
-                MUTED_SMALL,
-            ),
+                )
+            },
         ),
     )
     view.body.append(i18n.root)
@@ -353,13 +356,13 @@ private fun buildThemingPage(meta: PageMeta): PageView {
         example(
             null,
             column(
-                paragraph(
-                    tr(
+                HtmlTagName.p {
+                    className = SMALL
+                    textContent = tr(
                         "这些包的公开 API 通过其他页面的示例间接覆盖：",
                         "These packages are covered indirectly by examples on other pages:",
-                    ),
-                    SMALL,
-                ),
+                    )
+                },
                 entryPoint(
                     "io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin",
                     tr("所有 Element 的基类", "Base class of every Element"),
@@ -383,16 +386,22 @@ private fun buildThemingPage(meta: PageMeta): PageView {
 
 /** A colour chip bound to one Lumo custom property. */
 private fun swatch(cssVariable: String, label: String): HTMLElement {
-    val chip = div().apply {
+    val chip = HtmlTagName.div().apply {
         style.setProperty("width", "3rem")
         style.setProperty("height", "3rem")
         style.setProperty("border-radius", "var(--lumo-border-radius-m)")
         style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
         style.setProperty("background", "var($cssVariable)")
     }
-    return column(chip, paragraph(label, MUTED_SMALL), code(cssVariable))
+    return column(chip, HtmlTagName.p {
+                            className = MUTED_SMALL
+                            textContent = label
+                        }, codeText(cssVariable))
 }
 
 /** Shows a stylesheet entry-point constant and its value. */
 private fun entryPoint(name: String, value: String): HTMLElement =
-    row(paragraph(name, SMALL), code(value))
+    row(HtmlTagName.p {
+            className = SMALL
+            textContent = name
+        }, codeText(value))

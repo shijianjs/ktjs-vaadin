@@ -1,5 +1,6 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.page.bulletList
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -8,7 +9,6 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.bulletList
 import demo.ui.column
 import demo.ui.example
 import demo.ui.page
@@ -149,8 +149,7 @@ private fun buildBreadcrumbsPage(meta: PageMeta): PageView {
     accessibility.body.append(
         example(
             null,
-            bulletList(
-                listOf(
+            bulletList(listOf(
                     tr(
                         "role=navigation：整条路径是一个导航地标。",
                         "role=navigation: the whole trail is a navigation landmark.",
@@ -167,8 +166,7 @@ private fun buildBreadcrumbsPage(meta: PageMeta): PageView {
                         "溢出按钮带有可本地化的 aria-label（i18n.moreItems）。",
                         "The overflow button carries a localizable aria-label (i18n.moreItems).",
                     ),
-                ),
-            ),
+                )),
         ),
     )
     view.body.append(accessibility.root)

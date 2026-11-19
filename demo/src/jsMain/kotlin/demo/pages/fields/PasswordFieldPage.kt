@@ -1,5 +1,8 @@
 package demo.pages.fields
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -11,15 +14,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.setHidden
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldEvents
@@ -245,7 +244,7 @@ private fun buildPasswordFieldPage(meta: PageMeta): PageView {
             label = tr("标签", "Label")
             helperText = tr("辅助文本", "Helper text")
             value = "Ex@mplePassw0rd"
-        }.withTheme("align-right", "small", "helper-above-field")
+        }.addTheme("align-right", "small", "helper-above-field")
     styles.body.append(example(null, styledField))
     view.body.append(styles.root)
 
@@ -282,11 +281,15 @@ private fun buildPasswordFieldPage(meta: PageMeta): PageView {
         }
     advanced.style.setProperty("width", "14em")
     val strengthCheck = createIcon { icon = "vaadin:check" }.apply { slot = "suffix" }
-    strengthCheck.setHidden(true)
-    val strengthText = span(tr("弱", "weak"))
-    val helperSlot = div()
+    strengthCheck.toggleAttribute("hidden", true)
+    val strengthText = HtmlTagName.span {
+                           textContent = tr("弱", "weak")
+                       }
+    val helperSlot = HtmlTagName.div()
     helperSlot.slot = "helper"
-    helperSlot.append(span(tr("密码强度：", "Password strength: ")), strengthText)
+    helperSlot.append(HtmlTagName.span {
+                          textContent = tr("密码强度：", "Password strength: ")
+                      }, strengthText)
     advanced.append(strengthCheck, helperSlot)
 
     fun updateStrength() {
@@ -306,7 +309,7 @@ private fun buildPasswordFieldPage(meta: PageMeta): PageView {
             }
         strengthText.textContent = label
         strengthText.style.setProperty("color", color)
-        strengthCheck.setHidden(!strong)
+        strengthCheck.toggleAttribute("hidden", !strong)
     }
     advanced.listen(PasswordFieldEvents.valueChanged) { updateStrength() }
     updateStrength()

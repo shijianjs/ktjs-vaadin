@@ -1,5 +1,9 @@
 package demo.pages.overlays
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -11,14 +15,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.js
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -59,7 +60,7 @@ val loginEntry: CatalogEntry =
  * successful submit closes the overlay again because `LoginOverlay` has no close control of its own.
  */
 private fun openOverlayButton(label: String, overlay: io.github.shijianjs.ktjs.vaadin.login.LoginOverlayElement): io.github.shijianjs.ktjs.vaadin.button.ButtonElement =
-    createButton { textContent = label }.withTheme("tertiary").apply {
+    createButton { textContent = label }.addTheme("tertiary").apply {
         overlay.listen(LoginFormEvents.login) { overlay.opened = false }
         clickEvent.addHandler { overlay.opened = true }
     }
@@ -167,7 +168,7 @@ private fun buildLoginPage(meta: PageMeta): PageView {
         example(
             null,
             row(
-                createButton { textContent = tr("打开登录浮层", "Open login overlay") }.withTheme("primary").apply {
+                createButton { textContent = tr("打开登录浮层", "Open login overlay") }.addTheme("primary").apply {
                     clickEvent.addHandler { loginOverlay.opened = true }
                 },
                 loginOverlay,
@@ -299,10 +300,10 @@ private fun buildLoginPage(meta: PageMeta): PageView {
         )
     val richForm = createLoginForm()
     richForm.noAutofocus = true
-    richForm.withTheme("dark")
+    richForm.addTheme("dark")
     // A full-bleed gradient behind the form: the login page's own backdrop, nothing else uses it.
     val richHost =
-        div().apply {
+        HtmlTagName.div().apply {
             style.setProperty("padding", "var(--lumo-space-l)")
             style.setProperty("border-radius", "var(--lumo-border-radius-l)")
             style.setProperty("background", "linear-gradient(135deg, #1f4e9c, #7a3f8f)")

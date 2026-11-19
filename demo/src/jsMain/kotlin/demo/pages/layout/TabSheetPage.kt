@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -9,12 +12,10 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -90,7 +91,7 @@ private fun buildTabSheetPage(meta: PageMeta): PageView {
             tr("这是支付面板的内容。", "This is the Payment tab content"),
             tr("这是配送面板的内容。", "This is the Shipping tab content"),
         ).mapIndexed { index, text ->
-            div().apply {
+            HtmlTagName.div().apply {
                 setAttribute("tab", lazyIds[index])
                 textContent = text
             }
@@ -120,7 +121,7 @@ private fun buildTabSheetPage(meta: PageMeta): PageView {
     adorned.append(
         createButton().apply {
             slot = "suffix"
-            withTheme("icon")
+            addTheme("icon")
             setAttribute("aria-label", tr("新增标签", "Add tab"))
             append(createIcon { icon = "vaadin:plus" })
         },
@@ -145,7 +146,7 @@ private fun buildTabSheetPage(meta: PageMeta): PageView {
 /** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
 private fun demoTabSheet(key: String, theme: String? = null): TabSheetElement {
     val sheet = createTabSheet()
-    if (theme != null) sheet.withTheme(theme)
+    if (theme != null) sheet.addTheme(theme)
     val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
     val labels = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
     val contents =
@@ -161,7 +162,7 @@ private fun demoTabSheet(key: String, theme: String? = null): TabSheetElement {
     sheet.append(tabs)
     contents.forEachIndexed { index, text ->
         sheet.append(
-            div().apply {
+            HtmlTagName.div().apply {
                 setAttribute("tab", ids[index])
                 textContent = text
             },

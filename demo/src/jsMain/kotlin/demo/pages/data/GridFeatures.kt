@@ -1,5 +1,9 @@
 package demo.pages.data
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
 import demo.tr
@@ -7,16 +11,12 @@ import demo.ui.EventLog
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
 import demo.ui.grid
 import demo.ui.jsArray
 import demo.ui.listen
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.cssom.Display
 import web.cssom.FlexWrap
@@ -80,7 +80,7 @@ private fun detailItems(event: Event, key: String): Array<JsAny> =
 // endregion
 
 private fun personDetails(item: JsAny?): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         // Six read-only fields, wrapping into rows: the same flex-wrap rule the docs use.
         inlineStyle.apply {
             display = Display.flex
@@ -110,7 +110,7 @@ private fun appendGridRowDetails(view: PageView) {
     // Details open on the active item.
     val clickGrid = newGrid()
     clickGrid.fill(people(5))
-    clickGrid.withTheme("row-stripes")
+    clickGrid.addTheme("row-stripes")
     clickGrid.append(
         createGridColumn { header = tr("姓名", "Name"); path = "displayName" },
         createGridColumn { path = "profession" },
@@ -144,7 +144,7 @@ private fun appendGridRowDetails(view: PageView) {
             renderer = { root, _, model ->
                 val open = model.detailsOpened == true
                 root.append(
-                    createButton { textContent = "" }.withTheme("tertiary icon").apply {
+                    createButton { textContent = "" }.addTheme("tertiary icon").apply {
                         setAttribute("aria-label", tr("切换详情", "Toggle details"))
                         setAttribute("aria-expanded", open.toString())
                         append(createIcon { icon = if (open) "vaadin:angle-down" else "vaadin:angle-right" })
@@ -188,7 +188,9 @@ private fun appendGridEmptyState(view: PageView) {
         createGridColumn { path = "lastName" },
         createGridColumn { path = "email" },
         createGridColumn { path = "profession" },
-        span(tr("没有找到员工。", "No employees found.")).apply { slot = "empty-state" },
+        HtmlTagName.span {
+            textContent = tr("没有找到员工。", "No employees found.")
+        }.apply { slot = "empty-state" },
     )
     empty.body.append(example(null, grid))
     view.body.append(empty.root)
@@ -255,7 +257,7 @@ private fun appendGridMenus(view: PageView) {
             renderer = { root, _, model ->
                 val status = itemText(model.item, "status")
                 root.append(
-                    createBadge { textContent = status }.withTheme(if (status == "Available") "success" else "error"),
+                    createBadge { textContent = status }.addTheme(if (status == "Available") "success" else "error"),
                 )
             }
         },
@@ -340,19 +342,19 @@ private fun appendGridFocusAndScroll(view: PageView) {
             column(
                 scrollGrid,
                 row(
-                    createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("跳到第 1 行", "Go to row 1") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             scrollGrid.scrollToIndex(0.0)
                             scrollLog.add("scrollToIndex(0)")
                         }
                     },
-                    createButton { textContent = tr("跳到第 50 行", "Go to row 50") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("跳到第 50 行", "Go to row 50") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             scrollGrid.scrollToIndex(49.0)
                             scrollLog.add("scrollToIndex(49)")
                         }
                     },
-                    createButton { textContent = tr("跳到第 200 行", "Go to row 200") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("跳到第 200 行", "Go to row 200") }.addTheme("tertiary").apply {
                         clickEvent.addHandler {
                             scrollGrid.scrollToIndex(199.0)
                             scrollLog.add("scrollToIndex(199)")
@@ -597,7 +599,7 @@ private fun appendGridSelection(view: PageView) {
 private fun themedGrid(theme: String): GridElement {
     val grid = newGrid("11rem")
     grid.fill(people(4))
-    grid.withTheme(theme)
+    grid.addTheme(theme)
     grid.append(
         createGridColumn { header = tr("名", "First name"); path = "firstName" },
         createGridColumn { path = "lastName" },
@@ -632,7 +634,7 @@ private fun appendGridStyling(view: PageView) {
 
     val wrapped = newGrid("12rem")
     wrapped.fill(people(5))
-    wrapped.withTheme("wrap-cell-content")
+    wrapped.addTheme("wrap-cell-content")
     wrapped.append(
         createGridColumn { path = "firstName" },
         createGridColumn { path = "lastName" },
@@ -694,7 +696,9 @@ private fun appendGridStyling(view: PageView) {
             headerPartName = "rating-header"
             footerPartName = "rating-footer"
             renderer = { root, _, model -> root.textContent = fixed2(itemRating(model.item)) }
-            footerRenderer = { root, _ -> root.append(span(tr("平均 5.32", "Avg rating: 5.32"))) }
+            footerRenderer = { root, _ -> root.append(HtmlTagName.span {
+                                                          textContent = tr("平均 5.32", "Avg rating: 5.32")
+                                                      }) }
         },
     )
     styling.body.append(

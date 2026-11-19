@@ -1,5 +1,11 @@
 package demo.pages.overlays
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,21 +16,14 @@ import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.anchor
 import demo.ui.column
-import demo.ui.div
 import demo.ui.example
-import demo.ui.heading
 import demo.ui.jsArray
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.rowStart
 import demo.ui.section
-import demo.ui.strong
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.cssom.AlignItems
 import web.cssom.Display
@@ -105,7 +104,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
             ),
         )
     val log = EventLog(4)
-    val trigger = createButton { textContent = tr("点击查看", "Click to open") }.withTheme("primary")
+    val trigger = createButton { textContent = tr("点击查看", "Click to open") }.addTheme("primary")
     trigger.id = ElementId("popover-trigger")
     trigger.dataset["test"] = "popover-trigger"
 
@@ -130,7 +129,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
                 "position accepts top / bottom / start / end and their combinations, twelve values in total.",
             ),
         )
-    val positionTarget = createButton { textContent = tr("打开", "Open") }.withTheme("primary")
+    val positionTarget = createButton { textContent = tr("打开", "Open") }.addTheme("primary")
     positionTarget.id = ElementId("popover-position-target")
     val positionSelect =
         createSelect {
@@ -178,9 +177,9 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
         )
     val bell = iconButton(tr("通知", "Notifications"), "lumo:bell")
     bell.id = ElementId("popover-arrow-trigger")
-    val arrowPopover = createPopover { withTheme("arrow") }
+    val arrowPopover = createPopover { addTheme("arrow") }
     arrowPopover.`for` = "popover-arrow-trigger"
-    arrowPopover.append(div().apply { textContent = tr("没有新通知", "No new notifications") })
+    arrowPopover.append(HtmlTagName.div().apply { textContent = tr("没有新通知", "No new notifications") })
     arrow.body.append(example(null, row(bell, arrowPopover)))
     view.body.append(arrow.root)
 
@@ -207,7 +206,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
             null,
             column(
                 row(discountButton, modalPopover),
-                createButton { textContent = tr("打开模态浮层", "Open modal popover") }.withTheme("tertiary").apply {
+                createButton { textContent = tr("打开模态浮层", "Open modal popover") }.addTheme("tertiary").apply {
                     clickEvent.addHandler { modalPopover.opened = true }
                 },
             ),
@@ -227,7 +226,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     val cvvField = createIntegerField { label = "CVV" }
     cvvField.id = ElementId("popover-cvv-field")
     cvvField.style.setProperty("width", "6rem")
-    val cvvPopover = createPopover { withTheme("arrow") }
+    val cvvPopover = createPopover { addTheme("arrow") }
     cvvPopover.`for` = "popover-cvv-field"
     cvvPopover.trigger = arrayOf(PopoverTriggers.hover, PopoverTriggers.focus)
     cvvPopover.position = "top"
@@ -240,7 +239,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
                     "of the signature strip.",
             ),
         ).apply { style.setProperty("max-width", "20rem") },
-        anchor(tr("查看不同卡片上的 CVV 位置", "See where to find CVV on different cards"), "https://www.cvvnumber.com/cvv.html", external = true),
+        kitAnchor(tr("查看不同卡片上的 CVV 位置", "See where to find CVV on different cards"), "https://www.cvvnumber.com/cvv.html"),
     )
     interactive.body.append(example(null, cvvField))
     interactive.body.append(cvvPopover)
@@ -289,7 +288,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     rangePopover.append(
         column(
             presets,
-            row(fromPicker, div().apply { textContent = "−" }, toPicker),
+            row(fromPicker, HtmlTagName.div().apply { textContent = "−" }, toPicker),
         ),
     )
     rangeInput.listen(KEY_DOWN) { event ->
@@ -333,7 +332,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
         )
     val notificationBell = iconButton(tr("通知", "Notifications"), "lumo:bell")
     notificationBell.id = ElementId("popover-notifications-trigger")
-    val notificationsPopover = createPopover { withTheme("arrow", "no-padding") }
+    val notificationsPopover = createPopover { addTheme("arrow", "no-padding") }
     notificationsPopover.`for` = "popover-notifications-trigger"
     notificationsPopover.modal = true
     notificationsPopover.width = "300px"
@@ -346,7 +345,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     val allList = createMessageList()
     allList.items = allItems
     val markAllRead =
-        createButton { textContent = tr("全部标为已读", "Mark all read") }.withTheme("small").apply {
+        createButton { textContent = tr("全部标为已读", "Mark all read") }.addTheme("small").apply {
             clickEvent.addHandler { unreadList.items = emptyArray() }
         }
     val panelHeader =
@@ -362,10 +361,14 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
         )
     }
     tabs.slot = "tabs"
-    val tabSheet = createTabSheet { withTheme("small", "no-padding", "no-border") }
+    val tabSheet = createTabSheet { addTheme("small", "no-padding", "no-border") }
     tabSheet.append(tabs)
-    tabSheet.append(div(null, unreadList).apply { setAttribute("tab", "unread-tab") })
-    tabSheet.append(div(null, allList).apply { setAttribute("tab", "all-tab") })
+    tabSheet.append(HtmlTagName.div {
+                        append(unreadList)
+                    }.apply { setAttribute("tab", "unread-tab") })
+    tabSheet.append(HtmlTagName.div {
+                        append(allList)
+                    }.apply { setAttribute("tab", "all-tab") })
     notificationsPopover.append(panelHeader, tabSheet)
     panel.body.append(example(null, row(notificationBell, notificationsPopover)))
     view.body.append(panel.root)
@@ -379,7 +382,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
             ),
         )
     val user = people(1).first()
-    val avatarButton = createButton { textContent = "" }.withTheme("icon", "tertiary").apply {
+    val avatarButton = createButton { textContent = "" }.addTheme("icon", "tertiary").apply {
         style.setProperty("padding", "0")
         style.setProperty("border-radius", "50%")
         append(
@@ -390,7 +393,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
         )
     }
     avatarButton.id = ElementId("popover-avatar-trigger")
-    val userPopover = createPopover { withTheme("no-padding") }
+    val userPopover = createPopover { addTheme("no-padding") }
     userPopover.`for` = "popover-avatar-trigger"
     userPopover.modal = true
     userPopover.position = "bottom-end"
@@ -398,7 +401,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     userPopover.setAttribute("aria-label", tr("用户菜单", "User menu"))
     val nickName = "@${user.firstName}${user.lastName}".lowercase()
     val userCard =
-        div().apply {
+        HtmlTagName.div().apply {
             inlineStyle.apply {
                 display = Display.flex
                 alignItems = AlignItems.center
@@ -410,16 +413,20 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
                     img = user.pictureUrl
                     name = user.displayName
                 },
-                span(user.displayName),
-                span(nickName),
+                HtmlTagName.span {
+                    textContent = user.displayName
+                },
+                HtmlTagName.span {
+                    textContent = nickName
+                },
             )
         }
     // Menu rows: the anchor fills the popover width and has no underline, so the whole row is the
     // target. The popover itself is a `no-padding` one; the padding lives here.
-    val menuLinks = div()
+    val menuLinks = HtmlTagName.div()
     listOf(tr("用户资料", "User profile"), tr("偏好设置", "Preferences"), tr("退出登录", "Sign out")).forEach { label ->
         menuLinks.append(
-            anchor(label, "#").apply {
+            kitAnchor(label, "#").apply {
                 setAttribute("role", "menuitem")
                 style.setProperty("display", "block")
                 style.setProperty("padding", "4px 16px")
@@ -466,7 +473,7 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     columnsPopover.modal = true
     columnsPopover.withBackdrop = true
     columnsPopover.position = "bottom-end"
-    val columnGroup = createCheckboxGroup { withTheme("vertical") }
+    val columnGroup = createCheckboxGroup { addTheme("vertical") }
     columnGroup.value = jsArray<String>("""["firstName", "lastName", "email", "profession"]""")
     columnDefs.forEach { (path, label) ->
         columnGroup.append(
@@ -485,12 +492,12 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
         style.setProperty("justify-content", "space-between")
         style.setProperty("gap", "var(--vaadin-gap-s)")
         append(
-            createButton { textContent = tr("全部显示", "Show all") }.withTheme("small").apply {
+            createButton { textContent = tr("全部显示", "Show all") }.addTheme("small").apply {
                 clickEvent.addHandler {
                     columnGroup.value = jsArray<String>("""["firstName", "lastName", "email", "profession"]""")
                 }
             },
-            createButton { textContent = tr("重置", "Reset") }.withTheme("small").apply {
+            createButton { textContent = tr("重置", "Reset") }.addTheme("small").apply {
                 clickEvent.addHandler {
                     columnGroup.value = jsArray<String>("""["firstName", "lastName", "email", "profession"]""")
                 }
@@ -499,7 +506,9 @@ private fun buildPopoverPage(meta: PageMeta): PageView {
     }
     columnsPopover.append(
         column(
-            strong(tr("配置列", "Configure columns")),
+            HtmlTagName.strong {
+                textContent = tr("配置列", "Configure columns")
+            },
             columnGroup,
             columnsActions,
         ),

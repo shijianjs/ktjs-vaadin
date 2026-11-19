@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -11,16 +14,12 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.grid
-import demo.ui.heading
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutEvents
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutPrimarySections
@@ -141,7 +140,7 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
     )
     val placementReadout = Readout("primarySection = drawer")
     val placementButton =
-        createButton { textContent = tr("切换 primarySection", "Toggle primarySection") }.withTheme("tertiary").apply {
+        createButton { textContent = tr("切换 primarySection", "Toggle primarySection") }.addTheme("tertiary").apply {
             clickEvent.addHandler {
                 val next =
                     if (sideLayout.primarySection == AppLayoutPrimarySections.drawer) {
@@ -166,7 +165,7 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
             ),
         )
     val autoFrame =
-        div().apply {
+        HtmlTagName.div().apply {
             style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
             style.setProperty("border-radius", "var(--lumo-border-radius-l)")
             style.setProperty("overflow", "hidden")
@@ -182,7 +181,7 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
     autoFrame.append(autoLayout)
 
     val fullFrame =
-        div().apply {
+        HtmlTagName.div().apply {
             style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
             style.setProperty("border-radius", "var(--lumo-border-radius-l)")
             style.setProperty("height", "18rem")
@@ -191,7 +190,7 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
     val fullLayout = createAppLayout().apply { style.setProperty("height", "100%") }
     val fullGrid = appPeopleGrid(20, allRowsVisible = false).apply {
         style.setProperty("height", "100%")
-        withTheme("no-border")
+        addTheme("no-border")
     }
     fullLayout.append(
         heading(3, tr("固定高度", "Full height")).apply {
@@ -294,7 +293,7 @@ private fun buildAppLayoutPage(meta: PageMeta): PageView {
 
 /** The navbar of the app layout examples: drawer toggle plus the application title. */
 private fun appNavbar(title: String): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         slot = "navbar"
         append(
             createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") },
@@ -311,14 +310,14 @@ private fun appDrawer(): HTMLElement =
 
 /** Content area filler for the app layout examples. */
 private fun appContent(text: String): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         style.setProperty("padding", "var(--lumo-space-m)")
         textContent = text
     }
 
 /** A demo navigation link that stays on the current hash route. */
 private fun navLink(label: String, icon: String? = null): HTMLElement =
-    element(HtmlTagName.a).apply {
+    HtmlTagName.a().apply {
         href = "#/app-layout"
         style.setProperty("display", "flex")
         style.setProperty("align-items", "center")

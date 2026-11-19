@@ -1,5 +1,6 @@
 package demo.page.overview
 
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -161,7 +162,7 @@ private class Card(
 )
 
 /**
- * One section of the index: the heading (whose mark and text are separate nodes, so a language switch
+ * One section of the index: the heading(whose mark and text are separate nodes, so a language switch
  * rewrites the text without touching the icon) and the cards under it.
  */
 private class GroupSection(val title: HTMLElement, val label: HTMLElement, val cards: List<Card>)
@@ -193,9 +194,9 @@ internal class OverviewPage : Page {
     override val node get() = page
 
     init {
-        page.addLink(texts.bind(anchor("", DOCS_BASE, external = true), { it.docsLink }))
-        page.addLink(texts.bind(anchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt", external = true), { it.sourceLink }))
-        page.addLink(texts.bind(anchor("", API_DOCS_URL, external = true), { it.apiLink }))
+        page.addLink(texts.bind(kitAnchor("", DOCS_BASE), { it.docsLink }))
+        page.addLink(texts.bind(kitAnchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt"), { it.sourceLink }))
+        page.addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
 
         val what = sectionBlock()
         texts.bind(what.title, { it.whatHeading })
@@ -257,7 +258,7 @@ internal class OverviewPage : Page {
         }
         val link = HtmlTagName.a {
             href = "#/${entry.id}"
-            classList.add(COMPONENT_CARD)
+            className = COMPONENT_CARD
             dataset["route"] = entry.id
             append(node)
         }

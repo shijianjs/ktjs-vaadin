@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,11 +10,9 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
 import demo.ui.example
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 
 val verticalLayoutEntry: CatalogEntry =
@@ -43,7 +44,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             "theme=\"spacing padding\"",
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 append(
                     box(tr("项目 1", "Item 1")),
                     box(tr("项目 2", "Item 2")),
@@ -66,7 +67,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             "justify-content: center",
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("height", "12rem")
                 style.setProperty("justify-content", "center")
                 append(
@@ -91,7 +92,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             "align-items: center",
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("align-items", "center")
                 append(
                     box(tr("项目 1", "Item 1")),
@@ -115,7 +116,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             null,
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("align-items", "start")
                 append(
                     box(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "end") },
@@ -136,14 +137,14 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 spacing", "Without spacing"),
             createVerticalLayout().apply {
-                withTheme("padding")
+                addTheme("padding")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
         example(
             tr("有 spacing", "With spacing"),
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
@@ -159,14 +160,14 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 padding", "Without padding"),
             createVerticalLayout().apply {
-                withTheme("spacing")
+                addTheme("spacing")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
         example(
             tr("有 padding", "With padding"),
             createVerticalLayout().apply {
-                withTheme("padding", "spacing")
+                addTheme("padding", "spacing")
                 append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
             },
         ),
@@ -181,11 +182,11 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
     margin.body.append(
         example(
             tr("没有 margin", "Without margin"),
-            div().apply {
+            HtmlTagName.div().apply {
                 style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                 append(
                     createVerticalLayout().apply {
-                        withTheme("spacing", "padding")
+                        addTheme("spacing", "padding")
                         append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
                     },
                 )
@@ -193,11 +194,11 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         ),
         example(
             tr("有 margin", "With margin"),
-            div().apply {
+            HtmlTagName.div().apply {
                 style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                 append(
                     createVerticalLayout().apply {
-                        withTheme("margin", "spacing", "padding")
+                        addTheme("margin", "spacing", "padding")
                         append(box(tr("项目 1", "Item 1")), box(tr("项目 2", "Item 2")), box(tr("项目 3", "Item 3")))
                     },
                 )
@@ -218,7 +219,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("没有 wrap", "Without wrap"),
             createVerticalLayout().apply {
-                withTheme("spacing", "padding")
+                addTheme("spacing", "padding")
                 style.setProperty("height", "10rem")
                 style.setProperty("align-items", "stretch")
                 append(*(1..4).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())
@@ -227,7 +228,7 @@ private fun buildVerticalLayoutPage(meta: PageMeta): PageView {
         example(
             tr("有 wrap", "With wrap"),
             createVerticalLayout().apply {
-                withTheme("wrap", "spacing", "padding")
+                addTheme("wrap", "spacing", "padding")
                 style.setProperty("height", "10rem")
                 style.setProperty("align-items", "stretch")
                 append(*(1..4).map { box(tr("项目 $it", "Item $it")) }.toTypedArray())

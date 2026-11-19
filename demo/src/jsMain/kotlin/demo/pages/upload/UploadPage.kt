@@ -1,5 +1,9 @@
 package demo.pages.upload
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -9,20 +13,13 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
-import demo.ui.anchor
 import demo.ui.column
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.grid
-import demo.ui.heading
 import demo.ui.jsObject
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.section
-import demo.ui.span
-import demo.ui.strong
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.html.HTMLElement
 import web.cssom.AlignItems
@@ -30,7 +27,6 @@ import web.cssom.AlignItems
 import web.cssom.Display
 import web.cssom.JustifyContent
 import web.cssom.px
-import demo.ui.withTheme
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -135,8 +131,12 @@ private fun appendDragAndDrop(view: PageView) {
         example(
             null,
             grid(
-                column(strong(tr("拖放已启用", "Drag and drop enabled")), dropEnabled),
-                column(strong(tr("拖放已禁用", "Drag and drop disabled")), dropDisabled),
+                column(HtmlTagName.strong {
+                           textContent = tr("拖放已启用", "Drag and drop enabled")
+                       }, dropEnabled),
+                column(HtmlTagName.strong {
+                           textContent = tr("拖放已禁用", "Drag and drop disabled")
+                       }, dropDisabled),
             ),
         ),
     )
@@ -193,7 +193,7 @@ private fun appendAutoUpload(view: PageView) {
     uploadAll.listen(UploadEvents.uploadProgress) { refreshReadout() }
     uploadAll.listen(UploadEvents.uploadSuccess) { refreshReadout() }
     val startAll = createButton { textContent = tr("开始全部上传", "Upload All Files") }
-    startAll.withTheme("primary")
+    startAll.addTheme("primary")
     startAll.clickEvent.addHandler { uploadAll.uploadFiles() }
     autoUpload.body.append(
         example(
@@ -237,7 +237,10 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传报告", "Upload report")),
-                paragraph(tr("可接受的文件格式：PDF（.pdf）", "Accepted file formats: PDF (.pdf)"), MUTED),
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("可接受的文件格式：PDF（.pdf）", "Accepted file formats: PDF (.pdf)")
+                },
                 report,
             ),
         ),
@@ -255,7 +258,10 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传文件", "Upload files")),
-                paragraph(tr("最多允许 3 个文件", "Maximum of 3 files allowed"), MUTED),
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("最多允许 3 个文件", "Maximum of 3 files allowed")
+                },
                 count,
             ),
         ),
@@ -276,7 +282,10 @@ private fun appendRestrictions(view: PageView) {
             null,
             column(
                 heading(4, tr("上传文件", "Upload file")),
-                paragraph(tr("最大文件大小：10 MB", "Maximum file size: 10 MB"), MUTED),
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("最大文件大小：10 MB", "Maximum file size: 10 MB")
+                },
                 size,
             ),
         ),
@@ -389,7 +398,7 @@ private fun appendCustomization(view: PageView) {
         )
 
     val primaryButton = createButton { textContent = tr("上传 PDF…", "Upload PDF...") }
-    primaryButton.withTheme("primary")
+    primaryButton.addTheme("primary")
     primaryButton.slot = "add-button"
     val buttonUpload = mockedUpload {
         maxFiles = 1.0
@@ -414,10 +423,10 @@ private fun appendCustomization(view: PageView) {
         example(
             tr("自定义上传按钮", "Custom upload button"),
             column(
-                paragraph(
-                    tr("达到数量上限后按钮会被禁用；选错文件时用 Notification 给出原因。", "The button is disabled once the file limit is reached; a rejected file is reported through a Notification."),
-                    MUTED,
-                ),
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("达到数量上限后按钮会被禁用；选错文件时用 Notification 给出原因。", "The button is disabled once the file limit is reached; a rejected file is reported through a Notification.")
+                },
                 buttonUpload,
             ),
         ),
@@ -427,11 +436,13 @@ private fun appendCustomization(view: PageView) {
     dropLabel.dataset["test"] = "upload-drop-label"
     dropLabel.append(
         createIcon { icon = "vaadin:cloud-upload" }.apply { slot = "drop-label-icon" },
-        element(HtmlTagName.span).apply {
+        HtmlTagName.span().apply {
             slot = "drop-label"
             append(
-                span(tr("文件会上传到我们的云端。参见", "Files will be uploaded to our cloud. See our ")),
-                anchor(tr("隐私政策", "privacy policy"), "https://vaadin.com/privacy-policy", external = true),
+                HtmlTagName.span {
+                    textContent = tr("文件会上传到我们的云端。参见", "Files will be uploaded to our cloud. See our ")
+                },
+                kitAnchor(tr("隐私政策", "privacy policy"), "https://vaadin.com/privacy-policy"),
             )
         },
     )
@@ -462,7 +473,7 @@ private fun appendListeners(view: PageView) {
     upload.listen(UploadEvents.uploadSuccess) { log.add("upload-success") }
     upload.listen(UploadEvents.uploadError) { log.add("upload-error") }
     val start = createButton { textContent = tr("开始上传", "Start upload") }
-    start.withTheme("primary")
+    start.addTheme("primary")
     start.clickEvent.addHandler { upload.uploadFiles() }
     listeners.body.append(example(null, column(upload, start, log.root)))
     view.body.append(listeners.root)
@@ -524,8 +535,14 @@ private fun appendBestPractices(view: PageView) {
             tr("辅助说明", "Helper text"),
             column(
                 heading(4, tr("上传表格", "Upload spreadsheet")),
-                paragraph(tr("文件大小不超过 1 MB。", "File size must be less than or equal to 1 MB."), MUTED),
-                paragraph(tr("仅接受 Excel 与 CSV 文件。", "Only Excel and CSV files are accepted."), MUTED),
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("文件大小不超过 1 MB。", "File size must be less than or equal to 1 MB.")
+                },
+                HtmlTagName.p {
+                    className = MUTED
+                    textContent = tr("仅接受 Excel 与 CSV 文件。", "Only Excel and CSV files are accepted.")
+                },
                 spreadsheet,
             ),
         ),
@@ -574,8 +591,12 @@ private fun appendErrorMessages(view: PageView) {
         example(
             null,
             grid(
-                column(strong(tr("不推荐", "Caution")), caution),
-                column(strong(tr("推荐", "Recommended")), recommended),
+                column(HtmlTagName.strong {
+                           textContent = tr("不推荐", "Caution")
+                       }, caution),
+                column(HtmlTagName.strong {
+                           textContent = tr("推荐", "Recommended")
+                       }, recommended),
             ),
         ),
     )
@@ -639,7 +660,7 @@ private fun appendModular(view: PageView) {
     dropZone.style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
     dropZone.style.setProperty("border-radius", "var(--lumo-border-radius-l)")
     dropZone.append(
-        div().apply {
+        HtmlTagName.div().apply {
             inlineStyle.apply {
                 display = Display.flex
                 alignItems = AlignItems.center
@@ -648,7 +669,9 @@ private fun appendModular(view: PageView) {
             }
             append(
                 createIcon { icon = "vaadin:upload" },
-                span(tr("把文件拖到这里，或", "Drop files here or")),
+                HtmlTagName.span {
+                    textContent = tr("把文件拖到这里，或", "Drop files here or")
+                },
                 browseButton,
             )
         },
@@ -678,7 +701,7 @@ private fun appendModular(view: PageView) {
     thumbnailsButton.manager = thumbnailsManager
     val thumbnailsList = createUploadFileList()
     thumbnailsList.manager = thumbnailsManager
-    thumbnailsList.withTheme("thumbnails")
+    thumbnailsList.addTheme("thumbnails")
     fullWidth(thumbnailsList)
     modular.body.append(
         example(

@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -8,13 +11,9 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
-import demo.ui.heading
 import demo.ui.page
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
@@ -55,7 +54,7 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
                     "top and bottom edges.",
             ),
         )
-    val scroller = createScroller().withTheme("overflow-indicators")
+    val scroller = createScroller().addTheme("overflow-indicators")
     scroller.dataset["test"] = "scroller"
     scroller.style.setProperty("max-height", "18rem")
     val markdown = createMarkdown()
@@ -84,7 +83,7 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
     bothScroller.style.setProperty("width", "100%")
     // The photo is 800px wide, so cap the scroller to make a horizontal scrollbar appear as well.
     bothScroller.style.setProperty("max-width", "40rem")
-    val illustration = element(HtmlTagName.img)
+    val illustration = HtmlTagName.img()
     illustration.src = Images.reindeer
     illustration.alt = tr("漫步在黄昏雪湖岸边的驯鹿", "A reindeer walking on a snowy lake shore at dusk")
     illustration.style.setProperty("display", "block")
@@ -101,7 +100,7 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
                     "of buttons that slides sideways.",
             ),
         )
-    val phone = div().apply {
+    val phone = HtmlTagName.div().apply {
         style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
         style.setProperty("border-radius", "var(--lumo-border-radius-l)")
         style.setProperty("max-width", "100%")
@@ -117,7 +116,7 @@ private fun buildScrollerPage(meta: PageMeta): PageView {
     horizontalScroller.append(
         createHorizontalLayout().apply {
             style.setProperty("display", "inline-flex")
-            withTheme("padding", "spacing")
+            addTheme("padding", "spacing")
             append(
                 scrollerAction(tr("审计", "Audit"), "vaadin:clipboard-check"),
                 scrollerAction(tr("报表", "Report"), "vaadin:book-dollar"),

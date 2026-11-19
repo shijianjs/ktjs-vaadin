@@ -1,5 +1,7 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -10,15 +12,11 @@ import demo.ui.PageMeta
 import demo.ui.PageView
 import demo.ui.Readout
 import demo.ui.column
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormItem
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
@@ -73,13 +71,17 @@ private fun buildNumberFieldPage(meta: PageMeta): PageView {
             value = "200"
         }
     balance.dataset["test"] = "number-field-basic"
-    balance.append(span("$").apply { slot = "prefix" })
+    balance.append(HtmlTagName.span {
+                       textContent = "$"
+                   }.apply { slot = "prefix" })
     val balanceEur =
         createNumberField {
             label = tr("余额", "Balance")
             value = "200"
         }
-    balanceEur.append(span("€").apply { slot = "suffix" })
+    balanceEur.append(HtmlTagName.span {
+                          textContent = "€"
+                      }.apply { slot = "suffix" })
     val balanceReadout = Readout(tr("当前值：200", "Value: 200"))
     balance.listen(NumberFieldEvents.valueChanged) {
         balanceReadout.set(tr("当前值：", "Value: "), balance.value.ifEmpty { tr("（空）", "(empty)") })
@@ -134,18 +136,28 @@ private fun buildNumberFieldPage(meta: PageMeta): PageView {
         field.listen(IntegerFieldEvents.valueChanged) { syncGuests() }
     }
     val adultsItem = createFormItem()
-    adultsItem.append(element(HtmlTagName.label).apply { slot = "label"; textContent = tr("成人", "Adults") }, adults)
+    adultsItem.append(HtmlTagName.label().apply { slot = "label"; textContent = tr("成人", "Adults") }, adults)
     val childrenItem = createFormItem()
     childrenItem.append(
-        element(HtmlTagName.label).apply {
+        HtmlTagName.label().apply {
             slot = "label"
-            append(div(SMALL, span(tr("儿童", "Children"))), div(MUTED_SMALL, span(tr("2-12 岁", "Age 2-12"))))
+            append(HtmlTagName.div {
+                       className = SMALL
+                       append(HtmlTagName.span {
+                                  textContent = tr("儿童", "Children")
+                              })
+                   }, HtmlTagName.div {
+                          className = MUTED_SMALL
+                          append(HtmlTagName.span {
+                                     textContent = tr("2-12 岁", "Age 2-12")
+                                 })
+                      })
         },
         children,
     )
     val infantsItem = createFormItem()
     infantsItem.append(
-        element(HtmlTagName.label).apply { slot = "label"; textContent = tr("婴儿", "Infants") },
+        HtmlTagName.label().apply { slot = "label"; textContent = tr("婴儿", "Infants") },
         infants,
     )
     val guestLayout =
@@ -280,7 +292,9 @@ private fun buildNumberFieldPage(meta: PageMeta): PageView {
     featured.dataset["test"] = "number-field-features"
     featured.append(
         createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" },
-        span("$").apply { slot = "prefix" },
+        HtmlTagName.span {
+            textContent = "$"
+        }.apply { slot = "prefix" },
         createIcon { icon = "vaadin:dollar" }.apply { slot = "suffix" },
     )
     features.body.append(example(null, featured))
@@ -400,7 +414,7 @@ private fun buildNumberFieldPage(meta: PageMeta): PageView {
                 label = tr("标签", "Label")
                 helperText = tr("说明文字", "Helper text")
                 value = "123.45"
-            }.withTheme("align-right", "small", "helper-above-field"),
+            }.addTheme("align-right", "small", "helper-above-field"),
         ),
     )
     view.body.append(styles.root)

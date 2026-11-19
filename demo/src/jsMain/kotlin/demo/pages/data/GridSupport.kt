@@ -1,12 +1,12 @@
 package demo.pages.data
 
+import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.tr
-import demo.ui.div
 import demo.ui.jsArray
 import demo.ui.row
-import demo.ui.span
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.demo.style.Palette
 import kotlin.js.Date
@@ -121,7 +121,9 @@ internal fun newGrid(height: String = "18rem"): GridElement =
 
 /** Header content with a trailing info icon, as used by the header renderer example. */
 internal fun headerWithIcon(label: String, icon: String, title: String): HTMLElement =
-    row(span(label), createIcon { this.icon = icon }.withTheme("small")).apply {
+    row(HtmlTagName.span {
+            textContent = label
+        }, createIcon { this.icon = icon }.addTheme("small")).apply {
         setAttribute("title", title)
     }
 
@@ -141,7 +143,7 @@ internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorter
 
 /** Avatar + name + email, the two-line cell the docs render through a Lit renderer. */
 internal fun personCell(item: JsAny?): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         inlineStyle.apply {
             display = Display.flex
             alignItems = AlignItems.center
@@ -152,14 +154,18 @@ internal fun personCell(item: JsAny?): HTMLElement =
                 name = "${itemText(item, "firstName")} ${itemText(item, "lastName")}"
                 img = itemText(item, "pictureUrl")
             },
-            div().apply {
+            HtmlTagName.div().apply {
                 inlineStyle.apply {
                     display = Display.flex
                     flexDirection = FlexDirection.column
                 }
                 append(
-                    span(itemText(item, "displayName")).apply { style.setProperty("font-weight", "600") },
-                    span(itemText(item, "email")).apply {
+                    HtmlTagName.span {
+                        textContent = itemText(item, "displayName")
+                    }.apply { style.setProperty("font-weight", "600") },
+                    HtmlTagName.span {
+                        textContent = itemText(item, "email")
+                    }.apply {
                         inlineStyle.apply {
                             color = Palette.muted
                             fontSize = 12.px

@@ -1,5 +1,7 @@
 package demo.pages.overlays
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -15,10 +17,8 @@ import demo.ui.column
 import demo.ui.example
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.confirmdialog.ConfirmDialogEvents
 import io.github.shijianjs.ktjs.vaadin.confirmdialog.createConfirmDialog
@@ -74,7 +74,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
     confirm.listen(ConfirmDialogEvents.closed) { log.add("closed") }
 
     val openButton =
-        createButton { textContent = tr("删除记录", "Delete record") }.withTheme("error").apply {
+        createButton { textContent = tr("删除记录", "Delete record") }.addTheme("error").apply {
             clickEvent.addHandler {
                 confirm.opened = true
                 status.set(tr("状态：", "Status: "))
@@ -111,7 +111,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
             null,
             column(
                 createButton { textContent = tr("打开三按钮对话框", "Open three-button dialog") }
-                    .withTheme("tertiary").apply {
+                    .addTheme("tertiary").apply {
                         clickEvent.addHandler { threeWayDialog.opened = true }
                     },
                 threeWayDialog,
@@ -147,7 +147,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
             null,
             column(
                 row(
-                    createButton { textContent = tr("删除报告", "Delete report") }.withTheme("error").apply {
+                    createButton { textContent = tr("删除报告", "Delete report") }.addTheme("error").apply {
                         clickEvent.addHandler { deleteDialog.opened = true }
                     },
                     deleteStatus.root,
@@ -189,7 +189,7 @@ private fun buildConfirmDialogPage(meta: PageMeta): PageView {
             null,
             column(
                 row(
-                    createButton { textContent = tr("导出报告", "Export report") }.withTheme("tertiary").apply {
+                    createButton { textContent = tr("导出报告", "Export report") }.addTheme("tertiary").apply {
                         clickEvent.addHandler { exportDialog.opened = true }
                     },
                     exportStatus.root,

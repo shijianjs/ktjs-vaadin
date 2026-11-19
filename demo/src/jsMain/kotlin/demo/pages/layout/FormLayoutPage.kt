@@ -1,5 +1,6 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -7,8 +8,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.page
 import demo.ui.row
@@ -210,7 +209,7 @@ private fun formFrame(form: HTMLElement): HTMLElement {
     form.style.setProperty("width", "100%")
     val split = createSplitLayout()
     split.style.setProperty("height", "18rem")
-    split.append(form, div().apply { style.setProperty("background", "var(--lumo-contrast-5pct)") })
+    split.append(form, HtmlTagName.div().apply { style.setProperty("background", "var(--lumo-contrast-5pct)") })
     return split
 }
 
@@ -228,7 +227,7 @@ internal fun passwordField(label: String): HTMLElement = createPasswordField { t
 /** A `vaadin-form-item` whose label goes into the `label` slot, as upstream documents it. */
 private fun formItem(label: String, field: HTMLElement): HTMLElement {
     val item = createFormItem()
-    val labelNode = element(HtmlTagName.label).apply {
+    val labelNode = HtmlTagName.label().apply {
         slot = "label"
         textContent = label
     }

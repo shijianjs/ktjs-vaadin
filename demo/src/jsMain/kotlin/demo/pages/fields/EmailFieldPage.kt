@@ -1,5 +1,6 @@
 package demo.pages.fields
 
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -16,7 +17,6 @@ import demo.ui.listen
 import demo.ui.page
 import demo.ui.row
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldEvents
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -209,7 +209,7 @@ private fun buildEmailFieldPage(meta: PageMeta): PageView {
             label = tr("标签", "Label")
             helperText = tr("辅助文本", "Helper text")
             value = "foo@bar.com"
-        }.withTheme("align-right", "small", "helper-above-field")
+        }.addTheme("align-right", "small", "helper-above-field")
     styles.body.append(example(null, styledField))
     view.body.append(styles.root)
 

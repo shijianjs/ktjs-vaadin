@@ -1,5 +1,9 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -8,16 +12,11 @@ import demo.tr
 import demo.ui.Images
 import demo.ui.PageMeta
 import demo.ui.PageView
-import demo.ui.div
-import demo.ui.element
 import demo.ui.example
 import demo.ui.grid
-import demo.ui.heading
 import demo.ui.listen
 import demo.ui.page
-import demo.ui.paragraph
 import demo.ui.section
-import demo.ui.withTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.AlignItems
 import web.cssom.Flex
@@ -139,15 +138,15 @@ private fun buildCardPage(meta: PageMeta): PageView {
     slotTitles.append(
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     val propertyTitle = createCard {
         cardTitle = tr("拉普兰", "Lapland")
         titleHeadingLevel = 3.0
     }
-    propertyTitle.append(div().apply { textContent = laplandShortText() })
-    slotTitles.classList.add(CARD_DEMO)
-    propertyTitle.classList.add(CARD_DEMO)
+    propertyTitle.append(HtmlTagName.div().apply { textContent = laplandShortText() })
+    slotTitles.className = CARD_DEMO
+    propertyTitle.className = CARD_DEMO
     titles.body.append(example(null, cardGrid(slotTitles, propertyTitle)))
     view.body.append(titles.root)
 
@@ -162,20 +161,20 @@ private fun buildCardPage(meta: PageMeta): PageView {
             ),
         )
     val headerCard = createCard()
-    headerCard.append(cardHeaderBlock(), div().apply { textContent = laplandShortText() })
+    headerCard.append(cardHeaderBlock(), HtmlTagName.div().apply { textContent = laplandShortText() })
     val prefixCard = createCard()
     prefixCard.append(
         createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "header-prefix" },
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     val suffixCard = createCard()
     suffixCard.append(
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        createBadge { textContent = tr("北极圈", "Arctic") }.withTheme("success").apply { slot = "header-suffix" },
-        div().apply { textContent = laplandShortText() },
+        createBadge { textContent = tr("北极圈", "Arctic") }.addTheme("success").apply { slot = "header-suffix" },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     header.body.append(example(null, cardGrid(headerCard, prefixCard, suffixCard)))
     view.body.append(header.root)
@@ -190,13 +189,13 @@ private fun buildCardPage(meta: PageMeta): PageView {
             ),
         )
     val imageCard = createCard()
-    imageCard.append(cardMediaImage(), div().apply { textContent = laplandShortText() })
+    imageCard.append(cardMediaImage(), HtmlTagName.div().apply { textContent = laplandShortText() })
     val iconCard = createCard()
-    iconCard.append(cardMediaIcon(), div().apply { textContent = laplandShortText() })
+    iconCard.append(cardMediaIcon(), HtmlTagName.div().apply { textContent = laplandShortText() })
     val avatarCard = createCard()
     avatarCard.append(
         createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     media.body.append(example(null, cardGrid(imageCard, iconCard, avatarCard)))
     view.body.append(media.root)
@@ -213,11 +212,11 @@ private fun buildCardPage(meta: PageMeta): PageView {
     footerCard.style.setProperty("height", "15rem")
     footerCard.append(
         cardSlotText("title", tr("拉普兰", "Lapland")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
         createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
         createButton { textContent = tr("了解更多", "Learn More") }.apply { slot = "footer" },
     )
-    footerCard.classList.add(CARD_DEMO)
+    footerCard.className = CARD_DEMO
     footer.body.append(example(null, footerCard))
     view.body.append(footer.root)
 
@@ -234,12 +233,12 @@ private fun buildCardPage(meta: PageMeta): PageView {
         example(
             null,
             cardGrid(
-                createCard { cardTitle = "Default" }.apply { append(div().apply { textContent = tr("默认卡片样式。", "This is the default card style.") }) },
-                createCard { cardTitle = "Outlined" }.withTheme("outlined").apply {
-                    append(div().apply { textContent = tr("在卡片四周加一圈实线边框。", "Adds a solid outline around the card.") })
+                createCard { cardTitle = "Default" }.apply { append(HtmlTagName.div().apply { textContent = tr("默认卡片样式。", "This is the default card style.") }) },
+                createCard { cardTitle = "Outlined" }.addTheme("outlined").apply {
+                    append(HtmlTagName.div().apply { textContent = tr("在卡片四周加一圈实线边框。", "Adds a solid outline around the card.") })
                 },
-                createCard { cardTitle = "Elevated" }.withTheme("elevated").apply {
-                    append(div().apply { textContent = tr("适合有底色背景的阴影样式。", "This variant works better on a shaded background.") })
+                createCard { cardTitle = "Elevated" }.addTheme("elevated").apply {
+                    append(HtmlTagName.div().apply { textContent = tr("适合有底色背景的阴影样式。", "This variant works better on a shaded background.") })
                 },
             ),
         ),
@@ -257,29 +256,29 @@ private fun buildCardPage(meta: PageMeta): PageView {
             ),
         )
     val combinedCard = createCard()
-    combinedCard.withTheme("outlined", "elevated", "horizontal", "cover-media")
+    combinedCard.addTheme("outlined", "elevated", "horizontal", "cover-media")
     combinedCard.style.setProperty("max-width", "34rem")
     combinedCard.append(
         cardMediaImage(),
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     val stretchCard = createCard()
-    stretchCard.withTheme("stretch-media")
+    stretchCard.addTheme("stretch-media")
     stretchCard.append(
         cardMediaImage(),
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     val horizontalCard = createCard()
-    horizontalCard.withTheme("horizontal")
+    horizontalCard.addTheme("horizontal")
     horizontalCard.append(
         createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
         cardSlotText("title", tr("拉普兰", "Lapland")),
         cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-        div().apply { textContent = laplandShortText() },
+        HtmlTagName.div().apply { textContent = laplandShortText() },
     )
     combined.body.append(example(null, cardGrid(combinedCard, stretchCard, horizontalCard)))
     view.body.append(combined.root)
@@ -304,7 +303,7 @@ private fun buildCardPage(meta: PageMeta): PageView {
 private fun cardPlayground(): HTMLElement {
     val playground = createCard()
     playground.dataset["test"] = "card-playground"
-    playground.withTheme("outlined", "elevated", "cover-media")
+    playground.addTheme("outlined", "elevated", "cover-media")
 
     val mediaNodes = arrayOf(cardMediaImage(), cardMediaIcon(), cardMediaAvatar("L"))
     val contentNodes = arrayOf(cardContentText(), cardContentScroller(), cardContentImage())
@@ -318,13 +317,13 @@ private fun cardPlayground(): HTMLElement {
             "header" to cardHeaderBlock(),
             "title" to cardSlotText("title", tr("拉普兰", "Lapland")),
             "subtitle" to cardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            "header-suffix" to createBadge { textContent = tr("北极圈", "Arctic") }.withTheme("success").apply { slot = "header-suffix" },
+            "header-suffix" to createBadge { textContent = tr("北极圈", "Arctic") }.addTheme("success").apply { slot = "header-suffix" },
             "content" to contentNode,
             "footer" to createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
         )
     playground.append(*nodes.values.toTypedArray())
 
-    val slotGroup = createCheckboxGroup { label = tr("插槽", "Slots") }.withTheme("vertical")
+    val slotGroup = createCheckboxGroup { label = tr("插槽", "Slots") }.addTheme("vertical")
     slotGroup.append(
         playgroundCheckbox("media", tr("媒体", "Media")),
         playgroundCheckbox("header-prefix", "Header Prefix"),
@@ -349,7 +348,7 @@ private fun cardPlayground(): HTMLElement {
             value = "0"
         }
 
-    val themeGroup = createCheckboxGroup { label = tr("样式变体", "Style variants") }.withTheme("vertical")
+    val themeGroup = createCheckboxGroup { label = tr("样式变体", "Style variants") }.addTheme("vertical")
     themeGroup.append(
         playgroundCheckbox("outlined", "Outlined"),
         playgroundCheckbox("elevated", "Elevated"),
@@ -376,7 +375,7 @@ private fun cardPlayground(): HTMLElement {
     slotGroup.listen(CheckboxGroupEvents.valueChanged) { syncSlots() }
     syncSlots()
 
-    themeGroup.listen(CheckboxGroupEvents.valueChanged) { playground.withTheme(*themeGroup.value) }
+    themeGroup.listen(CheckboxGroupEvents.valueChanged) { playground.addTheme(*themeGroup.value) }
 
     mediaSelect.listen(SelectEvents.valueChanged) {
         val next = mediaNodes[mediaSelect.value.toIntOrNull() ?: 0]
@@ -393,10 +392,21 @@ private fun cardPlayground(): HTMLElement {
         if ("content" in slotGroup.value) playground.append(next)
     }
 
-    return div(CARD_PLAYGROUND).apply {
+    return HtmlTagName.div {
+               className = CARD_PLAYGROUND
+           }.apply {
         append(
-            div(CARD_PLAYGROUND_PREVIEW, playground),
-            div(CARD_PLAYGROUND_OPTIONS, slotGroup, mediaSelect, contentSelect, themeGroup),
+            HtmlTagName.div {
+                className = CARD_PLAYGROUND_PREVIEW
+                append(playground)
+            },
+            HtmlTagName.div {
+                className = CARD_PLAYGROUND_OPTIONS
+                append(slotGroup)
+                append(mediaSelect)
+                append(contentSelect)
+                append(themeGroup)
+            },
         )
     }
 }
@@ -405,18 +415,18 @@ private fun cardGrid(vararg cards: HTMLElement): HTMLElement = grid(*cards)
 
 /** A `<div slot="…">` holding [text], for the title / subtitle slots of a card. */
 private fun cardSlotText(slotName: String, text: String): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         slot = slotName
         textContent = text
     }
 
 /** The custom header of the docs header example: an uppercase kicker above the title. */
 private fun cardHeaderBlock(): HTMLElement =
-    div().apply {
+    HtmlTagName.div().apply {
         slot = "header"
         style.setProperty("line-height", "1.25")
         append(
-            div().apply {
+            HtmlTagName.div().apply {
                 style.setProperty("font-size", "0.8125rem")
                 style.setProperty("text-transform", "uppercase")
                 textContent = tr("异域北方", "The Exotic North")
@@ -427,7 +437,7 @@ private fun cardHeaderBlock(): HTMLElement =
 
 /** The official Lapland photo in the media slot. */
 private fun cardMediaImage(): HTMLElement =
-    element(HtmlTagName.img).apply {
+    HtmlTagName.img().apply {
         slot = "media"
         src = Images.lapland
         alt = ""
