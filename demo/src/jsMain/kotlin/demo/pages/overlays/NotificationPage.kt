@@ -553,6 +553,21 @@ internal class NotificationPage : DemoPage() {
 
     }
 
+    /**
+     * The horizontal bar the notification examples put into a notification's content slot — spaced,
+     * centred, with a minimum width so the text does not jitter.
+     *
+     * The bar itself stays a `vaadin-horizontal-layout`, because the notification reads the nodes the
+     * examples append to it as its own children; it is a page method so the DOM is never assembled by
+     * a function standing outside the page component.
+     */
+    private fun horizontalBar(): HTMLElement {
+        val bar = createHorizontalLayout { addTheme("spacing") }
+        bar.style.setProperty("align-items", "center")
+        bar.style.setProperty("min-width", "300px")
+        return bar
+    }
+
     companion object : CustomElementReference<NotificationPage>(NotificationPage::class.js) {
         val NAME: TagName<NotificationPage> = TagName("vaadin-demo-notification-page")
 
@@ -566,20 +581,6 @@ internal class NotificationPage : DemoPage() {
 internal fun newNotificationPage(): NotificationPage {
     NotificationPage.define()
     return NotificationPage.NAME()
-}
-
-/**
- * `<vaadin-demo-notification-bar>`: the horizontal bar the notification examples put into a
- * notification's content slot — spaced, centred, with a minimum width so the text does not jitter.
- *
- * The bar itself stays a `vaadin-horizontal-layout`, because the notification reads the nodes the
- * examples append to it as its own children.
- */
-private fun horizontalBar(): HTMLElement {
-    val bar = createHorizontalLayout { addTheme("spacing") }
-    bar.style.setProperty("align-items", "center")
-    bar.style.setProperty("min-width", "300px")
-    return bar
 }
 
 /**
