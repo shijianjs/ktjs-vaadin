@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.Images
@@ -31,20 +31,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
 
-val iconEntry: CatalogEntry =
-    CatalogEntry(
-        id = "icon",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Icon", "Icon"),
-                summary = bi("图标元素：icon 名称、尺寸、SVG symbol 与字体图标。", "Icon element: icon name, size, SVG symbol and font icons."),
-                docsUrl = "$DOCS_BASE/icons",
-                sourcePath = "pages/display/IconPage.kt",
-            ),
-        kitPage = { IconPage.NAME() },
-    )
-
 // ---------------------------------------------------------------------------------------------
 // Icon (single icon: name, size, colour, fonts, svg literal)
 // ---------------------------------------------------------------------------------------------
@@ -52,7 +38,7 @@ val iconEntry: CatalogEntry =
 internal class IconPage : DemoPage() {
     private val texts = Binder(iconTexts)
 
-    private val frame = PageFrame(iconEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The icon the picker cycles through; the readout names it, so it moves with the copy. */
     private val picker = createIcon { icon = "lumo:user" }
@@ -158,7 +144,7 @@ internal class IconPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = iconEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -166,6 +152,20 @@ internal class IconPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "icon",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Icon", "Icon"),
+                        summary = bi("图标元素：icon 名称、尺寸、SVG symbol 与字体图标。", "Icon element: icon name, size, SVG symbol and font icons."),
+                        docsUrl = "${Catalog.DOCS_BASE}/icons",
+                        sourcePath = "pages/display/IconPage.kt",
+                    ),
+                kitPage = { IconPage.NAME() },
+            )
+
         private val english: IconTexts = IconTexts(
             basicHeading = "Basic usage",
             basicHint = "The icon property takes icon-set:name. registerLumoIcons() and registerVaadinIcons() make sure " +

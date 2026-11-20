@@ -7,8 +7,8 @@ import kotlin.js.js
 /**
  * Chinese/English metadata for a catalog entry.
  *
- * The catalog is declared before anything is built and has to carry every language's copy in the
- * same breath, so a title is a pair rather than a string resolved at read time.
+ * A page declares its copy where it declares the page — inside its companion — so both languages
+ * travel in one declaration instead of one string resolved when the language switches.
  */
 class Bilingual(private val zh: String, private val en: String) {
     /** This pair written in [lang]. */

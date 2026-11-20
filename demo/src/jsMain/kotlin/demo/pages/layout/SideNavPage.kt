@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -51,28 +51,10 @@ import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import web.location.location
 
-val sideNavEntry: CatalogEntry =
-    CatalogEntry(
-        id = "side-nav",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Side Nav", "Side Nav"),
-                summary =
-                    bi(
-                        "导航菜单：path 生成链接，可折叠、可嵌套。",
-                        "Navigation menu: path generates links; it can collapse and nest.",
-                    ),
-                docsUrl = "$DOCS_BASE/side-nav",
-                sourcePath = "pages/layout/SideNavPage.kt",
-            ),
-        kitPage = { SideNavPage.NAME() },
-    )
-
 internal class SideNavPage : DemoPage() {
     private val texts = Binder(sideNavTexts)
 
-    private val frame = PageFrame(sideNavEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = EventLog(4)
 
@@ -287,7 +269,7 @@ internal class SideNavPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = sideNavEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -302,6 +284,24 @@ internal class SideNavPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SideNavPage>(SideNavPage::class.js, "vaadin-demo-side-nav-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "side-nav",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Side Nav", "Side Nav"),
+                        summary =
+                            bi(
+                                "导航菜单：path 生成链接，可折叠、可嵌套。",
+                                "Navigation menu: path generates links; it can collapse and nest.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/side-nav",
+                        sourcePath = "pages/layout/SideNavPage.kt",
+                    ),
+                kitPage = { SideNavPage.NAME() },
+            )
+
         /** The emphasis colour this page gives an external link; the sheet and the item share it. */
         private val EXTERNAL: ClassName = ClassName("external")
         /** The accent colour of that link. */

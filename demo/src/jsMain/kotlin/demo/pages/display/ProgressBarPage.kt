@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -31,20 +31,6 @@ import web.events.addHandler
 import web.html.HtmlTagName
 import demo.ui.MUTED_SMALL
 
-val progressBarEntry: CatalogEntry =
-    CatalogEntry(
-        id = "progress-bar",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Progress Bar", "Progress Bar"),
-                summary = bi("进度条：确定值与不确定状态，min / max 决定比例。", "Progress bar: determinate value and indeterminate state; min / max set the ratio."),
-                docsUrl = "$DOCS_BASE/progress-bar",
-                sourcePath = "pages/display/ProgressBarPage.kt",
-            ),
-        kitPage = { ProgressBarPage.NAME() },
-    )
-
 // ---------------------------------------------------------------------------------------------
 // Progress bar
 // ---------------------------------------------------------------------------------------------
@@ -52,7 +38,7 @@ val progressBarEntry: CatalogEntry =
 internal class ProgressBarPage : DemoPage() {
     private val texts = Binder(progressBarTexts)
 
-    private val frame = PageFrame(progressBarEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The label and hint of the two labelled examples: external text, so the page owns them. */
     private val barLabel = HtmlTagName.label()
@@ -163,7 +149,7 @@ internal class ProgressBarPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = progressBarEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -172,6 +158,20 @@ internal class ProgressBarPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ProgressBarPage>(ProgressBarPage::class.js, "vaadin-demo-progress-bar-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "progress-bar",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Progress Bar", "Progress Bar"),
+                        summary = bi("进度条：确定值与不确定状态，min / max 决定比例。", "Progress bar: determinate value and indeterminate state; min / max set the ratio."),
+                        docsUrl = "${Catalog.DOCS_BASE}/progress-bar",
+                        sourcePath = "pages/display/ProgressBarPage.kt",
+                    ),
+                kitPage = { ProgressBarPage.NAME() },
+            )
+
         private val english: ProgressBarTexts = ProgressBarTexts(
             basicHeading = "Basic usage",
             basicHint = "The default range is 0–1 and value is the current progress; the bar below sits at 50%.",

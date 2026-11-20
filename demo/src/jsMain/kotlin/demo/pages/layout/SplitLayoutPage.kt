@@ -13,7 +13,7 @@ import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -25,29 +25,10 @@ import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import web.dom.clickEvent
 import web.events.addHandler
 
-val splitLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "split-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Split Layout", "Split Layout"),
-                summary =
-                    bi(
-                        "可拖动的分栏容器，orientation 决定水平或垂直分割。",
-                        "Resizable split container; orientation switches between a horizontal and a " +
-                            "vertical split.",
-                    ),
-                docsUrl = "$DOCS_BASE/split-layout",
-                sourcePath = "pages/layout/SplitLayoutPage.kt",
-            ),
-        kitPage = { SplitLayoutPage.NAME() },
-    )
-
 internal class SplitLayoutPage : DemoPage() {
     private val texts = Binder(splitLayoutTexts)
 
-    private val frame = PageFrame(splitLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The sidebar toggle: its label is an attribute, so it is written here rather than bound. */
     private val collapseButton = createButton()
@@ -154,7 +135,7 @@ internal class SplitLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = splitLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -164,6 +145,25 @@ internal class SplitLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "split-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Split Layout", "Split Layout"),
+                        summary =
+                            bi(
+                                "可拖动的分栏容器，orientation 决定水平或垂直分割。",
+                                "Resizable split container; orientation switches between a horizontal and a " +
+                                    "vertical split.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/split-layout",
+                        sourcePath = "pages/layout/SplitLayoutPage.kt",
+                    ),
+                kitPage = { SplitLayoutPage.NAME() },
+            )
+
         private val english: SplitLayoutTexts = SplitLayoutTexts(
             basicHeading = "Basic usage",
             basicHint = "A draggable divider sits between the two children; they share the space evenly unless a width " +

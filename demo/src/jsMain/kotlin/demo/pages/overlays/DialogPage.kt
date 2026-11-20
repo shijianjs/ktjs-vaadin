@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -36,29 +36,10 @@ import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 
-val dialogEntry: CatalogEntry =
-    CatalogEntry(
-        id = "dialog",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Dialog", "Dialog"),
-                summary =
-                    bi(
-                        "模态对话框：renderer 提供内容，header / footer 渲染器提供标题与操作区。",
-                        "Modal dialog: renderer supplies the content, and the header / footer renderers " +
-                            "supply the title and the actions.",
-                    ),
-                docsUrl = "$DOCS_BASE/dialog",
-                sourcePath = "pages/overlays/DialogPage.kt",
-            ),
-        kitPage = { DialogPage.NAME() },
-    )
-
 internal class DialogPage : DemoPage() {
     private val texts = Binder(dialogTexts)
 
-    private val frame = PageFrame(dialogEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = RecordedLog<String>(5)
 
@@ -302,7 +283,7 @@ internal class DialogPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = dialogEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -311,6 +292,25 @@ internal class DialogPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DialogPage>(DialogPage::class.js, "vaadin-demo-dialog-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "dialog",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Dialog", "Dialog"),
+                        summary =
+                            bi(
+                                "模态对话框：renderer 提供内容，header / footer 渲染器提供标题与操作区。",
+                                "Modal dialog: renderer supplies the content, and the header / footer renderers " +
+                                    "supply the title and the actions.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/dialog",
+                        sourcePath = "pages/overlays/DialogPage.kt",
+                    ),
+                kitPage = { DialogPage.NAME() },
+            )
+
         private val english: DialogTexts =
             DialogTexts(
                 basicHeading = "Basic usage",

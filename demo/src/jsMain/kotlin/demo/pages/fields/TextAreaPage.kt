@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -33,28 +33,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val textAreaEntry: CatalogEntry =
-    CatalogEntry(
-        id = "text-area",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Text Area", "Text Area"),
-                summary =
-                    bi(
-                        "多行文本输入：行数范围、字数上限与约束校验。",
-                        "Multi-line text input: row range, character limit and constraint validation.",
-                    ),
-                docsUrl = "$DOCS_BASE/text-area",
-                sourcePath = "pages/fields/TextAreaPage.kt",
-            ),
-        kitPage = { TextAreaPage.NAME() },
-    )
-
 internal class TextAreaPage : DemoPage() {
     private val texts = Binder(textAreaTexts)
 
-    private val frame = PageFrame(textAreaEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val messageField = createTextArea()
 
@@ -268,7 +250,7 @@ internal class TextAreaPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = textAreaEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -280,6 +262,24 @@ internal class TextAreaPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "text-area",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Text Area", "Text Area"),
+                        summary =
+                            bi(
+                                "多行文本输入：行数范围、字数上限与约束校验。",
+                                "Multi-line text input: row range, character limit and constraint validation.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/text-area",
+                        sourcePath = "pages/fields/TextAreaPage.kt",
+                    ),
+                kitPage = { TextAreaPage.NAME() },
+            )
+
         private val english: TextAreaTexts =
             TextAreaTexts(
                 basicHeading = "Basic usage",

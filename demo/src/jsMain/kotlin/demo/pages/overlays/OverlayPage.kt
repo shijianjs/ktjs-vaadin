@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -27,34 +27,10 @@ import io.github.shijianjs.ktjs.vaadin.overlay.createOverlay
 import web.dom.clickEvent
 import web.events.addHandler
 
-val overlayEntry: CatalogEntry =
-    CatalogEntry(
-        id = "overlay",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Overlay", "Overlay"),
-                summary =
-                    bi(
-                        "底层浮层元素：Dialog / Select / ComboBox 都构建在它之上。",
-                        "Low-level overlay element: Dialog / Select / ComboBox are all built on it.",
-                    ),
-                docsUrl = "$DOCS_BASE/dialog",
-                docsNote =
-                    bi(
-                        "vaadin-overlay 是内部基础元素，官方文档见 Dialog。",
-                        "vaadin-overlay is an internal building block; the official documentation is " +
-                            "under Dialog.",
-                    ),
-                sourcePath = "pages/overlays/OverlayPage.kt",
-            ),
-        kitPage = { OverlayPage.NAME() },
-    )
-
 internal class OverlayPage : DemoPage() {
     private val texts = Binder(overlayTexts)
 
-    private val frame = PageFrame(overlayEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The buttons of the three examples; only their labels depend on the language. */
     private val openButton: ButtonElement = createButton()
@@ -136,7 +112,7 @@ internal class OverlayPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = overlayEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -151,6 +127,30 @@ internal class OverlayPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "overlay",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Overlay", "Overlay"),
+                        summary =
+                            bi(
+                                "底层浮层元素：Dialog / Select / ComboBox 都构建在它之上。",
+                                "Low-level overlay element: Dialog / Select / ComboBox are all built on it.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/dialog",
+                        docsNote =
+                            bi(
+                                "vaadin-overlay 是内部基础元素，官方文档见 Dialog。",
+                                "vaadin-overlay is an internal building block; the official documentation is " +
+                                    "under Dialog.",
+                            ),
+                        sourcePath = "pages/overlays/OverlayPage.kt",
+                    ),
+                kitPage = { OverlayPage.NAME() },
+            )
+
         private val english: OverlayTexts = OverlayTexts(
             basicHeading = "Basic usage",
             basicHint = "renderer(root, owner, model) supplies the content; withBackdrop shows the backdrop.",

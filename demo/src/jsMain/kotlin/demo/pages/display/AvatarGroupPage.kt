@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -33,25 +33,10 @@ import web.dom.clickEvent
 import web.events.addHandler
 import kotlin.js.JsAny
 
-val avatarGroupEntry: CatalogEntry =
-    CatalogEntry(
-        id = "avatar-group",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Avatar Group", "Avatar Group"),
-                summary = bi("头像组：超出 maxItemsVisible 的部分折叠成计数。", "Avatar group: items beyond maxItemsVisible collapse into a counter."),
-                docsUrl = "$DOCS_BASE/avatar",
-                docsNote = bi("Avatar Group 与 Avatar 共用一页官方文档。", "Avatar Group shares the Avatar documentation page."),
-                sourcePath = "pages/display/AvatarGroupPage.kt",
-            ),
-        kitPage = { AvatarGroupPage.NAME() },
-    )
-
 internal class AvatarGroupPage : DemoPage() {
     private val texts = Binder(avatarGroupTexts)
 
-    private val frame = PageFrame(avatarGroupEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The localised group: its `i18n` is a property, rewritten on every language change. */
     private val localised: AvatarGroupElement = createAvatarGroup()
@@ -134,7 +119,7 @@ internal class AvatarGroupPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = avatarGroupEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -145,6 +130,21 @@ internal class AvatarGroupPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "avatar-group",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Avatar Group", "Avatar Group"),
+                        summary = bi("头像组：超出 maxItemsVisible 的部分折叠成计数。", "Avatar group: items beyond maxItemsVisible collapse into a counter."),
+                        docsUrl = "${Catalog.DOCS_BASE}/avatar",
+                        docsNote = bi("Avatar Group 与 Avatar 共用一页官方文档。", "Avatar Group shares the Avatar documentation page."),
+                        sourcePath = "pages/display/AvatarGroupPage.kt",
+                    ),
+                kitPage = { AvatarGroupPage.NAME() },
+            )
+
         private val english: AvatarGroupTexts = AvatarGroupTexts(
             basicHeading = "Basic usage",
             basicHint = "Each object in items describes one avatar; the official example maps three people from the " +

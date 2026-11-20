@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -37,29 +37,10 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.cssom.ClassName
 
-val tooltipEntry: CatalogEntry =
-    CatalogEntry(
-        id = "tooltip",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Tooltip", "Tooltip"),
-                summary =
-                    bi(
-                        "悬停提示：可以放进组件的 tooltip 插槽，也可以用 for 关联任意元素。",
-                        "Hover hint: goes into a component's tooltip slot, or is linked to any element " +
-                            "with for.",
-                    ),
-                docsUrl = "$DOCS_BASE/tooltip",
-                sourcePath = "pages/overlays/TooltipPage.kt",
-            ),
-        kitPage = { TooltipPage.NAME() },
-    )
-
 internal class TooltipPage : DemoPage() {
     private val texts = Binder(tooltipTexts)
 
-    private val frame = PageFrame(tooltipEntry)
+    private val frame = PageFrame(ENTRY)
 
     init {
         frame.mount(this)
@@ -204,7 +185,7 @@ internal class TooltipPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = tooltipEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -212,6 +193,25 @@ internal class TooltipPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "tooltip",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Tooltip", "Tooltip"),
+                        summary =
+                            bi(
+                                "悬停提示：可以放进组件的 tooltip 插槽，也可以用 for 关联任意元素。",
+                                "Hover hint: goes into a component's tooltip slot, or is linked to any element " +
+                                    "with for.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/tooltip",
+                        sourcePath = "pages/overlays/TooltipPage.kt",
+                    ),
+                kitPage = { TooltipPage.NAME() },
+            )
+
         private val english: TooltipTexts =
             TooltipTexts(
                 slottedHeading = "Inside a slot",

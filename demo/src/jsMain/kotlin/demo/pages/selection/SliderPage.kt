@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -28,28 +28,10 @@ import io.github.shijianjs.ktjs.vaadin.slider.SliderEvents
 import io.github.shijianjs.ktjs.vaadin.slider.createRangeSlider
 import io.github.shijianjs.ktjs.vaadin.slider.createSlider
 
-val sliderEntry: CatalogEntry =
-    CatalogEntry(
-        id = "slider",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Slider", "Slider"),
-                summary =
-                    bi(
-                        "拖动选择数值，支持区间滑块、步进与只读状态。",
-                        "Pick a value by dragging, with range slider, step and read-only state.",
-                    ),
-                docsUrl = "$DOCS_BASE/slider",
-                sourcePath = "pages/selection/SliderPage.kt",
-            ),
-        kitPage = { SliderPage.NAME() },
-    )
-
 internal class SliderPage : DemoPage() {
     private val texts = Binder(sliderTexts)
 
-    private val frame = PageFrame(sliderEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val slider: SliderElement = createSlider { min = 0.0; max = 100.0; step = 5.0; value = 40.0 }
 
@@ -214,7 +196,7 @@ internal class SliderPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = sliderEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -253,6 +235,24 @@ internal class SliderPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SliderPage>(SliderPage::class.js, "vaadin-demo-slider-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "slider",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Slider", "Slider"),
+                        summary =
+                            bi(
+                                "拖动选择数值，支持区间滑块、步进与只读状态。",
+                                "Pick a value by dragging, with range slider, step and read-only state.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/slider",
+                        sourcePath = "pages/selection/SliderPage.kt",
+                    ),
+                kitPage = { SliderPage.NAME() },
+            )
+
         private val english: SliderTexts =
             SliderTexts(
                 basicHeading = "Basic usage",

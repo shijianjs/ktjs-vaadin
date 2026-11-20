@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -32,29 +32,10 @@ import io.github.shijianjs.ktjs.vaadin.multiselectcombobox.MultiSelectComboBoxEv
 import io.github.shijianjs.ktjs.vaadin.multiselectcombobox.createMultiSelectComboBox
 import io.github.shijianjs.ktjs.vaadin.textarea.createTextArea
 
-val multiSelectComboBoxEntry: CatalogEntry =
-    CatalogEntry(
-        id = "multi-select-combo-box",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Multi-Select Combo Box", "Multi-Select Combo Box"),
-                summary =
-                    bi(
-                        "多选下拉：选中项显示为 chip，selectedItems 是选中的对象数组。",
-                        "Multi-select dropdown: selections show as chips and selectedItems holds the " +
-                            "selected objects.",
-                    ),
-                docsUrl = "$DOCS_BASE/multi-select-combo-box",
-                sourcePath = "pages/selection/MultiSelectComboBoxPage.kt",
-            ),
-        kitPage = { MultiSelectComboBoxPage.NAME() },
-    )
-
 internal class MultiSelectComboBoxPage : DemoPage() {
     private val texts = Binder(multiSelectComboBoxTexts)
 
-    private val frame = PageFrame(multiSelectComboBoxEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The field whose selection the readout follows, kept as a field so a switch can re-render it. */
     private val multi: MultiSelectComboBoxElement = createMultiSelectComboBox()
@@ -225,7 +206,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = multiSelectComboBoxEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -245,6 +226,25 @@ internal class MultiSelectComboBoxPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "multi-select-combo-box",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Multi-Select Combo Box", "Multi-Select Combo Box"),
+                        summary =
+                            bi(
+                                "多选下拉：选中项显示为 chip，selectedItems 是选中的对象数组。",
+                                "Multi-select dropdown: selections show as chips and selectedItems holds the " +
+                                    "selected objects.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/multi-select-combo-box",
+                        sourcePath = "pages/selection/MultiSelectComboBoxPage.kt",
+                    ),
+                kitPage = { MultiSelectComboBoxPage.NAME() },
+            )
+
         private val english: MultiSelectComboBoxTexts =
             MultiSelectComboBoxTexts(
                 basicHeading = "Basic usage",

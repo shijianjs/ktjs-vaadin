@@ -1,6 +1,6 @@
 package demo.site
 
-import demo.catalog
+import demo.Catalog
 import demo.page.overview.OverviewPage
 import io.github.shijianjs.ktjs.demo.nav.DemoMenu
 import io.github.shijianjs.ktjs.demo.nav.Entry
@@ -19,7 +19,7 @@ const val API_URL: String = "https://shijianjs.github.io/ktjs-vaadin/api/index.h
 const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
 
 /**
- * The site, derived from [catalog]: one drawer group per catalog group and one entry per page.
+ * The site, derived from [Catalog.ENTRIES]: one drawer group per catalog group and one entry per page.
  *
  * The catalog already carries the declarations (route id, group, bilingual title, builder), so the
  * menu is a projection of it rather than a second list that can drift. Icons belong to the group
@@ -31,11 +31,11 @@ const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
  * list by identity, so a fresh instance per entry would split one group into sixty.
  */
 fun siteMenu(): DemoMenu {
-    val groups: Map<String, Group> = catalog.map { it.group.id }.distinct()
-        .associateWith { id -> Group(id, catalog.first { it.group.id == id }.group.icon) }
+    val groups: Map<String, Group> = Catalog.ENTRIES.map { it.group.id }.distinct()
+        .associateWith { id -> Group(id, Catalog.ENTRIES.first { it.group.id == id }.group.icon) }
 
     return DemoMenu(
-        catalog.map { entry ->
+        Catalog.ENTRIES.map { entry ->
             val group = groups.getValue(entry.group.id)
             Entry(entry.id, group) {
                 // A page is an element and owns its copy, so a language switch rewrites the text in

@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -31,34 +31,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val checkboxGroupEntry: CatalogEntry =
-    CatalogEntry(
-        id = "checkbox-group",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Checkbox Group", "Checkbox Group"),
-                summary =
-                    bi(
-                        "多选组：value 是数组，支持必填校验与整体只读。",
-                        "Multi-select group: value is an array, with required validation and a " +
-                            "group-wide read-only state.",
-                    ),
-                docsUrl = "$DOCS_BASE/checkbox",
-                docsNote =
-                    bi(
-                        "Checkbox Group 与 Checkbox 共用一页官方文档。",
-                        "Checkbox Group shares the Checkbox documentation page.",
-                    ),
-                sourcePath = "pages/selection/CheckboxGroupPage.kt",
-            ),
-        kitPage = { CheckboxGroupPage.NAME() },
-    )
-
 internal class CheckboxGroupPage : DemoPage() {
     private val texts = Binder(checkboxGroupTexts)
 
-    private val frame = PageFrame(checkboxGroupEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The last line put in the shared result readout, so a language switch rewrites it in place. */
     private var lastResult: ((CheckboxGroupTexts) -> Pair<String, String>)? = null
@@ -185,7 +161,7 @@ internal class CheckboxGroupPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = checkboxGroupEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -200,6 +176,30 @@ internal class CheckboxGroupPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CheckboxGroupPage>(CheckboxGroupPage::class.js, "vaadin-demo-checkbox-group-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "checkbox-group",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Checkbox Group", "Checkbox Group"),
+                        summary =
+                            bi(
+                                "多选组：value 是数组，支持必填校验与整体只读。",
+                                "Multi-select group: value is an array, with required validation and a " +
+                                    "group-wide read-only state.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/checkbox",
+                        docsNote =
+                            bi(
+                                "Checkbox Group 与 Checkbox 共用一页官方文档。",
+                                "Checkbox Group shares the Checkbox documentation page.",
+                            ),
+                        sourcePath = "pages/selection/CheckboxGroupPage.kt",
+                    ),
+                kitPage = { CheckboxGroupPage.NAME() },
+            )
+
         private val english: CheckboxGroupTexts =
             CheckboxGroupTexts(
                 basicHeading = "Basic usage",

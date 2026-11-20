@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -44,29 +44,10 @@ import web.dom.document
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
-val menuBarEntry: CatalogEntry =
-    CatalogEntry(
-        id = "menu-bar",
-        group = Groups.BUTTONS,
-        meta =
-            PageMeta(
-                title = bi("Menu Bar", "Menu Bar"),
-                summary =
-                    bi(
-                        "横向菜单栏，支持子菜单、禁用项、悬停展开与键盘导航。",
-                        "Horizontal menu bar with submenus, disabled items, hover expansion and keyboard " +
-                            "navigation.",
-                    ),
-                docsUrl = "$DOCS_BASE/menu-bar",
-                sourcePath = "pages/buttons/MenuBarPage.kt",
-            ),
-        kitPage = { MenuBarPage.NAME() },
-    )
-
 internal class MenuBarPage : DemoPage() {
     private val texts = Binder(menuBarTexts)
 
-    private val frame = PageFrame(menuBarEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = EventLog(6)
 
@@ -505,7 +486,7 @@ internal class MenuBarPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = menuBarEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -517,6 +498,25 @@ internal class MenuBarPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MenuBarPage>(MenuBarPage::class.js, "vaadin-demo-menu-bar-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "menu-bar",
+                group = Groups.BUTTONS,
+                meta =
+                    PageMeta(
+                        title = bi("Menu Bar", "Menu Bar"),
+                        summary =
+                            bi(
+                                "横向菜单栏，支持子菜单、禁用项、悬停展开与键盘导航。",
+                                "Horizontal menu bar with submenus, disabled items, hover expansion and keyboard " +
+                                    "navigation.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/menu-bar",
+                        sourcePath = "pages/buttons/MenuBarPage.kt",
+                    ),
+                kitPage = { MenuBarPage.NAME() },
+            )
+
         /** Parses a declarative menu tree into the typed `items` array. */
         private fun menuItems(json: String): Array<MenuBarItem> = jsObject(json).unsafeCast<Array<MenuBarItem>>()
         private val english: MenuBarTexts =

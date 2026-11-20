@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.demo.page.Grid
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -53,29 +53,10 @@ import web.events.addHandler
 import web.html.HtmlTagName
 import demo.ui.MUTED
 
-val uploadEntry: CatalogEntry =
-    CatalogEntry(
-        id = "upload",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Upload", "Upload"),
-                summary =
-                    bi(
-                        "文件选择、上传进度与状态列表；本页没有后端，示例用模拟请求走完整个上传流程。",
-                        "File selection, upload progress and a status list; this page has no backend, so the " +
-                            "examples finish the whole upload flow against a simulated request.",
-                    ),
-                docsUrl = "$DOCS_BASE/upload",
-                sourcePath = "pages/upload/UploadPage.kt",
-            ),
-        kitPage = { UploadPage.NAME() },
-    )
-
 internal class UploadPage : DemoPage() {
     private val texts = Binder(uploadTexts)
 
-    private val frame = PageFrame(uploadEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** Uploads whose `i18n` object has to be rebuilt when the language changes. */
     private val i18nFills: MutableList<Pair<UploadElement, (UploadTexts) -> UploadI18n>> = mutableListOf()
@@ -625,7 +606,7 @@ internal class UploadPage : DemoPage() {
         node.apply { style.setProperty("width", "100%") }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = uploadEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -637,6 +618,25 @@ internal class UploadPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<UploadPage>(UploadPage::class.js, "vaadin-demo-upload-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "upload",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Upload", "Upload"),
+                        summary =
+                            bi(
+                                "文件选择、上传进度与状态列表；本页没有后端，示例用模拟请求走完整个上传流程。",
+                                "File selection, upload progress and a status list; this page has no backend, so the " +
+                                    "examples finish the whole upload flow against a simulated request.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/upload",
+                        sourcePath = "pages/upload/UploadPage.kt",
+                    ),
+                kitPage = { UploadPage.NAME() },
+            )
+
         private val english: UploadTexts =
             UploadTexts(
                 basicHeading = "Basic usage",

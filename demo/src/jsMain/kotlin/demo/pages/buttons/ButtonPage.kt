@@ -3,7 +3,7 @@ package demo.pages.buttons
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import demo.componentApiUrl
+import demo.Catalog
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
@@ -19,7 +19,6 @@ import web.html.HTMLAnchorElement
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
 import demo.pages.layout.emailField
@@ -40,24 +39,6 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
-val buttonEntry: CatalogEntry =
-    CatalogEntry(
-        id = "button",
-        group = Groups.BUTTONS,
-        meta =
-            PageMeta(
-                title = bi("Button", "Button"),
-                summary =
-                    bi(
-                        "可点击的按钮：主题变体、尺寸、图标插槽、禁用状态与点击事件。",
-                        "Clickable buttons: theme variants, sizes, icon slots, disabled state and click events.",
-                    ),
-                docsUrl = "$DOCS_BASE/button",
-                sourcePath = "pages/buttons/ButtonPage.kt",
-            ),
-        kitPage = { ButtonPage.NAME() },
-    )
-
 /**
  * The same page on kit blocks.
  *
@@ -67,7 +48,7 @@ val buttonEntry: CatalogEntry =
  */
 
 internal class ButtonPage : DemoPage() {
-    private val meta: PageMeta = buttonEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(buttonTexts)
 
@@ -133,7 +114,7 @@ internal class ButtonPage : DemoPage() {
         registerVaadinIcons()
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(buttonEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -385,6 +366,24 @@ internal class ButtonPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ButtonPage>(ButtonPage::class.js, "vaadin-demo-button-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "button",
+                group = Groups.BUTTONS,
+                meta =
+                    PageMeta(
+                        title = bi("Button", "Button"),
+                        summary =
+                            bi(
+                                "可点击的按钮：主题变体、尺寸、图标插槽、禁用状态与点击事件。",
+                                "Clickable buttons: theme variants, sizes, icon slots, disabled state and click events.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/button",
+                        sourcePath = "pages/buttons/ButtonPage.kt",
+                    ),
+                kitPage = { ButtonPage.NAME() },
+            )
+
         private val buttonEnglish: ButtonTexts = ButtonTexts(
             docsLink = "Vaadin documentation",
             sourceLink = "Kotlin source",

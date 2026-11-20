@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -41,20 +41,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
 import demo.pages.overlays.ariaLabel
-
-val badgeEntry: CatalogEntry =
-    CatalogEntry(
-        id = "badge",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Badge", "Badge"),
-                summary = bi("数字或文本标记：number 决定显示的数字，theme 决定颜色。", "Numeric or text badge: number sets the displayed count and theme sets the colour."),
-                docsUrl = "$DOCS_BASE/badge",
-                sourcePath = "pages/display/BadgePage.kt",
-            ),
-        kitPage = { BadgePage.NAME() },
-    )
 
 // ---------------------------------------------------------------------------------------------
 // Badge
@@ -266,7 +252,7 @@ private val badgeTexts: Translations<BadgeTexts> = texts(
 internal class BadgePage : DemoPage() {
     private val texts = Binder(badgeTexts)
 
-    private val frame = PageFrame(badgeEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val permissions = createGrid()
 
@@ -630,7 +616,7 @@ internal class BadgePage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = badgeEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -643,5 +629,21 @@ internal class BadgePage : DemoPage() {
         syncFilters()
     }
 
-    companion object : CustomElementReferenceAdapter<BadgePage>(BadgePage::class.js, "vaadin-demo-badge-page")
+    companion object : CustomElementReferenceAdapter<BadgePage>(BadgePage::class.js, "vaadin-demo-badge-page") {        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "badge",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Badge", "Badge"),
+                        summary = bi("数字或文本标记：number 决定显示的数字，theme 决定颜色。", "Numeric or text badge: number sets the displayed count and theme sets the colour."),
+                        docsUrl = "${Catalog.DOCS_BASE}/badge",
+                        sourcePath = "pages/display/BadgePage.kt",
+                    ),
+                kitPage = { BadgePage.NAME() },
+            )
+
+
+
+}
 }

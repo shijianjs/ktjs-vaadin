@@ -11,7 +11,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -33,29 +33,10 @@ import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 
-val formLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "form-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Form Layout", "Form Layout"),
-                summary =
-                    bi(
-                        "响应式表单栅格：按可用宽度自动调整列数，标签可以放在字段旁边。",
-                        "Responsive form grid: the column count follows the available width and labels can " +
-                            "sit beside their fields.",
-                    ),
-                docsUrl = "$DOCS_BASE/form-layout",
-                sourcePath = "pages/layout/FormLayoutPage.kt",
-            ),
-        kitPage = { FormLayoutPage.NAME() },
-    )
-
 internal class FormLayoutPage : DemoPage() {
     private val texts = Binder(formLayoutTexts)
 
-    private val frame = PageFrame(formLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     init {
         frame.mount(this)
@@ -201,7 +182,7 @@ internal class FormLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = formLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -209,6 +190,25 @@ internal class FormLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "form-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Form Layout", "Form Layout"),
+                        summary =
+                            bi(
+                                "响应式表单栅格：按可用宽度自动调整列数，标签可以放在字段旁边。",
+                                "Responsive form grid: the column count follows the available width and labels can " +
+                                    "sit beside their fields.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/form-layout",
+                        sourcePath = "pages/layout/FormLayoutPage.kt",
+                    ),
+                kitPage = { FormLayoutPage.NAME() },
+            )
+
         private val english: FormLayoutTexts =
             FormLayoutTexts(
                 autoHeading = "Auto-responsive mode",

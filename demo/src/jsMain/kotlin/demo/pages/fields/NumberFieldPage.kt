@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -39,29 +39,10 @@ import web.html.HtmlTagName
 import demo.ui.SMALL
 import demo.ui.MUTED_SMALL
 
-val numberFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "number-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Number Field", "Number Field"),
-                summary =
-                    bi(
-                        "数字输入：min / max / step、步进按钮、原生 validity 校验与值变更时机。",
-                        "Numeric input: min / max / step, step buttons, native validity checks and value " +
-                            "change timing.",
-                    ),
-                docsUrl = "$DOCS_BASE/number-field",
-                sourcePath = "pages/fields/NumberFieldPage.kt",
-            ),
-        kitPage = { NumberFieldPage.NAME() },
-    )
-
 internal class NumberFieldPage : DemoPage() {
     private val texts = Binder(numberFieldTexts)
 
-    private val frame = PageFrame(numberFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val balance = createNumberField()
 
@@ -384,7 +365,7 @@ internal class NumberFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = numberFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -398,6 +379,25 @@ internal class NumberFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<NumberFieldPage>(NumberFieldPage::class.js, "vaadin-demo-number-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "number-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Number Field", "Number Field"),
+                        summary =
+                            bi(
+                                "数字输入：min / max / step、步进按钮、原生 validity 校验与值变更时机。",
+                                "Numeric input: min / max / step, step buttons, native validity checks and value " +
+                                    "change timing.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/number-field",
+                        sourcePath = "pages/fields/NumberFieldPage.kt",
+                    ),
+                kitPage = { NumberFieldPage.NAME() },
+            )
+
         private val english: NumberFieldTexts =
             NumberFieldTexts(
                 basicHeading = "Basic usage",

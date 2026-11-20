@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.codeText
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.Images
@@ -37,20 +37,6 @@ import web.svg.SVG_NAMESPACE
 import web.svg.SvgTagName
 import demo.ui.MUTED_SMALL
 
-val iconsEntry: CatalogEntry =
-    CatalogEntry(
-        id = "icons",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Icon Sets", "Icon Sets"),
-                summary = bi("注册额外的图标集：@vaadin/icons 提供 vaadin:* 的几百个图标。", "Register additional icon sets: @vaadin/icons provides hundreds of vaadin:* icons."),
-                docsUrl = "$DOCS_BASE/icons",
-                sourcePath = "pages/display/IconSetsPage.kt",
-            ),
-        kitPage = { IconSetsPage.NAME() },
-    )
-
 // ---------------------------------------------------------------------------------------------
 // Icon sets (registration, sprites, accessibility, padding, generator)
 // ---------------------------------------------------------------------------------------------
@@ -58,7 +44,7 @@ val iconsEntry: CatalogEntry =
 internal class IconSetsPage : DemoPage() {
     private val texts = Binder(iconSetsTexts)
 
-    private val frame = PageFrame(iconsEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The two icon-only buttons and the standalone icon: their names are accessible-name attributes. */
     private val vaadinButton: ButtonElement = createButton()
@@ -231,7 +217,7 @@ internal class IconSetsPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = iconsEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -244,6 +230,20 @@ internal class IconSetsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IconSetsPage>(IconSetsPage::class.js, "vaadin-demo-icon-sets-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "icons",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Icon Sets", "Icon Sets"),
+                        summary = bi("注册额外的图标集：@vaadin/icons 提供 vaadin:* 的几百个图标。", "Register additional icon sets: @vaadin/icons provides hundreds of vaadin:* icons."),
+                        docsUrl = "${Catalog.DOCS_BASE}/icons",
+                        sourcePath = "pages/display/IconSetsPage.kt",
+                    ),
+                kitPage = { IconSetsPage.NAME() },
+            )
+
         private val english: IconSetsTexts = IconSetsTexts(
             vaadinHeading = "Vaadin icons",
             vaadinHint = "registerVaadinIcons() registers @vaadin/icons, more than six hundred icons used with the " +

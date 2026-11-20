@@ -14,36 +14,17 @@ import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
 import demo.ui.PageMeta
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 
-val horizontalLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "horizontal-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Horizontal Layout", "Horizontal Layout"),
-                summary =
-                    bi(
-                        "横向排列子元素的容器，通过 theme 控制间距、内边距与换行。",
-                        "Container that arranges its children horizontally; theme controls spacing, padding " +
-                            "and wrapping.",
-                    ),
-                docsUrl = "$DOCS_BASE/horizontal-layout",
-                sourcePath = "pages/layout/HorizontalLayoutPage.kt",
-            ),
-        kitPage = { HorizontalLayoutPage.NAME() },
-    )
-
 internal class HorizontalLayoutPage : DemoPage() {
     private val texts = Binder(horizontalLayoutTexts)
 
-    private val frame = PageFrame(horizontalLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     init {
         frame.mount(this)
@@ -306,7 +287,7 @@ internal class HorizontalLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = horizontalLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -314,6 +295,25 @@ internal class HorizontalLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "horizontal-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Horizontal Layout", "Horizontal Layout"),
+                        summary =
+                            bi(
+                                "横向排列子元素的容器，通过 theme 控制间距、内边距与换行。",
+                                "Container that arranges its children horizontally; theme controls spacing, padding " +
+                                    "and wrapping.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/horizontal-layout",
+                        sourcePath = "pages/layout/HorizontalLayoutPage.kt",
+                    ),
+                kitPage = { HorizontalLayoutPage.NAME() },
+            )
+
         private val english: HorizontalLayoutTexts =
             HorizontalLayoutTexts(
                 basicHeading = "Basic usage",

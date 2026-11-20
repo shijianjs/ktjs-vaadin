@@ -1,7 +1,7 @@
 package demo.ui
 
 import demo.CatalogEntry
-import demo.componentApiUrl
+import demo.Catalog
 import demo.frameTexts
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
@@ -30,7 +30,7 @@ internal class PageFrame(private val entry: CatalogEntry) {
 
     private val sourceLink: HTMLAnchorElement = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
 
-    private val apiLink: HTMLAnchorElement = kitAnchor("", componentApiUrl(entry.id))
+    private val apiLink: HTMLAnchorElement = kitAnchor("", Catalog.componentApiUrl(entry.id))
 
     /**
      * The note explains the docs link rather than being one, so it belongs to the body; the link row

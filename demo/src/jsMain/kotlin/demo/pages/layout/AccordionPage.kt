@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -36,29 +36,10 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
 
-val accordionEntry: CatalogEntry =
-    CatalogEntry(
-        id = "accordion",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Accordion", "Accordion"),
-                summary =
-                    bi(
-                        "可折叠面板组，支持多开与指定展开下标。",
-                        "Group of collapsible panels; several can stay open and the open indexes can be set " +
-                            "directly.",
-                    ),
-                docsUrl = "$DOCS_BASE/accordion",
-                sourcePath = "pages/layout/AccordionPage.kt",
-            ),
-        kitPage = { AccordionPage.NAME() },
-    )
-
 internal class AccordionPage : DemoPage() {
     private val texts = Binder(accordionTexts)
 
-    private val frame = PageFrame(accordionEntry)
+    private val frame = PageFrame(ENTRY)
 
     init {
         frame.mount(this)
@@ -166,7 +147,7 @@ internal class AccordionPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = accordionEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -240,6 +221,25 @@ internal class AccordionPage : DemoPage() {
         }
 
     companion object : CustomElementReferenceAdapter<AccordionPage>(AccordionPage::class.js, "vaadin-demo-accordion-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "accordion",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Accordion", "Accordion"),
+                        summary =
+                            bi(
+                                "可折叠面板组，支持多开与指定展开下标。",
+                                "Group of collapsible panels; several can stay open and the open indexes can be set " +
+                                    "directly.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/accordion",
+                        sourcePath = "pages/layout/AccordionPage.kt",
+                    ),
+                kitPage = { AccordionPage.NAME() },
+            )
+
         private val english: AccordionTexts =
             AccordionTexts(
                 basicHeading = "Basic usage",

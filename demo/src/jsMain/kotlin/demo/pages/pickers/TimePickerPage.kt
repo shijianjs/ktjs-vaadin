@@ -4,10 +4,9 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
-import demo.componentApiUrl
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
 import demo.ui.listen
@@ -38,24 +37,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLAnchorElement
 
-val timePickerEntry: CatalogEntry =
-    CatalogEntry(
-        id = "time-picker",
-        group = Groups.PICKERS,
-        meta =
-            PageMeta(
-                title = bi("Time Picker", "Time Picker"),
-                summary =
-                    bi(
-                        "时间选择：值格式为 HH:mm，可限制范围与步进精度。",
-                        "Time selection: the value is HH:mm, with optional bounds and step precision.",
-                    ),
-                docsUrl = "$DOCS_BASE/time-picker",
-                sourcePath = "pages/pickers/TimePickerPage.kt",
-            ),
-        kitPage = { TimePickerPage.NAME() },
-    )
-
 // ---------------------------------------------------------------------------------------------
 // Time picker
 // ---------------------------------------------------------------------------------------------
@@ -71,7 +52,7 @@ val timePickerEntry: CatalogEntry =
  * text, so a value someone typed survives the switch.
  */
 internal class TimePickerPage : DemoPage() {
-    private val meta: PageMeta = timePickerEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(timePickerTexts)
 
@@ -170,7 +151,7 @@ internal class TimePickerPage : DemoPage() {
         registerVaadinIcons()
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(timePickerEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -381,6 +362,24 @@ internal class TimePickerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TimePickerPage>(TimePickerPage::class.js, "vaadin-demo-time-picker-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "time-picker",
+                group = Groups.PICKERS,
+                meta =
+                    PageMeta(
+                        title = bi("Time Picker", "Time Picker"),
+                        summary =
+                            bi(
+                                "时间选择：值格式为 HH:mm，可限制范围与步进精度。",
+                                "Time selection: the value is HH:mm, with optional bounds and step precision.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/time-picker",
+                        sourcePath = "pages/pickers/TimePickerPage.kt",
+                    ),
+                kitPage = { TimePickerPage.NAME() },
+            )
+
         private val timePickerEnglish: TimePickerTexts = TimePickerTexts(
             docsLink = "Vaadin documentation",
             sourceLink = "Kotlin source",

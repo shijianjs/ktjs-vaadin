@@ -13,7 +13,7 @@ import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.Images
@@ -41,28 +41,10 @@ import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.ident
 
-val messageListEntry: CatalogEntry =
-    CatalogEntry(
-        id = "message-list",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Message List", "Message List"),
-                summary =
-                    bi(
-                        "聊天式消息列表：items 描述每条消息的文本、作者与时间。",
-                        "Chat-style message list: items describe the text, author and time of each message.",
-                    ),
-                docsUrl = "$DOCS_BASE/message-list",
-                sourcePath = "pages/data/MessageListPage.kt",
-            ),
-        kitPage = { MessageListPage.NAME() },
-    )
-
 internal class MessageListPage : DemoPage() {
     private val texts = Binder(messageTexts)
 
-    private val frame = PageFrame(messageListEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** Each list plus how to fill its `items` in any language. */
     private val lists: MutableList<Pair<MessageListElement, (MessageTexts) -> Array<MessageListItem>>> =
@@ -325,7 +307,7 @@ internal class MessageListPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = messageListEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -336,6 +318,24 @@ internal class MessageListPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "message-list",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Message List", "Message List"),
+                        summary =
+                            bi(
+                                "聊天式消息列表：items 描述每条消息的文本、作者与时间。",
+                                "Chat-style message list: items describe the text, author and time of each message.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/message-list",
+                        sourcePath = "pages/data/MessageListPage.kt",
+                    ),
+                kitPage = { MessageListPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // Message List
         //

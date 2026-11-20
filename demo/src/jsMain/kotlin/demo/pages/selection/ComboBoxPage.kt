@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.Person
@@ -39,29 +39,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val comboBoxEntry: CatalogEntry =
-    CatalogEntry(
-        id = "combo-box",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Combo Box", "Combo Box"),
-                summary =
-                    bi(
-                        "可筛选的下拉选择：对象选项、itemLabelPath / itemValuePath、自定义值。",
-                        "Filterable dropdown: object items, itemLabelPath / itemValuePath and custom " +
-                            "values.",
-                    ),
-                docsUrl = "$DOCS_BASE/combo-box",
-                sourcePath = "pages/selection/ComboBoxPage.kt",
-            ),
-        kitPage = { ComboBoxPage.NAME() },
-    )
-
 internal class ComboBoxPage : DemoPage() {
     private val texts = Binder(comboBoxTexts)
 
-    private val frame = PageFrame(comboBoxEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val owners = createComboBox()
 
@@ -336,7 +317,7 @@ internal class ComboBoxPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = comboBoxEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -354,6 +335,25 @@ internal class ComboBoxPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ComboBoxPage>(ComboBoxPage::class.js, "vaadin-demo-combo-box-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "combo-box",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Combo Box", "Combo Box"),
+                        summary =
+                            bi(
+                                "可筛选的下拉选择：对象选项、itemLabelPath / itemValuePath、自定义值。",
+                                "Filterable dropdown: object items, itemLabelPath / itemValuePath and custom " +
+                                    "values.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/combo-box",
+                        sourcePath = "pages/selection/ComboBoxPage.kt",
+                    ),
+                kitPage = { ComboBoxPage.NAME() },
+            )
+
         private val english: ComboBoxTexts =
             ComboBoxTexts(
                 basicHeading = "Basic usage",

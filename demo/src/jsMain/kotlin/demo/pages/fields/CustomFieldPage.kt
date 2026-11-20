@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -37,29 +37,10 @@ import web.events.addHandler
 import web.html.HTMLInputElement
 import web.html.HtmlTagName
 
-val customFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "custom-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Custom Field", "Custom Field"),
-                summary =
-                    bi(
-                        "把多个输入组合成单个字段，用 formatValue / parseValue 在组合值与字符串之间转换。",
-                        "Combines several inputs into one field, converting between the combined value and a " +
-                            "string with formatValue / parseValue.",
-                    ),
-                docsUrl = "$DOCS_BASE/custom-field",
-                sourcePath = "pages/fields/CustomFieldPage.kt",
-            ),
-        kitPage = { CustomFieldPage.NAME() },
-    )
-
 internal class CustomFieldPage : DemoPage() {
     private val texts = Binder(customFieldTexts)
 
-    private val frame = PageFrame(customFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val period: CustomFieldElement = createCustomField()
 
@@ -178,7 +159,7 @@ internal class CustomFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = customFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -228,6 +209,25 @@ internal class CustomFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CustomFieldPage>(CustomFieldPage::class.js, "vaadin-demo-custom-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "custom-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Custom Field", "Custom Field"),
+                        summary =
+                            bi(
+                                "把多个输入组合成单个字段，用 formatValue / parseValue 在组合值与字符串之间转换。",
+                                "Combines several inputs into one field, converting between the combined value and a " +
+                                    "string with formatValue / parseValue.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/custom-field",
+                        sourcePath = "pages/fields/CustomFieldPage.kt",
+                    ),
+                kitPage = { CustomFieldPage.NAME() },
+            )
+
         private val english: CustomFieldTexts =
             CustomFieldTexts(
                 basicHeading = "Basic usage",

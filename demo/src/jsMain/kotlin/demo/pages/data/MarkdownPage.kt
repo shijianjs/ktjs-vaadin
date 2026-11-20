@@ -4,11 +4,10 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageMeta
-import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
@@ -25,24 +24,6 @@ import io.github.shijianjs.ktjs.vaadin.markdown.MarkdownElement
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import web.html.HTMLAnchorElement
 
-val markdownEntry: CatalogEntry =
-    CatalogEntry(
-        id = "markdown",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Markdown", "Markdown"),
-                summary =
-                    bi(
-                        "把 Markdown 字符串渲染成富文本，可选择是否保留换行。",
-                        "Renders a Markdown string as rich text, optionally keeping single line breaks.",
-                    ),
-                docsUrl = "$DOCS_BASE/markdown",
-                sourcePath = "pages/data/MarkdownPage.kt",
-            ),
-        kitPage = { MarkdownPage.NAME() },
-    )
-
 /**
  * The page on kit blocks.
  *
@@ -51,7 +32,7 @@ val markdownEntry: CatalogEntry =
  * to each other.
  */
 internal class MarkdownPage : DemoPage() {
-    private val meta: PageMeta = markdownEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(markdownTexts)
 
@@ -74,9 +55,9 @@ internal class MarkdownPage : DemoPage() {
     private val links = mutableListOf<HTMLAnchorElement>()
 
     init {
-        val docs = kitAnchor("", "$DOCS_BASE/markdown")
+        val docs = kitAnchor("", "${Catalog.DOCS_BASE}/markdown")
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(markdownEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -108,6 +89,24 @@ internal class MarkdownPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "markdown",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Markdown", "Markdown"),
+                        summary =
+                            bi(
+                                "把 Markdown 字符串渲染成富文本，可选择是否保留换行。",
+                                "Renders a Markdown string as rich text, optionally keeping single line breaks.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/markdown",
+                        sourcePath = "pages/data/MarkdownPage.kt",
+                    ),
+                kitPage = { MarkdownPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // Markdown
         //

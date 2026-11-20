@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -32,28 +32,10 @@ import web.events.addHandler
 import web.html.HTMLLIElement
 import web.html.HTMLElement
 
-val breadcrumbsEntry: CatalogEntry =
-    CatalogEntry(
-        id = "breadcrumbs",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Breadcrumbs", "Breadcrumbs"),
-                summary =
-                    bi(
-                        "面包屑导航：每项一个 path，当前项不可点击。",
-                        "Breadcrumb navigation: each item takes a path and the current item is not clickable.",
-                    ),
-                docsUrl = "$DOCS_BASE/breadcrumbs",
-                sourcePath = "pages/layout/BreadcrumbsPage.kt",
-            ),
-        kitPage = { BreadcrumbsPage.NAME() },
-    )
-
 internal class BreadcrumbsPage : DemoPage() {
     private val texts = Binder(breadcrumbsTexts)
 
-    private val frame = PageFrame(breadcrumbsEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = EventLog(4)
 
@@ -145,7 +127,7 @@ internal class BreadcrumbsPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = breadcrumbsEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -171,6 +153,24 @@ internal class BreadcrumbsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<BreadcrumbsPage>(BreadcrumbsPage::class.js, "vaadin-demo-breadcrumbs-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "breadcrumbs",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Breadcrumbs", "Breadcrumbs"),
+                        summary =
+                            bi(
+                                "面包屑导航：每项一个 path，当前项不可点击。",
+                                "Breadcrumb navigation: each item takes a path and the current item is not clickable.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/breadcrumbs",
+                        sourcePath = "pages/layout/BreadcrumbsPage.kt",
+                    ),
+                kitPage = { BreadcrumbsPage.NAME() },
+            )
+
         private val english: BreadcrumbsTexts = BreadcrumbsTexts(
             basicHeading = "Basic usage",
             basicHint = "Breadcrumbs lead from the top-level location to the current page: items with a path render as " +

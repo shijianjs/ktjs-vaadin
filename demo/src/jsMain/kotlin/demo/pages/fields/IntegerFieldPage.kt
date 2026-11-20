@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -31,34 +31,10 @@ import io.github.shijianjs.ktjs.vaadin.integerfield.createIntegerField
 import web.dom.clickEvent
 import web.events.addHandler
 
-val integerFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "integer-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Integer Field", "Integer Field"),
-                summary =
-                    bi(
-                        "只接受整数的数字输入，继承 Number Field 的全部属性。",
-                        "Numeric input that only accepts integers; inherits every Number Field property.",
-                    ),
-                docsUrl = "$DOCS_BASE/number-field",
-                docsNote =
-                    bi(
-                        "官方文档没有单独的 Integer Field 页面，语义见 Number Field。",
-                        "There is no dedicated Integer Field page in the official documentation; see " +
-                            "Number Field for the semantics.",
-                    ),
-                sourcePath = "pages/fields/IntegerFieldPage.kt",
-            ),
-        kitPage = { IntegerFieldPage.NAME() },
-    )
-
 internal class IntegerFieldPage : DemoPage() {
     private val texts = Binder(integerFieldTexts)
 
-    private val frame = PageFrame(integerFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val count: IntegerFieldElement = createIntegerField()
 
@@ -180,7 +156,7 @@ internal class IntegerFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = integerFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -198,6 +174,30 @@ internal class IntegerFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "integer-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Integer Field", "Integer Field"),
+                        summary =
+                            bi(
+                                "只接受整数的数字输入，继承 Number Field 的全部属性。",
+                                "Numeric input that only accepts integers; inherits every Number Field property.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/number-field",
+                        docsNote =
+                            bi(
+                                "官方文档没有单独的 Integer Field 页面，语义见 Number Field。",
+                                "There is no dedicated Integer Field page in the official documentation; see " +
+                                    "Number Field for the semantics.",
+                            ),
+                        sourcePath = "pages/fields/IntegerFieldPage.kt",
+                    ),
+                kitPage = { IntegerFieldPage.NAME() },
+            )
+
         private val english: IntegerFieldTexts = IntegerFieldTexts(
             basicHeading = "Basic usage",
             basicHint = "Only integers are parsed; input with a decimal point fires unparsable-change and leaves value " +

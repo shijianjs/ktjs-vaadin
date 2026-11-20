@@ -16,31 +16,17 @@ import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.Images
 import demo.ui.PageFrame
 import demo.ui.PageMeta
 
-val avatarEntry: CatalogEntry =
-    CatalogEntry(
-        id = "avatar",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Avatar", "Avatar"),
-                summary = bi("用户头像：缩写、图片、颜色索引与悬停提示。", "User avatars: initials, images, colour index and hover tooltip."),
-                docsUrl = "$DOCS_BASE/avatar",
-                sourcePath = "pages/display/AvatarPage.kt",
-            ),
-        kitPage = { AvatarPage.NAME() },
-    )
-
 internal class AvatarPage : DemoPage() {
     private val texts = Binder(avatarTexts)
 
-    private val frame = PageFrame(avatarEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The colour row, kept so a language switch rewrites the names the tooltips read. */
     private val colourAvatars: List<AvatarElement> =
@@ -150,7 +136,7 @@ internal class AvatarPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = avatarEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -160,6 +146,20 @@ internal class AvatarPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "avatar",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Avatar", "Avatar"),
+                        summary = bi("用户头像：缩写、图片、颜色索引与悬停提示。", "User avatars: initials, images, colour index and hover tooltip."),
+                        docsUrl = "${Catalog.DOCS_BASE}/avatar",
+                        sourcePath = "pages/display/AvatarPage.kt",
+                    ),
+                kitPage = { AvatarPage.NAME() },
+            )
+
         private val english: AvatarTexts = AvatarTexts(
             basicHeading = "Basic usage",
             basicHint = "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +

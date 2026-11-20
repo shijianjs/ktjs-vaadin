@@ -12,7 +12,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.Images
@@ -30,28 +30,10 @@ import web.html.HTMLHeadingElement
 import web.html.HTMLImageElement
 import web.html.HtmlTagName
 
-val scrollerEntry: CatalogEntry =
-    CatalogEntry(
-        id = "scroller",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Scroller", "Scroller"),
-                summary =
-                    bi(
-                        "带样式的滚动容器，scrollDirection 控制滚动轴。",
-                        "Styled scrolling container; scrollDirection picks the scroll axis.",
-                    ),
-                docsUrl = "$DOCS_BASE/scroller",
-                sourcePath = "pages/layout/ScrollerPage.kt",
-            ),
-        kitPage = { ScrollerPage.NAME() },
-    )
-
 internal class ScrollerPage : DemoPage() {
     private val texts = Binder(scrollerTexts)
 
-    private val frame = PageFrame(scrollerEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The event card: its title and footer button are the card's own properties, not page text. */
     private val eventCard: CardElement = createCard()
@@ -130,7 +112,7 @@ internal class ScrollerPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = scrollerEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -147,6 +129,24 @@ internal class ScrollerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "scroller",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Scroller", "Scroller"),
+                        summary =
+                            bi(
+                                "带样式的滚动容器，scrollDirection 控制滚动轴。",
+                                "Styled scrolling container; scrollDirection picks the scroll axis.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/scroller",
+                        sourcePath = "pages/layout/ScrollerPage.kt",
+                    ),
+                kitPage = { ScrollerPage.NAME() },
+            )
+
         private val english: ScrollerTexts = ScrollerTexts(
             basicHeading = "Basic usage",
             basicHint = "A scrollbar appears when the content exceeds the fixed height; overflow-indicators fades the " +

@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -29,28 +29,10 @@ import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.html.HTMLParagraphElement
 
-val emailFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "email-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Email Field", "Email Field"),
-                summary =
-                    bi(
-                        "带邮箱格式语义的文本输入，继承 Text Field 的全部属性。",
-                        "Text input with email semantics; inherits every Text Field property.",
-                    ),
-                docsUrl = "$DOCS_BASE/email-field",
-                sourcePath = "pages/fields/EmailFieldPage.kt",
-            ),
-        kitPage = { EmailFieldPage.NAME() },
-    )
-
 internal class EmailFieldPage : DemoPage() {
     private val texts = Binder(emailFieldTexts)
 
-    private val frame = PageFrame(emailFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The field whose value the validity readout follows, so a switch can rewrite that line. */
     private val emailField: EmailFieldElement = createEmailField()
@@ -191,7 +173,7 @@ internal class EmailFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = emailFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -219,6 +201,24 @@ internal class EmailFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<EmailFieldPage>(EmailFieldPage::class.js, "vaadin-demo-email-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "email-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Email Field", "Email Field"),
+                        summary =
+                            bi(
+                                "带邮箱格式语义的文本输入，继承 Text Field 的全部属性。",
+                                "Text input with email semantics; inherits every Text Field property.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/email-field",
+                        sourcePath = "pages/fields/EmailFieldPage.kt",
+                    ),
+                kitPage = { EmailFieldPage.NAME() },
+            )
+
         private val english: EmailFieldTexts =
             EmailFieldTexts(
                 basicHeading = "Basic usage",

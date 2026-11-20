@@ -1,7 +1,6 @@
 package demo.site
 
-import demo.catalog
-import demo.catalogGroups
+import demo.Catalog
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.SiteTexts
@@ -32,8 +31,8 @@ private fun siteTextsFor(lang: Lang): SiteTexts {
         lightLabel = if (en) "Light" else "亮色",
         darkLabel = if (en) "Dark" else "暗色",
         systemLabel = if (en) "Follow browser" else "跟随浏览器",
-        groupTitles = catalogGroups.associate { it.id to it.labelFor(lang) },
-        pageTitles = catalog.associate { it.id to it.meta.titleFor(lang) },
+        groupTitles = Catalog.GROUPS.associate { it.id to it.labelFor(lang) },
+        pageTitles = Catalog.ENTRIES.associate { it.id to it.meta.titleFor(lang) },
     )
 }
 

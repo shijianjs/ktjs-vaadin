@@ -12,7 +12,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.demo.page.Grid
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageMeta
@@ -32,30 +32,11 @@ import web.cssom.ClassName
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
-val cardEntry: CatalogEntry =
-    CatalogEntry(
-        id = "card",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Card", "Card"),
-                summary =
-                    bi(
-                        "内容卡片：标题层级、elevated / outlined / stretch-media 变体。",
-                        "Content card: title heading level plus the elevated / outlined / stretch-media " +
-                            "variants.",
-                    ),
-                docsUrl = "$DOCS_BASE/card",
-                sourcePath = "pages/layout/CardPage.kt",
-            ),
-        kitPage = { CardPage.NAME() },
-    )
-
 internal class CardPage : DemoPage() {
 
     private val texts: Binder<CardTexts> = cardTexts
 
-    private val frame: PageFrame = PageFrame(cardEntry)
+    private val frame: PageFrame = PageFrame(ENTRY)
 
     /** Card elements that own a text table of their own and want the current language. */
     private val translatables: MutableList<CardTranslatable> = mutableListOf()
@@ -239,7 +220,7 @@ internal class CardPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = cardEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -248,6 +229,25 @@ internal class CardPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "card",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Card", "Card"),
+                        summary =
+                            bi(
+                                "内容卡片：标题层级、elevated / outlined / stretch-media 变体。",
+                                "Content card: title heading level plus the elevated / outlined / stretch-media " +
+                                    "variants.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/card",
+                        sourcePath = "pages/layout/CardPage.kt",
+                    ),
+                kitPage = { CardPage.NAME() },
+            )
+
         /** The single-card width the docs examples use; the sheet keys on this same object. */
         private val CARD_DEMO: ClassName = ClassName("card-demo")
         /**

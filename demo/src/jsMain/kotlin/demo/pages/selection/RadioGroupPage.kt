@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -42,34 +42,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val radioGroupEntry: CatalogEntry =
-    CatalogEntry(
-        id = "radio-group",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Radio Group", "Radio Group"),
-                summary =
-                    bi(
-                        "单选组：value 是字符串，子项由 vaadin-radio-button 提供。",
-                        "Single-select group: value is a string and the items are vaadin-radio-button " +
-                            "elements.",
-                    ),
-                docsUrl = "$DOCS_BASE/radio-button",
-                docsNote =
-                    bi(
-                        "官方文档的 Radio Button 页面同时覆盖 Radio Group。",
-                        "The Radio Button documentation page also covers Radio Group.",
-                    ),
-                sourcePath = "pages/selection/RadioGroupPage.kt",
-            ),
-        kitPage = { RadioGroupPage.NAME() },
-    )
-
 internal class RadioGroupPage : DemoPage() {
     private val texts = Binder(radioGroupTexts)
 
-    private val frame = PageFrame(radioGroupEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val valueReadout = Readout("")
 
@@ -298,7 +274,7 @@ internal class RadioGroupPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = radioGroupEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -308,6 +284,30 @@ internal class RadioGroupPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<RadioGroupPage>(RadioGroupPage::class.js, "vaadin-demo-radio-group-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "radio-group",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Radio Group", "Radio Group"),
+                        summary =
+                            bi(
+                                "单选组：value 是字符串，子项由 vaadin-radio-button 提供。",
+                                "Single-select group: value is a string and the items are vaadin-radio-button " +
+                                    "elements.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/radio-button",
+                        docsNote =
+                            bi(
+                                "官方文档的 Radio Button 页面同时覆盖 Radio Group。",
+                                "The Radio Button documentation page also covers Radio Group.",
+                            ),
+                        sourcePath = "pages/selection/RadioGroupPage.kt",
+                    ),
+                kitPage = { RadioGroupPage.NAME() },
+            )
+
         /** The option box of the custom-label example; the sheet and the three options share it. */
         private val RADIO_OPTION: ClassName = ClassName("radio-option")
         private val english: RadioGroupTexts =

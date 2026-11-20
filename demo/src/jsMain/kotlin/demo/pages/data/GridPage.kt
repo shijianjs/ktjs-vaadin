@@ -17,7 +17,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.Person
@@ -68,25 +68,6 @@ import kotlin.js.js
 import web.html.HTMLElement
 import web.pointer.PointerEvent
 
-val gridEntry: CatalogEntry =
-    CatalogEntry(
-        id = "grid",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Grid", "Grid"),
-                summary =
-                    bi(
-                        "数据表格：列、绑定数据、排序、行详情、选择、拖放、样式与懒渲染。",
-                        "Data table: columns, data binding, sorting, row details, selection, drag and " +
-                            "drop, styling and lazy rendering.",
-                    ),
-                docsUrl = "$DOCS_BASE/grid",
-                sourcePath = "pages/data/GridPage.kt",
-            ),
-        kitPage = { GridPage.NAME() },
-    )
-
 /**
  * `<vaadin-demo-grid-page>`: every grid example of the docs, from basic usage to lazy columns.
  *
@@ -99,7 +80,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
 
     private val texts: Binder<GridTexts> = gridTexts
 
-    private val frame: PageFrame = PageFrame(gridEntry)
+    private val frame: PageFrame = PageFrame(ENTRY)
 
     /** Cards and elements that own a text table of their own. */
     private val translatables: MutableList<GridTranslatable> = mutableListOf()
@@ -160,7 +141,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = gridEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -1206,5 +1187,26 @@ internal class GridPage : DemoPage(), GridTranslatable {
         body.append(lazy.root)
     }
 
-    companion object : CustomElementReferenceAdapter<GridPage>(GridPage::class.js, "vaadin-demo-grid-page")
+    companion object : CustomElementReferenceAdapter<GridPage>(GridPage::class.js, "vaadin-demo-grid-page") {        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "grid",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Grid", "Grid"),
+                        summary =
+                            bi(
+                                "数据表格：列、绑定数据、排序、行详情、选择、拖放、样式与懒渲染。",
+                                "Data table: columns, data binding, sorting, row details, selection, drag and " +
+                                    "drop, styling and lazy rendering.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/grid",
+                        sourcePath = "pages/data/GridPage.kt",
+                    ),
+                kitPage = { GridPage.NAME() },
+            )
+
+
+
+}
 }

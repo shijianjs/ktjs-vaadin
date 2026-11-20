@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -33,29 +33,10 @@ import io.github.shijianjs.ktjs.vaadin.tabs.createTab
 import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
 import web.cssom.ClassName
 
-val tabsEntry: CatalogEntry =
-    CatalogEntry(
-        id = "tabs",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Tabs", "Tabs"),
-                summary =
-                    bi(
-                        "标签栏：selected 是下标，支持横向 / 纵向与 equal-width 变体。",
-                        "Tab bar: selected is the index; horizontal / vertical and equal-width variants are " +
-                            "supported.",
-                    ),
-                docsUrl = "$DOCS_BASE/tabs",
-                sourcePath = "pages/layout/TabsPage.kt",
-            ),
-        kitPage = { TabsPage.NAME() },
-    )
-
 internal class TabsPage : DemoPage() {
     private val texts = Binder(tabsTexts)
 
-    private val frame = PageFrame(tabsEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = EventLog(4)
 
@@ -258,7 +239,7 @@ internal class TabsPage : DemoPage() {
         }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = tabsEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -274,6 +255,25 @@ internal class TabsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "tabs",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Tabs", "Tabs"),
+                        summary =
+                            bi(
+                                "标签栏：selected 是下标，支持横向 / 纵向与 equal-width 变体。",
+                                "Tab bar: selected is the index; horizontal / vertical and equal-width variants are " +
+                                    "supported.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/tabs",
+                        sourcePath = "pages/layout/TabsPage.kt",
+                    ),
+                kitPage = { TabsPage.NAME() },
+            )
+
         private val english: TabsTexts =
             TabsTexts(
                 basicHeading = "Basic usage",

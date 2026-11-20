@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -31,29 +31,10 @@ import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetEvents
 import io.github.shijianjs.ktjs.vaadin.tabsheet.createTabSheet
 import web.dom.ElementId
 
-val tabsheetEntry: CatalogEntry =
-    CatalogEntry(
-        id = "tabsheet",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Tab Sheet", "Tab Sheet"),
-                summary =
-                    bi(
-                        "把 Tabs 与内容面板组合起来，按 selected 下标切换内容。",
-                        "Combines Tabs with content panels and switches panels by the selected index.",
-                    ),
-                docsUrl = "$DOCS_BASE/tabs",
-                docsNote = bi("Tab Sheet 与 Tabs 共用一页官方文档。", "Tab Sheet shares the Tabs documentation page."),
-                sourcePath = "pages/layout/TabSheetPage.kt",
-            ),
-        kitPage = { TabSheetPage.NAME() },
-    )
-
 internal class TabSheetPage : DemoPage() {
     private val texts = Binder(tabSheetTexts)
 
-    private val frame = PageFrame(tabsheetEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The basic, prefixed and bordered examples share the same three tabs and panels. */
     private val basicParts = demoTabSheet("tabsheet-basic")
@@ -130,7 +111,7 @@ internal class TabSheetPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = tabsheetEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -141,6 +122,25 @@ internal class TabSheetPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TabSheetPage>(TabSheetPage::class.js, "vaadin-demo-tab-sheet-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "tabsheet",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Tab Sheet", "Tab Sheet"),
+                        summary =
+                            bi(
+                                "把 Tabs 与内容面板组合起来，按 selected 下标切换内容。",
+                                "Combines Tabs with content panels and switches panels by the selected index.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/tabs",
+                        docsNote = bi("Tab Sheet 与 Tabs 共用一页官方文档。", "Tab Sheet shares the Tabs documentation page."),
+                        sourcePath = "pages/layout/TabSheetPage.kt",
+                    ),
+                kitPage = { TabSheetPage.NAME() },
+            )
+
         private val english: TabSheetTexts = TabSheetTexts(
             basicHeading = "Basic usage",
             basicHint = "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel points " +

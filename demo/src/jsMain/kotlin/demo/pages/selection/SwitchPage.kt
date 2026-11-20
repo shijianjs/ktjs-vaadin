@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -30,29 +30,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val switchEntry: CatalogEntry =
-    CatalogEntry(
-        id = "switch",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Switch", "Switch"),
-                summary =
-                    bi(
-                        "二态开关，语义与 Checkbox 相同，视觉上表达即时生效的设置。",
-                        "Two-state switch with the same semantics as Checkbox, used for settings that " +
-                            "apply immediately.",
-                    ),
-                docsUrl = "$DOCS_BASE/switch",
-                sourcePath = "pages/selection/SwitchPage.kt",
-            ),
-        kitPage = { SwitchPage.NAME() },
-    )
-
 internal class SwitchPage : DemoPage() {
     private val texts = Binder(switchTexts)
 
-    private val frame = PageFrame(switchEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val notifications: SwitchElement = createSwitch()
 
@@ -131,7 +112,7 @@ internal class SwitchPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = switchEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -152,6 +133,25 @@ internal class SwitchPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SwitchPage>(SwitchPage::class.js, "vaadin-demo-switch-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "switch",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Switch", "Switch"),
+                        summary =
+                            bi(
+                                "二态开关，语义与 Checkbox 相同，视觉上表达即时生效的设置。",
+                                "Two-state switch with the same semantics as Checkbox, used for settings that " +
+                                    "apply immediately.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/switch",
+                        sourcePath = "pages/selection/SwitchPage.kt",
+                    ),
+                kitPage = { SwitchPage.NAME() },
+            )
+
         private val english: SwitchTexts = SwitchTexts(
             basicHeading = "Basic usage",
             basicHint = "switch and checkbox share the same state model, read and written through checked.",

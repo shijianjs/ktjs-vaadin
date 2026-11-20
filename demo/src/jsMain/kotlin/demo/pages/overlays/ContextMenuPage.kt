@@ -17,7 +17,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -56,24 +56,6 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 
-val contextMenuEntry: CatalogEntry =
-    CatalogEntry(
-        id = "context-menu",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Context Menu", "Context Menu"),
-                summary =
-                    bi(
-                        "右键 / 点击菜单：items 是树形结构，选择后触发 item-selected。",
-                        "Right-click or click menu: items form a tree and choosing one fires item-selected.",
-                    ),
-                docsUrl = "$DOCS_BASE/context-menu",
-                sourcePath = "pages/overlays/ContextMenuPage.kt",
-            ),
-        kitPage = { ContextMenuPage.NAME() },
-    )
-
 /** One menu entry: a label, optionally disabled, with a submenu, a class or a tooltip. */
 private fun entry(
     text: String,
@@ -99,7 +81,7 @@ private fun divider(): ContextMenuItemData =
 internal class ContextMenuPage : DemoPage() {
     private val texts = Binder(contextMenuTexts)
 
-    private val frame = PageFrame(contextMenuEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = RecordedLog<String>(5)
 
@@ -405,7 +387,7 @@ internal class ContextMenuPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = contextMenuEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -417,6 +399,24 @@ internal class ContextMenuPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "context-menu",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Context Menu", "Context Menu"),
+                        summary =
+                            bi(
+                                "右键 / 点击菜单：items 是树形结构，选择后触发 item-selected。",
+                                "Right-click or click menu: items form a tree and choosing one fires item-selected.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/context-menu",
+                        sourcePath = "pages/overlays/ContextMenuPage.kt",
+                    ),
+                kitPage = { ContextMenuPage.NAME() },
+            )
+
         // endregion
 
         // region Context menu

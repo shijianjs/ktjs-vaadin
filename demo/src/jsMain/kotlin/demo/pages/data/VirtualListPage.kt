@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -34,29 +34,10 @@ import io.github.shijianjs.ktjs.vaadin.virtuallist.createVirtualList
 import web.dom.clickEvent
 import web.events.addHandler
 
-val virtualListEntry: CatalogEntry =
-    CatalogEntry(
-        id = "virtual-list",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Virtual List", "Virtual List"),
-                summary =
-                    bi(
-                        "只用 renderer 渲染可见行的长列表，适合成千上万条数据。",
-                        "Long lists that render only visible rows through a renderer, built for " +
-                            "thousands of items.",
-                    ),
-                docsUrl = "$DOCS_BASE/virtual-list",
-                sourcePath = "pages/data/VirtualListPage.kt",
-            ),
-        kitPage = { VirtualListPage.NAME() },
-    )
-
 internal class VirtualListPage : DemoPage() {
     private val texts = Binder(virtualListTexts)
 
-    private val frame = PageFrame(virtualListEntry)
+    private val frame = PageFrame(ENTRY)
 
     /**
      * Both lists re-run their renderer on a language switch: the rows are built from the copy, and the
@@ -205,7 +186,7 @@ internal class VirtualListPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = virtualListEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -216,6 +197,25 @@ internal class VirtualListPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "virtual-list",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Virtual List", "Virtual List"),
+                        summary =
+                            bi(
+                                "只用 renderer 渲染可见行的长列表，适合成千上万条数据。",
+                                "Long lists that render only visible rows through a renderer, built for " +
+                                    "thousands of items.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/virtual-list",
+                        sourcePath = "pages/data/VirtualListPage.kt",
+                    ),
+                kitPage = { VirtualListPage.NAME() },
+            )
+
         private val english: VirtualListTexts = VirtualListTexts(
             basicHeading = "Basic usage",
             basicHint = "The renderer is called only for visible rows and container nodes are reused while scrolling. " +

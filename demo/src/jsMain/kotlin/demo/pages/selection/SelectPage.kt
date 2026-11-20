@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.CITIES_JSON
@@ -41,29 +41,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val selectEntry: CatalogEntry =
-    CatalogEntry(
-        id = "select",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Select", "Select"),
-                summary =
-                    bi(
-                        "下拉单选：items 提供选项，value 是选中的字符串。",
-                        "Dropdown single select: items provides the options and value is the selected " +
-                            "string.",
-                    ),
-                docsUrl = "$DOCS_BASE/select",
-                sourcePath = "pages/selection/SelectPage.kt",
-            ),
-        kitPage = { SelectPage.NAME() },
-    )
-
 internal class SelectPage : DemoPage() {
     private val texts = Binder(selectTexts)
 
-    private val frame = PageFrame(selectEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val cities: SelectElement = createSelect()
 
@@ -266,7 +247,7 @@ internal class SelectPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = selectEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -285,6 +266,25 @@ internal class SelectPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "select",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Select", "Select"),
+                        summary =
+                            bi(
+                                "下拉单选：items 提供选项，value 是选中的字符串。",
+                                "Dropdown single select: items provides the options and value is the selected " +
+                                    "string.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/select",
+                        sourcePath = "pages/selection/SelectPage.kt",
+                    ),
+                kitPage = { SelectPage.NAME() },
+            )
+
         private val english: SelectTexts =
             SelectTexts(
                 basicHeading = "Basic usage",

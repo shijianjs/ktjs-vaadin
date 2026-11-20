@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.Person
@@ -48,29 +48,10 @@ import web.html.HTMLParagraphElement
 import web.cssom.ClassName
 import demo.ui.MUTED_SMALL
 
-val masterDetailLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "master-detail-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Master Detail Layout", "Master Detail Layout"),
-                summary =
-                    bi(
-                        "主从布局：主区在默认插槽，详情在 detail 插槽，放不下时自动切换成浮层。",
-                        "Master-detail layout: the master goes into the default slot and the detail into the " +
-                            "detail slot; the detail switches to an overlay when it does not fit.",
-                    ),
-                docsUrl = "$DOCS_BASE/master-detail-layout",
-                sourcePath = "pages/layout/MasterDetailLayoutPage.kt",
-            ),
-        kitPage = { MasterDetailLayoutPage.NAME() },
-    )
-
 internal class MasterDetailLayoutPage : DemoPage() {
     private val texts = Binder(masterDetailLayoutTexts)
 
-    private val frame = PageFrame(masterDetailLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The placeholder example's toggle, whose label follows the state as well as the language. */
     private val detailToggle: ButtonElement = createButton()
@@ -345,7 +326,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = masterDetailLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -359,6 +340,25 @@ internal class MasterDetailLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js, "vaadin-demo-master-detail-layout-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "master-detail-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Master Detail Layout", "Master Detail Layout"),
+                        summary =
+                            bi(
+                                "主从布局：主区在默认插槽，详情在 detail 插槽，放不下时自动切换成浮层。",
+                                "Master-detail layout: the master goes into the default slot and the detail into the " +
+                                    "detail slot; the detail switches to an overlay when it does not fit.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/master-detail-layout",
+                        sourcePath = "pages/layout/MasterDetailLayoutPage.kt",
+                    ),
+                kitPage = { MasterDetailLayoutPage.NAME() },
+            )
+
         private val english: MasterDetailLayoutTexts =
             MasterDetailLayoutTexts(
                 basicHeading = "Basic usage",

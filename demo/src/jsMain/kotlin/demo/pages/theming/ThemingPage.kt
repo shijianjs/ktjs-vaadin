@@ -6,7 +6,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.Blocks.codeText
-import demo.componentApiUrl
+import demo.Catalog
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
@@ -21,7 +21,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.Groups
-import demo.STYLING_BASE
 import demo.Theme
 import demo.bi
 import demo.ui.EventLog
@@ -45,25 +44,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
-val themingEntry: CatalogEntry =
-    CatalogEntry(
-        id = "theming",
-        group = Groups.THEMING,
-        meta =
-            PageMeta(
-                title = bi("主题与样式", "Theming and styling"),
-                summary =
-                    bi(
-                        "Demo 使用 Lumo 主题：亮色 / 暗色切换、设计令牌与组件主题变体。",
-                        "The demo uses the Lumo theme: light / dark switching, design tokens and component " +
-                            "theme variants.",
-                    ),
-                docsUrl = "$STYLING_BASE/themes/lumo",
-                sourcePath = "pages/theming/ThemingPage.kt",
-            ),
-        kitPage = { ThemingPage.NAME() },
-    )
-
 /**
  * The same page on kit blocks.
  *
@@ -72,7 +52,7 @@ val themingEntry: CatalogEntry =
  * text of the nodes is rewritten.
  */
 internal class ThemingPage : DemoPage() {
-    private val meta: PageMeta = themingEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(themingTexts)
 
@@ -111,7 +91,7 @@ internal class ThemingPage : DemoPage() {
 
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(themingEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -318,6 +298,25 @@ internal class ThemingPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "theming",
+                group = Groups.THEMING,
+                meta =
+                    PageMeta(
+                        title = bi("主题与样式", "Theming and styling"),
+                        summary =
+                            bi(
+                                "Demo 使用 Lumo 主题：亮色 / 暗色切换、设计令牌与组件主题变体。",
+                                "The demo uses the Lumo theme: light / dark switching, design tokens and component " +
+                                    "theme variants.",
+                            ),
+                        docsUrl = "${Catalog.STYLING_BASE}/themes/lumo",
+                        sourcePath = "pages/theming/ThemingPage.kt",
+                    ),
+                kitPage = { ThemingPage.NAME() },
+            )
+
         private val themingEnglish: ThemingTexts = ThemingTexts(
             docsLink = "Vaadin documentation",
             sourceLink = "Kotlin source",

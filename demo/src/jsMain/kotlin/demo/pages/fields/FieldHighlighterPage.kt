@@ -4,12 +4,11 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageMeta
 import demo.ui.Readout
-import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerConfidences
@@ -38,31 +37,6 @@ import web.html.HTMLAnchorElement
 import web.dom.clickEvent
 import web.events.addHandler
 
-val fieldHighlighterEntry: CatalogEntry =
-    CatalogEntry(
-        id = "field-highlighter",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Field Highlighter", "Field Highlighter"),
-                summary =
-                    bi(
-                        "协作编辑指示：给字段加上其他用户正在编辑的彩色轮廓与用户标签。",
-                        "Collaboration indicator: adds a coloured outline and a user tag for other people " +
-                            "editing the field.",
-                    ),
-                docsUrl = DOCS_BASE,
-                docsNote =
-                    bi(
-                        "Field Highlighter 是内部协作组件，官方文档没有独立页面。",
-                        "Field Highlighter is an internal collaboration component without a dedicated " +
-                            "documentation page.",
-                    ),
-                sourcePath = "pages/fields/FieldHighlighterPage.kt",
-            ),
-        kitPage = { FieldHighlighterPage.NAME() },
-    )
-
 /**
  * The page on kit blocks.
  *
@@ -72,7 +46,7 @@ val fieldHighlighterEntry: CatalogEntry =
  * and the readout still names her.
  */
 internal class FieldHighlighterPage : DemoPage() {
-    private val meta: PageMeta = fieldHighlighterEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(fieldHighlighterTexts)
 
@@ -121,7 +95,7 @@ internal class FieldHighlighterPage : DemoPage() {
     init {
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(fieldHighlighterEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -200,6 +174,31 @@ internal class FieldHighlighterPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<FieldHighlighterPage>(FieldHighlighterPage::class.js, "vaadin-demo-field-highlighter-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "field-highlighter",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Field Highlighter", "Field Highlighter"),
+                        summary =
+                            bi(
+                                "协作编辑指示：给字段加上其他用户正在编辑的彩色轮廓与用户标签。",
+                                "Collaboration indicator: adds a coloured outline and a user tag for other people " +
+                                    "editing the field.",
+                            ),
+                        docsUrl = Catalog.DOCS_BASE,
+                        docsNote =
+                            bi(
+                                "Field Highlighter 是内部协作组件，官方文档没有独立页面。",
+                                "Field Highlighter is an internal collaboration component without a dedicated " +
+                                    "documentation page.",
+                            ),
+                        sourcePath = "pages/fields/FieldHighlighterPage.kt",
+                    ),
+                kitPage = { FieldHighlighterPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // The same page on kit blocks
         // ---------------------------------------------------------------------------------------------

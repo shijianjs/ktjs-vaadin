@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -30,28 +30,10 @@ import io.github.shijianjs.ktjs.vaadin.confirmdialog.createConfirmDialog
 import web.dom.clickEvent
 import web.events.addHandler
 
-val confirmDialogEntry: CatalogEntry =
-    CatalogEntry(
-        id = "confirm-dialog",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Confirm Dialog", "Confirm Dialog"),
-                summary =
-                    bi(
-                        "确认对话框：确认 / 取消 / 拒绝三种结果与对应事件。",
-                        "Confirmation dialog: the confirm / cancel / reject outcomes and their events.",
-                    ),
-                docsUrl = "$DOCS_BASE/confirm-dialog",
-                sourcePath = "pages/overlays/ConfirmDialogPage.kt",
-            ),
-        kitPage = { ConfirmDialogPage.NAME() },
-    )
-
 internal class ConfirmDialogPage : DemoPage() {
     private val texts = Binder(confirmDialogTexts)
 
-    private val frame = PageFrame(confirmDialogEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val status = Readout("")
 
@@ -194,7 +176,7 @@ internal class ConfirmDialogPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = confirmDialogEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -221,6 +203,24 @@ internal class ConfirmDialogPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ConfirmDialogPage>(ConfirmDialogPage::class.js, "vaadin-demo-confirm-dialog-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "confirm-dialog",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Confirm Dialog", "Confirm Dialog"),
+                        summary =
+                            bi(
+                                "确认对话框：确认 / 取消 / 拒绝三种结果与对应事件。",
+                                "Confirmation dialog: the confirm / cancel / reject outcomes and their events.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/confirm-dialog",
+                        sourcePath = "pages/overlays/ConfirmDialogPage.kt",
+                    ),
+                kitPage = { ConfirmDialogPage.NAME() },
+            )
+
         private val english: ConfirmDialogTexts =
             ConfirmDialogTexts(
                 basicHeading = "Basic usage",

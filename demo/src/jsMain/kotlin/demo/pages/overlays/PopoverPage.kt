@@ -17,7 +17,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -65,29 +65,10 @@ import web.dom.ElementId
 import web.dom.clickEvent
 import web.events.addHandler
 
-val popoverEntry: CatalogEntry =
-    CatalogEntry(
-        id = "popover",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Popover", "Popover"),
-                summary =
-                    bi(
-                        "锚定到某个元素的浮层，支持点击 / 悬停触发、位置与模态模式。",
-                        "An overlay anchored to an element, with click / hover triggers, positions and " +
-                            "a modal mode.",
-                    ),
-                docsUrl = "$DOCS_BASE/popover",
-                sourcePath = "pages/overlays/PopoverPage.kt",
-            ),
-        kitPage = { PopoverPage.NAME() },
-    )
-
 internal class PopoverPage : DemoPage() {
     private val texts = Binder(popoverTexts)
 
-    private val frame = PageFrame(popoverEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = RecordedLog<Boolean>(4)
 
@@ -457,7 +438,7 @@ internal class PopoverPage : DemoPage() {
         }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = popoverEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -499,6 +480,25 @@ internal class PopoverPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<PopoverPage>(PopoverPage::class.js, "vaadin-demo-popover-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "popover",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Popover", "Popover"),
+                        summary =
+                            bi(
+                                "锚定到某个元素的浮层，支持点击 / 悬停触发、位置与模态模式。",
+                                "An overlay anchored to an element, with click / hover triggers, positions and " +
+                                    "a modal mode.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/popover",
+                        sourcePath = "pages/overlays/PopoverPage.kt",
+                    ),
+                kitPage = { PopoverPage.NAME() },
+            )
+
         // endregion
 
         // region Popover

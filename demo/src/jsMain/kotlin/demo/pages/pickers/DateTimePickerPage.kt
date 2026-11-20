@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -39,28 +39,10 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
-val dateTimePickerEntry: CatalogEntry =
-    CatalogEntry(
-        id = "date-time-picker",
-        group = Groups.PICKERS,
-        meta =
-            PageMeta(
-                title = bi("Date Time Picker", "Date Time Picker"),
-                summary =
-                    bi(
-                        "日期 + 时间组合输入，值是 ISO 日期时间字符串。",
-                        "Combined date and time input; the value is an ISO date-time string.",
-                    ),
-                docsUrl = "$DOCS_BASE/date-time-picker",
-                sourcePath = "pages/pickers/DateTimePickerPage.kt",
-            ),
-        kitPage = { DateTimePickerPage.NAME() },
-    )
-
 internal class DateTimePickerPage : DemoPage() {
     private val texts = Binder(dateTimePickerTexts)
 
-    private val frame = PageFrame(dateTimePickerEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val basicReadout = Readout("")
 
@@ -397,7 +379,7 @@ internal class DateTimePickerPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = dateTimePickerEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -410,6 +392,24 @@ internal class DateTimePickerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DateTimePickerPage>(DateTimePickerPage::class.js, "vaadin-demo-date-time-picker-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "date-time-picker",
+                group = Groups.PICKERS,
+                meta =
+                    PageMeta(
+                        title = bi("Date Time Picker", "Date Time Picker"),
+                        summary =
+                            bi(
+                                "日期 + 时间组合输入，值是 ISO 日期时间字符串。",
+                                "Combined date and time input; the value is an ISO date-time string.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/date-time-picker",
+                        sourcePath = "pages/pickers/DateTimePickerPage.kt",
+                    ),
+                kitPage = { DateTimePickerPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // Date time picker
         // ---------------------------------------------------------------------------------------------

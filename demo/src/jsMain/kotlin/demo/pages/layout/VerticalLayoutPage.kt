@@ -15,31 +15,17 @@ import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
 import demo.ui.PageMeta
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 
-val verticalLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "vertical-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Vertical Layout", "Vertical Layout"),
-                summary = bi("纵向排列子元素的容器。", "Container that stacks its children vertically."),
-                docsUrl = "$DOCS_BASE/vertical-layout",
-                sourcePath = "pages/layout/VerticalLayoutPage.kt",
-            ),
-        kitPage = { VerticalLayoutPage.NAME() },
-    )
-
 internal class VerticalLayoutPage : DemoPage() {
     private val texts = Binder(verticalLayoutTexts)
 
-    private val frame = PageFrame(verticalLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** Every box built on this page, so a switch can rewrite their "Item n" labels in place. */
     private var boxes: MutableList<HTMLElement> = mutableListOf()
@@ -237,7 +223,7 @@ internal class VerticalLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = verticalLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -247,6 +233,20 @@ internal class VerticalLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "vertical-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Vertical Layout", "Vertical Layout"),
+                        summary = bi("纵向排列子元素的容器。", "Container that stacks its children vertically."),
+                        docsUrl = "${Catalog.DOCS_BASE}/vertical-layout",
+                        sourcePath = "pages/layout/VerticalLayoutPage.kt",
+                    ),
+                kitPage = { VerticalLayoutPage.NAME() },
+            )
+
         private val english: VerticalLayoutTexts =
             VerticalLayoutTexts(
                 basicHeading = "Basic usage",

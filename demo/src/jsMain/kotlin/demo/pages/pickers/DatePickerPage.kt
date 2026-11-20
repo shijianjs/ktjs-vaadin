@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -48,29 +48,10 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
 
-val datePickerEntry: CatalogEntry =
-    CatalogEntry(
-        id = "date-picker",
-        group = Groups.PICKERS,
-        meta =
-            PageMeta(
-                title = bi("Date Picker", "Date Picker"),
-                summary =
-                    bi(
-                        "日期选择：值格式为 ISO 日期字符串，支持范围、禁用日期、周数与手动输入。",
-                        "Date selection: the value is an ISO date string, with ranges, disabled dates, " +
-                            "week numbers and manual input.",
-                    ),
-                docsUrl = "$DOCS_BASE/date-picker",
-                sourcePath = "pages/pickers/DatePickerPage.kt",
-            ),
-        kitPage = { DatePickerPage.NAME() },
-    )
-
 internal class DatePickerPage : DemoPage() {
     private val texts = Binder(datePickerTexts)
 
-    private val frame = PageFrame(datePickerEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val basicReadout = Readout("value = 2026-10-25")
 
@@ -576,7 +557,7 @@ internal class DatePickerPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = datePickerEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -591,6 +572,25 @@ internal class DatePickerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "date-picker",
+                group = Groups.PICKERS,
+                meta =
+                    PageMeta(
+                        title = bi("Date Picker", "Date Picker"),
+                        summary =
+                            bi(
+                                "日期选择：值格式为 ISO 日期字符串，支持范围、禁用日期、周数与手动输入。",
+                                "Date selection: the value is an ISO date string, with ranges, disabled dates, " +
+                                    "week numbers and manual input.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/date-picker",
+                        sourcePath = "pages/pickers/DatePickerPage.kt",
+                    ),
+                kitPage = { DatePickerPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // Date picker
         // ---------------------------------------------------------------------------------------------

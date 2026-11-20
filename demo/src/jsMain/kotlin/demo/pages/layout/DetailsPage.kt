@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -41,24 +41,6 @@ import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLSpanElement
 
-val detailsEntry: CatalogEntry =
-    CatalogEntry(
-        id = "details",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("Details", "Details"),
-                summary =
-                    bi(
-                        "单个可折叠区块，summary 是标题，子节点是内容。",
-                        "A single collapsible block: summary is the heading and the children are the content.",
-                    ),
-                docsUrl = "$DOCS_BASE/details",
-                sourcePath = "pages/layout/DetailsPage.kt",
-            ),
-        kitPage = { DetailsPage.NAME() },
-    )
-
 /** A combo box over a fixed list of countries, labelled through `item-label-path`. */
 internal fun countryComboBox(label: String): ComboBoxElement =
     createComboBox {
@@ -77,7 +59,7 @@ internal fun countryComboBox(label: String): ComboBoxElement =
 internal class DetailsPage : DemoPage() {
     private val texts = Binder(detailsTexts)
 
-    private val frame = PageFrame(detailsEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val basicDetails: DetailsElement = createDetails()
 
@@ -198,7 +180,7 @@ internal class DetailsPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = detailsEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -225,6 +207,24 @@ internal class DetailsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "details",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("Details", "Details"),
+                        summary =
+                            bi(
+                                "单个可折叠区块，summary 是标题，子节点是内容。",
+                                "A single collapsible block: summary is the heading and the children are the content.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/details",
+                        sourcePath = "pages/layout/DetailsPage.kt",
+                    ),
+                kitPage = { DetailsPage.NAME() },
+            )
+
         private val english: DetailsTexts = DetailsTexts(
             basicHeading = "Basic usage",
             basicHint = "summary is the header text and the children are the expanded content; opened is read/write and " +

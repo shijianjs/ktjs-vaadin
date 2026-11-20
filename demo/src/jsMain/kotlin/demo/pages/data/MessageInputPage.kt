@@ -12,7 +12,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -27,24 +27,6 @@ import io.github.shijianjs.ktjs.vaadin.messagelist.createMessageList
 import io.github.shijianjs.ktjs.vaadin.notification.Notification
 import io.github.shijianjs.ktjs.vaadin.notification.NotificationShowOptions
 
-val messageInputEntry: CatalogEntry =
-    CatalogEntry(
-        id = "message-input",
-        group = Groups.DATA,
-        meta =
-            PageMeta(
-                title = bi("Message Input", "Message Input"),
-                summary =
-                    bi(
-                        "消息输入框：value 与 submit 事件，适合与 Message List 组合。",
-                        "Message input field: value and the submit event, designed to pair with Message List.",
-                    ),
-                docsUrl = "$DOCS_BASE/message-input",
-                sourcePath = "pages/data/MessageInputPage.kt",
-            ),
-        kitPage = { MessageInputPage.NAME() },
-    )
-
 // ---------------------------------------------------------------------------------------------
 // Message Input
 //
@@ -55,7 +37,7 @@ val messageInputEntry: CatalogEntry =
 internal class MessageInputPage : DemoPage() {
     private val texts = Binder(messageInputTexts)
 
-    private val frame = PageFrame(messageInputEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The single example's state lines; kept so a language switch can rewrite what is still untouched. */
     private val readout = Readout(english.notSentYet)
@@ -141,7 +123,7 @@ internal class MessageInputPage : DemoPage() {
         )
 
     override fun applyTranslation(lang: Lang) {
-        val meta = messageInputEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -155,6 +137,24 @@ internal class MessageInputPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "message-input",
+                group = Groups.DATA,
+                meta =
+                    PageMeta(
+                        title = bi("Message Input", "Message Input"),
+                        summary =
+                            bi(
+                                "消息输入框：value 与 submit 事件，适合与 Message List 组合。",
+                                "Message input field: value and the submit event, designed to pair with Message List.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/message-input",
+                        sourcePath = "pages/data/MessageInputPage.kt",
+                    ),
+                kitPage = { MessageInputPage.NAME() },
+            )
+
         private val english: MessageInputTexts = MessageInputTexts(
             basicHeading = "Basic usage",
             basicHint = "Enter or the send button fires submit; value is not cleared automatically and the caller " +

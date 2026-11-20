@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -36,29 +36,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val textFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "text-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Text Field", "Text Field"),
-                summary =
-                    bi(
-                        "单行文本输入：标签、占位符、前缀/后缀插槽、清空按钮、只读、禁用与校验。",
-                        "Single-line text input: label, placeholder, prefix/suffix slots, clear button, " +
-                            "read-only, disabled and validation.",
-                    ),
-                docsUrl = "$DOCS_BASE/text-field",
-                sourcePath = "pages/fields/TextFieldPage.kt",
-            ),
-        kitPage = { TextFieldPage.NAME() },
-    )
-
 internal class TextFieldPage : DemoPage() {
     private val texts = Binder(textFieldTexts)
 
-    private val frame = PageFrame(textFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val readout = Readout("")
 
@@ -313,7 +294,7 @@ internal class TextFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = textFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -325,6 +306,25 @@ internal class TextFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TextFieldPage>(TextFieldPage::class.js, "vaadin-demo-text-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "text-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Text Field", "Text Field"),
+                        summary =
+                            bi(
+                                "单行文本输入：标签、占位符、前缀/后缀插槽、清空按钮、只读、禁用与校验。",
+                                "Single-line text input: label, placeholder, prefix/suffix slots, clear button, " +
+                                    "read-only, disabled and validation.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/text-field",
+                        sourcePath = "pages/fields/TextFieldPage.kt",
+                    ),
+                kitPage = { TextFieldPage.NAME() },
+            )
+
         private val english: TextFieldTexts =
             TextFieldTexts(
                 basicHeading = "Basic usage",

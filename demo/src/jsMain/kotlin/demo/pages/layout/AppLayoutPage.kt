@@ -15,7 +15,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.data.gridItems
@@ -42,25 +42,6 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
-
-val appLayoutEntry: CatalogEntry =
-    CatalogEntry(
-        id = "app-layout",
-        group = Groups.LAYOUT,
-        meta =
-            PageMeta(
-                title = bi("App Layout", "App Layout"),
-                summary =
-                    bi(
-                        "应用级布局：navbar、drawer 与内容区，抽屉在窄屏上变成浮层。",
-                        "Application-level layout: navbar, drawer and content area; the drawer becomes an " +
-                            "overlay on narrow screens.",
-                    ),
-                docsUrl = "$DOCS_BASE/app-layout",
-                sourcePath = "pages/layout/AppLayoutPage.kt",
-            ),
-        kitPage = { AppLayoutPage.NAME() },
-    )
 
 private val english: AppLayoutTexts =
     AppLayoutTexts(
@@ -147,7 +128,7 @@ private val appLayoutTexts: Translations<AppLayoutTexts> = texts(
 internal class AppLayoutPage : DemoPage() {
     private val texts = Binder(appLayoutTexts)
 
-    private val frame = PageFrame(appLayoutEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** Every drawer built on this page, so a switch can rewrite their shared navigation. */
     private val drawers = mutableListOf<AppDrawer>()
@@ -346,7 +327,7 @@ internal class AppLayoutPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = appLayoutEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -354,7 +335,26 @@ internal class AppLayoutPage : DemoPage() {
         drawers.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReferenceAdapter<AppLayoutPage>(AppLayoutPage::class.js, "vaadin-demo-app-layout-page")
+    companion object : CustomElementReferenceAdapter<AppLayoutPage>(AppLayoutPage::class.js, "vaadin-demo-app-layout-page") {        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "app-layout",
+                group = Groups.LAYOUT,
+                meta =
+                    PageMeta(
+                        title = bi("App Layout", "App Layout"),
+                        summary =
+                            bi(
+                                "应用级布局：navbar、drawer 与内容区，抽屉在窄屏上变成浮层。",
+                                "Application-level layout: navbar, drawer and content area; the drawer becomes an " +
+                                    "overlay on narrow screens.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/app-layout",
+                        sourcePath = "pages/layout/AppLayoutPage.kt",
+                    ),
+                kitPage = { AppLayoutPage.NAME() },
+            )
+
+
 }
 
 /**
@@ -398,4 +398,6 @@ private fun boxedAppLayout(
         createGridColumn { path = "profession" },
     )
     return grid
+
+}
 }

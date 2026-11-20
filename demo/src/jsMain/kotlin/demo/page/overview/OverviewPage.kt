@@ -3,13 +3,11 @@ package demo.page.overview
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
-import demo.API_DOCS_URL
-import demo.catalog
+import demo.bi
+import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
-import demo.catalogEntriesOf
-import demo.catalogGroups
 import demo.ui.listen
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
@@ -88,9 +86,9 @@ internal class OverviewPage : DemoPage() {
     private var language: Lang = Langs.EN
 
     init {
-        addLink(texts.bind(kitAnchor("", DOCS_BASE), { it.docsLink }))
+        addLink(texts.bind(kitAnchor("", Catalog.DOCS_BASE), { it.docsLink }))
         addLink(texts.bind(kitAnchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt"), { it.sourceLink }))
-        addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
+        addLink(texts.bind(kitAnchor("", Catalog.API_DOCS_URL), { it.apiLink }))
 
         val what = SectionBlock.NAME { show() }
         texts.bind(what.heading, { it.whatHeading })
@@ -109,7 +107,7 @@ internal class OverviewPage : DemoPage() {
 
     private fun buildIndex(): List<Node> {
         val blocks = mutableListOf<Node>()
-        catalogGroups.filter { group -> group != Groups.OVERVIEW }.forEach { group ->
+        Catalog.GROUPS.filter { group -> group != Groups.OVERVIEW }.forEach { group ->
             // The group's mark, the same one the drawer draws: the heading and the drawer row are
             // two views of one section, so they carry one icon.
             val groupLabel = HtmlTagName.span { textContent = group.labelFor(language) }
@@ -120,7 +118,7 @@ internal class OverviewPage : DemoPage() {
             // Cards flow in as many columns as the width allows: a component name plus its one-line
             // summary reads well in a card, and a vertical list of fifty-nine of them is a wall.
             val list = Grid.NAME { show(240) }
-            val groupCards = catalogEntriesOf(group).map { entry ->
+            val groupCards = Catalog.entriesOf(group).map { entry ->
                 val card = card(entry)
                 list.append(card.link)
                 cards += card
@@ -199,6 +197,32 @@ internal class OverviewPage : DemoPage() {
     }
 
         companion object : CustomElementReferenceAdapter<OverviewPage>(OverviewPage::class.js, "vaadin-demo-overview-page") {
+
+        /**
+         * The landing entry of the catalog.
+         *
+         * The index page is built from this file's own class, so the entry — route id, group, bilingual
+         * copy, and the tag it builds — belongs here rather than in a file of its own.
+         */
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "overview",
+                group = Groups.OVERVIEW,
+                meta =
+                    PageMeta(
+                        title = bi("组件总览", "Component overview"),
+                        summary =
+                            bi(
+                                "免费版 Vaadin Web Components 的 Kotlin/JS 封装，逐组件演示属性、变体与交互。",
+                                "Kotlin/JS wrappers for the free Vaadin Web Components, demonstrating properties, " +
+                                    "variants and interactions component by component.",
+                            ),
+                        docsUrl = Catalog.DOCS_BASE,
+                        docsNote = bi("官方文档的组件索引页", "Component index of the official documentation"),
+                        sourcePath = "page/overview/OverviewPage.kt",
+                    ),
+                kitPage = { OverviewPage.NAME() },
+            )
 
         private val overviewEnglish: OverviewTexts = OverviewTexts(
             title = "Component overview",

@@ -3,10 +3,9 @@ package demo.pages.display
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
-import demo.componentApiUrl
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -32,29 +31,6 @@ import web.cssom.rem
 import web.html.HTMLAnchorElement
 import web.html.HTMLElement
 import web.html.HtmlTagName
-
-val inputContainerEntry: CatalogEntry =
-    CatalogEntry(
-        id = "input-container",
-        group = Groups.DISPLAY,
-        meta =
-            PageMeta(
-                title = bi("Input Container", "Input Container"),
-                summary =
-                    bi(
-                        "输入类字段的底层容器：前缀 / 后缀插槽、invalid 与 readonly 状态。",
-                        "Low-level container for input fields: prefix/suffix slots plus invalid and readonly states.",
-                    ),
-                docsUrl = "$DOCS_BASE/text-field",
-                docsNote =
-                    bi(
-                        "vaadin-input-container 是内部基础元素，官方文档见 Text Field。",
-                        "vaadin-input-container is an internal building block; the official documentation is under Text Field.",
-                    ),
-                sourcePath = "pages/display/InputContainerPage.kt",
-            ),
-        kitPage = { InputContainerPage.NAME() },
-    )
 
 // ---------------------------------------------------------------------------------------------
 // Input container (internal element, documented under Text Field)
@@ -91,7 +67,7 @@ internal fun containerInput(value: String = "") =
  * the captions below them, and the input's value repeats the caption so the state is legible.
  */
 internal class InputContainerPage : DemoPage() {
-    private val meta: PageMeta = inputContainerEntry.meta
+    private val meta: PageMeta = ENTRY.meta
 
     private val texts = Binder(inputContainerTexts)
 
@@ -113,7 +89,7 @@ internal class InputContainerPage : DemoPage() {
     init {
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
-        val api = kitAnchor("", componentApiUrl(inputContainerEntry.id))
+        val api = kitAnchor("", Catalog.componentApiUrl(ENTRY.id))
         links += docs
         links += source
         links += api
@@ -151,6 +127,29 @@ internal class InputContainerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "input-container",
+                group = Groups.DISPLAY,
+                meta =
+                    PageMeta(
+                        title = bi("Input Container", "Input Container"),
+                        summary =
+                            bi(
+                                "输入类字段的底层容器：前缀 / 后缀插槽、invalid 与 readonly 状态。",
+                                "Low-level container for input fields: prefix/suffix slots plus invalid and readonly states.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/text-field",
+                        docsNote =
+                            bi(
+                                "vaadin-input-container 是内部基础元素，官方文档见 Text Field。",
+                                "vaadin-input-container is an internal building block; the official documentation is under Text Field.",
+                            ),
+                        sourcePath = "pages/display/InputContainerPage.kt",
+                    ),
+                kitPage = { InputContainerPage.NAME() },
+            )
+
         // ---------------------------------------------------------------------------------------------
         // The same page on kit blocks
         // ---------------------------------------------------------------------------------------------

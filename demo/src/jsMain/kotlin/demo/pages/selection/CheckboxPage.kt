@@ -14,7 +14,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -32,29 +32,10 @@ import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
 import web.dom.clickEvent
 import web.events.addHandler
 
-val checkboxEntry: CatalogEntry =
-    CatalogEntry(
-        id = "checkbox",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("Checkbox", "Checkbox"),
-                summary =
-                    bi(
-                        "单个勾选框：checked / indeterminate 三态、只读、禁用与 change 事件。",
-                        "Single checkbox: checked / indeterminate tri-state, read-only, disabled and " +
-                            "change events.",
-                    ),
-                docsUrl = "$DOCS_BASE/checkbox",
-                sourcePath = "pages/selection/CheckboxPage.kt",
-            ),
-        kitPage = { CheckboxPage.NAME() },
-    )
-
 internal class CheckboxPage : DemoPage() {
     private val texts = Binder(checkboxTexts)
 
-    private val frame = PageFrame(checkboxEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val log = RecordedLog<Pair<Boolean, Boolean>>(6)
 
@@ -247,7 +228,7 @@ internal class CheckboxPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = checkboxEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -276,6 +257,25 @@ internal class CheckboxPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CheckboxPage>(CheckboxPage::class.js, "vaadin-demo-checkbox-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "checkbox",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("Checkbox", "Checkbox"),
+                        summary =
+                            bi(
+                                "单个勾选框：checked / indeterminate 三态、只读、禁用与 change 事件。",
+                                "Single checkbox: checked / indeterminate tri-state, read-only, disabled and " +
+                                    "change events.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/checkbox",
+                        sourcePath = "pages/selection/CheckboxPage.kt",
+                    ),
+                kitPage = { CheckboxPage.NAME() },
+            )
+
         private val english: CheckboxTexts =
             CheckboxTexts(
                 basicHeading = "Basic usage",

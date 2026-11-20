@@ -13,7 +13,7 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
@@ -31,29 +31,10 @@ import io.github.shijianjs.ktjs.vaadin.listbox.createListBox
 import web.html.HTMLSpanElement
 import web.html.HtmlTagName
 
-val listBoxEntry: CatalogEntry =
-    CatalogEntry(
-        id = "list-box",
-        group = Groups.SELECTION,
-        meta =
-            PageMeta(
-                title = bi("List Box", "List Box"),
-                summary =
-                    bi(
-                        "可滚动的选项列表，支持分隔线、禁用条目、单选与多选。",
-                        "Scrollable list of options with dividers, disabled items, single and multiple " +
-                            "selection.",
-                    ),
-                docsUrl = "$DOCS_BASE/list-box",
-                sourcePath = "pages/selection/ListBoxPage.kt",
-            ),
-        kitPage = { ListBoxPage.NAME() },
-    )
-
 internal class ListBoxPage : DemoPage() {
     private val texts = Binder(listBoxTexts)
 
-    private val frame = PageFrame(listBoxEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The five toggle items of the first example, in list order. */
     private val toggleItems: List<ItemElement> = List(5) { createItem() }
@@ -192,7 +173,7 @@ internal class ListBoxPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = listBoxEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -200,6 +181,25 @@ internal class ListBoxPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ListBoxPage>(ListBoxPage::class.js, "vaadin-demo-list-box-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "list-box",
+                group = Groups.SELECTION,
+                meta =
+                    PageMeta(
+                        title = bi("List Box", "List Box"),
+                        summary =
+                            bi(
+                                "可滚动的选项列表，支持分隔线、禁用条目、单选与多选。",
+                                "Scrollable list of options with dividers, disabled items, single and multiple " +
+                                    "selection.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/list-box",
+                        sourcePath = "pages/selection/ListBoxPage.kt",
+                    ),
+                kitPage = { ListBoxPage.NAME() },
+            )
+
         private val english: ListBoxTexts = ListBoxTexts(
             dividersHeading = "Dividers",
             dividersHint = "A list can mix in <hr> elements as group dividers; they take no part in selection.",

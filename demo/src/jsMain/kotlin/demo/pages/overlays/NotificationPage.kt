@@ -17,7 +17,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -38,29 +38,10 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.keyboard.KeyboardEvent
 
-val notificationEntry: CatalogEntry =
-    CatalogEntry(
-        id = "notification",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Notification", "Notification"),
-                summary =
-                    bi(
-                        "轻量提示：位置、时长、主题变体，以及需要手动关闭的常驻通知。",
-                        "Short messages: position, duration, theme variants and persistent notices " +
-                            "that are closed by hand.",
-                    ),
-                docsUrl = "$DOCS_BASE/notification",
-                sourcePath = "pages/overlays/NotificationPage.kt",
-            ),
-        kitPage = { NotificationPage.NAME() },
-    )
-
 internal class NotificationPage : DemoPage() {
     private val texts = Binder(notificationTexts)
 
-    private val frame = PageFrame(notificationEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val actionLog = RecordedLog<String>(5)
 
@@ -454,7 +435,7 @@ internal class NotificationPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = notificationEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -464,6 +445,25 @@ internal class NotificationPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<NotificationPage>(NotificationPage::class.js, "vaadin-demo-notification-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "notification",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Notification", "Notification"),
+                        summary =
+                            bi(
+                                "轻量提示：位置、时长、主题变体，以及需要手动关闭的常驻通知。",
+                                "Short messages: position, duration, theme variants and persistent notices " +
+                                    "that are closed by hand.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/notification",
+                        sourcePath = "pages/overlays/NotificationPage.kt",
+                    ),
+                kitPage = { NotificationPage.NAME() },
+            )
+
         // region Notification
 
         private val english: NotificationTexts =

@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.EventLog
@@ -42,29 +42,10 @@ import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
 
-val loginEntry: CatalogEntry =
-    CatalogEntry(
-        id = "login",
-        group = Groups.OVERLAYS,
-        meta =
-            PageMeta(
-                title = bi("Login", "Login"),
-                summary =
-                    bi(
-                        "登录表单与登录浮层：用户名 / 密码校验、错误状态与 forgot-password 事件。",
-                        "Login form and login overlay: username / password validation, the error state and " +
-                            "the forgot-password event.",
-                    ),
-                docsUrl = "$DOCS_BASE/login",
-                sourcePath = "pages/overlays/LoginPage.kt",
-            ),
-        kitPage = { LoginPage.NAME() },
-    )
-
 internal class LoginPage : DemoPage() {
     private val texts = Binder(loginTexts)
 
-    private val frame = PageFrame(loginEntry)
+    private val frame = PageFrame(ENTRY)
 
     /** The field status line, and which of the two states it is showing. */
     private val slowStatus = Readout("")
@@ -255,7 +236,7 @@ internal class LoginPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = loginEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -284,6 +265,25 @@ internal class LoginPage : DemoPage() {
         }
 
     companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "login",
+                group = Groups.OVERLAYS,
+                meta =
+                    PageMeta(
+                        title = bi("Login", "Login"),
+                        summary =
+                            bi(
+                                "登录表单与登录浮层：用户名 / 密码校验、错误状态与 forgot-password 事件。",
+                                "Login form and login overlay: username / password validation, the error state and " +
+                                    "the forgot-password event.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/login",
+                        sourcePath = "pages/overlays/LoginPage.kt",
+                    ),
+                kitPage = { LoginPage.NAME() },
+            )
+
         private val english: LoginTexts =
             LoginTexts(
                 formHeading = "Login form",

@@ -16,7 +16,7 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
-import demo.DOCS_BASE
+import demo.Catalog
 import demo.Groups
 import demo.bi
 import demo.ui.PageFrame
@@ -32,28 +32,10 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 
-val passwordFieldEntry: CatalogEntry =
-    CatalogEntry(
-        id = "password-field",
-        group = Groups.FIELDS,
-        meta =
-            PageMeta(
-                title = bi("Password Field", "Password Field"),
-                summary =
-                    bi(
-                        "密码输入：自带明文切换按钮，可隐藏该按钮。",
-                        "Password input with a built-in reveal toggle that can be hidden.",
-                    ),
-                docsUrl = "$DOCS_BASE/password-field",
-                sourcePath = "pages/fields/PasswordFieldPage.kt",
-            ),
-        kitPage = { PasswordFieldPage.NAME() },
-    )
-
 internal class PasswordFieldPage : DemoPage() {
     private val texts = Binder(passwordFieldTexts)
 
-    private val frame = PageFrame(passwordFieldEntry)
+    private val frame = PageFrame(ENTRY)
 
     private val passwordField = createPasswordField()
 
@@ -274,7 +256,7 @@ internal class PasswordFieldPage : DemoPage() {
     }
 
     override fun applyTranslation(lang: Lang) {
-        val meta = passwordFieldEntry.meta
+        val meta = ENTRY.meta
         setTitle(meta.titleFor(lang))
         setSummary(meta.summaryFor(lang))
         texts.apply(lang)
@@ -286,6 +268,24 @@ internal class PasswordFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<PasswordFieldPage>(PasswordFieldPage::class.js, "vaadin-demo-password-field-page") {
+        val ENTRY: CatalogEntry =
+            CatalogEntry(
+                id = "password-field",
+                group = Groups.FIELDS,
+                meta =
+                    PageMeta(
+                        title = bi("Password Field", "Password Field"),
+                        summary =
+                            bi(
+                                "密码输入：自带明文切换按钮，可隐藏该按钮。",
+                                "Password input with a built-in reveal toggle that can be hidden.",
+                            ),
+                        docsUrl = "${Catalog.DOCS_BASE}/password-field",
+                        sourcePath = "pages/fields/PasswordFieldPage.kt",
+                    ),
+                kitPage = { PasswordFieldPage.NAME() },
+            )
+
         private val english: PasswordFieldTexts =
             PasswordFieldTexts(
                 basicHeading = "Basic usage",
