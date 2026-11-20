@@ -1,5 +1,10 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -16,20 +21,22 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.listen
+import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.tabs.TabElement
 import io.github.shijianjs.ktjs.vaadin.tabs.createTab
 import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
 import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetElement
 import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetEvents
 import io.github.shijianjs.ktjs.vaadin.tabsheet.createTabSheet
 import web.dom.ElementId
+import web.html.HTMLElement
 
 val tabsheetEntry: CatalogEntry =
     CatalogEntry(
@@ -48,106 +55,179 @@ val tabsheetEntry: CatalogEntry =
                 sourcePath = "pages/layout/TabSheetPage.kt",
             ),
         kitPage = { newTabSheetPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class TabSheetTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val lazyHeading: String,
+    val lazyHint: String,
+    val prefixHeading: String,
+    val prefixHint: String,
+    val themeHeading: String,
+    val themeHint: String,
+    /** The labels of the three tabs, in tab order. */
+    val tabLabels: List<String>,
+    /** The content of the three panels, in the same order as the tabs. */
+    val panelContents: List<String>,
+    val closeAll: String,
+    val addTab: String,
+)
+
+private val english: TabSheetTexts = TabSheetTexts(
+    basicHeading = "Basic usage",
+    basicHint = "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel points " +
+        "at a tab id through its tab attribute; the component handles the switch. When the selected tab has no " +
+        "matching panel the component enters a loading state.",
+    lazyHeading = "Lazy initialization of tab contents",
+    lazyHint = "Create a panel only when its tab is visited: prepare the tab ids up front and append the matching " +
+        "panel the first time the tab is selected. The upstream example also shows a loading indicator; this demo " +
+        "focuses on the on-demand creation.",
+    prefixHeading = "Prefix and suffix",
+    prefixHint = "A Tab Sheet exposes prefix / suffix slots for custom content at both ends of the tab bar.",
+    themeHeading = "Theme",
+    themeHint = "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
+    tabLabels = listOf("Dashboard", "Payment", "Shipping"),
+    panelContents = listOf(
+        "This is the Dashboard tab content",
+        "This is the Payment tab content",
+        "This is the Shipping tab content",
+    ),
+    closeAll = "Close all",
+    addTab = "Add tab",
+)
+
+private val chinese: TabSheetTexts = TabSheetTexts(
+    basicHeading = "基本用法",
+    basicHint = "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
+        "对应 tab 的 id，切换由组件完成。选中的 tab 找不到面板时组件进入 loading 状态。",
+    lazyHeading = "内容懒初始化",
+    lazyHint = "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
+        "上游示例还演示了加载指示器，这里只演示按需创建。",
+    prefixHeading = "前缀与后缀",
+    prefixHint = "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
+    themeHeading = "主题",
+    themeHint = "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
+    tabLabels = listOf("仪表盘", "支付", "配送"),
+    panelContents = listOf("这是仪表盘面板的内容。", "这是支付面板的内容。", "这是配送面板的内容。"),
+    closeAll = "全部关闭",
+    addTab = "新增标签",
+)
+
+private val tabSheetTexts: Translations<TabSheetTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
+/** A sheet with its three tab labels and three panel bodies, so the page can rewrite them. */
+private class SheetParts(val sheet: TabSheetElement, val tabs: List<TabElement>, val panels: List<HTMLElement>)
+
+/** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
+private fun demoTabSheet(key: String, theme: String? = null): SheetParts {
+    val sheet = createTabSheet()
+    if (theme != null) sheet.addTheme(theme)
+    val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
+    val tabs = ids.map { id -> createTab().apply { this.id = ElementId(id) } }
+    val tabsBar = createTabs { slot = "tabs" }
+    tabs.forEach { tabsBar.append(it) }
+    sheet.append(tabsBar)
+    val panels =
+        ids.map { id ->
+            HtmlTagName.div().apply { setAttribute("tab", id) }
+        }
+    panels.forEach { sheet.append(it) }
+    return SheetParts(sheet, tabs, panels)
+}
+
 internal class TabSheetPage : DemoPage() {
+    private val texts = Binder(tabSheetTexts)
+
+    private val frame = PageFrame(tabsheetEntry)
+
+    /** The basic, prefixed and bordered examples share the same three tabs and panels. */
+    private val basicParts = demoTabSheet("tabsheet-basic")
+    private val lazyParts = demoTabSheet("tabsheet-lazy")
+    private val adornedParts = demoTabSheet("tabsheet-adorned")
+    private val borderedParts = demoTabSheet("tabsheet-bordered", "bordered")
+
+    private val closeAll: ButtonElement = createButton()
+
+    /** The icon-only suffix button: its `aria-label` is an attribute, not text. */
+    private val addTab: ButtonElement = createButton()
 
     init {
-        configureFrame(tabsheetEntry)
+        frame.mount(this)
         registerVaadinIcons()
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
-                        "对应 tab 的 id，切换由组件完成。选中的 tab 找不到面板时组件进入 loading 状态。",
-                    "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel " +
-                        "points at a tab id through its tab attribute; the component handles the switch. When the " +
-                        "selected tab has no matching panel the component enters a loading state.",
-                ),
-            )
-        val sheet = demoTabSheet("tabsheet-basic")
-        sheet.dataset["test"] = "tab-sheet"
+        basicParts.sheet.dataset["test"] = "tab-sheet"
+        lazyParts.sheet.dataset["test"] = "tab-sheet-lazy"
+
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         val selected = Readout("selected = 0")
-        sheet.listen(TabSheetEvents.selectedChanged) { selected.set("selected = ${sheet.selected}") }
-        basic.body.append(exampleBox(null, kitCol(sheet, selected.root)))
+        basicParts.sheet.listen(TabSheetEvents.selectedChanged) {
+            selected.set("selected = ${basicParts.sheet.selected}")
+        }
+        basic.body.append(exampleBox(null, kitCol(basicParts.sheet, selected.root)))
         body.append(basic.root)
 
-        val lazy =
-            sectionBlock(
-                tr("内容懒初始化", "Lazy initialization of tab contents"),
-                tr(
-                    "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
-                        "上游示例还演示了加载指示器，这里只演示按需创建。",
-                    "Create a panel only when its tab is visited: prepare the tab ids up front and append the " +
-                        "matching panel the first time the tab is selected. The upstream example also shows a " +
-                        "loading indicator; this demo focuses on the on-demand creation.",
-                ),
-            )
-        val lazySheet = createTabSheet()
-        lazySheet.dataset["test"] = "tab-sheet-lazy"
-        val lazyIds = listOf("tabsheet-lazy-dashboard", "tabsheet-lazy-payment", "tabsheet-lazy-shipping")
-        val lazyTabs = createTabs { slot = "tabs" }
-        listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping")).forEachIndexed { index, label ->
-            lazyTabs.append(createTab { textContent = label }.apply { id = ElementId(lazyIds[index]) })
-        }
-        val lazyPanels =
-            listOf(
-                tr("这是仪表盘面板的内容。", "This is the Dashboard tab content"),
-                tr("这是支付面板的内容。", "This is the Payment tab content"),
-                tr("这是配送面板的内容。", "This is the Shipping tab content"),
-            ).mapIndexed { index, text ->
-                HtmlTagName.div().apply {
-                    setAttribute("tab", lazyIds[index])
-                    textContent = text
-                }
-            }
-        lazySheet.append(lazyTabs, lazyPanels[0])
-        // The initially selected tab counts as visited; the others materialize on first selection.
+        val lazy = sectionBlock()
+        texts.bind(lazy.heading) { it.lazyHeading }
+        texts.bind(lazy.hint) { it.lazyHint }
         val visited = mutableSetOf(0)
         val visitedReadout = Readout("visited = [0]")
-        lazySheet.listen(TabSheetEvents.selectedChanged) {
-            val index = lazySheet.selected.toInt()
-            if (index in lazyPanels.indices && visited.add(index)) lazySheet.append(lazyPanels[index])
+        lazyParts.sheet.listen(TabSheetEvents.selectedChanged) {
+            val index = lazyParts.sheet.selected.toInt()
+            val panel = lazyParts.panels.getOrNull(index)
+            if (panel != null && visited.add(index)) lazyParts.sheet.append(panel)
             visitedReadout.set("visited = ${visited.sorted().joinToString(", ", "[", "]")}")
         }
-        lazy.body.append(exampleBox(null, kitCol(lazySheet, visitedReadout.root)))
+        // The initially selected tab counts as visited; the others materialize on first selection.
+        lazyParts.sheet.append(lazyParts.panels[0])
+        lazy.body.append(exampleBox(null, kitCol(lazyParts.sheet, visitedReadout.root)))
         body.append(lazy.root)
 
-        val prefixSuffix =
-            sectionBlock(
-                tr("前缀与后缀", "Prefix and suffix"),
-                tr(
-                    "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
-                    "A Tab Sheet exposes prefix / suffix slots for custom content at both ends of the tab bar.",
-                ),
-            )
-        val adorned = demoTabSheet("tabsheet-adorned")
-        adorned.append(createButton { textContent = tr("全部关闭", "Close all") }.apply { slot = "prefix" })
-        adorned.append(
-            createButton().apply {
-                slot = "suffix"
-                addTheme("icon")
-                setAttribute("aria-label", tr("新增标签", "Add tab"))
-                append(createIcon { icon = "vaadin:plus" })
-            },
-        )
-        prefixSuffix.body.append(exampleBox(null, adorned))
+        val prefixSuffix = sectionBlock()
+        texts.bind(prefixSuffix.heading) { it.prefixHeading }
+        texts.bind(prefixSuffix.hint) { it.prefixHint }
+        closeAll.slot = "prefix"
+        adornedParts.sheet.append(closeAll)
+        addTab.slot = "suffix"
+        addTab.addTheme("icon")
+        addTab.append(createIcon { icon = "vaadin:plus" })
+        adornedParts.sheet.append(addTab)
+        prefixSuffix.body.append(exampleBox(null, adornedParts.sheet))
         body.append(prefixSuffix.root)
 
-        val bordered =
-            sectionBlock(
-                tr("主题", "Theme"),
-                tr(
-                    "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
-                    "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
-                ),
-            )
-        bordered.body.append(exampleBox(null, demoTabSheet("tabsheet-bordered", "bordered")))
+        val bordered = sectionBlock()
+        texts.bind(bordered.heading) { it.themeHeading }
+        texts.bind(bordered.hint) { it.themeHint }
+        bordered.body.append(exampleBox(null, borderedParts.sheet))
         body.append(bordered.root)
 
+        listOf(basicParts, lazyParts, adornedParts, borderedParts).forEach { parts ->
+            parts.tabs.forEachIndexed { index, tab ->
+                texts.bind(tab) { copy -> copy.tabLabels[index] }
+            }
+            parts.panels.forEachIndexed { index, panel ->
+                texts.bind(panel) { copy -> copy.panelContents[index] }
+            }
+        }
+
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = tabsheetEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        val copy = texts.current
+        closeAll.textContent = copy.closeAll
+        addTab.setAttribute("aria-label", copy.addTab)
     }
 
     companion object : CustomElementReference<TabSheetPage>(TabSheetPage::class.js) {
@@ -164,32 +244,3 @@ internal fun newTabSheetPage(): TabSheetPage {
     TabSheetPage.define()
     return TabSheetPage.NAME()
 }
-
-/** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
-private fun demoTabSheet(key: String, theme: String? = null): TabSheetElement {
-    val sheet = createTabSheet()
-    if (theme != null) sheet.addTheme(theme)
-    val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
-    val labels = listOf(tr("仪表盘", "Dashboard"), tr("支付", "Payment"), tr("配送", "Shipping"))
-    val contents =
-        listOf(
-            tr("这是仪表盘面板的内容。", "This is the Dashboard tab content"),
-            tr("这是支付面板的内容。", "This is the Payment tab content"),
-            tr("这是配送面板的内容。", "This is the Shipping tab content"),
-        )
-    val tabs = createTabs { slot = "tabs" }
-    labels.forEachIndexed { index, label ->
-        tabs.append(createTab { textContent = label }.apply { id = ElementId(ids[index]) })
-    }
-    sheet.append(tabs)
-    contents.forEachIndexed { index, text ->
-        sheet.append(
-            HtmlTagName.div().apply {
-                setAttribute("tab", ids[index])
-                textContent = text
-            },
-        )
-    }
-    return sheet
-}
-
