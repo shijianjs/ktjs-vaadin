@@ -1,12 +1,5 @@
 package demo.pages.display
 
-import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import demo.tr
-import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
-import io.github.shijianjs.ktjs.vaadin.badge.createBadge
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
-import web.dom.document
-
 /** A permissions row of `badge-icons-only-table.ts`: one boolean per guarded action. */
 internal external interface PermissionRow {
     var name: String
@@ -14,21 +7,3 @@ internal external interface PermissionRow {
     var comment: Boolean?
     var edit: Boolean?
 }
-
-/** The "Yes" / "No" badge of the permissions table. */
-internal fun permissionBadge(granted: Boolean): BadgeElement =
-    iconBadge(
-        if (granted) "vaadin:check" else "vaadin:close",
-        tr(if (granted) "是" else "否", if (granted) "Yes" else "No"),
-        if (granted) "success" else "error",
-        "icon-only",
-    )
-
-/** A badge with an icon in the `icon` slot, before the text. */
-internal fun iconBadge(icon: String, text: String, vararg themes: String): BadgeElement =
-    createBadge()
-        .addTheme(*themes)
-        .apply {
-            append(createIcon { this.icon = icon }.apply { slot = "icon" })
-            append(document.createTextNode(text))
-        }
