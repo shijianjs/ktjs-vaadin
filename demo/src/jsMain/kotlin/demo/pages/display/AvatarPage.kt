@@ -1,25 +1,29 @@
 package demo.pages.display
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
+import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.exampleCaption
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
-import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
+import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
+import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
 import demo.ui.Images
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
-import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 
 val avatarEntry: CatalogEntry =
     CatalogEntry(
@@ -33,26 +37,89 @@ val avatarEntry: CatalogEntry =
                 sourcePath = "pages/display/AvatarPage.kt",
             ),
         kitPage = { newAvatarPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class AvatarTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val namingHeading: String,
+    val namingHint: String,
+    val namingCaption: String,
+    val imageHeading: String,
+    val imageHint: String,
+    val sizesHeading: String,
+    val sizesHint: String,
+    val coloursHeading: String,
+    val coloursHint: String,
+    /** The name of the [index]th avatar in the colour row. */
+    val user: (Int) -> String,
+)
+
+private val english: AvatarTexts = AvatarTexts(
+    basicHeading = "Basic usage",
+    basicHint = "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +
+        "the tooltip text. The official example loads a person with getPeople(); the demo uses fixed local " +
+        "people with the same portraits as the docs.",
+    namingHeading = "Name and abbreviation",
+    namingHint = "With only name the abbreviation is derived from it; abbr overrides it explicitly. " +
+        "withTooltip shows name on hover or focus (i18n.anonymous when there is no name).",
+    namingCaption = "Derived initials / explicit abbreviation",
+    imageHeading = "Image",
+    imageHint = "img accepts any image source; the official example shows a person photo and a company logo, " +
+        "and the demo uses the same pictures copied from the official documentation.",
+    sizesHeading = "Sizes",
+    sizesHint = "The theme offers xlarge / large / small / xsmall; without a theme the default size is used.",
+    coloursHeading = "Colour index",
+    coloursHint = "colorIndex selects one of the seven Lumo user colours; the avatar group examples use the " +
+        "same property.",
+    user = { index -> "User $index" },
+)
+
+private val chinese: AvatarTexts = AvatarTexts(
+    basicHeading = "基本用法",
+    basicHint = "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
+        "getPeople() 取人像，演示站使用固定的本地人物，照片与文档示例相同。",
+    namingHeading = "姓名与缩写",
+    namingHint = "只给 name 时缩写由姓名推导；abbr 显式覆盖。withTooltip 打开后，悬停或聚焦会显示 name " +
+        "（没有名字时用 i18n.anonymous）。",
+    namingCaption = "姓名推导缩写 / 显式缩写",
+    imageHeading = "图片",
+    imageHint = "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
+    sizesHeading = "尺寸",
+    sizesHint = "theme 提供 xlarge / large / small / xsmall 四个尺寸，未设置时使用默认尺寸。",
+    coloursHeading = "颜色索引",
+    coloursHint = "colorIndex 选择 Lumo 的用户色板，共 7 个颜色；avatar-group 的例子用同样的属性。",
+    user = { index -> "用户 $index" },
+)
+
+private val avatarTexts: Translations<AvatarTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class AvatarPage : DemoPage() {
+    private val texts = Binder(avatarTexts)
+
+    private val frame = PageFrame(avatarEntry)
+
+    /** The colour row, kept so a language switch rewrites the names the tooltips read. */
+    private val colourAvatars: List<AvatarElement> =
+        (0..6).map { index ->
+            createAvatar {
+                name = english.user(index)
+                abbr = "U$index"
+                colorIndex = index.toDouble()
+            }
+        }
 
     init {
-        configureFrame(avatarEntry)
+        frame.mount(this)
 
         // --- Basic usage (avatar/avatar-basic.ts) ---------------------------------------------------
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
-                        "getPeople() 取人像，演示站使用固定的本地人物，照片与文档示例相同。",
-                    "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +
-                        "the tooltip text. The official example loads a person with getPeople(); the demo uses " +
-                        "fixed local people with the same portraits as the docs.",
-                ),
-            )
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         val anonymous = createAvatar()
         anonymous.dataset["test"] = "avatar-anonymous"
         basic.body.append(
@@ -71,19 +138,14 @@ internal class AvatarPage : DemoPage() {
         body.append(basic.root)
 
         // --- Name and abbreviation (avatar/avatar-name.ts, avatar/avatar-abbreviation.ts) -----------
-        val naming =
-            sectionBlock(
-                tr("姓名与缩写", "Name and abbreviation"),
-                tr(
-                    "只给 name 时缩写由姓名推导；abbr 显式覆盖。withTooltip 打开后，悬停或聚焦会显示 name " +
-                        "（没有名字时用 i18n.anonymous）。",
-                    "With only name the abbreviation is derived from it; abbr overrides it explicitly. " +
-                        "withTooltip shows name on hover or focus (i18n.anonymous when there is no name).",
-                ),
-            )
+        val naming = sectionBlock()
+        texts.bind(naming.heading) { it.namingHeading }
+        texts.bind(naming.hint) { it.namingHint }
+        val namingCaption = texts.bind(exampleCaption(), { it.namingCaption })
         naming.body.append(
             exampleBox(
-                tr("姓名推导缩写 / 显式缩写", "Derived initials / explicit abbreviation"),
+                null,
+                namingCaption,
                 kitRow(
                     createAvatar {
                         name = "Augusta Ada King"
@@ -100,15 +162,9 @@ internal class AvatarPage : DemoPage() {
         body.append(naming.root)
 
         // --- Image (avatar/avatar-image.ts) ---------------------------------------------------------
-        val image =
-            sectionBlock(
-                tr("图片", "Image"),
-                tr(
-                    "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
-                    "img accepts any image source; the official example shows a person photo and a company logo, " +
-                        "and the demo uses the same pictures copied from the official documentation.",
-                ),
-            )
+        val image = sectionBlock()
+        texts.bind(image.heading) { it.imageHeading }
+        texts.bind(image.hint) { it.imageHint }
         image.body.append(
             exampleBox(
                 null,
@@ -127,14 +183,9 @@ internal class AvatarPage : DemoPage() {
         body.append(image.root)
 
         // --- Sizes (avatar/avatar-sizes.ts) ---------------------------------------------------------
-        val sizes =
-            sectionBlock(
-                tr("尺寸", "Sizes"),
-                tr(
-                    "theme 提供 xlarge / large / small / xsmall 四个尺寸，未设置时使用默认尺寸。",
-                    "The theme offers xlarge / large / small / xsmall; without a theme the default size is used.",
-                ),
-            )
+        val sizes = sectionBlock()
+        texts.bind(sizes.heading) { it.sizesHeading }
+        texts.bind(sizes.hint) { it.sizesHint }
         sizes.body.append(
             exampleBox(
                 null,
@@ -150,29 +201,23 @@ internal class AvatarPage : DemoPage() {
         body.append(sizes.root)
 
         // --- Background colour (wrapper extra, see avatar-group-bg-color.ts) ------------------------
-        val colours =
-            sectionBlock(
-                tr("颜色索引", "Colour index"),
-                tr(
-                    "colorIndex 选择 Lumo 的用户色板，共 7 个颜色；avatar-group 的例子用同样的属性。",
-                    "colorIndex selects one of the seven Lumo user colours; the avatar group examples use the " +
-                        "same property.",
-                ),
-            )
-        colours.body.append(
-            exampleBox(
-                null,
-                kitRow(*(0..6).map { index ->
-                    createAvatar {
-                        name = tr("用户 $index", "User $index")
-                        abbr = "U$index"
-                        colorIndex = index.toDouble()
-                    }
-                }.toTypedArray()),
-            ),
-        )
+        val colours = sectionBlock()
+        texts.bind(colours.heading) { it.coloursHeading }
+        texts.bind(colours.hint) { it.coloursHint }
+        colours.body.append(exampleBox(null, kitRow(*colourAvatars.toTypedArray())))
         body.append(colours.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = avatarEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        val copy = texts.current
+        colourAvatars.forEachIndexed { index, avatar -> avatar.name = copy.user(index) }
     }
 
     companion object : CustomElementReference<AvatarPage>(AvatarPage::class.js) {
@@ -189,4 +234,3 @@ internal fun newAvatarPage(): AvatarPage {
     AvatarPage.define()
     return AvatarPage.NAME()
 }
-
