@@ -1,6 +1,5 @@
 package demo.pages.data
 
-import demo.tr
 import demo.ui.Images
 import js.objects.unsafeJso
 import kotlin.js.js
@@ -84,20 +83,20 @@ internal fun appendMessage(current: Array<MessageListItem>?, item: MessageListIt
  * driven by a timer to show how tokens are appended to a single message. [onChunk] receives `true`
  * once the reply is complete.
  */
-internal fun streamReply(reply: MessageListItem, onChunk: (Boolean) -> Unit) {
-    val words =
-        tr(
-            "我来帮你安排：先把今天的 **待办** 按优先级排好，再留出一段不被打扰的时间。",
-            "Here is a plan: first sort today's **to-dos** by priority, then block out an uninterrupted " +
-                "stretch of time.",
-        ).split(" ")
+internal fun streamReply(
+    reply: MessageListItem,
+    text: String,
+    joiner: String,
+    onChunk: (Boolean) -> Unit,
+) {
+    val words = if (joiner.isEmpty()) text.map { "$it" } else text.split(joiner)
     var sent = 0
     var handle = 0
     handle =
         js("(fn, ms) => window.setInterval(fn, ms)")(
             {
                 sent += 1
-                reply.text = words.take(sent).joinToString(" ")
+                reply.text = words.take(sent).joinToString(joiner)
                 val done = sent >= words.size
                 onChunk(done)
                 if (done) js("(handle) => window.clearInterval(handle)")(handle)

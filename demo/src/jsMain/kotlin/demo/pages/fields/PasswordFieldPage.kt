@@ -6,10 +6,16 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
+import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -17,15 +23,13 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.pages.data.message
-import demo.pages.layout.passwordField
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.listen
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldElement
 import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldEvents
 import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
@@ -48,7 +52,6 @@ val passwordFieldEntry: CatalogEntry =
                 sourcePath = "pages/fields/PasswordFieldPage.kt",
             ),
         kitPage = { newPasswordFieldPage() },
-        rebuildsOnLanguage = true,
     )
 
 /** Pattern of `password-field-helper.ts`: at least eight characters, one letter and one digit. */
@@ -57,287 +60,398 @@ private const val PASSWORD_HELPER_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8}.*$"
 /** Pattern of `password-field-validation.ts`: letters A-Z and digits only. */
 private const val PASSWORD_LETTERS_AND_DIGITS = "^[A-Za-z0-9]+$"
 
+/** Every string this page shows, in one language. */
+private class PasswordFieldTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val password: String,
+    val atLeastEight: String,
+    val visible: (Boolean, Int) -> String,
+    val revealCaption: String,
+    val revealHeading: String,
+    val revealHint: String,
+    val revealShown: String,
+    val revealHidden: String,
+    val featuresHeading: String,
+    val featuresHint: String,
+    val label: String,
+    val helperText: String,
+    val placeholder: String,
+    val tooltipText: String,
+    val validationHeading: String,
+    val validationHint: String,
+    val validationHelper: String,
+    val notValidated: String,
+    val required: String,
+    val tooShort: (Int) -> String,
+    val tooLong: (Int) -> String,
+    val pattern: String,
+    val checkPrefix: String,
+    val passed: String,
+    val failed: String,
+    val statesHeading: String,
+    val statesHint: String,
+    val readonly: String,
+    val disabled: String,
+    val stylesHeading: String,
+    val stylesHint: String,
+    val practicesHeading: String,
+    val practicesHint: String,
+    val requirementsHelper: String,
+    val invalidPassword: String,
+    val requirementsCaption: String,
+    val strengthCaption: String,
+    val strengthPrefix: String,
+    val weak: String,
+    val moderate: String,
+    val strong: String,
+)
+
+private val english: PasswordFieldTexts =
+    PasswordFieldTexts(
+        basicHeading = "Basic usage",
+        basicHint = "The value is masked by default and the eye button temporarily reveals it; the " +
+            "read-only passwordVisible property reflects the current state.",
+        password = "Password",
+        atLeastEight = "At least 8 characters",
+        visible = { visible, length -> "passwordVisible = $visible · length $length" },
+        revealCaption = "Reveal toggle and read-out",
+        revealHeading = "Reveal button",
+        revealHint = "The eye button lets users confirm what they typed, which helps on mobile; " +
+            "revealButtonHidden removes it for one-time codes and other values that should not be revealed.",
+        revealShown = "Reveal button shown",
+        revealHidden = "Reveal button hidden",
+        featuresHeading = "Basic features",
+        featuresHint = "The label, helper text, placeholder, tooltip, clear button and prefix / suffix " +
+            "slots work exactly as in Text Field.",
+        label = "Label",
+        helperText = "Helper text",
+        placeholder = "Placeholder",
+        tooltipText = "Tooltip text",
+        validationHeading = "Validation",
+        validationHint = "required, minlength / maxlength and pattern constrain the password together; " +
+            "the example maps each failure to its own message in the validated event.",
+        validationHelper = "6 to 12 characters. Only letters A-Z and numbers supported.",
+        notValidated = "Not validated yet",
+        required = "Field is required",
+        tooShort = { "Minimum length is $it characters" },
+        tooLong = { "Maximum length is $it characters" },
+        pattern = "Only letters A-Z and numbers are allowed",
+        checkPrefix = "Check: ",
+        passed = "passed",
+        failed = "failed",
+        statesHeading = "Read-only and disabled",
+        statesHint = "readonly allows focus and copying but no edits; disabled removes interaction " +
+            "entirely. Both keep the masked rendering.",
+        readonly = "Read-only",
+        disabled = "Disabled",
+        stylesHeading = "Style variants",
+        stylesHint = "The theme variants match Text Field: align-right, small and helper-above-field " +
+            "can be combined.",
+        practicesHeading = "Best practices",
+        practicesHint = "State the password requirements in the helper text so users do not have to " +
+            "guess; the strength can go into the helper text and a suffix icon as well. The example derives " +
+            "weak / moderate / strong from the length only; real strength estimation belongs in the " +
+            "application.",
+        requirementsHelper = "A password must be at least 8 characters. It has to have at least one " +
+            "letter and one digit.",
+        invalidPassword = "Not a valid password",
+        requirementsCaption = "Requirements in the helper text",
+        strengthCaption = "Showing password strength",
+        strengthPrefix = "Password strength: ",
+        weak = "weak",
+        moderate = "moderate",
+        strong = "strong",
+    )
+
+private val chinese: PasswordFieldTexts =
+    PasswordFieldTexts(
+        basicHeading = "基本用法",
+        basicHint = "密码默认以掩码显示，眼睛按钮可以临时切换为明文；passwordVisible 只读反映当前状态。",
+        password = "密码",
+        atLeastEight = "至少 8 位",
+        visible = { visible, length -> "passwordVisible = $visible · 长度 $length" },
+        revealCaption = "明文切换与读值",
+        revealHeading = "明文切换按钮",
+        revealHint = "眼睛按钮让用户在输入后确认内容，移动端尤其有用；revealButtonHidden 可以去掉这个" +
+            "按钮，适合一次性口令等不希望暴露内容的场景。",
+        revealShown = "显示切换按钮",
+        revealHidden = "隐藏切换按钮",
+        featuresHeading = "基本特性",
+        featuresHint = "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
+        label = "标签",
+        helperText = "辅助文本",
+        placeholder = "占位符",
+        tooltipText = "提示文本",
+        validationHeading = "校验",
+        validationHint = "required、minlength / maxlength 与 pattern 一起约束密码；示例在 validated " +
+            "事件里把每种失败映射成具体提示。",
+        validationHelper = "6 到 12 位，只支持字母 A-Z 和数字",
+        notValidated = "尚未校验",
+        required = "这一项必填",
+        tooShort = { "最短 $it 个字符" },
+        tooLong = { "最长 $it 个字符" },
+        pattern = "只允许字母 A-Z 和数字",
+        checkPrefix = "校验：",
+        passed = "通过",
+        failed = "未通过",
+        statesHeading = "只读与禁用",
+        statesHint = "readonly 可以聚焦和复制但不能修改；disabled 完全移除交互，两者都保留掩码显示。",
+        readonly = "只读",
+        disabled = "禁用",
+        stylesHeading = "样式变体",
+        stylesHint = "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
+        practicesHeading = "最佳实践",
+        practicesHint = "在辅助文本里直接说明密码要求，用户不必猜；密码强度也可以显示在辅助文本和后缀" +
+            "图标里。示例只按长度分为弱 / 中 / 强，真实强度评估应在应用侧完成。",
+        requirementsHelper = "密码至少 8 位，且必须包含至少一个字母和一个数字。",
+        invalidPassword = "密码不符合要求",
+        requirementsCaption = "在辅助文本中说明要求",
+        strengthCaption = "显示密码强度",
+        strengthPrefix = "密码强度：",
+        weak = "弱",
+        moderate = "中",
+        strong = "强",
+    )
+
+private val passwordFieldTexts: Translations<PasswordFieldTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class PasswordFieldPage : DemoPage() {
+    private val texts = Binder(passwordFieldTexts)
+
+    private val frame = PageFrame(passwordFieldEntry)
+
+    private val passwordField = createPasswordField()
+
+    private val readout = Readout("")
+
+    private val password = createPasswordField()
+
+    private val passwordResult = Readout("")
+
+    /** The kind of the last validation, so a language switch can write it again. */
+    private var lastCheck: String? = null
+
+    private val requirements = createPasswordField()
+
+    private val advanced = createPasswordField()
+
+    private val strengthText = HtmlTagName.span()
+
+    private val strengthCheck = createIcon { icon = "vaadin:check" }
+
+    private var modes: ValueChangeSection? = null
 
     init {
-        configureFrame(passwordFieldEntry)
+        frame.mount(this)
         registerVaadinIcons()
 
+        fun field(copy: (PasswordFieldTexts) -> String): PasswordFieldElement =
+            createPasswordField().also { node -> texts.bind(node, copy) { node.label = it } }
+
         // --- Basic usage (password-field-basic.ts) --------------------------------------------------
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "密码默认以掩码显示，眼睛按钮可以临时切换为明文；passwordVisible 只读反映当前状态。",
-                    "The value is masked by default and the eye button temporarily reveals it; the read-only " +
-                        "passwordVisible property reflects the current state.",
-                ),
-            )
-        val docsField =
-            createPasswordField {
-                label = tr("密码", "Password")
-                value = "Ex@mplePassw0rd"
-            }
-        val passwordField =
-            createPasswordField {
-                label = tr("密码", "Password")
-                helperText = tr("至少 8 位", "At least 8 characters")
-                clearButtonVisible = false
-            }
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
+        val docsField = field { it.password }
+        docsField.value = "Ex@mplePassw0rd"
+        texts.bind(passwordField, { it.password }) { passwordField.label = it }
+        texts.bind(passwordField, { it.atLeastEight }) { passwordField.helperText = it }
+        passwordField.clearButtonVisible = false
         passwordField.dataset["test"] = "password-field"
-        val readout = Readout("passwordVisible = false")
-        fun syncVisibility() {
-            readout.set(
-                tr(
-                    "passwordVisible = ${passwordField.passwordVisible} · 长度 ${passwordField.value.length}",
-                    "passwordVisible = ${passwordField.passwordVisible} · length ${passwordField.value.length}",
-                ),
-            )
-        }
-        passwordField.listen(PasswordFieldEvents.input) { syncVisibility() }
+        passwordField.listen(PasswordFieldEvents.input) { showVisibility() }
         // `passwordVisible` is read-only and has no change event; the reveal button's click is composed,
         // so a click listener on the host is enough to refresh the read-out.
-        passwordField.clickEvent.addHandler { syncVisibility() }
+        passwordField.clickEvent.addHandler { showVisibility() }
         basic.body.append(
             exampleBox(null, docsField),
-            exampleBox(tr("明文切换与读值", "Reveal toggle and read-out"), kitCol(passwordField, readout.root)),
+            exampleBox(
+                null,
+                newCaption { it.revealCaption },
+                kitCol(passwordField, readout.root),
+            ),
         )
         body.append(basic.root)
 
         // --- Reveal button (password-field-reveal-button-hidden.ts) --------------------------------
-        val reveal =
-            sectionBlock(
-                tr("明文切换按钮", "Reveal button"),
-                tr(
-                    "眼睛按钮让用户在输入后确认内容，移动端尤其有用；revealButtonHidden 可以去掉这个按钮，" +
-                        "适合一次性口令等不希望暴露内容的场景。",
-                    "The eye button lets users confirm what they typed, which helps on mobile; " +
-                        "revealButtonHidden removes it for one-time codes and other values that should not be " +
-                        "revealed.",
-                ),
-            )
-        reveal.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createPasswordField {
-                        label = tr("显示切换按钮", "Reveal button shown")
-                        value = "Ex@mplePassw0rd"
-                    },
-                    createPasswordField {
-                        label = tr("隐藏切换按钮", "Reveal button hidden")
-                        value = "Ex@mplePassw0rd"
-                        revealButtonHidden = true
-                    },
-                ),
-            ),
-        )
+        val reveal = sectionBlock()
+        texts.bind(reveal.heading) { it.revealHeading }
+        texts.bind(reveal.hint) { it.revealHint }
+        val shown = field { it.revealShown }
+        shown.value = "Ex@mplePassw0rd"
+        val hidden = field { it.revealHidden }
+        hidden.value = "Ex@mplePassw0rd"
+        hidden.revealButtonHidden = true
+        reveal.body.append(exampleBox(null, kitRow(shown, hidden)))
         body.append(reveal.root)
 
         // --- Basic features (password-field-basic-features.ts) --------------------------------------
-        val features =
-            sectionBlock(
-                tr("基本特性", "Basic features"),
-                tr(
-                    "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
-                    "The label, helper text, placeholder, tooltip, clear button and prefix / suffix slots work " +
-                        "exactly as in Text Field.",
-                ),
-            )
-        val featureField =
-            createPasswordField {
-                label = tr("标签", "Label")
-                helperText = tr("辅助文本", "Helper text")
-                placeholder = tr("占位符", "Placeholder")
-                clearButtonVisible = true
-            }
-        featureField.append(
-            createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" },
-            createIcon { icon = "vaadin:lock" }.apply { slot = "prefix" },
-        )
+        val features = sectionBlock()
+        texts.bind(features.heading) { it.featuresHeading }
+        texts.bind(features.hint) { it.featuresHint }
+        val featureField = createPasswordField()
+        texts.bind(featureField, { it.label }) { featureField.label = it }
+        texts.bind(featureField, { it.helperText }) { featureField.helperText = it }
+        texts.bind(featureField, { it.placeholder }) { featureField.placeholder = it }
+        featureField.clearButtonVisible = true
+        val tooltip = createTooltip().apply { slot = "tooltip" }
+        texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
+        featureField.append(tooltip, createIcon { icon = "vaadin:lock" }.apply { slot = "prefix" })
         features.body.append(exampleBox(null, featureField))
         body.append(features.root)
 
         // --- Validation (password-field-validation.ts) ----------------------------------------------
-        val validation =
-            sectionBlock(
-                tr("校验", "Validation"),
-                tr(
-                    "required、minlength / maxlength 与 pattern 一起约束密码；示例在 validated 事件里把每种" +
-                        "失败映射成具体提示。",
-                    "required, minlength / maxlength and pattern constrain the password together; the example " +
-                        "maps each failure to its own message in the validated event.",
-                ),
-            )
-        val password =
-            createPasswordField {
-                label = tr("密码", "Password")
-                helperText =
-                    tr(
-                        "6 到 12 位，只支持字母 A-Z 和数字",
-                        "6 to 12 characters. Only letters A-Z and numbers supported.",
-                    )
-                required = true
-                minlength = 6.0
-                maxlength = 12.0
-                pattern = PASSWORD_LETTERS_AND_DIGITS
-            }
-        val passwordResult = Readout(tr("尚未校验", "Not validated yet"))
+        val validation = sectionBlock()
+        texts.bind(validation.heading) { it.validationHeading }
+        texts.bind(validation.hint) { it.validationHint }
+        texts.bind(password, { it.password }) { password.label = it }
+        texts.bind(password, { it.validationHelper }) { password.helperText = it }
+        password.required = true
+        password.minlength = 6.0
+        password.maxlength = 12.0
+        password.pattern = PASSWORD_LETTERS_AND_DIGITS
         password.listen(PasswordFieldEvents.validated) {
             val validity = validityOf(password)
-            val message =
+            lastCheck =
                 when {
-                    validity.valueMissing -> tr("这一项必填", "Field is required")
-                    validity.tooShort ->
-                        tr(
-                            "最短 ${password.minlength.toInt()} 个字符",
-                            "Minimum length is ${password.minlength.toInt()} characters",
-                        )
-                    validity.tooLong ->
-                        tr(
-                            "最长 ${password.maxlength.toInt()} 个字符",
-                            "Maximum length is ${password.maxlength.toInt()} characters",
-                        )
-                    validity.patternMismatch -> tr("只允许字母 A-Z 和数字", "Only letters A-Z and numbers are allowed")
-                    else -> ""
+                    validity.valueMissing -> "required"
+                    validity.tooShort -> "tooShort"
+                    validity.tooLong -> "tooLong"
+                    validity.patternMismatch -> "pattern"
+                    else -> "ok"
                 }
-            password.errorMessage = message
-            passwordResult.set(
-                tr("校验：", "Check: "),
-                if (message.isEmpty()) tr("通过", "passed") else tr("未通过", "failed"),
-            )
+            showValidation()
         }
         validation.body.append(exampleBox(null, kitCol(password, passwordResult.root)))
         body.append(validation.root)
 
         // --- Read-only and disabled (password-field-readonly-and-disabled.ts) -----------------------
-        val states =
-            sectionBlock(
-                tr("只读与禁用", "Read-only and disabled"),
-                tr(
-                    "readonly 可以聚焦和复制但不能修改；disabled 完全移除交互，两者都保留掩码显示。",
-                    "readonly allows focus and copying but no edits; disabled removes interaction entirely. " +
-                        "Both keep the masked rendering.",
-                ),
-            )
-        states.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createPasswordField {
-                        label = tr("只读", "Read-only")
-                        value = "Ex@mplePassw0rd"
-                        readonly = true
-                    },
-                    createPasswordField {
-                        label = tr("禁用", "Disabled")
-                    },
-                ),
-            ),
-        )
+        val states = sectionBlock()
+        texts.bind(states.heading) { it.statesHeading }
+        texts.bind(states.hint) { it.statesHint }
+        val readonlyField = field { it.readonly }
+        readonlyField.value = "Ex@mplePassw0rd"
+        readonlyField.readonly = true
+        val disabledField = field { it.disabled }
+        states.body.append(exampleBox(null, kitRow(readonlyField, disabledField)))
         body.append(states.root)
 
         // --- Style variants (password-field-styles.ts) ----------------------------------------------
-        val styles =
-            sectionBlock(
-                tr("样式变体", "Style variants"),
-                tr(
-                    "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
-                    "The theme variants match Text Field: align-right, small and helper-above-field can be " +
-                        "combined.",
-                ),
-            )
-        val styledField =
-            createPasswordField {
-                label = tr("标签", "Label")
-                helperText = tr("辅助文本", "Helper text")
-                value = "Ex@mplePassw0rd"
-            }.addTheme("align-right", "small", "helper-above-field")
+        val styles = sectionBlock()
+        texts.bind(styles.heading) { it.stylesHeading }
+        texts.bind(styles.hint) { it.stylesHint }
+        val styledField = field { it.label }
+        texts.bind(styledField, { it.helperText }) { styledField.helperText = it }
+        styledField.value = "Ex@mplePassw0rd"
+        styledField.addTheme("align-right", "small", "helper-above-field")
         styles.body.append(exampleBox(null, styledField))
         body.append(styles.root)
 
         // --- Best practices (password-field-helper.ts, password-field-advanced-helper.ts) -----------
-        val practices =
-            sectionBlock(
-                tr("最佳实践", "Best practices"),
-                tr(
-                    "在辅助文本里直接说明密码要求，用户不必猜；密码强度也可以显示在辅助文本和后缀图标里。" +
-                        "示例只按长度分为弱 / 中 / 强，真实强度评估应在应用侧完成。",
-                    "State the password requirements in the helper text so users do not have to guess; the " +
-                        "strength can go into the helper text and a suffix icon as well. The example derives " +
-                        "weak / moderate / strong from the length only; real strength estimation belongs in the " +
-                        "application.",
-                ),
-            )
-        val requirements =
-            createPasswordField {
-                label = tr("密码", "Password")
-                helperText =
-                    tr(
-                        "密码至少 8 位，且必须包含至少一个字母和一个数字。",
-                        "A password must be at least 8 characters. It has to have at least one letter and one " +
-                            "digit.",
-                    )
-                pattern = PASSWORD_HELPER_PATTERN
-                errorMessage = tr("密码不符合要求", "Not a valid password")
-            }
-        val advanced =
-            createPasswordField {
-                label = tr("密码", "Password")
-                pattern = PASSWORD_HELPER_PATTERN
-                errorMessage = tr("密码不符合要求", "Not a valid password")
-            }
+        val practices = sectionBlock()
+        texts.bind(practices.heading) { it.practicesHeading }
+        texts.bind(practices.hint) { it.practicesHint }
+        texts.bind(requirements, { it.password }) { requirements.label = it }
+        texts.bind(requirements, { it.requirementsHelper }) { requirements.helperText = it }
+        requirements.pattern = PASSWORD_HELPER_PATTERN
+        texts.bind(requirements, { it.invalidPassword }) { requirements.errorMessage = it }
+        texts.bind(advanced, { it.password }) { advanced.label = it }
+        advanced.pattern = PASSWORD_HELPER_PATTERN
+        texts.bind(advanced, { it.invalidPassword }) { advanced.errorMessage = it }
         advanced.style.setProperty("width", "14em")
-        val strengthCheck = createIcon { icon = "vaadin:check" }.apply { slot = "suffix" }
+        strengthCheck.slot = "suffix"
         strengthCheck.toggleAttribute("hidden", true)
-        val strengthText = HtmlTagName.span {
-                               textContent = tr("弱", "weak")
-                           }
         val helperSlot = HtmlTagName.div()
         helperSlot.slot = "helper"
-        helperSlot.append(HtmlTagName.span {
-                              textContent = tr("密码强度：", "Password strength: ")
-                          }, strengthText)
+        val strengthPrefix = HtmlTagName.span()
+        texts.bind(strengthPrefix, { it.strengthPrefix }) { strengthPrefix.textContent = it }
+        helperSlot.append(strengthPrefix, strengthText)
         advanced.append(strengthCheck, helperSlot)
-
-        fun updateStrength() {
-            val length = advanced.value.length
-            val strong = length > 9
-            val label =
-                when {
-                    strong -> tr("强", "strong")
-                    length > 5 -> tr("中", "moderate")
-                    else -> tr("弱", "weak")
-                }
-            val color =
-                when {
-                    strong -> "var(--lumo-success-text-color)"
-                    length > 5 -> "var(--lumo-warning-text-color)"
-                    else -> "var(--lumo-error-text-color)"
-                }
-            strengthText.textContent = label
-            strengthText.style.setProperty("color", color)
-            strengthCheck.toggleAttribute("hidden", !strong)
-        }
-        advanced.listen(PasswordFieldEvents.valueChanged) { updateStrength() }
-        updateStrength()
-
+        advanced.listen(PasswordFieldEvents.valueChanged) { showStrength() }
         practices.body.append(
-            exampleBox(tr("在辅助文本中说明要求", "Requirements in the helper text"), requirements),
-            exampleBox(tr("显示密码强度", "Showing password strength"), advanced),
+            exampleBox(null, newCaption { it.requirementsCaption }, requirements),
+            exampleBox(null, newCaption { it.strengthCaption }, advanced),
         )
         body.append(practices.root)
 
         // --- Value change modes (password-field-value-change-mode.ts, Flow-only example) ------------
-        val modeField = createPasswordField { label = tr("密码", "Password") }
-        body.append(
+        val modeField = field { it.password }
+        modes =
             valueChangeModesSection(
                 modeField,
                 PasswordFieldEvents.valueChanged,
                 PasswordFieldEvents.change,
-            ) { modeField.value }.root,
-        )
+            ) { modeField.value }
+        body.append(modes!!.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    /** A paragraph above an example, used where the caption is copy rather than a CSS snippet. */
+    private fun newCaption(copy: (PasswordFieldTexts) -> String): HTMLElement =
+        HtmlTagName.p().apply {
+            style.setProperty("margin", "0 0 0.75rem")
+            style.setProperty("font-size", "0.8125rem")
+            style.setProperty("color", "var(--lumo-secondary-text-color)")
+            texts.bind(this, copy) { textContent = it }
+        }
+
+    private fun showVisibility() {
+        readout.set(texts.current.visible(passwordField.passwordVisible, passwordField.value.length))
+    }
+
+    private fun showValidation() {
+        val copy = texts.current
+        val message =
+            when (lastCheck) {
+                "required" -> copy.required
+                "tooShort" -> copy.tooShort(password.minlength.toInt())
+                "tooLong" -> copy.tooLong(password.maxlength.toInt())
+                "pattern" -> copy.pattern
+                else -> ""
+            }
+        password.errorMessage = message
+        passwordResult.set(
+            copy.checkPrefix,
+            if (lastCheck == null) copy.notValidated else if (message.isEmpty()) copy.passed else copy.failed,
+        )
+    }
+
+    private fun showStrength() {
+        val copy = texts.current
+        val length = advanced.value.length
+        val strong = length > 9
+        val moderate = length in 6..9
+        strengthText.textContent =
+            when {
+                strong -> copy.strong
+                moderate -> copy.moderate
+                else -> copy.weak
+            }
+        strengthText.style.setProperty(
+            "color",
+            when {
+                strong -> "var(--lumo-success-text-color)"
+                moderate -> "var(--lumo-warning-text-color)"
+                else -> "var(--lumo-error-text-color)"
+            },
+        )
+        strengthCheck.toggleAttribute("hidden", !strong)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = passwordFieldEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showVisibility()
+        showValidation()
+        showStrength()
+        modes?.show(lang)
     }
 
     companion object : CustomElementReference<PasswordFieldPage>(PasswordFieldPage::class.js) {
@@ -354,4 +468,3 @@ internal fun newPasswordFieldPage(): PasswordFieldPage {
     PasswordFieldPage.define()
     return PasswordFieldPage.NAME()
 }
-
