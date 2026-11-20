@@ -1,5 +1,8 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -12,44 +15,25 @@ import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.heading
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
-import demo.ui.Images
 import demo.ui.PageMeta
-import demo.ui.configureFrame
-import demo.ui.listen
+import demo.ui.PageFrame
 import io.github.shijianjs.ktjs.dom.css.cssSheet
-import web.cssom.AlignItems
-import web.cssom.Flex
 import web.cssom.CSSStyleSheet
-import web.cssom.Display
-import web.cssom.FlexDirection
-import web.cssom.FlexWrap
 import web.cssom.number
-import web.cssom.px
 import web.cssom.rem
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
-import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
-import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
-import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
-import io.github.shijianjs.ktjs.vaadin.select.createSelect
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import web.cssom.ClassName
 import io.github.shijianjs.ktjs.dom.css.dsl.className
-import io.github.shijianjs.ktjs.dom.css.dsl.descendant
-import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 
 /** The single-card width the docs examples use; the sheet keys on this same object. */
 private val CARD_DEMO: ClassName = ClassName("card-demo")
@@ -72,7 +56,6 @@ val cardEntry: CatalogEntry =
                 sourcePath = "pages/layout/CardPage.kt",
             ),
         kitPage = { newCardPage() },
-        rebuildsOnLanguage = true,
     )
 
 /**
@@ -84,195 +67,202 @@ private val CARD_SHEET: CSSStyleSheet = cssSheet {
 }
 internal class CardPage : DemoPage() {
 
+    private val texts: Binder<CardTexts> = cardTexts
+
+    private val frame: PageFrame = PageFrame(cardEntry)
+
+    /** Card elements that own a text table of their own and want the current language. */
+    private val translatables: MutableList<CardTranslatable> = mutableListOf()
+
     init {
-        configureFrame(cardEntry)
+        frame.mount(this)
         addSheet(CARD_SHEET)
         registerVaadinIcons()
 
-        val content =
-            sectionBlock(
-                tr("内容", "Content"),
-                tr(
-                    "默认插槽里的节点组成卡片正文，可以是任意 DOM 片段。",
-                    "Nodes in the default slot form the card content; any DOM fragment is allowed.",
-                ),
-            )
+        val content = sectionBlock()
+        texts.bind(
+            content.heading,
+            { it.contentHeading },
+        ) { content.heading.textContent = it }
+        texts.bind(content.hint, { it.contentHint }) { content.hint.textContent = it }
         val contentCard = createCard()
-        contentCard.append(paragraph(laplandLongText()), paragraph(laplandSamiText()))
+        contentCard.append(paragraph(""), paragraph(""))
+        val contentParagraphs = contentCard.children
+        texts.bind(contentParagraphs.item(0) as HTMLElement, { it.longText }) {
+            (contentParagraphs.item(0) as HTMLElement).textContent = it
+        }
+        texts.bind(contentParagraphs.item(1) as HTMLElement, { it.samiText }) {
+            (contentParagraphs.item(1) as HTMLElement).textContent = it
+        }
         content.body.append(exampleBox(null, contentCard))
+        body.append(content.root)
 
-        val titles =
-            sectionBlock(
-                tr("标题与副标题", "Title and subtitle"),
-                tr(
-                    "title / subtitle 插槽放自定义的标题节点；cardTitle 属性则直接生成标题元素，标题层级由 " +
-                        "titleHeadingLevel 决定。",
-                    "The title / subtitle slots take custom heading nodes, while the cardTitle property generates " +
-                        "the heading itself with titleHeadingLevel as its level.",
-                ),
-            )
+        val titles = sectionBlock()
+        texts.bind(titles.heading, { it.titlesHeading }) { titles.heading.textContent = it }
+        texts.bind(titles.hint, { it.titlesHint }) { titles.hint.textContent = it }
         val slotTitles = createCard()
         slotTitles.append(
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val propertyTitle = createCard {
-            cardTitle = tr("拉普兰", "Lapland")
             titleHeadingLevel = 3.0
         }
-        propertyTitle.append(HtmlTagName.div().apply { textContent = laplandShortText() })
+        texts.bind(propertyTitle, { it.lapland }) { propertyTitle.cardTitle = it }
+        propertyTitle.append(HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } })
         slotTitles.className = CARD_DEMO
         propertyTitle.className = CARD_DEMO
         titles.body.append(exampleBox(null, kitGrid(260, slotTitles, propertyTitle)))
         body.append(titles.root)
 
-        val header =
-            sectionBlock(
-                tr("头部区域", "Header area"),
-                tr(
-                    "header 插槽替换默认的标题行，header-prefix / header-suffix 在标题两侧各放一个节点，常见的是" +
-                        "头像与徽标。",
-                    "The header slot replaces the default title row; header-prefix / header-suffix place one node " +
-                        "on each side, typically an avatar and a badge.",
-                ),
-            )
-        val headerCard = createCard()
-        headerCard.append(newCardHeader(), HtmlTagName.div().apply { textContent = laplandShortText() })
+        val header = sectionBlock()
+        texts.bind(header.heading, { it.headerHeading }) { header.heading.textContent = it }
+        texts.bind(header.hint, { it.headerHint }) { header.hint.textContent = it }
+        val headerCard = newCardHeader().also { translatables += it }
+        headerCard.append(HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } })
         val prefixCard = createCard()
         prefixCard.append(
-            createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "header-prefix" },
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            createAvatar {}.apply {
+                slot = "header-prefix"
+                texts.bind(this, { it.lapland }) { name = it }
+            },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val suffixCard = createCard()
         suffixCard.append(
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            createBadge { textContent = tr("北极圈", "Arctic") }.addTheme("success").apply { slot = "header-suffix" },
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            createBadge().addTheme("success").apply {
+                slot = "header-suffix"
+                texts.bind(this, { it.arctic }) { textContent = it }
+            },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         header.body.append(exampleBox(null, kitGrid(260, headerCard, prefixCard, suffixCard)))
         body.append(header.root)
 
-        val media =
-            sectionBlock(
-                tr("媒体", "Media"),
-                tr(
-                    "media 插槽放图片、图标或头像；宽高由卡片根据当前变体决定。",
-                    "The media slot takes an image, an icon or an avatar; the card sizes it according to the active " +
-                        "variants.",
-                ),
-            )
+        val media = sectionBlock()
+        texts.bind(media.heading, { it.mediaHeading }) { media.heading.textContent = it }
+        texts.bind(media.hint, { it.mediaHint }) { media.hint.textContent = it }
         val imageCard = createCard()
-        imageCard.append(newCardMediaImage(100), HtmlTagName.div().apply { textContent = laplandShortText() })
+        imageCard.append(
+            newCardMediaImage(100),
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
+        )
         val iconCard = createCard()
-        iconCard.append(newCardMediaIcon(), HtmlTagName.div().apply { textContent = laplandShortText() })
+        iconCard.append(
+            newCardMediaIcon(),
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
+        )
         val avatarCard = createCard()
         avatarCard.append(
-            createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            createAvatar {}.apply {
+                slot = "media"
+                texts.bind(this, { it.lapland }) { name = it }
+            },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         media.body.append(exampleBox(null, kitGrid(260, imageCard, iconCard, avatarCard)))
         body.append(media.root)
 
-        val footer =
-            sectionBlock(
-                tr("底部操作", "Footer"),
-                tr(
-                    "footer 插槽里的按钮固定在卡片底部，配合固定高度的卡片使用。",
-                    "Buttons in the footer slot stay at the bottom of the card, which pays off with a fixed height.",
-                ),
-            )
+        val footer = sectionBlock()
+        texts.bind(footer.heading, { it.footerHeading }) { footer.heading.textContent = it }
+        texts.bind(footer.hint, { it.footerHint }) { footer.hint.textContent = it }
         val footerCard = createCard()
         footerCard.style.setProperty("height", "15rem")
         footerCard.append(
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
-            createButton { textContent = tr("预订假期", "Book Vacation") }.apply { slot = "footer" },
-            createButton { textContent = tr("了解更多", "Learn More") }.apply { slot = "footer" },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
+            createButton().apply {
+                slot = "footer"
+                texts.bind(this, { it.bookVacation }) { textContent = it }
+            },
+            createButton().apply {
+                slot = "footer"
+                texts.bind(this, { it.learnMore }) { textContent = it }
+            },
         )
         footerCard.className = CARD_DEMO
         footer.body.append(exampleBox(null, footerCard))
         body.append(footer.root)
 
-        val variants =
-            sectionBlock(
-                tr("样式变体", "Style variants"),
-                tr(
-                    "默认样式之外，outlined 加边框，elevated 加阴影（更适合有底色的背景）。",
-                    "Beyond the default style, outlined adds a border and elevated adds a shadow that works best on " +
-                        "a shaded background.",
-                ),
-            )
+        val variants = sectionBlock()
+        texts.bind(variants.heading, { it.variantsHeading }) { variants.heading.textContent = it }
+        texts.bind(variants.hint, { it.variantsHint }) { variants.hint.textContent = it }
         variants.body.append(
             exampleBox(
                 null,
-                kitGrid(260, 
-                    createCard { cardTitle = "Default" }.apply { append(HtmlTagName.div().apply { textContent = tr("默认卡片样式。", "This is the default card style.") }) },
+                kitGrid(260,
+                    createCard { cardTitle = "Default" }.apply {
+                        append(HtmlTagName.div().also { node -> texts.bind(node, { it.defaultCardText }) { node.textContent = it } })
+                    },
                     createCard { cardTitle = "Outlined" }.addTheme("outlined").apply {
-                        append(HtmlTagName.div().apply { textContent = tr("在卡片四周加一圈实线边框。", "Adds a solid outline around the card.") })
+                        append(HtmlTagName.div().also { node -> texts.bind(node, { it.outlinedCardText }) { node.textContent = it } })
                     },
                     createCard { cardTitle = "Elevated" }.addTheme("elevated").apply {
-                        append(HtmlTagName.div().apply { textContent = tr("适合有底色背景的阴影样式。", "This variant works better on a shaded background.") })
+                        append(HtmlTagName.div().also { node -> texts.bind(node, { it.elevatedCardText }) { node.textContent = it } })
                     },
                 ),
             ),
         )
         body.append(variants.root)
 
-        val combined =
-            sectionBlock(
-                tr("组合变体", "Combining variants"),
-                tr(
-                    "horizontal 让媒体与内容并排，stretch-media 拉伸媒体填满剩余空间，cover-media 让媒体铺满卡片" +
-                        "上方。多个 theme 可以叠加。",
-                    "horizontal puts media next to the content, stretch-media stretches the media into the remaining " +
-                        "space and cover-media makes it cover the top of the card. Themes can be combined.",
-                ),
-            )
+        val combined = sectionBlock()
+        texts.bind(combined.heading, { it.combinedHeading }) { combined.heading.textContent = it }
+        texts.bind(combined.hint, { it.combinedHint }) { combined.hint.textContent = it }
         val combinedCard = createCard()
         combinedCard.addTheme("outlined", "elevated", "horizontal", "cover-media")
         combinedCard.style.setProperty("max-width", "34rem")
         combinedCard.append(
             newCardMediaImage(),
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val stretchCard = createCard()
         stretchCard.addTheme("stretch-media")
         stretchCard.append(
             newCardMediaImage(),
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val horizontalCard = createCard()
         horizontalCard.addTheme("horizontal")
         horizontalCard.append(
-            createAvatar { name = tr("拉普兰", "Lapland") }.apply { slot = "media" },
-            newCardSlotText("title", tr("拉普兰", "Lapland")),
-            newCardSlotText("subtitle", tr("异域北方", "The Exotic North")),
-            HtmlTagName.div().apply { textContent = laplandShortText() },
+            createAvatar {}.apply {
+                slot = "media"
+                texts.bind(this, { it.lapland }) { name = it }
+            },
+            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         combined.body.append(exampleBox(null, kitGrid(260, combinedCard, stretchCard, horizontalCard)))
         body.append(combined.root)
 
-        val playgroundSection =
-            sectionBlock(
-                tr("交互式配置", "Interactive configuration"),
-                tr(
-                    "勾选插槽与样式变体、切换媒体与正文内容，预览会就地更新：节点只被摘下来或重新挂回去，" +
-                        "不会重建整张卡片。",
-                    "Ticking slots and style variants, or switching the media and content, updates the preview in " +
-                        "place: nodes are only detached and reattached, the card is never rebuilt.",
-                ),
-            )
-        playgroundSection.body.append(exampleBox(null, newCardPlayground()))
+        val playgroundSection = sectionBlock()
+        texts.bind(playgroundSection.heading, { it.playgroundHeading }) {
+            playgroundSection.heading.textContent = it
+        }
+        texts.bind(playgroundSection.hint, { it.playgroundHint }) { playgroundSection.hint.textContent = it }
+        val playground = newCardPlayground().also { translatables += it }
+        playgroundSection.body.append(exampleBox(null, playground))
         body.append(playgroundSection.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = cardEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        translatables.forEach { it.applyTranslation(lang) }
     }
 
     companion object : CustomElementReference<CardPage>(CardPage::class.js) {

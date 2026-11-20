@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,10 +21,9 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
 import demo.ui.EventLog
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.joinValues
 import demo.ui.jsArray
@@ -34,6 +38,7 @@ import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDate
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadata
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataArrayOrPromise
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataProvider
+import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerElement
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerEvents
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerI18n
 import io.github.shijianjs.ktjs.vaadin.datepicker.createDate
@@ -46,6 +51,7 @@ import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
+import web.html.HtmlTagName
 
 val datePickerEntry: CatalogEntry =
     CatalogEntry(
@@ -64,170 +70,496 @@ val datePickerEntry: CatalogEntry =
                 sourcePath = "pages/pickers/DatePickerPage.kt",
             ),
         kitPage = { newDatePickerPage() },
-        rebuildsOnLanguage = true,
     )
 
 // ---------------------------------------------------------------------------------------------
 // Date picker
 // ---------------------------------------------------------------------------------------------
 
+/** Every string this page shows, in one language. */
+private class DatePickerTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val startDate: String,
+    val basicHelper: String,
+    val empty: String,
+    val eventStream: String,
+    val validationHeading: String,
+    val validationHint: String,
+    val appointmentDate: String,
+    val businessDayHelper: String,
+    val errorPrefix: String,
+    val none: String,
+    val badFormat: String,
+    val required: String,
+    val tooEarly: String,
+    val tooLate: String,
+    val closed: String,
+    val validate: String,
+    val customHeading: String,
+    val customHint: String,
+    val meetingDate: String,
+    val weekdaysOnly: String,
+    val selectWeekday: String,
+    val metadataHeading: String,
+    val metadataHint: String,
+    val almostFullHelper: String,
+    val providerReady: String,
+    val chosenDate: String,
+    val weekNumbersHeading: String,
+    val weekNumbersHint: String,
+    val vacationStart: String,
+    val initialHeading: String,
+    val initialHint: String,
+    val q4Deadline: String,
+    val autoOpenHeading: String,
+    val autoOpenHint: String,
+    val open: String,
+    val close: String,
+    val localizationHeading: String,
+    val localizationHint: String,
+    val germanCaption: String,
+    val basicsHeading: String,
+    val basicsHint: String,
+    val label: String,
+    val helperText: String,
+    val placeholder: String,
+    val tooltipText: String,
+    val statesHeading: String,
+    val statesHint: String,
+    val readOnly: String,
+    val disabled: String,
+    val rangeHeading: String,
+    val rangeHint: String,
+    val departure: String,
+    val returnDate: String,
+    val rangeReadout: (String, String) -> String,
+    val individualHeading: String,
+    val individualHint: String,
+    val year: String,
+    val month: String,
+    val day: String,
+    val selectedDate: String,
+    val formatHeading: String,
+    val formatHint: String,
+    val formatHelper: String,
+    val stylesHeading: String,
+    val stylesHint: String,
+    val customFunctionsHeading: String,
+    val customFunctionsHint: String,
+    val selectDate: String,
+    val isoHelper: String,
+    val inputText: String,
+    val customFormatsHeading: String,
+    val customFormatsHint: String,
+    val flexibleHelper: String,
+    val localeHeading: String,
+    val localeHint: String,
+    val finnishHelper: String,
+)
+
+private val english: DatePickerTexts =
+    DatePickerTexts(
+        basicHeading = "Basic usage",
+        basicHint = "value is a YYYY-MM-DD string; the clear button empties it and an unparsable date fires " +
+            "unparsable-change.",
+        startDate = "Start date",
+        basicHelper = "Type a date or pick one from the calendar",
+        empty = "(empty)",
+        eventStream = "Event stream",
+        validationHeading = "Validation",
+        validationHint = "min / max and isDateDisabled decide which dates can be picked; the validated event " +
+            "sets errorMessage from the value. Weekends and the next two days (office closed) are blocked.",
+        appointmentDate = "Appointment date",
+        businessDayHelper = "Must be a business day within 60 days from today",
+        errorPrefix = "Error message: ",
+        none = "(none)",
+        badFormat = "Invalid date format",
+        required = "Field is required",
+        tooEarly = "Too early, choose another date",
+        tooLate = "Too late, choose another date",
+        closed = "The office is closed, choose another date",
+        validate = "Validate",
+        customHeading = "Custom validation",
+        customHint = "The docs example uses a Binder validator to allow weekdays only; this page performs the " +
+            "same check on validate() and writes the result back to errorMessage.",
+        meetingDate = "Meeting date",
+        weekdaysOnly = "Mondays – Fridays only",
+        selectWeekday = "Select a weekday",
+        metadataHeading = "Configuring individual dates",
+        metadataHint = "dateMetadataProvider answers whole month ranges at once: disabled blocks a date and " +
+            "part adds a custom part name (here limited for almost-full days, styled with ::part(limited) from " +
+            "the component theme). The data is simulated locally, there is no backend call.",
+        almostFullHelper = "Highlighted dates are almost full",
+        providerReady = "Provider ready (answers whole months)",
+        chosenDate = "Chosen date: ",
+        weekNumbersHeading = "Week numbers",
+        weekNumbersHint = "showWeekNumbers shows ISO week numbers; it only works when i18n.firstDayOfWeek is " +
+            "1 (Monday).",
+        vacationStart = "Vacation start date",
+        initialHeading = "Initial position",
+        initialHint = "initialPosition decides which day the calendar opens on when there is no value; here " +
+            "it points at the last day of the current year.",
+        q4Deadline = "Q4 deadline",
+        autoOpenHeading = "Auto open",
+        autoOpenHint = "autoOpenDisabled stops the calendar from opening on focus; the dropdown can still be " +
+            "opened and closed from outside.",
+        open = "Open",
+        close = "Close",
+        localizationHeading = "Internationalization",
+        localizationHint = "i18n overrides the month names, weekdays and the today / cancel buttons; only the " +
+            "changed fields are given, the rest is merged with the defaults.",
+        germanCaption = "German (Deutsch)",
+        basicsHeading = "Basic features",
+        basicsHint = "helperText and placeholder guide the input, clearButtonVisible adds the clear button; " +
+            "the prefix slot holds an icon and the tooltip slot a hover description.",
+        label = "Label",
+        helperText = "Helper text",
+        placeholder = "Placeholder",
+        tooltipText = "Tooltip text",
+        statesHeading = "Read-only and disabled",
+        statesHint = "readonly allows focus and copying but no edits; disabled turns off all interaction.",
+        readOnly = "Read-only",
+        disabled = "Disabled",
+        rangeHeading = "Date range",
+        rangeHint = "The two pickers constrain each other: the return date cannot precede the departure date " +
+            "and the departure date cannot follow the return date.",
+        departure = "Departure date",
+        returnDate = "Return date",
+        rangeReadout = { departure, ret -> "Departure: $departure · Return: $ret" },
+        individualHeading = "Individual input fields",
+        individualHint = "The docs example replaces the calendar with three combo boxes: the year and month " +
+            "decide how many days exist and the day options are rebuilt accordingly.",
+        year = "Year",
+        month = "Month",
+        day = "Day",
+        selectedDate = "Selected date: ",
+        formatHeading = "Show the date format",
+        formatHint = "Put the expected format in the placeholder and the helper text so the user does not " +
+            "have to guess how to type.",
+        formatHelper = "Format: DD/MM/YYYY",
+        stylesHeading = "Style variants",
+        stylesHint = "align-right aligns the text to the trailing edge, small shrinks the field and " +
+            "helper-above-field moves the helper text above the input.",
+        customFunctionsHeading = "Custom format functions",
+        customFunctionsHint = "i18n.formatDate / i18n.parseDate own the text-to-date conversion; this page " +
+            "re-implements ISO 8601 in Kotlin, equivalent to the date-fns version in the docs.",
+        selectDate = "Select a date:",
+        isoHelper = "Date picker configured to use ISO 8601 format",
+        inputText = "Input text: ",
+        customFormatsHeading = "Multiple input formats",
+        customFormatsHint = "The Flow example (date-picker-custom-format) configures one display format and " +
+            "several parse formats; the web component has a single parseDate, so this function tries " +
+            "yyyy-MM-dd, MM/dd/yyyy and dd.MM.yyyy in turn while the display stays yyyy-MM-dd.",
+        flexibleHelper = "Type 2026-10-25, 10/25/2026 or 25.10.2026",
+        localeHeading = "Locale",
+        localeHint = "The Flow example (date-picker-locale) switches to the Finnish locale; the web component " +
+            "has no Locale property, so this page reproduces the effect with Finnish month and weekday names " +
+            "plus the d.M.yyyy format.",
+        finnishHelper = "Date picker configured to use Finnish date format",
+    )
+
+private val chinese: DatePickerTexts =
+    DatePickerTexts(
+        basicHeading = "基本用法",
+        basicHint = "value 是 YYYY-MM-DD 字符串；清空按钮把值置为空，输入非法日期触发 unparsable-change。",
+        startDate = "开始日期",
+        basicHelper = "可以直接输入，也可以从日历选择",
+        empty = "（空）",
+        eventStream = "事件流",
+        validationHeading = "校验",
+        validationHint = "min / max 与 isDateDisabled 共同决定可选日期；validated 事件里按值设置 errorMessage，" +
+            "周末和最近两天（停业）都不可选。",
+        appointmentDate = "预约日期",
+        businessDayHelper = "必须是今天起 60 天内的工作日",
+        errorPrefix = "错误信息：",
+        none = "（无）",
+        badFormat = "日期格式不正确",
+        required = "此项为必填项",
+        tooEarly = "日期过早，请另选一天",
+        tooLate = "日期过晚，请另选一天",
+        closed = "办公室不开放，请另选一天",
+        validate = "校验",
+        customHeading = "自定义校验",
+        customHint = "文档示例用 Binder 的验证器限制工作日；这里在同一次 validate() 里做同样的判断，结果写回 errorMessage。",
+        meetingDate = "会议日期",
+        weekdaysOnly = "仅限周一至周五",
+        selectWeekday = "请选择工作日",
+        metadataHeading = "单个日期的配置",
+        metadataHint = "dateMetadataProvider 按整个月的范围批量返回元数据：disabled 关闭日期，part 给日期加上自定义 " +
+            "part 名（示例里满额日期是 limited，需要用 ::part(limited) 在组件内部主题里着色）。数据在本地模拟，没有后端请求。",
+        almostFullHelper = "高亮的日期接近满额",
+        providerReady = "provider 已就绪（按月批量返回）",
+        chosenDate = "所选日期：",
+        weekNumbersHeading = "周数",
+        weekNumbersHint = "showWeekNumbers 显示 ISO 周数，i18n.firstDayOfWeek 必须是 1（周一）才会生效。",
+        vacationStart = "休假开始日期",
+        initialHeading = "初始月份",
+        initialHint = "initialPosition 决定没有值时日历打开到哪一天：这里定位到本年的最后一天。",
+        q4Deadline = "第四季度截止日期",
+        autoOpenHeading = "自动展开",
+        autoOpenHint = "autoOpenDisabled 关闭「聚焦即弹出日历」，下拉仍可以用按钮从外部打开和关闭。",
+        open = "打开",
+        close = "关闭",
+        localizationHeading = "本地化",
+        localizationHint = "i18n 覆盖月份、星期、今天 / 取消按钮等文案；只给出需要改的字段，其余与默认值合并。",
+        germanCaption = "德语（Deutsch）",
+        basicsHeading = "基本特性",
+        basicsHint = "helperText 与 placeholder 提供输入提示，clearButtonVisible 加清空按钮；prefix 插槽放图标，" +
+            "tooltip 插槽提供悬停说明。",
+        label = "标签",
+        helperText = "辅助文本",
+        placeholder = "占位符",
+        tooltipText = "提示文本",
+        statesHeading = "只读与禁用",
+        statesHint = "readonly 可以聚焦和复制但不能修改；disabled 关闭全部交互。",
+        readOnly = "只读",
+        disabled = "禁用",
+        rangeHeading = "日期区间",
+        rangeHint = "两个选择器互相约束：返回日期不早于出发日期，出发日期不晚于返回日期。",
+        departure = "出发日期",
+        returnDate = "返回日期",
+        rangeReadout = { departure, ret -> "出发：$departure · 返回：$ret" },
+        individualHeading = "分开的年月日字段",
+        individualHint = "文档示例用三个 combo-box 取代日历：年、月决定天数，日选项随之重建。浏览器没有日期选择能力时" +
+            "这是一种可访问的替代方案。",
+        year = "年",
+        month = "月",
+        day = "日",
+        selectedDate = "已选日期：",
+        formatHeading = "显示日期格式",
+        formatHint = "把期望的格式写进 placeholder 与 helperText，用户不必猜输入方式。",
+        formatHelper = "格式：DD/MM/YYYY",
+        stylesHeading = "样式变体",
+        stylesHint = "align-right 右对齐文本，small 缩小尺寸，helper-above-field 把辅助文本放到字段上方。",
+        customFunctionsHeading = "自定义格式化函数",
+        customFunctionsHint = "i18n.formatDate / i18n.parseDate 接管文本与日期的互转；这里用 Kotlin 重新实现了 ISO 8601，" +
+            "与文档中的 date-fns 版本等价。",
+        selectDate = "选择日期：",
+        isoHelper = "日期选择器使用 ISO 8601 格式",
+        inputText = "输入框文本：",
+        customFormatsHeading = "多种输入格式",
+        customFormatsHint = "Flow 示例（date-picker-custom-format）配置一个显示格式和多个解析格式；Web Component 只有一个" +
+            " parseDate，所以这里在同一个函数里依次尝试 yyyy-MM-dd、MM/dd/yyyy 和 dd.MM.yyyy，显示始终是 yyyy-MM-dd。",
+        flexibleHelper = "可输入 2026-10-25、10/25/2026 或 25.10.2026",
+        localeHeading = "区域设置",
+        localeHint = "Flow 示例（date-picker-locale）切换到芬兰语区域；浏览器端没有 Locale 属性，这里用 i18n 的" +
+            "芬兰语月份、星期与 d.M.yyyy 格式复现同样的效果。",
+        finnishHelper = "日期选择器使用芬兰语格式",
+    )
+
+private val datePickerTexts: Translations<DatePickerTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
+/** The message a validation example shows; the copy is chosen when the page is drawn. */
+private enum class DateMessage { NONE, BAD_FORMAT, REQUIRED, TOO_EARLY, TOO_LATE, CLOSED, WEEKDAY }
+
 internal class DatePickerPage : DemoPage() {
+    private val texts = Binder(datePickerTexts)
+
+    private val frame = PageFrame(datePickerEntry)
+
+    private val basicReadout = Readout("value = 2026-10-25")
+
+    private val validatedError = Readout("")
+
+    private val weekdayError = Readout("")
+
+    private val metadataReadout = Readout("")
+
+    private val individualReadout = Readout("")
+
+    private val rangeValue = Readout("")
+
+    private val customFunctionsText = Readout("")
+
+    private val validatedPicker = createDatePicker()
+
+    private val weekdayPicker = createDatePicker()
+
+    private val departurePicker = createDatePicker()
+
+    private val returnPicker = createDatePicker()
+
+    private val customFunctionsPicker = createDatePicker()
+
+    private val metadataPicker = createDatePicker()
+
+    private val currentYear = Date().getFullYear()
+
+    private val monthLabels =
+        listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        )
+
+    private val yearCombo = createComboBox()
+    private val monthCombo = createComboBox()
+    private val dayCombo = createComboBox()
+
+    private var basicValue: String? = null
+    private var validatedMessage: DateMessage? = null
+    private var weekdayMessage: DateMessage? = null
+    private var metadataValue: String? = null
+    private var selectedYear: Int? = null
+    private var selectedMonth: Int? = null
+    private var selectedDay: Int? = null
+    private var departureValue: String = ""
+    private var returnValue: String = ""
+    private var inputTextValue: String? = null
+
+    private fun message(copy: DatePickerTexts, which: DateMessage?): String =
+        when (which) {
+            null -> copy.none
+            DateMessage.NONE -> copy.none
+            DateMessage.BAD_FORMAT -> copy.badFormat
+            DateMessage.REQUIRED -> copy.required
+            DateMessage.TOO_EARLY -> copy.tooEarly
+            DateMessage.TOO_LATE -> copy.tooLate
+            DateMessage.CLOSED -> copy.closed
+            DateMessage.WEEKDAY -> copy.selectWeekday
+        }
+
+    private fun showReadouts() {
+        val copy = texts.current
+        basicReadout.set("value = ", (basicValue ?: "2026-10-25").ifEmpty { copy.empty })
+        validatedError.set(copy.errorPrefix, message(copy, validatedMessage))
+        weekdayError.set(copy.errorPrefix, message(copy, weekdayMessage))
+        metadataReadout.set(
+            if (metadataValue == null) copy.providerReady else copy.chosenDate + metadataValue,
+        )
+        individualReadout.set(
+            copy.selectedDate,
+            if (selectedYear != null && selectedMonth != null && selectedDay != null) {
+                formatISODate(
+                    createDate(selectedYear!!.toDouble(), selectedMonth!!.toDouble(), selectedDay!!.toDouble()),
+                )
+            } else {
+                copy.empty
+            },
+        )
+        rangeValue.set(
+            copy.rangeReadout(
+                departureValue.ifEmpty { copy.empty },
+                returnValue.ifEmpty { copy.empty },
+            ),
+        )
+        customFunctionsText.set(copy.inputText, inputTextValue ?: customFunctionsPicker.value)
+    }
 
     init {
-        configureFrame(datePickerEntry)
+        frame.mount(this)
         registerVaadinIcons()
         val todayDate = todayAtMidnight()
 
         // --- 1. Basic usage (date-picker-basic.ts) -------------------------------------------------
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "value 是 YYYY-MM-DD 字符串；清空按钮把值置为空，输入非法日期触发 unparsable-change。",
-                    "value is a YYYY-MM-DD string; the clear button empties it and an unparsable date fires " +
-                        "unparsable-change.",
-                ),
-            )
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         val basicLog = EventLog(6)
-        val basicPicker =
-            createDatePicker {
-                label = tr("开始日期", "Start date")
-                value = "2026-10-25"
-                helperText = tr("可以直接输入，也可以从日历选择", "Type a date or pick one from the calendar")
-                clearButtonVisible = true
-            }
+        val basicPicker = createDatePicker()
+        texts.bind(basicPicker, { it.startDate }) { basicPicker.label = it }
+        texts.bind(basicPicker, { it.basicHelper }) { basicPicker.helperText = it }
+        basicPicker.value = "2026-10-25"
+        basicPicker.clearButtonVisible = true
         basicPicker.dataset["test"] = "date-picker-basic"
-        // The end-to-end test locates this read-out by the `value =` prefix; keep it the only one.
-        val basicValue = Readout("value = 2026-10-25")
         basicPicker.listen(DatePickerEvents.valueChanged) {
-            basicValue.set("value = ", basicPicker.value.ifEmpty { tr("（空）", "(empty)") })
+            basicValue = basicPicker.value
+            showReadouts()
             basicLog.add("value-changed · ${basicPicker.value}")
         }
         basicPicker.listen(DatePickerEvents.unparsableChange) { basicLog.add("unparsable-change") }
+        val eventCaption = HtmlTagName.p()
+        texts.bind(eventCaption, { it.eventStream }) { eventCaption.textContent = it }
         basic.body.append(
-            exampleBox(null, kitCol(basicPicker, basicValue.root)),
-            exampleBox(tr("事件流", "Event stream"), basicLog.root),
+            exampleBox(null, kitCol(basicPicker, basicReadout.root)),
+            exampleBox(null, kitCol(eventCaption, basicLog.root)),
         )
         body.append(basic.root)
 
         // --- 2. Validation (date-picker-validation.ts) ---------------------------------------------
-        val validation =
-            sectionBlock(
-                tr("校验", "Validation"),
-                tr(
-                    "min / max 与 isDateDisabled 共同决定可选日期；validated 事件里按值设置 errorMessage，" +
-                        "周末和最近两天（停业）都不可选。",
-                    "min / max and isDateDisabled decide which dates can be picked; the validated event sets " +
-                        "errorMessage from the value. Weekends and the next two days (office closed) are blocked.",
-                ),
-            )
+        val validation = sectionBlock()
+        texts.bind(validation.heading) { it.validationHeading }
+        texts.bind(validation.hint) { it.validationHint }
         val closedDates = listOf(formatISODate(addDays(todayDate, 3)), formatISODate(addDays(todayDate, 4)))
         fun officeClosed(iso: String): Boolean {
             val date = parseDate(iso) ?: return false
             return isWeekend(date) || iso == closedDates[0] || iso == closedDates[1]
         }
-        val validatedPicker =
-            createDatePicker {
-                label = tr("预约日期", "Appointment date")
-                helperText = tr("必须是今天起 60 天内的工作日", "Must be a business day within 60 days from today")
-                required = true
-                min = formatISODate(todayDate)
-                max = formatISODate(addDays(todayDate, 60))
-                isDateDisabled = { parts -> officeClosed(isoOf(parts)) }
-            }
-        val validatedError = Readout(tr("错误信息：（无）", "Error message: (none)"))
+        texts.bind(validatedPicker, { it.appointmentDate }) { validatedPicker.label = it }
+        texts.bind(validatedPicker, { it.businessDayHelper }) { validatedPicker.helperText = it }
+        validatedPicker.required = true
+        validatedPicker.min = formatISODate(todayDate)
+        validatedPicker.max = formatISODate(addDays(todayDate, 60))
+        validatedPicker.isDateDisabled = { parts -> officeClosed(isoOf(parts)) }
         validatedPicker.listen(DatePickerEvents.validated) {
             val value = validatedPicker.value
-            validatedPicker.errorMessage =
+            val which =
                 when {
-                    value.isEmpty() && rawInputText(validatedPicker).isNotEmpty() ->
-                        tr("日期格式不正确", "Invalid date format")
-                    value.isEmpty() -> tr("此项为必填项", "Field is required")
-                    value < validatedPicker.min -> tr("日期过早，请另选一天", "Too early, choose another date")
-                    value > validatedPicker.max -> tr("日期过晚，请另选一天", "Too late, choose another date")
-                    officeClosed(value) -> tr("办公室不开放，请另选一天", "The office is closed, choose another date")
-                    else -> ""
+                    value.isEmpty() && rawInputText(validatedPicker).isNotEmpty() -> DateMessage.BAD_FORMAT
+                    value.isEmpty() -> DateMessage.REQUIRED
+                    value < validatedPicker.min -> DateMessage.TOO_EARLY
+                    value > validatedPicker.max -> DateMessage.TOO_LATE
+                    officeClosed(value) -> DateMessage.CLOSED
+                    else -> DateMessage.NONE
                 }
-            validatedError.set(
-                tr("错误信息：", "Error message: "),
-                validatedPicker.errorMessage.ifEmpty { tr("（无）", "(none)") },
-            )
+            validatedMessage = which
+            validatedPicker.errorMessage = message(texts.current, which).takeIf { which != DateMessage.NONE } ?: ""
+            showReadouts()
         }
-        val validateDate =
-            createButton { textContent = tr("校验", "Validate") }.apply {
-                clickEvent.addHandler { validatedPicker.validate() }
-            }
+        val validateDate = createButton()
+        texts.bind(validateDate) { it.validate }
+        validateDate.clickEvent.addHandler { validatedPicker.validate() }
         validation.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    validatedPicker,
-                    kitRow(validateDate, validatedError.root),
-                ),
-            ),
+            exampleBox(null, kitCol(validatedPicker, kitRow(validateDate, validatedError.root))),
         )
         body.append(validation.root)
 
         // --- 3. Custom validation (date-picker-custom-validation.ts) --------------------------------
-        val weekday =
-            sectionBlock(
-                tr("自定义校验", "Custom validation"),
-                tr(
-                    "文档示例用 Binder 的验证器限制工作日；这里在同一次 validate() 里做同样的判断，结果写回 " +
-                        "errorMessage。",
-                    "The docs example uses a Binder validator to allow weekdays only; this page performs the same " +
-                        "check on validate() and writes the result back to errorMessage.",
-                ),
-            )
-        val weekdayPicker =
-            createDatePicker {
-                label = tr("会议日期", "Meeting date")
-                helperText = tr("仅限周一至周五", "Mondays – Fridays only")
-            }
-        val weekdayError = Readout(tr("错误信息：（无）", "Error message: (none)"))
+        val weekday = sectionBlock()
+        texts.bind(weekday.heading) { it.customHeading }
+        texts.bind(weekday.hint) { it.customHint }
+        texts.bind(weekdayPicker, { it.meetingDate }) { weekdayPicker.label = it }
+        texts.bind(weekdayPicker, { it.weekdaysOnly }) { weekdayPicker.helperText = it }
         weekdayPicker.listen(DatePickerEvents.validated) {
             val date = parseDate(weekdayPicker.value)
-            weekdayPicker.errorMessage =
+            val which =
                 when {
-                    weekdayPicker.value.isEmpty() && rawInputText(weekdayPicker).isNotEmpty() ->
-                        tr("日期格式不正确", "Invalid date format")
-                    weekdayPicker.value.isEmpty() -> tr("此项为必填项", "Field is required")
-                    date == null || isWeekend(date) -> tr("请选择工作日", "Select a weekday")
-                    else -> ""
+                    weekdayPicker.value.isEmpty() && rawInputText(weekdayPicker).isNotEmpty() -> DateMessage.BAD_FORMAT
+                    weekdayPicker.value.isEmpty() -> DateMessage.REQUIRED
+                    date == null || isWeekend(date) -> DateMessage.WEEKDAY
+                    else -> DateMessage.NONE
                 }
+            weekdayMessage = which
+            weekdayPicker.errorMessage = message(texts.current, which).takeIf { which != DateMessage.NONE } ?: ""
             // The component only renders errorMessage while `invalid` is set, like Binder does.
             weekdayPicker.invalid = weekdayPicker.errorMessage.isNotEmpty()
-            weekdayError.set(
-                tr("错误信息：", "Error message: "),
-                weekdayPicker.errorMessage.ifEmpty { tr("（无）", "(none)") },
-            )
+            showReadouts()
         }
+        val validateWeekday = createButton()
+        texts.bind(validateWeekday) { it.validate }
+        validateWeekday.clickEvent.addHandler { weekdayPicker.validate() }
         weekday.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    weekdayPicker,
-                    kitRow(createButton { textContent = tr("校验", "Validate") }.apply {
-                        clickEvent.addHandler { weekdayPicker.validate() }
-                    }, weekdayError.root),
-                ),
-            ),
+            exampleBox(null, kitCol(weekdayPicker, kitRow(validateWeekday, weekdayError.root))),
         )
         body.append(weekday.root)
 
         // --- 4. Date metadata (date-picker-date-metadata.ts) ----------------------------------------
-        val metadata =
-            sectionBlock(
-                tr("单个日期的配置", "Configuring individual dates"),
-                tr(
-                    "dateMetadataProvider 按整个月的范围批量返回元数据：disabled 关闭日期，part 给日期加上自定义 " +
-                        "part 名（示例里满额日期是 limited，需要用 ::part(limited) 在组件内部主题里着色）。" +
-                        "数据在本地模拟，没有后端请求。",
-                    "dateMetadataProvider answers whole month ranges at once: disabled blocks a date and part adds " +
-                        "a custom part name (here limited for almost-full days, styled with ::part(limited) from " +
-                        "the component theme). The data is simulated locally, there is no backend call.",
-                ),
-            )
+        val metadata = sectionBlock()
+        texts.bind(metadata.heading) { it.metadataHeading }
+        texts.bind(metadata.hint) { it.metadataHint }
         val metadataProvider: DatePickerDateMetadataProvider = { range ->
             val start = parseDate(range.start)
             val end = parseDate(range.end)
@@ -262,109 +594,66 @@ internal class DatePickerPage : DemoPage() {
                 DatePickerDateMetadataArrayOrPromise(entries.toTypedArray())
             }
         }
-        val metadataPicker =
-            createDatePicker {
-                label = tr("预约日期", "Appointment date")
-                helperText = tr("高亮的日期接近满额", "Highlighted dates are almost full")
-                dateMetadataProvider = metadataProvider
-            }
-        val metadataReadout = Readout(tr("provider 已就绪（按月批量返回）", "Provider ready (answers whole months)"))
+        texts.bind(metadataPicker, { it.appointmentDate }) { metadataPicker.label = it }
+        texts.bind(metadataPicker, { it.almostFullHelper }) { metadataPicker.helperText = it }
+        metadataPicker.dateMetadataProvider = metadataProvider
         metadataPicker.listen(DatePickerEvents.valueChanged) {
-            metadataReadout.set(
-                tr("所选日期：", "Chosen date: "),
-                metadataPicker.value.ifEmpty { tr("（空）", "(empty)") },
-            )
+            metadataValue = metadataPicker.value
+            showReadouts()
         }
         metadata.body.append(exampleBox(null, kitCol(metadataPicker, metadataReadout.root)))
         body.append(metadata.root)
 
         // --- 5. Week numbers (date-picker-week-numbers.ts) ------------------------------------------
-        val weekNumbers =
-            sectionBlock(
-                tr("周数", "Week numbers"),
-                tr(
-                    "showWeekNumbers 显示 ISO 周数，i18n.firstDayOfWeek 必须是 1（周一）才会生效。",
-                    "showWeekNumbers shows ISO week numbers; it only works when i18n.firstDayOfWeek is 1 (Monday).",
-                ),
-            )
-        val weekPicker =
-            createDatePicker {
-                label = tr("休假开始日期", "Vacation start date")
-                showWeekNumbers = true
-                i18n = unsafeJso<DatePickerI18n> { firstDayOfWeek = 1.0 }
-            }
+        val weekNumbers = sectionBlock()
+        texts.bind(weekNumbers.heading) { it.weekNumbersHeading }
+        texts.bind(weekNumbers.hint) { it.weekNumbersHint }
+        val weekPicker = createDatePicker()
+        texts.bind(weekPicker, { it.vacationStart }) { weekPicker.label = it }
+        weekPicker.showWeekNumbers = true
+        weekPicker.i18n = unsafeJso<DatePickerI18n> { firstDayOfWeek = 1.0 }
         weekNumbers.body.append(exampleBox(null, weekPicker))
         body.append(weekNumbers.root)
 
         // --- 6. Initial position (date-picker-initial-position.ts) ----------------------------------
-        val initial =
-            sectionBlock(
-                tr("初始月份", "Initial position"),
-                tr(
-                    "initialPosition 决定没有值时日历打开到哪一天：这里定位到本年的最后一天。",
-                    "initialPosition decides which day the calendar opens on when there is no value; here it " +
-                        "points at the last day of the current year.",
-                ),
-            )
+        val initial = sectionBlock()
+        texts.bind(initial.heading) { it.initialHeading }
+        texts.bind(initial.hint) { it.initialHint }
         val initialIso = formatISODate(lastDayOfYear(todayDate))
-        val initialPicker =
-            createDatePicker {
-                label = tr("第四季度截止日期", "Q4 deadline")
-                initialPosition = initialIso
-            }
+        val initialPicker = createDatePicker()
+        texts.bind(initialPicker, { it.q4Deadline }) { initialPicker.label = it }
+        initialPicker.initialPosition = initialIso
         initial.body.append(exampleBox(null, kitCol(initialPicker, Readout("initialPosition = $initialIso").root)))
         body.append(initial.root)
 
         // --- 7. Auto open (date-picker-auto-open.ts) ------------------------------------------------
-        val autoOpen =
-            sectionBlock(
-                tr("自动展开", "Auto open"),
-                tr(
-                    "autoOpenDisabled 关闭「聚焦即弹出日历」，下拉仍可以用按钮从外部打开和关闭。",
-                    "autoOpenDisabled stops the calendar from opening on focus; the dropdown can still be opened " +
-                        "and closed from outside.",
-                ),
-            )
-        val autoPicker =
-            createDatePicker {
-                label = tr("开始日期", "Start date")
-                autoOpenDisabled = true
-                value = "2026-01-15"
-            }
+        val autoOpen = sectionBlock()
+        texts.bind(autoOpen.heading) { it.autoOpenHeading }
+        texts.bind(autoOpen.hint) { it.autoOpenHint }
+        val autoPicker = createDatePicker()
+        texts.bind(autoPicker, { it.startDate }) { autoPicker.label = it }
+        autoPicker.autoOpenDisabled = true
+        autoPicker.value = "2026-01-15"
         autoPicker.dataset["test"] = "date-picker-manual"
         val autoOpened = Readout("opened = false")
         autoPicker.listen(DatePickerEvents.openedChanged) {
             autoOpened.set("opened = ${autoPicker.opened}")
         }
+        val openButton = createButton().addTheme("tertiary")
+        texts.bind(openButton) { it.open }
+        openButton.clickEvent.addHandler { autoPicker.open() }
+        val closeButton = createButton().addTheme("tertiary")
+        texts.bind(closeButton) { it.close }
+        closeButton.clickEvent.addHandler { autoPicker.close() }
         autoOpen.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    autoPicker,
-                    kitRow(
-                        createButton { textContent = tr("打开", "Open") }.addTheme("tertiary").apply {
-                            clickEvent.addHandler { autoPicker.open() }
-                        },
-                        createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary").apply {
-                            clickEvent.addHandler { autoPicker.close() }
-                        },
-                        autoOpened.root,
-                    ),
-                ),
-            ),
+            exampleBox(null, kitCol(autoPicker, kitRow(openButton, closeButton, autoOpened.root))),
         )
         body.append(autoOpen.root)
 
         // --- 8. Internationalization (date-picker-internationalization.ts) --------------------------
-        val localization =
-            sectionBlock(
-                tr("本地化", "Internationalization"),
-                tr(
-                    "i18n 覆盖月份、星期、今天 / 取消按钮等文案；只给出需要改的字段，其余与默认值合并。",
-                    "i18n overrides the month names, weekdays and the today / cancel buttons; only the changed " +
-                        "fields are given, the rest is merged with the defaults.",
-                ),
-            )
+        val localization = sectionBlock()
+        texts.bind(localization.heading) { it.localizationHeading }
+        texts.bind(localization.hint) { it.localizationHint }
         val germanPicker =
             createDatePicker {
                 label = "Sitzungsdatum"
@@ -392,77 +681,55 @@ internal class DatePickerPage : DemoPage() {
                         cancel = "Abbrechen"
                     }
             }
-        localization.body.append(exampleBox(tr("德语（Deutsch）", "German (Deutsch)"), germanPicker))
+        val germanCaption = HtmlTagName.p()
+        texts.bind(germanCaption, { it.germanCaption }) { germanCaption.textContent = it }
+        localization.body.append(exampleBox(null, kitCol(germanCaption, germanPicker)))
         body.append(localization.root)
 
         // --- 9. Basic features (date-picker-basic-features.ts) --------------------------------------
-        val basics =
-            sectionBlock(
-                tr("基本特性", "Basic features"),
-                tr(
-                    "helperText 与 placeholder 提供输入提示，clearButtonVisible 加清空按钮；prefix 插槽放图标，" +
-                        "tooltip 插槽提供悬停说明。",
-                    "helperText and placeholder guide the input, clearButtonVisible adds the clear button; the " +
-                        "prefix slot holds an icon and the tooltip slot a hover description.",
-                ),
-            )
-        val featuredPicker =
-            createDatePicker {
-                label = tr("标签", "Label")
-                helperText = tr("辅助文本", "Helper text")
-                placeholder = tr("占位符", "Placeholder")
-                clearButtonVisible = true
-            }
-        featuredPicker.append(createTooltip { text = tr("提示文本", "Tooltip text") }.apply { slot = "tooltip" })
+        val basics = sectionBlock()
+        texts.bind(basics.heading) { it.basicsHeading }
+        texts.bind(basics.hint) { it.basicsHint }
+        val featuredPicker = createDatePicker()
+        texts.bind(featuredPicker, { it.label }) { featuredPicker.label = it }
+        texts.bind(featuredPicker, { it.helperText }) { featuredPicker.helperText = it }
+        texts.bind(featuredPicker, { it.placeholder }) { featuredPicker.placeholder = it }
+        featuredPicker.clearButtonVisible = true
+        val tooltip = createTooltip { slot = "tooltip" }
+        texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
+        featuredPicker.append(tooltip)
         featuredPicker.append(createIcon { icon = "vaadin:vaadin-h" }.apply { slot = "prefix" })
         basics.body.append(exampleBox(null, featuredPicker))
         body.append(basics.root)
 
         // --- 10. Read-only and disabled (date-picker-readonly-and-disabled.ts) ----------------------
-        val states =
-            sectionBlock(
-                tr("只读与禁用", "Read-only and disabled"),
-                tr(
-                    "readonly 可以聚焦和复制但不能修改；disabled 关闭全部交互。",
-                    "readonly allows focus and copying but no edits; disabled turns off all interaction.",
-                ),
-            )
-        states.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createDatePicker {
-                        label = tr("只读", "Read-only")
-                        value = "2020-06-12"
-                        readonly = true
-                    },
-                    createDatePicker { label = tr("禁用", "Disabled") }.apply { disabled = true },
-                ),
-            ),
-        )
+        val states = sectionBlock()
+        texts.bind(states.heading) { it.statesHeading }
+        texts.bind(states.hint) { it.statesHint }
+        val readOnlyPicker = createDatePicker()
+        texts.bind(readOnlyPicker, { it.readOnly }) { readOnlyPicker.label = it }
+        readOnlyPicker.value = "2020-06-12"
+        readOnlyPicker.readonly = true
+        val disabledPicker = createDatePicker()
+        texts.bind(disabledPicker, { it.disabled }) { disabledPicker.label = it }
+        disabledPicker.disabled = true
+        states.body.append(exampleBox(null, kitRow(readOnlyPicker, disabledPicker)))
         body.append(states.root)
 
         // --- 11. Date range (date-picker-date-range.ts) ---------------------------------------------
-        val range =
-            sectionBlock(
-                tr("日期区间", "Date range"),
-                tr(
-                    "两个选择器互相约束：返回日期不早于出发日期，出发日期不晚于返回日期。",
-                    "The two pickers constrain each other: the return date cannot precede the departure date and " +
-                        "the departure date cannot follow the return date.",
-                ),
-            )
-        val departurePicker = createDatePicker { label = tr("出发日期", "Departure date") }
-        val returnPicker = createDatePicker { label = tr("返回日期", "Return date") }
-        val rangeValue = Readout(tr("出发：（空）· 返回：（空）", "Departure: (empty) · Return: (empty)"))
+        val range = sectionBlock()
+        texts.bind(range.heading) { it.rangeHeading }
+        texts.bind(range.hint) { it.rangeHint }
+        texts.bind(departurePicker, { it.departure }) { departurePicker.label = it }
+        texts.bind(returnPicker, { it.returnDate }) { returnPicker.label = it }
+        departureValue = departurePicker.value
+        returnValue = returnPicker.value
         fun syncRange() {
             departurePicker.max = returnPicker.value
             returnPicker.min = departurePicker.value
-            rangeValue.set(
-                tr("出发：${departurePicker.value.ifEmpty { "（空）" }} · 返回：${returnPicker.value.ifEmpty { "（空）" }}",
-                    "Departure: ${departurePicker.value.ifEmpty { "(empty)" }} · " +
-                        "Return: ${returnPicker.value.ifEmpty { "(empty)" }}"),
-            )
+            departureValue = departurePicker.value
+            returnValue = returnPicker.value
+            showReadouts()
         }
         departurePicker.listen(DatePickerEvents.valueChanged) { syncRange() }
         returnPicker.listen(DatePickerEvents.valueChanged) { syncRange() }
@@ -470,66 +737,20 @@ internal class DatePickerPage : DemoPage() {
         body.append(range.root)
 
         // --- 12. Individual input fields (date-picker-individual-input-fields.ts) -------------------
-        val individual =
-            sectionBlock(
-                tr("分开的年月日字段", "Individual input fields"),
-                tr(
-                    "文档示例用三个 combo-box 取代日历：年、月决定天数，日选项随之重建。浏览器没有日期选择能力时" +
-                        "这是一种可访问的替代方案。",
-                    "The docs example replaces the calendar with three combo boxes: the year and month decide how " +
-                        "many days exist and the day options are rebuilt accordingly.",
-                ),
-            )
-        val currentYear = Date().getFullYear()
-        val monthLabels =
-            listOf(
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-            )
-        var selectedYear: Int? = null
-        var selectedMonth: Int? = null
-        var selectedDay: Int? = null
-        val yearCombo =
-            createComboBox {
-                label = tr("年", "Year")
-                items = numberItems((currentYear - 99..currentYear).toList())
-            }.apply { style.setProperty("width", "7em") }
-        val monthCombo =
-            createComboBox {
-                label = tr("月", "Month")
-                items = jsArray<JsAny>(monthLabels.joinToString(",", "[", "]") { "\"$it\"" })
-                disabled = true
-            }.apply { style.setProperty("width", "10em") }
-        val dayCombo =
-            createComboBox {
-                label = tr("日", "Day")
-                items = numberItems(emptyList())
-                disabled = true
-            }.apply { style.setProperty("width", "6em") }
-        val individualValue = Readout(tr("已选日期：（空）", "Selected date: (empty)"))
-        fun syncIndividual() {
-            val year = selectedYear
-            val month = selectedMonth
-            val day = selectedDay
-            individualValue.set(
-                tr("已选日期：", "Selected date: "),
-                if (year != null && month != null && day != null) {
-                    formatISODate(createDate(year.toDouble(), month.toDouble(), day.toDouble()))
-                } else {
-                    tr("（空）", "(empty)")
-                },
-            )
-        }
+        val individual = sectionBlock()
+        texts.bind(individual.heading) { it.individualHeading }
+        texts.bind(individual.hint) { it.individualHint }
+        texts.bind(yearCombo, { it.year }) { yearCombo.label = it }
+        yearCombo.items = numberItems((currentYear - 99..currentYear).toList())
+        yearCombo.style.setProperty("width", "7em")
+        texts.bind(monthCombo, { it.month }) { monthCombo.label = it }
+        monthCombo.items = jsArray<JsAny>(monthLabels.joinToString(",", "[", "]") { "\"$it\"" })
+        monthCombo.disabled = true
+        monthCombo.style.setProperty("width", "10em")
+        texts.bind(dayCombo, { it.day }) { dayCombo.label = it }
+        dayCombo.items = numberItems(emptyList())
+        dayCombo.disabled = true
+        dayCombo.style.setProperty("width", "6em")
         fun refreshDays() {
             val year = selectedYear
             val month = selectedMonth
@@ -545,153 +766,117 @@ internal class DatePickerPage : DemoPage() {
             monthCombo.disabled = selectedYear == null
             selectedMonth = null
             refreshDays()
-            syncIndividual()
+            showReadouts()
         }
         monthCombo.listen(ComboBoxEvents.selectedItemChanged) {
             selectedMonth = monthLabels.indexOf(joinValues(monthCombo.selectedItem)).takeIf { it >= 0 }
             refreshDays()
-            syncIndividual()
+            showReadouts()
         }
         dayCombo.listen(ComboBoxEvents.selectedItemChanged) {
             selectedDay = joinValues(dayCombo.selectedItem).toIntOrNull()
-            syncIndividual()
+            showReadouts()
         }
-        individual.body.append(exampleBox(null, kitCol(kitRow(yearCombo, monthCombo, dayCombo), individualValue.root)))
+        individual.body.append(exampleBox(null, kitCol(kitRow(yearCombo, monthCombo, dayCombo), individualReadout.root)))
         body.append(individual.root)
 
         // --- 13. Show the date format (date-picker-date-format-indicator.ts) -------------------------
-        val formatHint =
-            sectionBlock(
-                tr("显示日期格式", "Show the date format"),
-                tr(
-                    "把期望的格式写进 placeholder 与 helperText，用户不必猜输入方式。",
-                    "Put the expected format in the placeholder and the helper text so the user does not have to " +
-                        "guess how to type.",
-                ),
-            )
-        formatHint.body.append(
-            exampleBox(
-                null,
-                createDatePicker {
-                    label = tr("开始日期", "Start date")
-                    placeholder = "DD/MM/YYYY"
-                    helperText = tr("格式：DD/MM/YYYY", "Format: DD/MM/YYYY")
-                },
-            ),
-        )
+        val formatHint = sectionBlock()
+        texts.bind(formatHint.heading) { it.formatHeading }
+        texts.bind(formatHint.hint) { it.formatHint }
+        val formatPicker = createDatePicker()
+        texts.bind(formatPicker, { it.startDate }) { formatPicker.label = it }
+        texts.bind(formatPicker, { it.formatHelper }) { formatPicker.helperText = it }
+        formatPicker.placeholder = "DD/MM/YYYY"
+        formatHint.body.append(exampleBox(null, formatPicker))
         body.append(formatHint.root)
 
         // --- 14. Styles (date-picker-styles.ts) -----------------------------------------------------
-        val styles =
-            sectionBlock(
-                tr("样式变体", "Style variants"),
-                tr(
-                    "align-right 右对齐文本，small 缩小尺寸，helper-above-field 把辅助文本放到字段上方。",
-                    "align-right aligns the text to the trailing edge, small shrinks the field and " +
-                        "helper-above-field moves the helper text above the input.",
-                ),
-            )
-        styles.body.append(
-            exampleBox(
-                null,
-                createDatePicker {
-                    label = tr("标签", "Label")
-                    helperText = tr("辅助文本", "Helper text")
-                    value = "2020-06-12"
-                }.addTheme("align-right", "small", "helper-above-field"),
-            ),
-        )
+        val styles = sectionBlock()
+        texts.bind(styles.heading) { it.stylesHeading }
+        texts.bind(styles.hint) { it.stylesHint }
+        val styledPicker = createDatePicker()
+        texts.bind(styledPicker, { it.label }) { styledPicker.label = it }
+        texts.bind(styledPicker, { it.helperText }) { styledPicker.helperText = it }
+        styledPicker.value = "2020-06-12"
+        styledPicker.addTheme("align-right", "small", "helper-above-field")
+        styles.body.append(exampleBox(null, styledPicker))
         body.append(styles.root)
 
         // --- 15. Custom format functions (date-formats.adoc, custom-functions.ts) -------------------
-        val customFunctions =
-            sectionBlock(
-                tr("自定义格式化函数", "Custom format functions"),
-                tr(
-                    "i18n.formatDate / i18n.parseDate 接管文本与日期的互转；这里用 Kotlin 重新实现了 ISO 8601，" +
-                        "与文档中的 date-fns 版本等价。",
-                    "i18n.formatDate / i18n.parseDate own the text-to-date conversion; this page re-implements " +
-                        "ISO 8601 in Kotlin, equivalent to the date-fns version in the docs.",
-                ),
-            )
-        val customFunctionsPicker =
-            createDatePicker {
-                label = tr("选择日期：", "Select a date:")
-                value = formatISODate(todayDate)
-                helperText = tr("日期选择器使用 ISO 8601 格式", "Date picker configured to use ISO 8601 format")
-                i18n =
-                    unsafeJso<DatePickerI18n> {
-                        formatDate = { parts -> isoOf(parts) }
-                        // Fully qualified: `parseDate` also names the property being assigned here.
-                        parseDate = { text -> io.github.shijianjs.ktjs.vaadin.datepicker.parseDate(text)?.let(::extractDateParts) }
-                    }
+        val customFunctions = sectionBlock()
+        texts.bind(customFunctions.heading) { it.customFunctionsHeading }
+        texts.bind(customFunctions.hint) { it.customFunctionsHint }
+        texts.bind(customFunctionsPicker, { it.selectDate }) { customFunctionsPicker.label = it }
+        texts.bind(customFunctionsPicker, { it.isoHelper }) { customFunctionsPicker.helperText = it }
+        customFunctionsPicker.value = formatISODate(todayDate)
+        customFunctionsPicker.i18n =
+            unsafeJso<DatePickerI18n> {
+                formatDate = { parts -> isoOf(parts) }
+                // Fully qualified: `parseDate` also names the property being assigned here.
+                parseDate = { text -> io.github.shijianjs.ktjs.vaadin.datepicker.parseDate(text)?.let(::extractDateParts) }
             }
-        val customFunctionsText = Readout(tr("输入框文本：", "Input text: "))
         customFunctionsPicker.listen(DatePickerEvents.valueChanged) {
-            customFunctionsText.set(tr("输入框文本：", "Input text: "), customFunctionsPicker.value)
+            inputTextValue = customFunctionsPicker.value
+            showReadouts()
         }
         customFunctions.body.append(exampleBox(null, kitCol(customFunctionsPicker, customFunctionsText.root)))
         body.append(customFunctions.root)
 
         // --- 16. Custom parse formats (date-formats.adoc, custom-format.ts, Flow only) -------------
-        val customFormats =
-            sectionBlock(
-                tr("多种输入格式", "Multiple input formats"),
-                tr(
-                    "Flow 示例（date-picker-custom-format）配置一个显示格式和多个解析格式；Web Component 只有一个" +
-                        " parseDate，所以这里在同一个函数里依次尝试 yyyy-MM-dd、MM/dd/yyyy 和 dd.MM.yyyy，" +
-                        "显示始终是 yyyy-MM-dd。",
-                    "The Flow example (date-picker-custom-format) configures one display format and several parse " +
-                        "formats; the web component has a single parseDate, so this function tries yyyy-MM-dd, " +
-                        "MM/dd/yyyy and dd.MM.yyyy in turn while the display stays yyyy-MM-dd.",
-                ),
-            )
-        val customFormatsPicker =
-            createDatePicker {
-                label = tr("选择日期：", "Select a date:")
-                value = formatISODate(todayDate)
-                helperText = tr("可输入 2026-10-25、10/25/2026 或 25.10.2026", "Type 2026-10-25, 10/25/2026 or 25.10.2026")
-                i18n =
-                    unsafeJso<DatePickerI18n> {
-                        formatDate = { parts -> isoOf(parts) }
-                        parseDate = { text -> parseFlexibleDate(text) }
-                    }
+        val customFormats = sectionBlock()
+        texts.bind(customFormats.heading) { it.customFormatsHeading }
+        texts.bind(customFormats.hint) { it.customFormatsHint }
+        val customFormatsPicker = createDatePicker()
+        texts.bind(customFormatsPicker, { it.selectDate }) { customFormatsPicker.label = it }
+        texts.bind(customFormatsPicker, { it.flexibleHelper }) { customFormatsPicker.helperText = it }
+        customFormatsPicker.value = formatISODate(todayDate)
+        customFormatsPicker.i18n =
+            unsafeJso<DatePickerI18n> {
+                formatDate = { parts -> isoOf(parts) }
+                parseDate = { text -> parseFlexibleDate(text) }
             }
         customFormats.body.append(exampleBox(null, customFormatsPicker))
         body.append(customFormats.root)
 
         // --- 17. Locale (date-formats.adoc, locale.ts, Flow only) -----------------------------------
-        val locale =
-            sectionBlock(
-                tr("区域设置", "Locale"),
-                tr(
-                    "Flow 示例（date-picker-locale）切换到芬兰语区域；浏览器端没有 Locale 属性，这里用 i18n 的" +
-                        "芬兰语月份、星期与 d.M.yyyy 格式复现同样的效果。",
-                    "The Flow example (date-picker-locale) switches to the Finnish locale; the web component has no " +
-                        "Locale property, so this page reproduces the effect with Finnish month and weekday names " +
-                        "plus the d.M.yyyy format.",
-                ),
-            )
-        val localePicker =
-            createDatePicker {
-                label = tr("选择日期：", "Select a date:")
-                value = formatISODate(todayDate)
-                helperText = tr("日期选择器使用芬兰语格式", "Date picker configured to use Finnish date format")
-                i18n =
-                    unsafeJso<DatePickerI18n> {
-                        monthNames = FINNISH_MONTHS
-                        weekdays = FINNISH_WEEKDAYS
-                        weekdaysShort = FINNISH_WEEKDAYS_SHORT
-                        firstDayOfWeek = 1.0
-                        today = "Tänään"
-                        cancel = "Peruuta"
-                        formatDate = { parts -> formatFinnishDate(parts) }
-                        parseDate = { text -> parseFinnishDate(text) }
-                    }
+        val locale = sectionBlock()
+        texts.bind(locale.heading) { it.localeHeading }
+        texts.bind(locale.hint) { it.localeHint }
+        val localePicker = createDatePicker()
+        texts.bind(localePicker, { it.selectDate }) { localePicker.label = it }
+        texts.bind(localePicker, { it.finnishHelper }) { localePicker.helperText = it }
+        localePicker.value = formatISODate(todayDate)
+        localePicker.i18n =
+            unsafeJso<DatePickerI18n> {
+                monthNames = FINNISH_MONTHS
+                weekdays = FINNISH_WEEKDAYS
+                weekdaysShort = FINNISH_WEEKDAYS_SHORT
+                firstDayOfWeek = 1.0
+                today = "Tänään"
+                cancel = "Peruuta"
+                formatDate = { parts -> formatFinnishDate(parts) }
+                parseDate = { text -> parseFinnishDate(text) }
             }
         locale.body.append(exampleBox(null, localePicker))
         body.append(locale.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = datePickerEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showReadouts()
+        validatedPicker.errorMessage =
+            message(texts.current, validatedMessage).takeIf { validatedMessage != DateMessage.NONE } ?: ""
+        if (weekdayPicker.invalid) {
+            weekdayPicker.errorMessage =
+                message(texts.current, weekdayMessage).takeIf { weekdayMessage != DateMessage.NONE } ?: ""
+        }
     }
 
     companion object : CustomElementReference<DatePickerPage>(DatePickerPage::class.js) {
@@ -753,4 +938,3 @@ private val FINNISH_WEEKDAYS: Array<String> =
     arrayOf("sunnuntai", "maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai")
 
 private val FINNISH_WEEKDAYS_SHORT: Array<String> = arrayOf("su", "ma", "ti", "ke", "to", "pe", "la")
-

@@ -95,14 +95,16 @@ internal val STATES = listOf("MA", "TX", "CO", "OR", "IL", "WA")
 internal fun people(count: Int = 6): List<Person> {
     val firstNames = listOf("Ada", "Grace", "Katherine", "Alan", "Barbara", "Edsger", "Margaret", "Dennis")
     val lastNames = listOf("Lovelace", "Hopper", "Johnson", "Turing", "Liskov", "Dijkstra", "Hamilton", "Ritchie")
+    // The professions are fixture data, like the names and the cities, so they stay in one language:
+    // a grid holds its items across a language switch and never re-reads the copy.
     val professions =
         listOf(
-            tr("软件工程师", "Software Engineer"),
-            tr("产品设计师", "Product Designer"),
-            tr("数据分析师", "Data Analyst"),
-            tr("前端开发", "Frontend Developer"),
-            tr("架构师", "Architect"),
-            tr("测试工程师", "Test Engineer"),
+            "Software Engineer",
+            "Product Designer",
+            "Data Analyst",
+            "Frontend Developer",
+            "Architect",
+            "Test Engineer",
         )
     return (0 until count).map { index ->
         Person(

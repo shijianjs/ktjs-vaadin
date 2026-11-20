@@ -1,52 +1,39 @@
 package demo.pages.data
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
+import web.events.Event
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
-import demo.tr
-import demo.ui.EventLog
-import demo.ui.Readout
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import web.cssom.Display
 import web.cssom.FlexWrap
-import web.cssom.Gap
 import web.cssom.px
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
-import io.github.shijianjs.ktjs.vaadin.badge.createBadge
-import io.github.shijianjs.ktjs.vaadin.button.createButton
-import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuEvents
 import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuItemData
-import io.github.shijianjs.ktjs.vaadin.contextmenu.createContextMenu
-import io.github.shijianjs.ktjs.vaadin.grid.ColumnRenderings
-import io.github.shijianjs.ktjs.vaadin.grid.GridColumnElement
 import io.github.shijianjs.ktjs.vaadin.grid.GridDropModes
 import io.github.shijianjs.ktjs.vaadin.grid.GridElement
-import io.github.shijianjs.ktjs.vaadin.grid.GridEventSections
 import io.github.shijianjs.ktjs.vaadin.grid.GridEvents
+import io.github.shijianjs.ktjs.vaadin.grid.GridColumnElement
 import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
-import io.github.shijianjs.ktjs.vaadin.grid.createGridSelectionColumn
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
-import io.github.shijianjs.ktjs.vaadin.textarea.createTextArea
+import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
-import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
-import web.dom.clickEvent
-import web.dom.contextMenuEvent
-import web.events.Event
-import web.events.addHandler
-import web.html.HTMLElement
-import web.pointer.PointerEvent
+
+/** A read-only field the details panel fills from the item. */
+private fun readOnlyField(): TextFieldElement = createTextField { readonly = true }
 
 // region Event detail readers
 
@@ -69,10 +56,12 @@ internal fun detailItems(event: Event, key: String): Array<JsAny> =
 
 /**
  * `<vaadin-demo-person-details>`: six read-only fields in the row details panel, wrapping into rows —
- * the same flex-wrap rule the docs use. The fields are rebuilt from the item on [show], because the row
- * details panel hands its content one item at a time.
+ * the same flex-wrap rule the docs use.
+ *
+ * The fields are created once and their labels are bound to the page's text table, so a language switch
+ * renames them in place; only the values come from the item, through [show].
  */
-internal class PersonDetails : CustomElementAdapter() {
+internal class PersonDetails : CustomElementAdapter(), GridTranslatable {
     private val fields = HtmlTagName.div().apply {
         inlineStyle.apply {
             display = Display.flex
@@ -81,20 +70,37 @@ internal class PersonDetails : CustomElementAdapter() {
         style.setProperty("gap", "8px")
     }
 
+    private val emailField: TextFieldElement = readOnlyField()
+    private val phoneField: TextFieldElement = readOnlyField()
+    private val streetField: TextFieldElement = readOnlyField()
+    private val zipField: TextFieldElement = readOnlyField()
+    private val cityField: TextFieldElement = readOnlyField()
+    private val stateField: TextFieldElement = readOnlyField()
+
     init {
+        gridTexts.bind(emailField, { it.fieldEmailAddress }) { emailField.label = it }
+        gridTexts.bind(phoneField, { it.fieldPhone }) { phoneField.label = it }
+        gridTexts.bind(streetField, { it.fieldStreet }) { streetField.label = it }
+        gridTexts.bind(zipField, { it.fieldZip }) { zipField.label = it }
+        gridTexts.bind(cityField, { it.fieldCity }) { cityField.label = it }
+        gridTexts.bind(stateField, { it.fieldState }) { stateField.label = it }
+        fields.append(emailField, phoneField, streetField, zipField, cityField, stateField)
         attachShadowRoot().append(fields)
+        gridTexts.apply(Langs.EN)
     }
 
     /** Fills the six fields from the grid's item. */
     fun show(item: JsAny?) {
-        fields.replaceChildren(
-            createTextField { label = tr("邮箱地址", "Email address"); value = itemPathText(item, "email"); readonly = true },
-            createTextField { label = tr("电话", "Phone number"); value = itemPathText(item, "address.phone"); readonly = true },
-            createTextField { label = tr("街道", "Street address"); value = itemPathText(item, "address.street"); readonly = true },
-            createTextField { label = tr("邮编", "ZIP code"); value = itemPathText(item, "address.zip"); readonly = true },
-            createTextField { label = tr("城市", "City"); value = itemPathText(item, "address.city"); readonly = true },
-            createTextField { label = tr("州", "State"); value = itemPathText(item, "address.state"); readonly = true },
-        )
+        emailField.value = itemPathText(item, "email")
+        phoneField.value = itemPathText(item, "address.phone")
+        streetField.value = itemPathText(item, "address.street")
+        zipField.value = itemPathText(item, "address.zip")
+        cityField.value = itemPathText(item, "address.city")
+        stateField.value = itemPathText(item, "address.state")
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        gridTexts.apply(lang)
     }
 
     companion object : CustomElementReference<PersonDetails>(PersonDetails::class.js) {
@@ -120,13 +126,11 @@ internal fun dragGrid(items: MutableList<Person>, onDragStart: (Int) -> Unit): G
     grid.style.setProperty("width", "20rem")
     grid.fill(items)
     grid.rowsDraggable = true
-    grid.append(
-        createGridColumn {
-            header = tr("全名", "Full name")
-            renderer = { root, _, model -> root.textContent = "${itemText(model.item, "firstName")} ${itemText(model.item, "lastName")}" }
-        },
-        createGridColumn { path = "profession" },
-    )
+    val nameColumn = createGridColumn {
+        renderer = { root, _, model -> root.textContent = "${itemText(model.item, "firstName")} ${itemText(model.item, "lastName")}" }
+    }
+    gridTexts.bind(nameColumn, { it.columnFullName }) { nameColumn.header = it }
+    grid.append(nameColumn, createGridColumn { path = "profession" })
     grid.listen(GridEvents.gridDragstart) { event ->
         grid.dropMode = GridDropModes.onGrid
         onDragStart(itemId(detailItems(event, "draggedItems").firstOrNull()))
@@ -139,11 +143,11 @@ internal fun themedGrid(theme: String): GridElement {
     val grid = newGrid("11rem")
     grid.fill(people(4))
     grid.addTheme(theme)
-    grid.append(
-        createGridColumn { header = tr("名", "First name"); path = "firstName" },
-        createGridColumn { path = "lastName" },
-        createGridColumn { path = "email" },
-    )
+    val nameColumn = createGridColumn {
+        path = "firstName"
+    }
+    gridTexts.bind(nameColumn, { it.columnFirstShort }) { nameColumn.header = it }
+    grid.append(nameColumn, createGridColumn { path = "lastName" }, createGridColumn { path = "email" })
     return grid
 }
 

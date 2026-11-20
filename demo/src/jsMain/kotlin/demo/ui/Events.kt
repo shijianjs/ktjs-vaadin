@@ -1,6 +1,5 @@
 package demo.ui
 
-import demo.tr
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
@@ -18,9 +17,6 @@ import web.events.addEventListener
 fun <E : Event> EventTargetLike.listen(type: EventType<E>, handler: (E) -> Unit) {
     addEventListener(type, handler)
 }
-
-/** Reads a boolean for the read-outs of the examples. */
-fun describeBoolean(value: Boolean): String = if (value) tr("是", "Yes") else tr("否", "No")
 
 /**
  * Joins an array (Kotlin or JS) of primitive values for display, or stringifies a single value.

@@ -1,7 +1,6 @@
 package demo.pages.upload
 
 import demo.pages.data.message
-import demo.tr
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -30,9 +29,9 @@ internal fun uploadFiles(json: String): Array<UploadFile> =
             "})",
     )(json).unsafeCast<Array<UploadFile>>()
 
-/** Fake files waiting for an explicit start, one JSON entry per [names]. */
-internal fun heldFiles(vararg names: String): Array<UploadFile> {
-    val entries = names.joinToString(", ") { """{"name": "$it", "status": "${tr("排队中", "Queued")}", "held": true}""" }
+/** Fake files waiting for an explicit start, one JSON entry per name; [queued] is the status text. */
+internal fun heldFiles(queued: String, vararg names: String): Array<UploadFile> {
+    val entries = names.joinToString(", ") { """{"name": "$it", "status": "$queued", "held": true}""" }
     return uploadFiles("[$entries]")
 }
 
@@ -90,10 +89,11 @@ internal fun rejectText(event: Event): String =
 internal fun rejectedFileName(event: Event): String =
     js("(event) => (event.detail && event.detail.file && event.detail.file.name) || ''")(event) as String
 
-internal fun showRejection(event: Event) {
+/** Shows the rejection reason the event carries, falling back to [fallback] when it is empty. */
+internal fun showRejection(event: Event, fallback: String) {
     val message = rejectText(event)
     Notification.show(
-        message.ifEmpty { tr("文件不符合上传限制", "The file does not meet the upload restrictions") },
+        message.ifEmpty { fallback },
         unsafeJso<NotificationShowOptions> {
             position = "middle"
             theme = "error"

@@ -11,7 +11,6 @@ import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
-import demo.tr
 import demo.ui.jsArray
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.demo.style.Palette
@@ -97,10 +96,9 @@ internal fun birthdayText(iso: String): String {
     return "${iso.substring(5, 7)}/${iso.substring(8, 10)}/$year"
 }
 
-internal fun ageText(iso: String): String {
-    val year = iso.take(4).toIntOrNull() ?: return ""
-    val age = Date().getFullYear() - year
-    return tr("年龄：$age 岁", "Age: $age")
+internal fun ageOf(iso: String): Int {
+    val year = iso.take(4).toIntOrNull() ?: return 0
+    return Date().getFullYear() - year
 }
 
 /** `MM/DD/YYYY` of a due date derived from the id, so the example is stable between visits. */
@@ -139,10 +137,24 @@ internal class GridHeader : CustomElementAdapter() {
 
     /** Sets the label, the icon and the tooltip title. */
     fun show(label: String, icon: String, title: String) {
-        labelNode.textContent = label
+        this.label = label
         mark.icon = icon
-        setAttribute("title", title)
+        this.tooltip = title
     }
+
+    /** The header label; a property rather than a text node, so the page binds it with a setter. */
+    var label: String = ""
+        set(value) {
+            field = value
+            labelNode.textContent = value
+        }
+
+    /** The tooltip on the info icon; kept as an attribute, which a page binds through its setter. */
+    var tooltip: String = ""
+        set(value) {
+            field = value
+            setAttribute("title", value)
+        }
 
     companion object : CustomElementReference<GridHeader>(GridHeader::class.js) {
         val NAME: TagName<GridHeader> = TagName("vaadin-demo-grid-header")

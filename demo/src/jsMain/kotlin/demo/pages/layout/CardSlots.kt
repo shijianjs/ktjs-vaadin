@@ -1,6 +1,7 @@
 package demo.pages.layout
 
-import demo.tr
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.page.heading
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
@@ -15,6 +16,7 @@ import web.html.HtmlTagName
  *
  * The slot name is an attribute of the host, so the card reads it exactly as it reads any other slotted
  * node; the text is the host's own child, which keeps the element from being a wrapper around a wrapper.
+ * The text is handed in by the page's text table, so a language switch rewrites it in place.
  */
 internal class CardSlotText : CustomElementAdapter() {
     private var slotName: String = ""
@@ -50,23 +52,30 @@ internal fun newCardSlotText(slotName: String, text: String): CardSlotText {
  * `<demo-card-header>`: the custom header of the official header example — a kicker above the title.
  *
  * The kicker is the small uppercase line, and the title is the same `<h2>` the kit's heading block draws,
- * so the header reads like the rest of the demo pages.
+ * so the header reads like the rest of the demo pages. Both lines come from the shared card text table.
  */
-internal class CardHeader : CustomElementAdapter() {
+internal class CardHeader : CustomElementAdapter(), CardTranslatable {
+    private val kicker = HtmlTagName.div().apply {
+        style.setProperty("font-size", "0.8125rem")
+        style.setProperty("text-transform", "uppercase")
+    }
+
+    private val headingNode = heading(2, "")
+
     init {
+        cardTexts.bind(kicker, { it.exoticNorth }) { kicker.textContent = it }
+        cardTexts.bind(headingNode, { it.lapland }) { headingNode.textContent = it }
         attachShadowRoot().append(
             HtmlTagName.div().apply {
                 style.setProperty("line-height", "1.25")
-                append(
-                    HtmlTagName.div().apply {
-                        style.setProperty("font-size", "0.8125rem")
-                        style.setProperty("text-transform", "uppercase")
-                        textContent = tr("异域北方", "The Exotic North")
-                    },
-                    heading(2, tr("拉普兰", "Lapland")),
-                )
+                append(kicker, headingNode)
             },
         )
+        cardTexts.apply(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        cardTexts.apply(lang)
     }
 
     override fun connectedCallback() {

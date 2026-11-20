@@ -185,6 +185,10 @@ private class ContextMenuTexts(
     val bestPracticeHint: String,
     val fileHeader: String,
     val sizeHeader: String,
+    val firstNameHeader: String,
+    val lastNameHeader: String,
+    val emailHeader: String,
+    val professionHeader: String,
 )
 
 private val english: ContextMenuTexts =
@@ -249,6 +253,10 @@ private val english: ContextMenuTexts =
             "the context menu and the inline button.",
         fileHeader = "File",
         sizeHeader = "Size",
+        firstNameHeader = "First name",
+        lastNameHeader = "Last name",
+        emailHeader = "Email",
+        professionHeader = "Profession",
     )
 
 private val chinese: ContextMenuTexts =
@@ -305,6 +313,10 @@ private val chinese: ContextMenuTexts =
         bestPracticeHint = "行内操作按钮用 Menu Bar 表达，同一个 items 数组既服务右键菜单也服务行内按钮。",
         fileHeader = "文件",
         sizeHeader = "大小",
+        firstNameHeader = "名",
+        lastNameHeader = "姓",
+        emailHeader = "邮箱",
+        professionHeader = "职务",
     )
 
 private val contextMenuTexts: Translations<ContextMenuTexts> = texts(
@@ -395,7 +407,9 @@ internal class ContextMenuPage : DemoPage() {
         texts.bind(gridSection.hint) { it.gridRowsHint }
         val rowMenu = createContextMenu()
         menus += rowMenu to { copy -> arrayOf(entry(copy.view), entry(copy.edit), entry(copy.delete)) }
-        rowMenu.append(personGrid(people(5)))
+        val rowTable = personGrid(people(5))
+        rowTable.bindHeaders(texts, { it.firstNameHeader }, { it.lastNameHeader }, { it.emailHeader }, { it.professionHeader })
+        rowMenu.append(rowTable.grid)
         gridSection.body.append(exampleBox(null, rowMenu))
         body.append(gridSection.root)
 
@@ -484,7 +498,9 @@ internal class ContextMenuPage : DemoPage() {
                 entry(copy.delete, disabled = true),
             )
         }
-        dividerMenu.append(personGrid(people(4)))
+        val dividerTable = personGrid(people(4))
+        dividerTable.bindHeaders(texts, { it.firstNameHeader }, { it.lastNameHeader }, { it.emailHeader }, { it.professionHeader })
+        dividerMenu.append(dividerTable.grid)
         dividers.body.append(exampleBox(null, dividerMenu))
         body.append(dividers.root)
 
@@ -540,7 +556,9 @@ internal class ContextMenuPage : DemoPage() {
                 divider(),
                 menuItem("vaadin:trash") { it.delete },
             )
-        presentMenu.append(personGrid(people(4)))
+        val presentTable = personGrid(people(4))
+        presentTable.bindHeaders(texts, { it.firstNameHeader }, { it.lastNameHeader }, { it.emailHeader }, { it.professionHeader })
+        presentMenu.append(presentTable.grid)
         customItems.body.append(exampleBox(null, presentMenu))
         body.append(customItems.root)
 
@@ -561,7 +579,9 @@ internal class ContextMenuPage : DemoPage() {
             )
         }
         tooltipMenu.append(createTooltip().also { it.slot = "tooltip" })
-        tooltipMenu.append(personGrid(people(4)))
+        val tooltipTable = personGrid(people(4))
+        tooltipTable.bindHeaders(texts, { it.firstNameHeader }, { it.lastNameHeader }, { it.emailHeader }, { it.professionHeader })
+        tooltipMenu.append(tooltipTable.grid)
         tooltips.body.append(exampleBox(null, tooltipMenu))
         body.append(tooltips.root)
 

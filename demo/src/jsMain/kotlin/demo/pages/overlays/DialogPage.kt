@@ -116,6 +116,7 @@ private class DialogTexts(
     val resizableHint: String,
     val employeeList: String,
     val openResizable: String,
+    val professionHeader: String,
 )
 
 private val english: DialogTexts =
@@ -181,6 +182,7 @@ private val english: DialogTexts =
             "::part(overlay).",
         employeeList = "Employee list",
         openResizable = "Open resizable dialog",
+        professionHeader = "Profession",
     )
 
 private val chinese: DialogTexts =
@@ -241,6 +243,7 @@ private val chinese: DialogTexts =
         resizableHint = "resizable 允许拖动边角改变尺寸；最小值通过 ::part(overlay) 上的 CSS 指定。",
         employeeList = "员工列表",
         openResizable = "打开可调整对话框",
+        professionHeader = "职务",
     )
 
 private val dialogTexts: Translations<DialogTexts> = texts(
@@ -466,7 +469,8 @@ internal class DialogPage : DemoPage() {
         title(filterDialog) { it.filterTitle }
         filterDialog.addTheme("no-padding")
         val filterGrid = personGrid(withSelection = true)
-        filterDialog.renderer = { root, _ -> root.append(filterGrid) }
+        filterGrid.bindHeaders(texts, { it.firstName }, { it.lastName }, { it.email }, { it.professionHeader })
+        filterDialog.renderer = { root, _ -> root.append(filterGrid.grid) }
         val filterButton = button { it.filter }.addTheme("primary")
         filterButton.clickEvent.addHandler { filterDialog.opened = false }
         filterDialog.footerRenderer = { root, _ -> root.append(filterButton) }
@@ -483,7 +487,8 @@ internal class DialogPage : DemoPage() {
         employeeDialog.draggable = true
         employeeDialog.width = "40rem"
         val employeeGrid = personGrid(people(8))
-        employeeDialog.renderer = { root, _ -> root.append(employeeGrid) }
+        employeeGrid.bindHeaders(texts, { it.firstName }, { it.lastName }, { it.email }, { it.professionHeader })
+        employeeDialog.renderer = { root, _ -> root.append(employeeGrid.grid) }
         val openEmployee = button { it.openResizable }
         openEmployee.clickEvent.addHandler { employeeDialog.opened = true }
         resizableSection.body.append(exampleBox(null, kitRow(openEmployee, employeeDialog)))
