@@ -566,22 +566,28 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   - `Main.kt`：唯一入口。`index.html` 里是 `<ktjs-demo-layout id="demo">`，浏览器负责创建元素，
     `main()` 只做 `mount(LayoutConfig(...))`；`LayoutConfig` 是一个配置对象，新增一项就加一个字段，
     不要把参数继续加到 `mount` 的签名上。
-  - `site/SiteMenu.kt` / `site/SiteTexts.kt`：`siteMenu()` 把各分组的 `<分组>Entries` 串成 kit 的
+  - `site/SiteMenu.kt` / `site/SiteTexts.kt`：`siteMenu()` 把 `Catalog.ENTRIES` 串成 kit 的
     `DemoMenu`（组、图标、页面工厂都在这里），`siteTexts` 是 kit `Translations<SiteTexts>` 的实现。
     **组与条目只有一份声明**：抽屉分组、总览页的分组标题与图标都从它读，不要在页面里再写一遍。
   - `site/LegacyPage.kt`：`PageSwapHost`（`<ktjs-page-swap>`）与 `RebuiltPage`。**这是过渡态**：绝大多数
     页面仍在构建时用 `tr(zh, en)` 取文案，切语言只能整页重建（示例里的组件状态会丢）。逐页迁到 kit 页
     （页面自带 `Translations` 表、就地改写文本）是批 1 之后的工作，新写的页面一律走 kit 页，不要再添
     `RebuiltPage`。
-  - `Catalog.kt`：路由 id → 分组 / 页面元信息（标题、官方文档 URL、源码路径）。每个组件一个
-    `CatalogEntry`，按分组顺序聚合各分组导出的 `<分组>Entries`。
+  - `Catalog.kt`：**只有一个 `object Catalog`**，没有任何文件级 `val`：`ENTRIES`（路由 id → 分组 / 页面元信息 /
+    构建该页的 tag）、`GROUPS`、`entry(id)`、`entriesOf(group)`、`componentApiUrl(id)` 与四个 URL 常量
+    （`DOCS_BASE` / `STYLING_BASE` / `API_ROOT` / `API_DOCS_URL`）都是它的成员。`ENTRIES` / `GROUPS` 与
+    id 索引表一律 `by lazy`：条目来自 11 个包里的 60 个 companion，文件级属性谁先初始化不受控制，
+    只有访问时才算，才不依赖那个顺序。分组类 `Group` 在 `Group.kt`。
   - `pages/<分组>/`：页面代码按 URL 分组分包（`overview`、`buttons`、`fields`、`selection`、
     `pickers`、`overlays`、`data`、`upload`、`layout`、`display`、`theming`），**一页一个文件**：
-    `XxxPage.kt` 里是这个页面的 `CatalogEntry`（`xxxEntry`）与 `private fun buildXxxPage`，帮助函数
-    放在同分组的 `Support.kt`（跨页共享的用 `internal`，同包内直接调用）。`Entries.kt` 按导航顺序
-    列出该分组的条目。多个页面共用的示例数据在 `pages/fixtures/People.kt`，跨包引用靠普通
-    `import demo.pages.<分组>.<名字>`。新增组件页 = 在对应分组里加一个 `XxxPage.kt` 并把它的条目加
-    进该分组 `Entries.kt`。
+    `XxxPage.kt` 里是这个页面类本体与它的 `private fun buildXxxPage`，**条目不另立文件**——`CatalogEntry`
+    写在页面类的 `companion object` 里（`val ENTRY`，放在 companion 体最前面，见下），帮助函数放在同分组的
+    `Support.kt`（跨页共享的用 `internal`，同包内直接调用）。多个页面共用的示例数据在
+    `pages/fixtures/People.kt`，跨包引用靠普通 `import demo.pages.<分组>.<名字>`。**新增组件页 = 在对应分组里
+    加一个 `XxxPage.kt`（含它的 `ENTRY`），再在 `Catalog.ENTRIES` 里按导航顺序补一行**；没有第二个清单要同步。
+  - **`ENTRY` 必须放在 companion 体最前面**：companion 的成员按声明顺序初始化，`ENTRY` 引用的 `texts(...)`
+    表要读同文件里先声明的 `english` / `chinese`；反过来（表在前、`ENTRY` 在后）能编过，但运行期会撞
+    `Variable 'x' must be initialized`。
   - `ui/`：停机位在这一层，`Blocks.kt` 的 `row` / `column` / `grid` / `example` / `section` 全部委托
     kit 的区块工厂（不再自己拼布局），`Dom.kt` 只保留 kit 没有的少数 helper（`heading`、`anchor`、
     `bulletList`、`setHidden`），`Typography.kt` 提供共享的 `MUTED` / `SMALL` / `MUTED_SMALL` 与
@@ -612,7 +618,7 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 - 每个页面必须提供三条链接：Vaadin 官方文档（中文模式 `https://vaadin.com/docs/latest/zh/components/<slug>`，
   英文模式自动改为 `/latest/components/`；没有独立页面的内部元素用最接近的页面并在 `docsNote` 里说明）、
   GitHub 上的 Kotlin 源码（`blob/main/demo/src/jsMain/kotlin/demo/<sourcePath>`）与 Dokka 的组件包页。
-  API 深链由 `Catalog.kt` 的 `componentApiUrl` 按路由 id 推导为
+  API 深链由 `Catalog.componentApiUrl` 按路由 id 推导为
   `api/ktjs-vaadin-web-components/io.github.shijianjs.ktjs.vaadin.<去掉连字符的 id>/index.html`（`overview` 指向模块索引、
   `theming` 指向 `io.github.shijianjs.ktjs.vaadin.lumostyles`），必须是 `api/` 开头的相对路径。端到端用例会逐页校验三条链接。
 - 所有演示文案（导航、标题、摘要、分区说明、示例标签、读值、事件日志）都要走 `tr` / `bi`；新增页面或
