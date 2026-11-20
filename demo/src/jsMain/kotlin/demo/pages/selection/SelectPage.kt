@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -20,9 +25,8 @@ import demo.bi
 import demo.pages.fixtures.CITIES_JSON
 import demo.pages.fixtures.SORT_ITEMS_JSON
 import demo.pages.fixtures.people
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.jsArray
 import demo.ui.listen
@@ -31,6 +35,7 @@ import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.select.SelectElement
 import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
 import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
 import io.github.shijianjs.ktjs.vaadin.select.createSelect
@@ -57,7 +62,6 @@ val selectEntry: CatalogEntry =
                 sourcePath = "pages/selection/SelectPage.kt",
             ),
         kitPage = { newSelectPage() },
-        rebuildsOnLanguage = true,
     )
 
 private const val SIZES_JSON =
@@ -84,172 +88,257 @@ private const val DIVIDED_SORT_ITEMS_JSON =
     ]
     """
 
+/** Every string this page shows, in one language. */
+private class SelectTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val city: String,
+    val chooseOne: String,
+    val none: String,
+    val featuresHeading: String,
+    val featuresHint: String,
+    val sortBy: String,
+    val helper: String,
+    val placeholder: String,
+    val tooltipText: String,
+    val dividersHeading: String,
+    val dividersHint: String,
+    val size: String,
+    val overlayHeading: String,
+    val overlayHint: String,
+    val employee: String,
+    val placeholderHeading: String,
+    val placeholderHint: String,
+    val team: String,
+    val nothingSelected: String,
+    val currentPrefix: String,
+    val empty: String,
+    val clear: String,
+    val emptySelectionHeading: String,
+    val emptySelectionHint: String,
+    val customLabelHeading: String,
+    val customLabelHint: String,
+    val assignee: String,
+    val presentationHeading: String,
+    val presentationHint: String,
+    val chooseDoctor: String,
+    val statesHeading: String,
+    val readonly: String,
+    val disabled: String,
+    val stylesHeading: String,
+    val stylesHint: String,
+    val label: String,
+    val helperText: String,
+)
+
+private val english: SelectTexts =
+    SelectTexts(
+        basicHeading = "Basic usage",
+        basicHint = "items takes an array of { label, value }; the dropdown renders in an overlay and " +
+            "value is a string.",
+        city = "City",
+        chooseOne = "Choose one",
+        none = "(none)",
+        featuresHeading = "Basic features",
+        featuresHint = "label, helper-text, placeholder and a prefix icon make up the complete field; " +
+            "the tooltip is attached through its slot.",
+        sortBy = "Sort by",
+        helper = "Helper text",
+        placeholder = "Placeholder",
+        tooltipText = "Tooltip text",
+        dividersHeading = "Dividers and disabled items",
+        dividersHint = "Use { component: \"hr\" } in items for a divider; individual items can be marked " +
+            "disabled.",
+        size = "Size",
+        overlayHeading = "Overlay position and width",
+        overlayHint = "no-vertical-overlap keeps the overlay from covering the field itself; " +
+            "--vaadin-select-overlay-width widens the dropdown independently.",
+        employee = "Employee",
+        placeholderHeading = "Placeholder and clearing",
+        placeholderHint = "placeholder only shows while nothing is selected; setting value to an empty " +
+            "string returns the field to it.",
+        team = "Team",
+        nothingSelected = "Nothing selected yet",
+        currentPrefix = "Current value: ",
+        empty = "(empty)",
+        clear = "Clear",
+        emptySelectionHeading = "Empty selection item",
+        emptySelectionHint = "Adding an item that represents \"no selection\" with a custom caption " +
+            "requires the Flow setEmptySelectionCaption API; the web component has no equivalent property, " +
+            "so it is not shown here.",
+        customLabelHeading = "Custom item label",
+        customLabelHint = "Build the dropdown content in the default slot; the label attribute of each " +
+            "item is what the field shows once selected.",
+        assignee = "Assignee",
+        presentationHeading = "Custom item presentation",
+        presentationHint = "Items can hold an avatar and secondary information; the selected value still " +
+            "comes from label.",
+        chooseDoctor = "Choose doctor",
+        statesHeading = "Read-only and disabled",
+        readonly = "Read-only",
+        disabled = "Disabled",
+        stylesHeading = "Style variants",
+        stylesHint = "align-right aligns the text to the end, small compresses the height and " +
+            "helper-above-field puts the helper text below the label.",
+        label = "Label",
+        helperText = "Helper text",
+    )
+
+private val chinese: SelectTexts =
+    SelectTexts(
+        basicHeading = "基本用法",
+        basicHint = "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
+        city = "所在城市",
+        chooseOne = "请选择",
+        none = "（未选择）",
+        featuresHeading = "基本特性",
+        featuresHint = "label、helper-text、placeholder 与 prefix 图标组合成完整字段；tooltip 通过 slot 挂载。",
+        sortBy = "排序方式",
+        helper = "辅助信息",
+        placeholder = "占位提示",
+        tooltipText = "提示文本",
+        dividersHeading = "分隔线与禁用条目",
+        dividersHint = "items 里用 { component: \"hr\" } 插入分隔线；单个条目可以用 disabled 标为不可选。",
+        size = "尺码",
+        overlayHeading = "浮层位置与宽度",
+        overlayHint = "no-vertical-overlap 禁止浮层覆盖输入框本身；--vaadin-select-overlay-width 单独设置下拉宽度。",
+        employee = "员工",
+        placeholderHeading = "占位符与清空",
+        placeholderHint = "placeholder 只在没有选中值时显示；把 value 置空即可回到占位状态。",
+        team = "团队",
+        nothingSelected = "尚未选择",
+        currentPrefix = "当前选择：",
+        empty = "（空）",
+        clear = "清空",
+        emptySelectionHeading = "空选择项",
+        emptySelectionHint = "在下拉列表里放一个表示「不选择」的条目、并自定义它的文案，需要 Flow 侧的 " +
+            "setEmptySelectionCaption API，Web Component 没有对应属性，这里不演示。",
+        customLabelHeading = "自定义条目标签",
+        customLabelHint = "用默认插槽自行组装下拉内容；条目上的 label 属性决定选中后显示在输入框里的文本。",
+        assignee = "负责人",
+        presentationHeading = "自定义条目呈现",
+        presentationHint = "条目内部可以放头像与次要信息；选中值仍由 label 决定。",
+        chooseDoctor = "选择医生",
+        statesHeading = "只读与禁用",
+        readonly = "只读",
+        disabled = "禁用",
+        stylesHeading = "样式变体",
+        stylesHint = "align-right 让文本右对齐，small 压缩高度，helper-above-field 把辅助信息放到标签下。",
+        label = "标签",
+        helperText = "辅助信息",
+    )
+
+private val selectTexts: Translations<SelectTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class SelectPage : DemoPage() {
+    private val texts = Binder(selectTexts)
+
+    private val frame = PageFrame(selectEntry)
+
+    private val cities: SelectElement = createSelect()
+
+    private val readout = Readout("value = helsinki")
+
+    private val team: SelectElement = createSelect()
+
+    private val teamReadout = Readout("")
 
     init {
-        configureFrame(selectEntry)
+        frame.mount(this)
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
-                    "items takes an array of { label, value }; the dropdown renders in an overlay and value " +
-                        "is a string.",
-                ),
-            )
-        val cities =
-            createSelect {
-                label = tr("所在城市", "City")
-                placeholder = tr("请选择", "Choose one")
-                value = "helsinki"
-                items = selectItems(CITIES_JSON)
-            }
+        fun field(copy: (SelectTexts) -> String): SelectElement =
+            createSelect().also { node -> texts.bind(node, copy) { node.label = it } }
+
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
+        cities.value = "helsinki"
+        cities.items = selectItems(CITIES_JSON)
+        texts.bind(cities, { it.city }) { cities.label = it }
+        texts.bind(cities, { it.chooseOne }) { cities.placeholder = it }
         cities.dataset["test"] = "select-basic"
-        val readout = Readout("value = helsinki")
-        cities.listen(SelectEvents.valueChanged) {
-            readout.set("value = ", cities.value.ifEmpty { tr("（未选择）", "(none)") })
-        }
+        cities.listen(SelectEvents.valueChanged) { showValue() }
         basic.body.append(exampleBox(null, kitCol(cities, readout.root)))
         body.append(basic.root)
 
-        val features =
-            sectionBlock(
-                tr("基本特性", "Basic features"),
-                tr(
-                    "label、helper-text、placeholder 与 prefix 图标组合成完整字段；tooltip 通过 slot 挂载。",
-                    "label, helper-text, placeholder and a prefix icon make up the complete field; the " +
-                        "tooltip is attached through its slot.",
-                ),
-            )
-        val sortBy =
-            createSelect {
-                label = tr("排序方式", "Sort by")
-                helperText = tr("辅助信息", "Helper text")
-                placeholder = tr("占位提示", "Placeholder")
-                items = selectItems(SORT_ITEMS_JSON)
-            }
-        sortBy.append(
-            createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
-            createIcon { icon = "vaadin:vaadin-h" }.apply { setAttribute("slot", "prefix") },
-        )
+        val features = sectionBlock()
+        texts.bind(features.heading) { it.featuresHeading }
+        texts.bind(features.hint) { it.featuresHint }
+        val sortBy = field { it.sortBy }
+        sortBy.items = selectItems(SORT_ITEMS_JSON)
+        texts.bind(sortBy, { it.helper }) { sortBy.helperText = it }
+        texts.bind(sortBy, { it.placeholder }) { sortBy.placeholder = it }
+        val tooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
+        sortBy.append(tooltip, createIcon { icon = "vaadin:vaadin-h" }.apply { setAttribute("slot", "prefix") })
         features.body.append(exampleBox(null, sortBy))
         body.append(features.root)
 
-        val dividersAndDisabled =
-            sectionBlock(
-                tr("分隔线与禁用条目", "Dividers and disabled items"),
-                tr(
-                    "items 里用 { component: \"hr\" } 插入分隔线；单个条目可以用 disabled 标为不可选。",
-                    "Use { component: \"hr\" } in items for a divider; individual items can be marked disabled.",
-                ),
-            )
-        val divided =
-            createSelect {
-                label = tr("排序方式", "Sort by")
-                value = "recent"
-                items = selectItems(DIVIDED_SORT_ITEMS_JSON)
-            }
-        val sizes =
-            createSelect {
-                label = tr("尺码", "Size")
-                value = "xl"
-                items = selectItems(SIZES_JSON)
-            }
+        val dividersAndDisabled = sectionBlock()
+        texts.bind(dividersAndDisabled.heading) { it.dividersHeading }
+        texts.bind(dividersAndDisabled.hint) { it.dividersHint }
+        val divided = field { it.sortBy }
+        divided.value = "recent"
+        divided.items = selectItems(DIVIDED_SORT_ITEMS_JSON)
+        val sizes = field { it.size }
+        sizes.value = "xl"
+        sizes.items = selectItems(SIZES_JSON)
         dividersAndDisabled.body.append(exampleBox(null, kitRow(divided, sizes)))
         body.append(dividersAndDisabled.root)
 
-        val overlay =
-            sectionBlock(
-                tr("浮层位置与宽度", "Overlay position and width"),
-                tr(
-                    "no-vertical-overlap 禁止浮层覆盖输入框本身；" +
-                        "--vaadin-select-overlay-width 单独设置下拉宽度。",
-                    "no-vertical-overlap keeps the overlay from covering the field itself; " +
-                        "--vaadin-select-overlay-width widens the dropdown independently.",
-                ),
-            )
-        val noOverlap =
-            createSelect {
-                label = tr("排序方式", "Sort by")
-                noVerticalOverlap = true
-                items = selectItems(SORT_ITEMS_JSON)
-            }
+        val overlay = sectionBlock()
+        texts.bind(overlay.heading) { it.overlayHeading }
+        texts.bind(overlay.hint) { it.overlayHint }
+        val noOverlap = field { it.sortBy }
+        noOverlap.noVerticalOverlap = true
+        noOverlap.items = selectItems(SORT_ITEMS_JSON)
         val employees = people(5)
-        val wide =
-            createSelect {
-                label = tr("员工", "Employee")
-                items =
-                    selectItems(
-                        employees
-                            .map { person ->
-                                "{\"label\": \"${person.profession} - ${person.displayName}\", " +
-                                    "\"value\": \"${person.displayName}\"}"
-                            }
-                            .joinToString(",", "[", "]"),
-                    )
-            }
+        val wide = field { it.employee }
+        wide.items =
+            selectItems(
+                employees
+                    .map { person ->
+                        "{\"label\": \"${person.profession} - ${person.displayName}\", " +
+                            "\"value\": \"${person.displayName}\"}"
+                    }
+                    .joinToString(",", "[", "]"),
+            )
         wide.style.setProperty("--vaadin-select-overlay-width", "350px")
         overlay.body.append(exampleBox(null, kitRow(noOverlap, wide)))
         body.append(overlay.root)
 
-        val placeholderSection =
-            sectionBlock(
-                tr("占位符与清空", "Placeholder and clearing"),
-                tr(
-                    "placeholder 只在没有选中值时显示；把 value 置空即可回到占位状态。",
-                    "placeholder only shows while nothing is selected; setting value to an empty string " +
-                        "returns the field to it.",
-                ),
+        val placeholderSection = sectionBlock()
+        texts.bind(placeholderSection.heading) { it.placeholderHeading }
+        texts.bind(placeholderSection.hint) { it.placeholderHint }
+        team.items =
+            selectItems(
+                """
+                [
+                  {"label": "Engineering", "value": "eng"},
+                  {"label": "Design", "value": "design"}
+                ]
+                """,
             )
-        val team =
-            createSelect {
-                label = tr("团队", "Team")
-                placeholder = tr("尚未选择", "Nothing selected yet")
-                items =
-                    selectItems(
-                        """
-                        [
-                          {"label": "Engineering", "value": "eng"},
-                          {"label": "Design", "value": "design"}
-                        ]
-                        """,
-                    )
-            }
-        val teamReadout = Readout(tr("value = （空）", "value = (empty)"))
-        team.listen(SelectEvents.valueChanged) {
-            teamReadout.set(tr("当前选择：", "Current value: "), team.value.ifEmpty { tr("（空）", "(empty)") })
-        }
-        val clear =
-            createButton { textContent = tr("清空", "Clear") }.apply {
-                clickEvent.addHandler { team.value = "" }
-            }
+        texts.bind(team, { it.team }) { team.label = it }
+        texts.bind(team, { it.nothingSelected }) { team.placeholder = it }
+        team.listen(SelectEvents.valueChanged) { showTeam() }
+        val clear = createButton().apply { clickEvent.addHandler { team.value = "" } }
+        texts.bind(clear) { it.clear }
         placeholderSection.body.append(exampleBox(null, kitCol(team, kitRow(clear, teamReadout.root))))
         body.append(placeholderSection.root)
 
-        val emptySelection =
-            sectionBlock(
-                tr("空选择项", "Empty selection item"),
-                tr(
-                    "在下拉列表里放一个表示「不选择」的条目、并自定义它的文案，需要 Flow 侧的 " +
-                        "setEmptySelectionCaption API，Web Component 没有对应属性，这里不演示。",
-                    "Adding an item that represents \"no selection\" with a custom caption requires the Flow " +
-                        "setEmptySelectionCaption API; the web component has no equivalent property, so it " +
-                        "is not shown here.",
-                ),
-            )
+        val emptySelection = sectionBlock()
+        texts.bind(emptySelection.heading) { it.emptySelectionHeading }
+        texts.bind(emptySelection.hint) { it.emptySelectionHint }
         body.append(emptySelection.root)
 
-        val customLabel =
-            sectionBlock(
-                tr("自定义条目标签", "Custom item label"),
-                tr(
-                    "用默认插槽自行组装下拉内容；条目上的 label 属性决定选中后显示在输入框里的文本。",
-                    "Build the dropdown content in the default slot; the label attribute of each item is " +
-                        "what the field shows once selected.",
-                ),
-            )
-        val assignee = createSelect { label = tr("负责人", "Assignee") }
+        val customLabel = sectionBlock()
+        texts.bind(customLabel.heading) { it.customLabelHeading }
+        texts.bind(customLabel.hint) { it.customLabelHint }
+        val assignee = field { it.assignee }
         val assigneeBox = createSelectListBox().apply { setAttribute("slot", "overlay") }
         employees.forEach { person ->
             assigneeBox.append(
@@ -259,12 +348,8 @@ internal class SelectPage : DemoPage() {
                 }.apply {
                     append(
                         kitCol(
-                            HtmlTagName.span {
-                                textContent = person.displayName
-                            },
-                            HtmlTagName.span {
-                                textContent = person.profession
-                            },
+                            HtmlTagName.span { textContent = person.displayName },
+                            HtmlTagName.span { textContent = person.profession },
                         ),
                     )
                 },
@@ -275,16 +360,10 @@ internal class SelectPage : DemoPage() {
         customLabel.body.append(exampleBox(null, assignee))
         body.append(customLabel.root)
 
-        val presentation =
-            sectionBlock(
-                tr("自定义条目呈现", "Custom item presentation"),
-                tr(
-                    "条目内部可以放头像与次要信息；选中值仍由 label 决定。",
-                    "Items can hold an avatar and secondary information; the selected value still comes " +
-                        "from label.",
-                ),
-            )
-        val doctors = createSelect { label = tr("选择医生", "Choose doctor") }
+        val presentation = sectionBlock()
+        texts.bind(presentation.heading) { it.presentationHeading }
+        texts.bind(presentation.hint) { it.presentationHint }
+        val doctors = field { it.chooseDoctor }
         doctors.style.width = "15em"
         val doctorBox = createSelectListBox().apply { setAttribute("slot", "overlay") }
         employees.forEach { person ->
@@ -292,15 +371,14 @@ internal class SelectPage : DemoPage() {
                 createSelectItem { value = "${person.id}" }.apply {
                     append(
                         kitRow(
-                            io.github.shijianjs.ktjs.vaadin.avatar.createAvatar {
+                            createAvatar {
                                 name = person.displayName
                                 img = person.pictureUrl
                             },
-                            kitCol(HtmlTagName.span {
-                                       textContent = person.displayName
-                                   }, HtmlTagName.span {
-                                          textContent = person.profession
-                                      }),
+                            kitCol(
+                                HtmlTagName.span { textContent = person.displayName },
+                                HtmlTagName.span { textContent = person.profession },
+                            ),
                         ),
                     )
                 },
@@ -311,67 +389,72 @@ internal class SelectPage : DemoPage() {
         presentation.body.append(exampleBox(null, doctors))
         body.append(presentation.root)
 
-        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
-        states.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createSelect {
-                        label = tr("只读", "Read-only")
-                        value = "bravo"
-                        readonly = true
-                        items =
-                            selectItems(
-                                """
-                                [
-                                  {"label": "Alpha", "value": "alpha"},
-                                  {"label": "Bravo", "value": "bravo"},
-                                  {"label": "Charlie", "value": "charlie"}
-                                ]
-                                """,
-                            )
-                    },
-                    createSelect {
-                        label = tr("禁用", "Disabled")
-                        value = "alpha"
-                        disabled = true
-                        items =
-                            selectItems(
-                                """
-                                [
-                                  {"label": "Alpha", "value": "alpha"},
-                                  {"label": "Bravo", "value": "bravo"}
-                                ]
-                                """,
-                            )
-                    },
-                ),
-            ),
-        )
+        val states = sectionBlock()
+        texts.bind(states.heading) { it.statesHeading }
+        val readonlySelect =
+            createSelect {
+                value = "bravo"
+                readonly = true
+                items =
+                    selectItems(
+                        """
+                        [
+                          {"label": "Alpha", "value": "alpha"},
+                          {"label": "Bravo", "value": "bravo"},
+                          {"label": "Charlie", "value": "charlie"}
+                        ]
+                        """,
+                    )
+            }
+        texts.bind(readonlySelect, { it.readonly }) { readonlySelect.label = it }
+        val disabledSelect =
+            createSelect {
+                value = "alpha"
+                disabled = true
+                items =
+                    selectItems(
+                        """
+                        [
+                          {"label": "Alpha", "value": "alpha"},
+                          {"label": "Bravo", "value": "bravo"}
+                        ]
+                        """,
+                    )
+            }
+        texts.bind(disabledSelect, { it.disabled }) { disabledSelect.label = it }
+        states.body.append(exampleBox(null, kitRow(readonlySelect, disabledSelect)))
         body.append(states.root)
 
-        val styles =
-            sectionBlock(
-                tr("样式变体", "Style variants"),
-                tr(
-                    "align-right 让文本右对齐，small 压缩高度，helper-above-field 把辅助信息放到标签下。",
-                    "align-right aligns the text to the end, small compresses the height and " +
-                        "helper-above-field puts the helper text below the label.",
-                ),
-            )
-        styles.body.append(
-            exampleBox(
-                null,
-                createSelect {
-                    label = tr("标签", "Label")
-                    helperText = tr("辅助信息", "Helper text")
-                    value = "recent"
-                    items = selectItems(SORT_ITEMS_JSON)
-                }.addTheme("align-right", "small", "helper-above-field"),
-            ),
-        )
+        val styles = sectionBlock()
+        texts.bind(styles.heading) { it.stylesHeading }
+        texts.bind(styles.hint) { it.stylesHint }
+        val styled = createSelect { value = "recent" }.addTheme("align-right", "small", "helper-above-field")
+        texts.bind(styled, { it.label }) { styled.label = it }
+        texts.bind(styled, { it.helperText }) { styled.helperText = it }
+        styled.items = selectItems(SORT_ITEMS_JSON)
+        styles.body.append(exampleBox(null, styled))
         body.append(styles.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = selectEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showValue()
+        showTeam()
+    }
+
+    private fun showValue() {
+        readout.set("value = ", cities.value.ifEmpty { texts.current.none })
+    }
+
+    private fun showTeam() {
+        val copy = texts.current
+        teamReadout.set(copy.currentPrefix, team.value.ifEmpty { copy.empty })
     }
 
     companion object : CustomElementReference<SelectPage>(SelectPage::class.js) {
@@ -392,4 +475,3 @@ internal fun newSelectPage(): SelectPage {
 /** Parses a JSON array of `{label, value, ...}` entries into the type `<vaadin-select>` takes. */
 private fun selectItems(json: String): Array<SelectItemData> =
     jsArray<JsAny>(json).unsafeCast<Array<SelectItemData>>()
-

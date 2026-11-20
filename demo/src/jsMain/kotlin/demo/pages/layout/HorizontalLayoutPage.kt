@@ -4,20 +4,25 @@ import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
 import web.dom.TagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 
 val horizontalLayoutEntry: CatalogEntry =
@@ -37,42 +42,166 @@ val horizontalLayoutEntry: CatalogEntry =
                 sourcePath = "pages/layout/HorizontalLayoutPage.kt",
             ),
         kitPage = { newHorizontalLayoutPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class HorizontalLayoutTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val verticalHeading: String,
+    val verticalHint: String,
+    val individualHeading: String,
+    val individualHint: String,
+    val horizontalHeading: String,
+    val horizontalHint: String,
+    val spacingHeading: String,
+    val spacingHint: String,
+    val paddingHeading: String,
+    val paddingHint: String,
+    val marginHeading: String,
+    val marginHint: String,
+    val wrappingHeading: String,
+    val wrappingHint: String,
+    val wrappingSlotsHeading: String,
+    val wrappingSlotsHint: String,
+    val expandingHeading: String,
+    val expandingHint: String,
+    val item: (Int) -> String,
+    val start: String,
+    val middle: String,
+    val end: String,
+    val withoutSpacing: String,
+    val withSpacing: String,
+    val withoutPadding: String,
+    val withPadding: String,
+    val withoutMargin: String,
+    val withMargin: String,
+    val withoutWrap: String,
+    val withWrap: String,
+)
+
+private val english: HorizontalLayoutTexts =
+    HorizontalLayoutTexts(
+        basicHeading = "Basic usage",
+        basicHint = "spacing and padding are the most common theme variants and can be combined.",
+        verticalHeading = "Vertical alignment",
+        verticalHint = "align-items positions the children vertically: stretch (default), start, center, " +
+            "end or baseline.",
+        individualHeading = "Aligning individual items",
+        individualHint = "align-self on a child overrides the container's align-items for that item only.",
+        horizontalHeading = "Horizontal alignment",
+        horizontalHint = "Children can be grouped into start / middle / end with slots, or distributed as " +
+            "a whole with justify-content. Do not use both at the same time.",
+        spacingHeading = "Spacing",
+        spacingHint = "spacing adds a uniform gap between the children.",
+        paddingHeading = "Padding",
+        paddingHint = "padding adds space inside the container.",
+        marginHeading = "Margin",
+        marginHint = "margin adds space around the container.",
+        wrappingHeading = "Wrapping",
+        wrappingHint = "By default children shrink or overflow when space runs out; wrap lets them flow " +
+            "onto a new line.",
+        wrappingSlotsHeading = "Wrapping aligned items",
+        wrappingSlotsHint = "When combined with horizontal alignment, group the children that should wrap " +
+            "together into sub-layouts and give those the slot.",
+        expandingHeading = "Expanding items",
+        expandingHint = "flex-grow makes a child take the excess space; several children share it " +
+            "proportionally.",
+        item = { "Item $it" },
+        start = "Start",
+        middle = "Middle",
+        end = "End",
+        withoutSpacing = "Without spacing",
+        withSpacing = "With spacing",
+        withoutPadding = "Without padding",
+        withPadding = "With padding",
+        withoutMargin = "Without margin",
+        withMargin = "With margin",
+        withoutWrap = "Without wrap",
+        withWrap = "With wrap",
+    )
+
+private val chinese: HorizontalLayoutTexts =
+    HorizontalLayoutTexts(
+        basicHeading = "基本用法",
+        basicHint = "spacing 和 padding 是最常用的两个主题，可以叠加使用。",
+        verticalHeading = "纵向对齐",
+        verticalHint = "用 align-items 控制子项在纵向上的位置：stretch（默认）、start、center、end、baseline。",
+        individualHeading = "单项纵向对齐",
+        individualHint = "子项的 align-self 覆盖容器的 align-items，只影响它自己。",
+        horizontalHeading = "水平对齐",
+        horizontalHint = "子项可以用 slot 分成 start / middle / end 三组，也可以用 justify-content 统一分布。" +
+            "两种方式不要同时使用。",
+        spacingHeading = "间距",
+        spacingHint = "spacing 在子项之间加入统一间隔。",
+        paddingHeading = "内边距",
+        paddingHint = "padding 在容器内部四周留出空间。",
+        marginHeading = "外边距",
+        marginHint = "margin 在容器外部留出空间，与相邻元素拉开距离。",
+        wrappingHeading = "换行",
+        wrappingHint = "默认情况下空间不足时子项会收缩或溢出；wrap 让它们换到下一行。",
+        wrappingSlotsHeading = "分组后换行",
+        wrappingSlotsHint = "与水平对齐组合时，把应该一起换行的子项放进子布局，再给子布局加 slot。",
+        expandingHeading = "扩展子项",
+        expandingHint = "给子项设置 flex-grow 让它占据多余空间；多个子项按比例分配。",
+        item = { "项目 $it" },
+        start = "开始",
+        middle = "中间",
+        end = "末尾",
+        withoutSpacing = "没有 spacing",
+        withSpacing = "有 spacing",
+        withoutPadding = "没有 padding",
+        withPadding = "有 padding",
+        withoutMargin = "没有 margin",
+        withMargin = "有 margin",
+        withoutWrap = "没有 wrap",
+        withWrap = "有 wrap",
+    )
+
+private val horizontalLayoutTexts: Translations<HorizontalLayoutTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class HorizontalLayoutPage : DemoPage() {
+    private val texts = Binder(horizontalLayoutTexts)
+
+    private val frame = PageFrame(horizontalLayoutEntry)
 
     init {
-        configureFrame(horizontalLayoutEntry)
+        frame.mount(this)
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "spacing 和 padding 是最常用的两个主题，可以叠加使用。",
-                    "spacing and padding are the most common theme variants and can be combined.",
-                ),
-            )
+        fun item(number: Int, height: String? = null): HTMLElement =
+            newBox("").also { node ->
+                if (height != null) node.style.setProperty("height", height)
+                texts.bind(node) { it.item(number) }
+            }
+
+        fun label(copy: (HorizontalLayoutTexts) -> String): HTMLElement =
+            HtmlTagName.p().apply {
+                style.setProperty("margin", "0 0 0.75rem")
+                style.setProperty("font-size", "0.8125rem")
+                style.setProperty("color", "var(--lumo-secondary-text-color)")
+                texts.bind(this, copy) { textContent = it }
+            }
+
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         basic.body.append(
             exampleBox(
                 "theme=\"spacing padding\"",
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
         )
         body.append(basic.root)
 
-        val verticalAlignment =
-            sectionBlock(
-                tr("纵向对齐", "Vertical alignment"),
-                tr(
-                    "用 align-items 控制子项在纵向上的位置：stretch（默认）、start、center、end、baseline。",
-                    "align-items positions the children vertically: stretch (default), start, center, end or " +
-                        "baseline.",
-                ),
-            )
+        val verticalAlignment = sectionBlock()
+        texts.bind(verticalAlignment.heading) { it.verticalHeading }
+        texts.bind(verticalAlignment.hint) { it.verticalHint }
         verticalAlignment.body.append(
             exampleBox(
                 "align-items: center",
@@ -80,7 +209,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("height", "7rem")
                     style.setProperty("align-items", "center")
-                    append(newBox(tr("项目 1", "Item 1"), "2.5rem"), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3"), "4rem"))
+                    append(item(1, "2.5rem"), item(2), item(3, "4rem"))
                 },
             ),
             exampleBox(
@@ -89,20 +218,15 @@ internal class HorizontalLayoutPage : DemoPage() {
                     addTheme("spacing", "padding")
                     style.setProperty("height", "7rem")
                     style.setProperty("align-items", "end")
-                    append(newBox(tr("项目 1", "Item 1"), "2.5rem"), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3"), "4rem"))
+                    append(item(1, "2.5rem"), item(2), item(3, "4rem"))
                 },
             ),
         )
         body.append(verticalAlignment.root)
 
-        val individual =
-            sectionBlock(
-                tr("单项纵向对齐", "Aligning individual items"),
-                tr(
-                    "子项的 align-self 覆盖容器的 align-items，只影响它自己。",
-                    "align-self on a child overrides the container's align-items for that item only.",
-                ),
-            )
+        val individual = sectionBlock()
+        texts.bind(individual.heading) { it.individualHeading }
+        texts.bind(individual.hint) { it.individualHint }
         individual.body.append(
             exampleBox(
                 null,
@@ -111,35 +235,33 @@ internal class HorizontalLayoutPage : DemoPage() {
                     style.setProperty("height", "8rem")
                     style.setProperty("align-items", "stretch")
                     append(
-                        newBox(tr("项目 1", "Item 1")).apply { style.setProperty("align-self", "start") },
-                        newBox(tr("项目 2", "Item 2")),
-                        newBox(tr("项目 3", "Item 3")).apply { style.setProperty("align-self", "end") },
+                        item(1).apply { style.setProperty("align-self", "start") },
+                        item(2),
+                        item(3).apply { style.setProperty("align-self", "end") },
                     )
                 },
             ),
         )
         body.append(individual.root)
 
-        val horizontalAlignment =
-            sectionBlock(
-                tr("水平对齐", "Horizontal alignment"),
-                tr(
-                    "子项可以用 slot 分成 start / middle / end 三组，也可以用 justify-content 统一分布。两种方式" +
-                        "不要同时使用。",
-                    "Children can be grouped into start / middle / end with slots, or distributed as a whole with " +
-                        "justify-content. Do not use both at the same time.",
-                ),
-            )
+        val horizontalAlignment = sectionBlock()
+        texts.bind(horizontalAlignment.heading) { it.horizontalHeading }
+        texts.bind(horizontalAlignment.hint) { it.horizontalHint }
+        val startBox = newBox("").also { texts.bind(it, { it.start }) { copy -> it.textContent = copy } }
+        val middleBox = newBox("").also { node ->
+            node.slot = "middle"
+            texts.bind(node, { it.middle }) { copy -> node.textContent = copy }
+        }
+        val endBox = newBox("").also { node ->
+            node.slot = "end"
+            texts.bind(node, { it.end }) { copy -> node.textContent = copy }
+        }
         horizontalAlignment.body.append(
             exampleBox(
                 "slot=\"middle\" / slot=\"end\"",
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(
-                        newBox(tr("开始", "Start")),
-                        newBox(tr("中间", "Middle")).apply { slot = "middle" },
-                        newBox(tr("末尾", "End")).apply { slot = "end" },
-                    )
+                    append(startBox, middleBox, endBox)
                 },
             ),
             exampleBox(
@@ -147,84 +269,84 @@ internal class HorizontalLayoutPage : DemoPage() {
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
                     style.setProperty("justify-content", "center")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
         )
         body.append(horizontalAlignment.root)
 
-        val spacing =
-            sectionBlock(
-                tr("间距", "Spacing"),
-                tr("spacing 在子项之间加入统一间隔。", "spacing adds a uniform gap between the children."),
-            )
+        val spacing = sectionBlock()
+        texts.bind(spacing.heading) { it.spacingHeading }
+        texts.bind(spacing.hint) { it.spacingHint }
         spacing.body.append(
             exampleBox(
-                tr("没有 spacing", "Without spacing"),
+                null,
+                label { it.withoutSpacing },
                 createHorizontalLayout().apply {
                     addTheme("padding")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
             exampleBox(
-                tr("有 spacing", "With spacing"),
+                null,
+                label { it.withSpacing },
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
         )
         body.append(spacing.root)
 
-        val padding =
-            sectionBlock(
-                tr("内边距", "Padding"),
-                tr("padding 在容器内部四周留出空间。", "padding adds space inside the container."),
-            )
+        val padding = sectionBlock()
+        texts.bind(padding.heading) { it.paddingHeading }
+        texts.bind(padding.hint) { it.paddingHint }
         padding.body.append(
             exampleBox(
-                tr("没有 padding", "Without padding"),
+                null,
+                label { it.withoutPadding },
                 createHorizontalLayout().apply {
                     addTheme("spacing")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
             exampleBox(
-                tr("有 padding", "With padding"),
+                null,
+                label { it.withPadding },
                 createHorizontalLayout().apply {
                     addTheme("padding", "spacing")
-                    append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                    append(item(1), item(2), item(3))
                 },
             ),
         )
         body.append(padding.root)
 
-        val margin =
-            sectionBlock(
-                tr("外边距", "Margin"),
-                tr("margin 在容器外部留出空间，与相邻元素拉开距离。", "margin adds space around the container."),
-            )
+        val margin = sectionBlock()
+        texts.bind(margin.heading) { it.marginHeading }
+        texts.bind(margin.hint) { it.marginHint }
         margin.body.append(
             exampleBox(
-                tr("没有 margin", "Without margin"),
+                null,
+                label { it.withoutMargin },
                 HtmlTagName.div().apply {
                     style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                     append(
                         createHorizontalLayout().apply {
                             addTheme("spacing", "padding")
-                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                            append(item(1), item(2), item(3))
                         },
                     )
                 },
             ),
             exampleBox(
-                tr("有 margin", "With margin"),
+                null,
+                label { it.withMargin },
                 HtmlTagName.div().apply {
                     style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
                     append(
                         createHorizontalLayout().apply {
                             addTheme("margin", "spacing", "padding")
-                            append(newBox(tr("项目 1", "Item 1")), newBox(tr("项目 2", "Item 2")), newBox(tr("项目 3", "Item 3")))
+                            append(item(1), item(2), item(3))
                         },
                     )
                 },
@@ -232,92 +354,86 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(margin.root)
 
-        val wrapping =
-            sectionBlock(
-                tr("换行", "Wrapping"),
-                tr(
-                    "默认情况下空间不足时子项会收缩或溢出；wrap 让它们换到下一行。",
-                    "By default children shrink or overflow when space runs out; wrap lets them flow onto a new line.",
-                ),
-            )
+        val wrapping = sectionBlock()
+        texts.bind(wrapping.heading) { it.wrappingHeading }
+        texts.bind(wrapping.hint) { it.wrappingHint }
         wrapping.body.append(
             exampleBox(
-                tr("没有 wrap", "Without wrap"),
+                null,
+                label { it.withoutWrap },
                 createHorizontalLayout().apply {
                     addTheme("spacing", "margin", "padding")
                     style.setProperty("width", "22rem")
-                    append(*(1..5).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(item(1), item(2), item(3), item(4), item(5))
                 },
             ),
             exampleBox(
-                tr("有 wrap", "With wrap"),
+                null,
+                label { it.withWrap },
                 createHorizontalLayout().apply {
                     addTheme("wrap", "spacing", "margin", "padding")
                     style.setProperty("width", "22rem")
-                    append(*(1..5).map { newBox(tr("项目 $it", "Item $it")) }.toTypedArray())
+                    append(item(1), item(2), item(3), item(4), item(5))
                 },
             ),
         )
         body.append(wrapping.root)
 
-        val wrappingSlots =
-            sectionBlock(
-                tr("分组后换行", "Wrapping aligned items"),
-                tr(
-                    "与水平对齐组合时，把应该一起换行的子项放进子布局，再给子布局加 slot。",
-                    "When combined with horizontal alignment, group the children that should wrap together into " +
-                        "sub-layouts and give those the slot.",
-                ),
-            )
+        val wrappingSlots = sectionBlock()
+        texts.bind(wrappingSlots.heading) { it.wrappingSlotsHeading }
+        texts.bind(wrappingSlots.hint) { it.wrappingSlotsHint }
+        fun group(slot: String?, copy: (HorizontalLayoutTexts) -> String, count: Int): HTMLElement =
+            createHorizontalLayout().apply {
+                if (slot != null) this.slot = slot
+                addTheme("spacing", "padding")
+                repeat(count) {
+                    val node = newBox("")
+                    texts.bind(node, copy) { text -> node.textContent = text }
+                    append(node)
+                }
+            }
         wrappingSlots.body.append(
             exampleBox(
                 null,
                 createHorizontalLayout().apply {
                     addTheme("spacing", "padding", "wrap")
                     append(
-                        createHorizontalLayout().apply {
-                            addTheme("spacing", "padding")
-                            append(newBox(tr("开始", "Start")), newBox(tr("开始", "Start")))
-                        },
-                        createHorizontalLayout().apply {
-                            slot = "middle"
-                            addTheme("spacing", "padding")
-                            append(newBox(tr("中间", "Middle")), newBox(tr("中间", "Middle")), newBox(tr("中间", "Middle")))
-                        },
-                        createHorizontalLayout().apply {
-                            slot = "end"
-                            addTheme("spacing", "padding")
-                            append(newBox(tr("末尾", "End")), newBox(tr("末尾", "End")))
-                        },
+                        group(null, { it.start }, 2),
+                        group("middle", { it.middle }, 3),
+                        group("end", { it.end }, 2),
                     )
                 },
             ),
         )
         body.append(wrappingSlots.root)
 
-        val expanding =
-            sectionBlock(
-                tr("扩展子项", "Expanding items"),
-                tr(
-                    "给子项设置 flex-grow 让它占据多余空间；多个子项按比例分配。",
-                    "flex-grow makes a child take the excess space; several children share it proportionally.",
-                ),
-            )
+        val expanding = sectionBlock()
+        texts.bind(expanding.heading) { it.expandingHeading }
+        texts.bind(expanding.hint) { it.expandingHint }
         expanding.body.append(
             exampleBox(
                 "flex-grow: 1",
                 createHorizontalLayout().apply {
                     addTheme("padding", "spacing")
                     append(
-                        newBox(tr("项目 1", "Item 1")).apply { style.setProperty("flex-grow", "1") },
-                        newBox(tr("项目 2", "Item 2")),
-                        newBox(tr("项目 3", "Item 3")),
+                        item(1).apply { style.setProperty("flex-grow", "1") },
+                        item(2),
+                        item(3),
                     )
                 },
             ),
         )
         body.append(expanding.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = horizontalLayoutEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
     }
 
     companion object : CustomElementReference<HorizontalLayoutPage>(HorizontalLayoutPage::class.js) {
@@ -334,4 +450,3 @@ internal fun newHorizontalLayoutPage(): HorizontalLayoutPage {
     HorizontalLayoutPage.define()
     return HorizontalLayoutPage.NAME()
 }
-

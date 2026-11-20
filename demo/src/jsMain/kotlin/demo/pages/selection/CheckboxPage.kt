@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -17,10 +22,9 @@ import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
 import demo.pages.fixtures.people
-import demo.tr
-import demo.ui.EventLog
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
+import demo.ui.RecordedLog
 import demo.ui.Readout
 import demo.ui.joinValues
 import demo.ui.listen
@@ -49,106 +53,278 @@ val checkboxEntry: CatalogEntry =
                 sourcePath = "pages/selection/CheckboxPage.kt",
             ),
         kitPage = { newCheckboxPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class CheckboxTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val acceptTerms: String,
+    val toggleFromCode: String,
+    val checkedPrefix: String,
+    val changeLine: (Boolean) -> String,
+    val codeLine: (Boolean) -> String,
+    val labelingHeading: String,
+    val labelingHint: String,
+    val agree: String,
+    val releases: String,
+    val oneEmail: String,
+    val requiredHeading: String,
+    val requiredHint: String,
+    val grantView: String,
+    val fieldRequired: String,
+    val notValidated: String,
+    val validate: String,
+    val validationPrefix: String,
+    val passed: String,
+    val failed: String,
+    val indeterminateHeading: String,
+    val indeterminateHint: String,
+    val notifyUsers: String,
+    val usersToNotify: String,
+    val orientationHeading: String,
+    val orientationHint: String,
+    val permissions: String,
+    val read: String,
+    val edit: String,
+    val delete: String,
+    val workingDays: String,
+    val monday: String,
+    val tuesday: String,
+    val wednesday: String,
+    val thursday: String,
+    val friday: String,
+    val saturday: String,
+    val sunday: String,
+    val manufacturer: String,
+    val status: String,
+    val inProgress: String,
+    val done: String,
+    val cancelled: String,
+    val presetHeading: String,
+    val presetHint: String,
+    val exportData: String,
+    val orderId: String,
+    val productName: String,
+    val customer: String,
+    val statusColumn: String,
+    val emptyValue: String,
+    val stylesHeading: String,
+    val stylesHint: String,
+    val label: String,
+    val helperText: String,
+)
+
+private val english: CheckboxTexts =
+    CheckboxTexts(
+        basicHeading = "Basic usage",
+        basicHint = "checked reflects the tick state; change only fires for user interaction, while " +
+            "checked-changed also fires when code sets the property.",
+        acceptTerms = "I accept the terms and conditions",
+        toggleFromCode = "Toggle from code",
+        checkedPrefix = "checked = ",
+        changeLine = { "change · $it" },
+        codeLine = { "checked-changed (from code) · $it" },
+        labelingHeading = "Label and helper text",
+        labelingHint = "label is the visible caption; helper-text explains the expected input. Both are " +
+            "set through properties.",
+        agree = "Yes, I agree",
+        releases = "Receive release notifications",
+        oneEmail = "At most one email per day",
+        requiredHeading = "Required",
+        requiredHint = "required makes an empty value invalid; error-message is shown below the field " +
+            "when validation fails.",
+        grantView = "Grant view permissions",
+        fieldRequired = "This field is required",
+        notValidated = "Not validated yet",
+        validate = "Validate",
+        validationPrefix = "Validation: ",
+        passed = "passed",
+        failed = "failed",
+        indeterminateHeading = "Indeterminate",
+        indeterminateHint = "The \"select all\" checkbox uses indeterminate for a partial selection; it " +
+            "is derived from the number of selected items together with checked.",
+        notifyUsers = "Notify users",
+        usersToNotify = "Users to notify",
+        orientationHeading = "Orientation",
+        orientationHint = "theme=\"horizontal\" lays the options out in a row, vertical stacks them; " +
+            "adjacent groups read better with a gap between them.",
+        permissions = "Permissions",
+        read = "Read",
+        edit = "Edit",
+        delete = "Delete",
+        workingDays = "Working days",
+        monday = "Monday",
+        tuesday = "Tuesday",
+        wednesday = "Wednesday",
+        thursday = "Thursday",
+        friday = "Friday",
+        saturday = "Saturday",
+        sunday = "Sunday",
+        manufacturer = "Manufacturer",
+        status = "Status",
+        inProgress = "In progress",
+        done = "Done",
+        cancelled = "Cancelled",
+        presetHeading = "Preset value",
+        presetHint = "value can be assigned directly; value-changed reports the new array after user edits.",
+        exportData = "Export data",
+        orderId = "Order ID",
+        productName = "Product name",
+        customer = "Customer",
+        statusColumn = "Status",
+        emptyValue = "[]",
+        stylesHeading = "Style variants",
+        stylesHint = "helper-above-field moves the helper text between the label and the options.",
+        label = "Label",
+        helperText = "Helper text",
+    )
+
+private val chinese: CheckboxTexts =
+    CheckboxTexts(
+        basicHeading = "基本用法",
+        basicHint = "checked 反映勾选状态；change 只在用户操作时触发，checked-changed 在属性被代码设置时也会触发。",
+        acceptTerms = "我接受条款与条件",
+        toggleFromCode = "程序化切换",
+        checkedPrefix = "checked = ",
+        changeLine = { "change · $it" },
+        codeLine = { "checked-changed（程序设置）· $it" },
+        labelingHeading = "标签与辅助信息",
+        labelingHint = "label 是可见标签；helper-text 提示填写方式，两者都通过 property 设置。",
+        agree = "我同意",
+        releases = "接收发布通知",
+        oneEmail = "每天最多一封邮件",
+        requiredHeading = "必填",
+        requiredHint = "required 让空值无法通过校验；error-message 是失败时显示在字段下方的文案。",
+        grantView = "授予查看权限",
+        fieldRequired = "此项为必填",
+        notValidated = "尚未校验",
+        validate = "校验",
+        validationPrefix = "校验：",
+        passed = "通过",
+        failed = "失败",
+        indeterminateHeading = "不确定态",
+        indeterminateHint = "「全选」勾选框用 indeterminate 表示部分选中；它与组件的 checked 一起由选中数量派生。",
+        notifyUsers = "通知所有用户",
+        usersToNotify = "接收通知的用户",
+        orientationHeading = "方向",
+        orientationHint = "theme=\"horizontal\" 让选项横排，vertical 让选项竖排；相邻的两个组之间留出间距更易读。",
+        permissions = "权限",
+        read = "读取",
+        edit = "编辑",
+        delete = "删除",
+        workingDays = "工作日",
+        monday = "周一",
+        tuesday = "周二",
+        wednesday = "周三",
+        thursday = "周四",
+        friday = "周五",
+        saturday = "周六",
+        sunday = "周日",
+        manufacturer = "制造商",
+        status = "状态",
+        inProgress = "进行中",
+        done = "已完成",
+        cancelled = "已取消",
+        presetHeading = "预设值",
+        presetHint = "value 可以直接赋值；value-changed 报告用户改动后的数组。",
+        exportData = "导出数据",
+        orderId = "订单号",
+        productName = "产品名称",
+        customer = "客户",
+        statusColumn = "状态",
+        emptyValue = "[]",
+        stylesHeading = "样式变体",
+        stylesHint = "helper-above-field 把辅助信息放到标签与选项之间。",
+        label = "标签",
+        helperText = "辅助信息",
+    )
+
+private val checkboxTexts: Translations<CheckboxTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class CheckboxPage : DemoPage() {
+    private val texts = Binder(checkboxTexts)
+
+    private val frame = PageFrame(checkboxEntry)
+
+    private val log = RecordedLog<Pair<Boolean, Boolean>>(6)
+
+    private val terms = createCheckbox()
+
+    private val stateReadout = Readout("")
+
+    private var lastValidation: Boolean? = null
+
+    private val requiredResult = Readout("")
+
+    private val exportGroup = createCheckboxGroup().addTheme("vertical")
+
+    private val exportReadout = Readout("")
 
     init {
-        configureFrame(checkboxEntry)
+        frame.mount(this)
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "checked 反映勾选状态；change 只在用户操作时触发，checked-changed 在属性被代码设置时也会触发。",
-                    "checked reflects the tick state; change only fires for user interaction, while " +
-                        "checked-changed also fires when code sets the property.",
-                ),
-            )
-        val log = EventLog(6)
-        val terms = createCheckbox { label = tr("我接受条款与条件", "I accept the terms and conditions") }
+        fun check(label: (CheckboxTexts) -> String): io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxElement =
+            createCheckbox().also { node -> texts.bind(node, label) { node.label = it } }
+
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
+        texts.bind(terms, { it.acceptTerms }) { terms.label = it }
         terms.dataset["test"] = "checkbox-basic"
         // `change` only fires for user interaction, so the event stream stays readable; the read-out
         // shows `checked-changed` working for programmatic updates as well.
-        terms.listen(CheckboxEvents.change) { log.add("change · ${terms.checked}") }
-        val stateReadout = Readout("checked = false")
-        terms.listen(CheckboxEvents.checkedChanged) { stateReadout.set("checked = ${terms.checked}") }
-        val toggleFromCode =
-            createButton { textContent = tr("程序化切换", "Toggle from code") }.apply {
-                clickEvent.addHandler {
-                    terms.checked = !terms.checked
-                    log.add(tr("checked-changed（程序设置）· ${terms.checked}", "checked-changed (from code) · ${terms.checked}"))
-                }
+        terms.listen(CheckboxEvents.change) {
+            log.add(false to terms.checked) { (fromCode, value) ->
+                if (fromCode) texts.current.codeLine(value) else texts.current.changeLine(value)
             }
+        }
+        terms.listen(CheckboxEvents.checkedChanged) { showChecked() }
+        val toggleFromCode = createButton()
+        texts.bind(toggleFromCode) { it.toggleFromCode }
+        toggleFromCode.clickEvent.addHandler {
+            terms.checked = !terms.checked
+            log.add(true to terms.checked) { (fromCode, value) ->
+                if (fromCode) texts.current.codeLine(value) else texts.current.changeLine(value)
+            }
+        }
         basic.body.append(exampleBox(null, kitCol(terms, kitRow(toggleFromCode, stateReadout.root), log.root)))
         body.append(basic.root)
 
-        val labeling =
-            sectionBlock(
-                tr("标签与辅助信息", "Label and helper text"),
-                tr(
-                    "label 是可见标签；helper-text 提示填写方式，两者都通过 property 设置。",
-                    "label is the visible caption; helper-text explains the expected input. Both are set " +
-                        "through properties.",
-                ),
-            )
-        labeling.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    createCheckbox {
-                        label = tr("我同意", "Yes, I agree")
-                    },
-                    createCheckbox {
-                        label = tr("接收发布通知", "Receive release notifications")
-                        helperText = tr("每天最多一封邮件", "At most one email per day")
-                    },
-                ),
-            ),
-        )
+        val labeling = sectionBlock()
+        texts.bind(labeling.heading) { it.labelingHeading }
+        texts.bind(labeling.hint) { it.labelingHint }
+        val agree = check { it.agree }
+        val releases = check { it.releases }
+        texts.bind(releases, { it.oneEmail }) { releases.helperText = it }
+        labeling.body.append(exampleBox(null, kitCol(agree, releases)))
         body.append(labeling.root)
 
-        val required =
-            sectionBlock(
-                tr("必填", "Required"),
-                tr(
-                    "required 让空值无法通过校验；error-message 是失败时显示在字段下方的文案。",
-                    "required makes an empty value invalid; error-message is shown below the field when " +
-                        "validation fails.",
-                ),
-            )
-        val grant = createCheckbox {
-            label = tr("授予查看权限", "Grant view permissions")
-            this.required = true
-            errorMessage = tr("此项为必填", "This field is required")
+        val required = sectionBlock()
+        texts.bind(required.heading) { it.requiredHeading }
+        texts.bind(required.hint) { it.requiredHint }
+        val grant = check { it.grantView }
+        grant.required = true
+        texts.bind(grant, { it.fieldRequired }) { grant.errorMessage = it }
+        val submit = createButton()
+        texts.bind(submit) { it.validate }
+        submit.clickEvent.addHandler {
+            lastValidation = grant.validate()
+            showValidation()
         }
-        val requiredResult = Readout(tr("尚未校验", "Not validated yet"))
-        val submit =
-            createButton { textContent = tr("校验", "Validate") }.apply {
-                clickEvent.addHandler {
-                    requiredResult.set(
-                        tr("校验：", "Validation: "),
-                        if (grant.validate()) tr("通过", "passed") else tr("失败", "failed"),
-                    )
-                }
-            }
         required.body.append(exampleBox(null, kitCol(grant, kitRow(submit, requiredResult.root))))
         body.append(required.root)
 
-        val indeterminate =
-            sectionBlock(
-                tr("不确定态", "Indeterminate"),
-                tr(
-                    "「全选」勾选框用 indeterminate 表示部分选中；它与组件的 checked 一起由选中数量派生。",
-                    "The \"select all\" checkbox uses indeterminate for a partial selection; it is derived " +
-                        "from the number of selected items together with checked.",
-                ),
-            )
+        val indeterminate = sectionBlock()
+        texts.bind(indeterminate.heading) { it.indeterminateHeading }
+        texts.bind(indeterminate.hint) { it.indeterminateHint }
         val users = people(3)
-        val selectAll = createCheckbox { label = tr("通知所有用户", "Notify users") }
-        val userGroup =
-            createCheckboxGroup { label = tr("接收通知的用户", "Users to notify") }.addTheme("vertical")
+        val selectAll = check { it.notifyUsers }
+        val userGroup = createCheckboxGroup().addTheme("vertical")
+        texts.bind(userGroup, { it.usersToNotify }) { userGroup.label = it }
         userGroup.append(
             *users.map { person ->
                 createCheckbox {
@@ -172,51 +348,33 @@ internal class CheckboxPage : DemoPage() {
         indeterminate.body.append(exampleBox(null, kitCol(selectAll, userGroup)))
         body.append(indeterminate.root)
 
-        val orientation =
-            sectionBlock(
-                tr("方向", "Orientation"),
-                tr(
-                    "theme=\"horizontal\" 让选项横排，vertical 让选项竖排；相邻的两个组之间留出间距更易读。",
-                    "theme=\"horizontal\" lays the options out in a row, vertical stacks them; adjacent " +
-                        "groups read better with a gap between them.",
-                ),
-            )
-        val horizontal =
-            createCheckboxGroup { label = tr("权限", "Permissions") }.addTheme("horizontal")
-        horizontal.append(
-            createCheckbox {
-                value = "read"
-                textContent = tr("读取", "Read")
-            },
-            createCheckbox {
-                value = "edit"
-                textContent = tr("编辑", "Edit")
-            },
-            createCheckbox {
-                value = "delete"
-                textContent = tr("删除", "Delete")
-            },
+        val orientation = sectionBlock()
+        texts.bind(orientation.heading) { it.orientationHeading }
+        texts.bind(orientation.hint) { it.orientationHint }
+        val permissions = createCheckboxGroup().addTheme("horizontal")
+        texts.bind(permissions, { it.permissions }) { permissions.label = it }
+        permissions.append(
+            option("read") { it.read },
+            option("edit") { it.edit },
+            option("delete") { it.delete },
         )
-        val vertical =
-            createCheckboxGroup { label = tr("工作日", "Working days") }.addTheme("vertical")
-        vertical.append(
-            *listOf(
-                tr("周一", "Monday"),
-                tr("周二", "Tuesday"),
-                tr("周三", "Wednesday"),
-                tr("周四", "Thursday"),
-                tr("周五", "Friday"),
-                tr("周六", "Saturday"),
-                tr("周日", "Sunday"),
-            ).map { day ->
-                createCheckbox {
-                    value = day
-                    textContent = day
-                }
-            }.toTypedArray(),
-        )
-        val manufacturers =
-            createCheckboxGroup { label = tr("制造商", "Manufacturer") }.addTheme("vertical")
+        val days = createCheckboxGroup().addTheme("vertical")
+        texts.bind(days, { it.workingDays }) { days.label = it }
+        listOf(
+            "monday" to { copy: CheckboxTexts -> copy.monday },
+            "tuesday" to { copy: CheckboxTexts -> copy.tuesday },
+            "wednesday" to { copy: CheckboxTexts -> copy.wednesday },
+            "thursday" to { copy: CheckboxTexts -> copy.thursday },
+            "friday" to { copy: CheckboxTexts -> copy.friday },
+            "saturday" to { copy: CheckboxTexts -> copy.saturday },
+            "sunday" to { copy: CheckboxTexts -> copy.sunday },
+        ).forEach { (value, copy) ->
+            val node = createCheckbox { this.value = value }
+            texts.bind(node, copy) { node.textContent = it }
+            days.append(node)
+        }
+        val manufacturers = createCheckboxGroup().addTheme("vertical")
+        texts.bind(manufacturers, { it.manufacturer }) { manufacturers.label = it }
         manufacturers.append(
             *listOf("Akuchi", "Broek", "Wulf").mapIndexed { index, name ->
                 createCheckbox {
@@ -225,81 +383,42 @@ internal class CheckboxPage : DemoPage() {
                 }
             }.toTypedArray(),
         )
-        val statuses =
-            createCheckboxGroup { label = tr("状态", "Status") }.addTheme("vertical")
+        val statuses = createCheckboxGroup().addTheme("vertical")
+        texts.bind(statuses, { it.status }) { statuses.label = it }
         statuses.append(
-            createCheckbox {
-                value = "0"
-                textContent = tr("进行中", "In progress")
-            },
-            createCheckbox {
-                value = "1"
-                textContent = tr("已完成", "Done")
-            },
-            createCheckbox {
-                value = "2"
-                textContent = tr("已取消", "Cancelled")
-            },
+            option("0") { it.inProgress },
+            option("1") { it.done },
+            option("2") { it.cancelled },
         )
         val adjacent = kitCol(manufacturers, statuses)
         orientation.body.append(
-            exampleBox(null, horizontal),
-            exampleBox(null, vertical),
+            exampleBox(null, permissions),
+            exampleBox(null, days),
             exampleBox(null, adjacent),
         )
         body.append(orientation.root)
 
-        val preset =
-            sectionBlock(
-                tr("预设值", "Preset value"),
-                tr(
-                    "value 可以直接赋值；value-changed 报告用户改动后的数组。",
-                    "value can be assigned directly; value-changed reports the new array after user edits.",
-                ),
-            )
-        val exportGroup =
-            createCheckboxGroup {
-                label = tr("导出数据", "Export data")
-                value = arrayOf("0", "2")
-            }.addTheme("vertical")
+        val preset = sectionBlock()
+        texts.bind(preset.heading) { it.presetHeading }
+        texts.bind(preset.hint) { it.presetHint }
+        texts.bind(exportGroup, { it.exportData }) { exportGroup.label = it }
+        exportGroup.value = arrayOf("0", "2")
         exportGroup.append(
-            createCheckbox {
-                value = "0"
-                textContent = tr("订单号", "Order ID")
-            },
-            createCheckbox {
-                value = "1"
-                textContent = tr("产品名称", "Product name")
-            },
-            createCheckbox {
-                value = "2"
-                textContent = tr("客户", "Customer")
-            },
-            createCheckbox {
-                value = "3"
-                textContent = tr("状态", "Status")
-            },
+            option("0") { it.orderId },
+            option("1") { it.productName },
+            option("2") { it.customer },
+            option("3") { it.statusColumn },
         )
-        val exportReadout = Readout("value = 0, 2")
-        exportGroup.listen(CheckboxGroupEvents.valueChanged) {
-            exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { "[]" })
-        }
+        exportGroup.listen(CheckboxGroupEvents.valueChanged) { showExport() }
         preset.body.append(exampleBox(null, kitCol(exportGroup, exportReadout.root)))
         body.append(preset.root)
 
-        val styles =
-            sectionBlock(
-                tr("样式变体", "Style variants"),
-                tr(
-                    "helper-above-field 把辅助信息放到标签与选项之间。",
-                    "helper-above-field moves the helper text between the label and the options.",
-                ),
-            )
-        val styled =
-            createCheckboxGroup {
-                label = tr("标签", "Label")
-                helperText = tr("辅助信息", "Helper text")
-            }.addTheme("helper-above-field", "vertical")
+        val styles = sectionBlock()
+        texts.bind(styles.heading) { it.stylesHeading }
+        texts.bind(styles.hint) { it.stylesHint }
+        val styled = createCheckboxGroup().addTheme("helper-above-field", "vertical")
+        texts.bind(styled, { it.label }) { styled.label = it }
+        texts.bind(styled, { it.helperText }) { styled.helperText = it }
         styled.append(
             *listOf("Item 1", "Item 2", "Item 3").map { label ->
                 createCheckbox {
@@ -311,6 +430,43 @@ internal class CheckboxPage : DemoPage() {
         styles.body.append(exampleBox(null, styled))
         body.append(styles.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    private fun option(
+        value: String,
+        copy: (CheckboxTexts) -> String,
+    ) = createCheckbox { this.value = value }.also { node ->
+        texts.bind(node, copy) { node.textContent = it }
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = checkboxEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showChecked()
+        showValidation()
+        showExport()
+        log.replay(false to false)
+    }
+
+    private fun showChecked() {
+        stateReadout.set(texts.current.checkedPrefix + terms.checked)
+    }
+
+    private fun showValidation() {
+        val copy = texts.current
+        val result = lastValidation
+        requiredResult.set(
+            if (result == null) copy.notValidated
+            else copy.validationPrefix + (if (result) copy.passed else copy.failed),
+        )
+    }
+
+    private fun showExport() {
+        exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { texts.current.emptyValue })
     }
 
     companion object : CustomElementReference<CheckboxPage>(CheckboxPage::class.js) {
@@ -327,4 +483,3 @@ internal fun newCheckboxPage(): CheckboxPage {
     CheckboxPage.define()
     return CheckboxPage.NAME()
 }
-

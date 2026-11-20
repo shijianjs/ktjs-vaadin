@@ -8,6 +8,11 @@ import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -21,9 +26,8 @@ import demo.Groups
 import demo.bi
 import demo.pages.data.gridItems
 import demo.pages.fixtures.people
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.listen
 import kotlin.js.unsafeCast
@@ -43,6 +47,7 @@ import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 
 val appLayoutEntry: CatalogEntry =
@@ -62,32 +67,160 @@ val appLayoutEntry: CatalogEntry =
                 sourcePath = "pages/layout/AppLayoutPage.kt",
             ),
         kitPage = { newAppLayoutPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class AppLayoutTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val myApp: String,
+    val contentText: String,
+    val navbarHeading: String,
+    val navbarHint: String,
+    val dashboard: String,
+    val orders: String,
+    val customers: String,
+    val products: String,
+    val contentArea: String,
+    val placementHeading: String,
+    val placementHint: String,
+    val dashboardContent: String,
+    val togglePrimary: String,
+    val scrollingHeading: String,
+    val scrollingHint: String,
+    val autoHeight: String,
+    val fixedHeight: String,
+    val bottomHeading: String,
+    val bottomHint: String,
+    val viewTitleContent: String,
+    val secondaryHeading: String,
+    val secondaryHint: String,
+    val all: String,
+    val open: String,
+    val completed: String,
+    val cancelled: String,
+    val orderList: String,
+)
+
+private val english: AppLayoutTexts =
+    AppLayoutTexts(
+        basicHeading = "Basic usage",
+        basicHint = "An application consists of a content area, a navbar and a drawer; the drawer is a " +
+            "fixed column on wide screens and a toggleable overlay on narrow ones.",
+        myApp = "MyApp",
+        contentText = "The content area is filled through the default slot.",
+        navbarHeading = "Navbar",
+        navbarHint = "The navbar is the header above the content area; it can hold the application title, " +
+            "primary actions or secondary navigation.",
+        dashboard = "Dashboard",
+        orders = "Orders",
+        customers = "Customers",
+        products = "Products",
+        contentArea = "Content area",
+        placementHeading = "Navbar placement",
+        placementHint = "By default the navbar sits on top; with primarySection set to drawer the drawer " +
+            "takes the full height and the navbar moves above the content on the right, where it usually " +
+            "holds the title and actions of the current view.",
+        dashboardContent = "Dashboard content",
+        togglePrimary = "Toggle primarySection",
+        scrollingHeading = "Scrolling behavior",
+        scrollingHint = "The layout grows with its content by default and the page scrolls. Give the " +
+            "layout a fixed height and let the content area fill it to scroll inside the content area " +
+            "instead.",
+        autoHeight = "Auto height",
+        fixedHeight = "Full height",
+        bottomHeading = "Bottom navbar on small touchscreens",
+        bottomHint = "With --vaadin-app-layout-touch-optimized enabled, the navbar touch-optimized slot " +
+            "is shown at the bottom of the screen, as fitted for a handful of primary destinations on " +
+            "mobile.",
+        viewTitleContent = "View title and content",
+        secondaryHeading = "Secondary navigation",
+        secondaryHint = "The drawer holds the main navigation while the navbar carries the title of the " +
+            "current view and the secondary navigation that belongs to it.",
+        all = "All",
+        open = "Open",
+        completed = "Completed",
+        cancelled = "Cancelled",
+        orderList = "Order list",
+    )
+
+private val chinese: AppLayoutTexts =
+    AppLayoutTexts(
+        basicHeading = "基本用法",
+        basicHint = "应用由内容区、导航栏与抽屉组成：抽屉在宽屏上是固定栏，窄屏时变成由抽屉开关控制的浮层。",
+        myApp = "我的应用",
+        contentText = "内容区由默认插槽填充。",
+        navbarHeading = "导航栏",
+        navbarHint = "navbar 是内容区上方的头部，可以放应用名、主工具栏或次级导航。",
+        dashboard = "仪表盘",
+        orders = "订单",
+        customers = "客户",
+        products = "产品",
+        contentArea = "内容区",
+        placementHeading = "导航栏位置",
+        placementHint = "默认导航栏在顶部；把 primarySection 设为 drawer 后抽屉占满整个高度，导航栏移到右侧内容区上方，" +
+            "常用来放当前视图的标题与次级操作。",
+        dashboardContent = "仪表盘内容",
+        togglePrimary = "切换 primarySection",
+        scrollingHeading = "滚动行为",
+        scrollingHint = "布局默认随内容增高，页面自己滚动；给布局设固定高度并让内容区撑满，长内容就在内容区内部滚动。",
+        autoHeight = "自动高度",
+        fixedHeight = "固定高度",
+        bottomHeading = "小屏底部导航栏",
+        bottomHint = "打开 --vaadin-app-layout-touch-optimized 后，放在 navbar touch-optimized 插槽里的导航会显示在" +
+            "屏幕底部，适合移动端的少数几个主目的地。",
+        viewTitleContent = "视图标题与内容",
+        secondaryHeading = "次级导航",
+        secondaryHint = "抽屉放大类导航，navbar 里放当前视图的标题与只与该视图相关的次级导航。",
+        all = "全部",
+        open = "进行中",
+        completed = "已完成",
+        cancelled = "已取消",
+        orderList = "订单列表",
+    )
+
+private val appLayoutTexts: Translations<AppLayoutTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class AppLayoutPage : DemoPage() {
+    private val texts = Binder(appLayoutTexts)
+
+    private val frame = PageFrame(appLayoutEntry)
+
+    /** Every drawer built on this page, so a switch can rewrite their shared navigation. */
+    private val drawers = mutableListOf<AppDrawer>()
 
     init {
-        configureFrame(appLayoutEntry)
+        frame.mount(this)
         registerVaadinIcons()
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "应用由内容区、导航栏与抽屉组成：抽屉在宽屏上是固定栏，窄屏时变成由抽屉开关控制的浮层。",
-                    "An application consists of a content area, a navbar and a drawer; the drawer is a fixed column " +
-                        "on wide screens and a toggleable overlay on narrow ones.",
-                ),
-            )
+        fun drawer(): AppDrawer = newAppDrawer().also { drawers += it }
+
+        fun content(copy: (AppLayoutTexts) -> String): AppContent =
+            newAppContent().also { node -> texts.bind(node, copy) { node.show(it) } }
+
+        fun link(icon: String? = null, copy: (AppLayoutTexts) -> String): NavLink =
+            newNavLink().also { node -> texts.bind(node, copy) { node.show(it, icon) } }
+
+        fun navTitle(copy: (AppLayoutTexts) -> String): HTMLElement {
+            val node = heading(3, "")
+            texts.bind(node, copy) { node.textContent = it }
+            node.slot = "navbar"
+            node.style.setProperty("margin", "0")
+            return node
+        }
+
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         val layout = createAppLayout()
         layout.dataset["test"] = "app-layout"
         layout.style.setProperty("height", "22rem")
-        layout.append(
-            newAppNavbar(tr("我的应用", "MyApp")),
-            newAppDrawer(),
-            newAppContent(tr("内容区由默认插槽填充。", "The content area is filled through the default slot.")),
-        )
+        val navbar = newAppNavbar()
+        texts.bind(navbar.captionNode) { it.myApp }
+        layout.append(navbar, drawer(), content { it.contentText })
         val readout = Readout("drawerOpened = false")
         layout.listen(AppLayoutEvents.drawerOpenedChanged) {
             readout.set("drawerOpened = ${layout.drawerOpened}")
@@ -95,22 +228,12 @@ internal class AppLayoutPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(layout, readout.root)))
         body.append(basic.root)
 
-        val navbarSection =
-            sectionBlock(
-                tr("导航栏", "Navbar"),
-                tr(
-                    "navbar 是内容区上方的头部，可以放应用名、主工具栏或次级导航。",
-                    "The navbar is the header above the content area; it can hold the application title, primary " +
-                        "actions or secondary navigation.",
-                ),
-            )
+        val navbarSection = sectionBlock()
+        texts.bind(navbarSection.heading) { it.navbarHeading }
+        texts.bind(navbarSection.hint) { it.navbarHint }
         val navbarLayout = createAppLayout()
         navbarLayout.dataset["test"] = "app-layout-navbar"
         navbarLayout.style.setProperty("height", "12rem")
-        val navTitle = heading(3, tr("我的应用", "MyApp")).apply {
-            slot = "navbar"
-            style.setProperty("margin", "0")
-        }
         val navLinks = createHorizontalLayout().apply {
             slot = "navbar"
             style.setProperty("width", "100%")
@@ -118,110 +241,83 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("justify-content", "center")
             style.setProperty("gap", "0.5rem")
             append(
-                newNavLink(tr("仪表盘", "Dashboard")),
-                newNavLink(tr("订单", "Orders")),
-                newNavLink(tr("客户", "Customers")),
-                newNavLink(tr("产品", "Products")),
+                link { it.dashboard },
+                link { it.orders },
+                link { it.customers },
+                link { it.products },
             )
         }
-        navbarLayout.append(navTitle, navLinks, newAppContent(tr("内容区", "Content area")))
+        navbarLayout.append(navTitle { it.myApp }, navLinks, content { it.contentArea })
         navbarSection.body.append(exampleBox(null, navbarLayout))
         body.append(navbarSection.root)
 
-        val placement =
-            sectionBlock(
-                tr("导航栏位置", "Navbar placement"),
-                tr(
-                    "默认导航栏在顶部；把 primarySection 设为 drawer 后抽屉占满整个高度，导航栏移到右侧内容区" +
-                        "上方，常用来放当前视图的标题与次级操作。",
-                    "By default the navbar sits on top; with primarySection set to drawer the drawer takes the full " +
-                        "height and the navbar moves above the content on the right, where it usually holds the " +
-                        "title and actions of the current view.",
-                ),
-            )
+        val placement = sectionBlock()
+        texts.bind(placement.heading) { it.placementHeading }
+        texts.bind(placement.hint) { it.placementHint }
         val sideLayout = createAppLayout { primarySection = AppLayoutPrimarySections.drawer }
         sideLayout.dataset["test"] = "app-layout-placement"
         sideLayout.style.setProperty("height", "20rem")
-        sideLayout.append(
-            newAppNavbar(tr("仪表盘", "Dashboard")),
-            newAppDrawer(),
-            newAppContent(tr("仪表盘内容", "Dashboard content")),
-        )
+        val sideNavbar = newAppNavbar()
+        texts.bind(sideNavbar.captionNode) { it.dashboard }
+        sideLayout.append(sideNavbar, drawer(), content { it.dashboardContent })
         val placementReadout = Readout("primarySection = drawer")
-        val placementButton =
-            createButton { textContent = tr("切换 primarySection", "Toggle primarySection") }.addTheme("tertiary").apply {
-                clickEvent.addHandler {
-                    val next =
-                        if (sideLayout.primarySection == AppLayoutPrimarySections.drawer) {
-                            AppLayoutPrimarySections.navbar
-                        } else {
-                            AppLayoutPrimarySections.drawer
-                        }
-                    sideLayout.primarySection = next
-                    placementReadout.set("primarySection = ${next.unsafeCast<String>()}")
-                }
+        val placementButton = createButton().addTheme("tertiary").apply {
+            clickEvent.addHandler {
+                val next =
+                    if (sideLayout.primarySection == AppLayoutPrimarySections.drawer) {
+                        AppLayoutPrimarySections.navbar
+                    } else {
+                        AppLayoutPrimarySections.drawer
+                    }
+                sideLayout.primarySection = next
+                placementReadout.set("primarySection = ${next.unsafeCast<String>()}")
             }
+        }
+        texts.bind(placementButton) { it.togglePrimary }
         placement.body.append(exampleBox(null, kitCol(sideLayout, kitRow(placementButton, placementReadout.root))))
         body.append(placement.root)
 
-        val scrolling =
-            sectionBlock(
-                tr("滚动行为", "Scrolling behavior"),
-                tr(
-                    "布局默认随内容增高，页面自己滚动；给布局设固定高度并让内容区撑满，长内容就在内容区内部滚动。",
-                    "The layout grows with its content by default and the page scrolls. Give the layout a fixed " +
-                        "height and let the content area fill it to scroll inside the content area instead.",
-                ),
-            )
-        val autoFrame =
-            HtmlTagName.div().apply {
-                style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-                style.setProperty("border-radius", "var(--lumo-border-radius-l)")
-                style.setProperty("overflow", "hidden")
-            }
+        val scrolling = sectionBlock()
+        texts.bind(scrolling.heading) { it.scrollingHeading }
+        texts.bind(scrolling.hint) { it.scrollingHint }
+        val autoFrame = HtmlTagName.div().apply {
+            style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
+            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            style.setProperty("overflow", "hidden")
+        }
         val autoLayout = createAppLayout()
         autoLayout.append(
-            heading(3, tr("自动高度", "Auto height")).apply {
-                slot = "navbar"
-                style.setProperty("margin", "0")
-            },
+            navTitle { it.autoHeight },
             appPeopleGrid(5, allRowsVisible = true),
         )
         autoFrame.append(autoLayout)
 
-        val fullFrame =
-            HtmlTagName.div().apply {
-                style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-                style.setProperty("border-radius", "var(--lumo-border-radius-l)")
-                style.setProperty("height", "18rem")
-                style.setProperty("overflow", "hidden")
-            }
+        val fullFrame = HtmlTagName.div().apply {
+            style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
+            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            style.setProperty("height", "18rem")
+            style.setProperty("overflow", "hidden")
+        }
         val fullLayout = createAppLayout().apply { style.setProperty("height", "100%") }
         val fullGrid = appPeopleGrid(20, allRowsVisible = false).apply {
             style.setProperty("height", "100%")
             addTheme("no-border")
         }
         fullLayout.append(
-            heading(3, tr("固定高度", "Full height")).apply {
-                slot = "navbar"
-                style.setProperty("margin", "0")
-            },
+            navTitle { it.fixedHeight },
             fullGrid,
         )
         fullFrame.append(fullLayout)
-        scrolling.body.append(exampleBox(tr("自动高度", "Auto height"), autoFrame), exampleBox(tr("固定高度", "Full height"), fullFrame))
+        val autoCard = exampleBox("", autoFrame)
+        texts.bind(autoCard.firstElementChild as HTMLParagraphElement) { it.autoHeight }
+        val fullCard = exampleBox("", fullFrame)
+        texts.bind(fullCard.firstElementChild as HTMLParagraphElement) { it.fixedHeight }
+        scrolling.body.append(autoCard, fullCard)
         body.append(scrolling.root)
 
-        val bottomNavbar =
-            sectionBlock(
-                tr("小屏底部导航栏", "Bottom navbar on small touchscreens"),
-                tr(
-                    "打开 --vaadin-app-layout-touch-optimized 后，放在 navbar touch-optimized 插槽里的导航会显示在" +
-                        "屏幕底部，适合移动端的少数几个主目的地。",
-                    "With --vaadin-app-layout-touch-optimized enabled, the navbar touch-optimized slot is shown at " +
-                        "the bottom of the screen, as fitted for a handful of primary destinations on mobile.",
-                ),
-            )
+        val bottomNavbar = sectionBlock()
+        texts.bind(bottomNavbar.heading) { it.bottomHeading }
+        texts.bind(bottomNavbar.hint) { it.bottomHint }
         val bottomLayout = createAppLayout()
         bottomLayout.dataset["test"] = "app-layout-bottom"
         bottomLayout.style.setProperty("height", "18rem")
@@ -231,72 +327,76 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("width", "100%")
             style.setProperty("justify-content", "space-evenly")
             append(
-                newNavLink(tr("仪表盘", "Dashboard"), "vaadin:dashboard"),
-                newNavLink(tr("订单", "Orders"), "vaadin:cart"),
-                newNavLink(tr("客户", "Customers"), "vaadin:user-heart"),
-                newNavLink(tr("产品", "Products"), "vaadin:package"),
+                link("vaadin:dashboard") { it.dashboard },
+                link("vaadin:cart") { it.orders },
+                link("vaadin:user-heart") { it.customers },
+                link("vaadin:package") { it.products },
             )
         }
         bottomLayout.append(
-            heading(3, tr("我的应用", "MyApp")).apply {
-                slot = "navbar"
-                style.setProperty("margin", "0")
-            },
+            navTitle { it.myApp },
             bottomNav,
-            newAppContent(tr("视图标题与内容", "View title and content")),
+            content { it.viewTitleContent },
         )
         bottomNavbar.body.append(exampleBox(null, bottomLayout))
         body.append(bottomNavbar.root)
 
-        val secondary =
-            sectionBlock(
-                tr("次级导航", "Secondary navigation"),
-                tr(
-                    "抽屉放大类导航，navbar 里放当前视图的标题与只与该视图相关的次级导航。",
-                    "The drawer holds the main navigation while the navbar carries the title of the current view " +
-                        "and the secondary navigation that belongs to it.",
-                ),
-            )
+        val secondary = sectionBlock()
+        texts.bind(secondary.heading) { it.secondaryHeading }
+        texts.bind(secondary.hint) { it.secondaryHint }
         val secondaryLayout = createAppLayout { primarySection = AppLayoutPrimarySections.drawer }
         secondaryLayout.dataset["test"] = "app-layout-secondary"
         secondaryLayout.style.setProperty("height", "22rem")
-        val drawerTitle = heading(3, tr("我的应用", "MyApp")).apply {
-            slot = "drawer"
-            style.setProperty("margin", "var(--lumo-space-m)")
-        }
+        val drawerTitle = heading(3, "")
+        texts.bind(drawerTitle) { it.myApp }
+        drawerTitle.slot = "drawer"
+        drawerTitle.style.setProperty("margin", "var(--lumo-space-m)")
         val secondaryNavbar = createVerticalLayout().apply {
             slot = "navbar"
             style.setProperty("padding", "var(--lumo-space-s) var(--lumo-space-m)")
-            append(
-                createHorizontalLayout().apply {
-                    style.setProperty("align-items", "center")
-                    append(
-                        createDrawerToggle().apply { style.setProperty("margin-inline-end", "var(--lumo-space-s)") },
-                        heading(4, tr("订单", "Orders")).apply { style.setProperty("margin", "0") },
-                    )
-                },
-                createHorizontalLayout().apply {
-                    style.setProperty("height", "2.25rem")
-                    style.setProperty("justify-content", "center")
-                    style.setProperty("gap", "0.5rem")
-                    append(
-                        newNavLink(tr("全部", "All")),
-                        newNavLink(tr("进行中", "Open")),
-                        newNavLink(tr("已完成", "Completed")),
-                        newNavLink(tr("已取消", "Cancelled")),
-                    )
-                },
-            )
         }
+        val orderHeading = heading(4, "")
+        texts.bind(orderHeading) { it.orders }
+        orderHeading.style.setProperty("margin", "0")
+        secondaryNavbar.append(
+            createHorizontalLayout().apply {
+                style.setProperty("align-items", "center")
+                append(
+                    createDrawerToggle().apply { style.setProperty("margin-inline-end", "var(--lumo-space-s)") },
+                    orderHeading,
+                )
+            },
+            createHorizontalLayout().apply {
+                style.setProperty("height", "2.25rem")
+                style.setProperty("justify-content", "center")
+                style.setProperty("gap", "0.5rem")
+                append(
+                    link { it.all },
+                    link { it.open },
+                    link { it.completed },
+                    link { it.cancelled },
+                )
+            },
+        )
         secondaryLayout.append(
             drawerTitle,
-            newAppDrawer(),
+            drawer(),
             secondaryNavbar,
-            newAppContent(tr("订单列表", "Order list")),
+            content { it.orderList },
         )
         secondary.body.append(exampleBox(null, secondaryLayout))
         body.append(secondary.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = appLayoutEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        drawers.forEach { it.applyTranslation(lang) }
     }
 
     companion object : CustomElementReference<AppLayoutPage>(AppLayoutPage::class.js) {
@@ -320,7 +420,11 @@ internal fun newAppLayoutPage(): AppLayoutPage {
  */
 internal class AppNavbar : CustomElementAdapter() {
     private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
+
     private val caption = heading(3, "").apply { style.setProperty("margin", "0") }
+
+    /** The heading a page binds its title to; the caption lives in the shadow root. */
+    val captionNode: HTMLElement get() = caption
 
     init {
         attachShadowRoot().append(toggle, caption)
@@ -345,9 +449,9 @@ internal class AppNavbar : CustomElementAdapter() {
 }
 
 /** Creates a defined `<vaadin-demo-app-navbar>`. */
-internal fun newAppNavbar(title: String): AppNavbar {
+internal fun newAppNavbar(): AppNavbar {
     AppNavbar.define()
-    return AppNavbar.NAME().also { it.show(title) }
+    return AppNavbar.NAME()
 }
 
 /**
@@ -355,12 +459,19 @@ internal fun newAppNavbar(title: String): AppNavbar {
  * side navigation.
  */
 internal class AppDrawer : CustomElementAdapter() {
+    private val sideNav = newAppSideNav()
+
     init {
-        attachShadowRoot().append(createScroller().apply { append(newAppSideNav()) })
+        attachShadowRoot().append(createScroller().apply { append(sideNav) })
     }
 
     override fun connectedCallback() {
         slot = "drawer"
+    }
+
+    /** Writes the shared side navigation in [lang]. */
+    fun applyTranslation(lang: Lang) {
+        sideNav.applyTranslation(lang)
     }
 
     companion object : CustomElementReference<AppDrawer>(AppDrawer::class.js) {
@@ -400,9 +511,9 @@ internal class AppContent : CustomElementAdapter() {
 }
 
 /** Creates a defined `<vaadin-demo-app-content>`. */
-internal fun newAppContent(text: String): AppContent {
+internal fun newAppContent(): AppContent {
     AppContent.define()
-    return AppContent.NAME().also { it.show(text) }
+    return AppContent.NAME()
 }
 
 /**
@@ -445,9 +556,9 @@ internal class NavLink : CustomElementAdapter() {
 }
 
 /** Creates a defined `<vaadin-demo-nav-link>`. */
-internal fun newNavLink(label: String, icon: String? = null): NavLink {
+internal fun newNavLink(): NavLink {
     NavLink.define()
-    return NavLink.NAME().also { it.show(label, icon) }
+    return NavLink.NAME()
 }
 
 /** A grid of demo people used by the scrolling examples of the app layout page. */
@@ -463,4 +574,3 @@ private fun appPeopleGrid(rows: Int, allRowsVisible: Boolean): GridElement {
     )
     return grid
 }
-
