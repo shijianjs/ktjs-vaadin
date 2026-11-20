@@ -1,5 +1,10 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
@@ -18,14 +23,16 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.jsArray
 import js.objects.unsafeJso
 import kotlin.js.JsAny
+import io.github.shijianjs.ktjs.vaadin.badge.BadgeElement
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxElement
 import io.github.shijianjs.ktjs.vaadin.combobox.createComboBox
+import io.github.shijianjs.ktjs.vaadin.details.DetailsElement
 import io.github.shijianjs.ktjs.vaadin.details.createDetails
 import io.github.shijianjs.ktjs.vaadin.details.createDetailsSummary
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
@@ -34,8 +41,10 @@ import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
+import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
-import web.html.HTMLElement
+import web.html.HTMLAnchorElement
+import web.html.HTMLSpanElement
 
 val detailsEntry: CatalogEntry =
     CatalogEntry(
@@ -53,11 +62,10 @@ val detailsEntry: CatalogEntry =
                 sourcePath = "pages/layout/DetailsPage.kt",
             ),
         kitPage = { newDetailsPage() },
-        rebuildsOnLanguage = true,
     )
 
 /** A combo box over a fixed list of countries, labelled through `item-label-path`. */
-internal fun countryComboBox(label: String) =
+internal fun countryComboBox(label: String): ComboBoxElement =
     createComboBox {
         this.label = label
         itemLabelPath = "name"
@@ -71,104 +79,195 @@ internal fun countryComboBox(label: String) =
             )
     }
 
+/** Every string this page shows, in one language. */
+private class DetailsTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val contactInformation: String,
+    val contentHeading: String,
+    val contentHint: String,
+    val analytics: String,
+    val analyticsLinks: List<String>,
+    val customers: String,
+    val customerLinks: List<String>,
+    val finances: String,
+    val financeLinks: List<String>,
+    val summaryHeading: String,
+    val summaryHint: String,
+    val errorsSuffix: String,
+    val address: String,
+    val zip: String,
+    val city: String,
+    val country: String,
+    val disabledHeading: String,
+    val disabledHint: String,
+    val members: String,
+    val themesHeading: String,
+    val themesHint: String,
+)
+
+private val english: DetailsTexts = DetailsTexts(
+    basicHeading = "Basic usage",
+    basicHint = "summary is the header text and the children are the expanded content; opened is read/write and " +
+        "starts as false.",
+    contactInformation = "Contact information",
+    contentHeading = "Content",
+    contentHint = "The content area takes any nodes; the example shows three groups of links, all opened.",
+    analytics = "Analytics",
+    analyticsLinks = listOf("Dashboard", "Reports", "Data sources"),
+    customers = "Customers",
+    customerLinks = listOf("Accounts", "Contacts"),
+    finances = "Finances",
+    financeLinks = listOf("Invoices", "Transactions", "Statements"),
+    summaryHeading = "Custom summary",
+    summaryHint = "The summary slot takes a details-summary that can combine text, badges and icons; here an " +
+        "error badge points at the missing fields.",
+    errorsSuffix = " errors",
+    address = "Address",
+    zip = "ZIP code",
+    city = "City",
+    country = "Country",
+    disabledHeading = "Disabling",
+    disabledHint = "disabled keeps the block from expanding and the header ignores pointer and keyboard input.",
+    members = "Members (8)",
+    themesHeading = "Theme variants",
+    themesHint = "filled, reverse and small are theme variants of details and can be combined with an opened block.",
+)
+
+private val chinese: DetailsTexts = DetailsTexts(
+    basicHeading = "基本用法",
+    basicHint = "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
+    contactInformation = "联系方式",
+    contentHeading = "内容",
+    contentHint = "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
+    analytics = "分析",
+    analyticsLinks = listOf("仪表盘", "报表", "数据源"),
+    customers = "客户",
+    customerLinks = listOf("账户", "联系人"),
+    finances = "财务",
+    financeLinks = listOf("发票", "交易", "对账单"),
+    summaryHeading = "自定义 summary",
+    summaryHint = "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
+    errorsSuffix = " 个错误",
+    address = "地址",
+    zip = "邮政编码",
+    city = "城市",
+    country = "国家",
+    disabledHeading = "禁用",
+    disabledHint = "disabled 让区块无法展开，标题也不会响应点击与键盘。",
+    members = "成员（8）",
+    themesHeading = "主题变体",
+    themesHint = "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
+)
+
+private val detailsTexts: Translations<DetailsTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
+/** The eight fixture members shown inside the themed blocks; names, so they need no translation. */
+private val MEMBERS = listOf(
+    "Blake Martin",
+    "Caroline Clark",
+    "Avery Torres",
+    "Khloe Scott",
+    "Camila Fisher",
+    "Gavin Lewis",
+    "Isabella Powell",
+    "Zoe Wilson",
+)
+
+/** One link group of the content example: the details block and the anchors inside it. */
+private class LinkGroup(val details: DetailsElement, val anchors: List<HTMLAnchorElement>)
+
+private fun linkGroup(itemCount: Int): LinkGroup {
+    val anchors = List(itemCount) { kitAnchor("", "#/details") }
+    val details = createDetails { opened = true }
+    details.append(kitCol(*anchors.toTypedArray()))
+    return LinkGroup(details, anchors)
+}
+
 internal class DetailsPage : DemoPage() {
+    private val texts = Binder(detailsTexts)
+
+    private val frame = PageFrame(detailsEntry)
+
+    private val basicDetails: DetailsElement = createDetails()
+
+    private val analytics = linkGroup(3)
+
+    private val customers = linkGroup(2)
+
+    private val finances = linkGroup(3)
+
+    /** The custom-summary example: its heading text and the badge suffix. */
+    private val customDetails: DetailsElement = createDetails { opened = true }
+
+    private val summaryHeading: HTMLSpanElement = HtmlTagName.span()
+
+    private val errorsSuffix: HTMLSpanElement = HtmlTagName.span()
+
+    private val errorBadge: BadgeElement = createBadge { number = 2.0 }
+
+    private val addressField: TextFieldElement = createTextField()
+
+    private val zipField: TextFieldElement = createTextField()
+
+    private val cityField: TextFieldElement = createTextField()
+
+    private val countryField: ComboBoxElement = countryComboBox("Country")
+
+    private val disabledDetails: DetailsElement = createDetails()
+
+    /** The three themed blocks; their only copy is the summary. */
+    private val themedDetails: List<DetailsElement> = listOf(createDetails(), createDetails(), createDetails())
 
     init {
-        configureFrame(detailsEntry)
+        frame.mount(this)
         registerVaadinIcons()
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
-                    "summary is the header text and the children are the expanded content; opened is read/write and " +
-                        "starts as false.",
-                ),
-            )
-        val details = createDetails {
-            summary = tr("联系方式", "Contact information")
-            opened = true
-        }
-        details.dataset["test"] = "details"
-        details.append(kitCol(HtmlTagName.span {
-                                  textContent = "Sophia Williams"
-                              }, HtmlTagName.span {
-                                     textContent = "sophia.williams@company.com"
-                                 }, HtmlTagName.span {
-                                        textContent = "(501) 555-9128"
-                                    }))
-        basic.body.append(exampleBox(null, details))
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
+        basicDetails.opened = true
+        basicDetails.dataset["test"] = "details"
+        basicDetails.append(
+            kitCol(
+                HtmlTagName.span { textContent = "Sophia Williams" },
+                HtmlTagName.span { textContent = "sophia.williams@company.com" },
+                HtmlTagName.span { textContent = "(501) 555-9128" },
+            ),
+        )
+        basic.body.append(exampleBox(null, basicDetails))
         body.append(basic.root)
 
-        val contentSection =
-            sectionBlock(
-                tr("内容", "Content"),
-                tr(
-                    "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
-                    "The content area takes any nodes; the example shows three groups of links, all opened.",
-                ),
-            )
-        val links =
-            listOf(
-                tr("分析", "Analytics") to listOf(tr("仪表盘", "Dashboard"), tr("报表", "Reports"), tr("数据源", "Data sources")),
-                tr("客户", "Customers") to listOf(tr("账户", "Accounts"), tr("联系人", "Contacts")),
-                tr("财务", "Finances") to listOf(tr("发票", "Invoices"), tr("交易", "Transactions"), tr("对账单", "Statements")),
-            )
+        val contentSection = sectionBlock()
+        texts.bind(contentSection.heading) { it.contentHeading }
+        texts.bind(contentSection.hint) { it.contentHint }
+
         contentSection.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    *links
-                        .map { (summary, items) ->
-                            linkDetails(summary, items)
-                        }.toTypedArray(),
-                ),
-            ),
+            exampleBox(null, kitCol(analytics.details, customers.details, finances.details)),
         )
         body.append(contentSection.root)
 
-        val summarySection =
-            sectionBlock(
-                tr("自定义 summary", "Custom summary"),
-                tr(
-                    "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
-                    "The summary slot takes a details-summary that can combine text, badges and icons; here an error " +
-                        "badge points at the missing fields.",
-                ),
-            )
-        val custom = createDetails { opened = true }
-        custom.dataset["test"] = "details-custom-summary"
+        val summarySection = sectionBlock()
+        texts.bind(summarySection.heading) { it.summaryHeading }
+        texts.bind(summarySection.hint) { it.summaryHint }
+        customDetails.dataset["test"] = "details-custom-summary"
         val summaryNode = createDetailsSummary()
         summaryNode.slot = "summary"
-        val errorBadge = createBadge { number = 2.0 }.addTheme("error")
-        errorBadge.append(
-            createIcon { icon = "vaadin:exclamation-circle" }.apply { slot = "icon" },
-            HtmlTagName.span {
-                textContent = tr(" 个错误", " errors")
-            },
-        )
+        errorBadge.addTheme("error")
+        errorBadge.append(createIcon { icon = "vaadin:exclamation-circle" }.apply { slot = "icon" }, errorsSuffix)
         summaryNode.append(
             createHorizontalLayout { addTheme("spacing") }.apply {
                 style.setProperty("align-items", "center")
-                append(HtmlTagName.span {
-                           textContent = tr("联系方式", "Contact information")
-                       }, errorBadge)
+                append(summaryHeading, errorBadge)
             },
         )
-        val addressField = createTextField {
-            label = tr("地址", "Address")
-            value = "4027 Amber Lake Canyon"
-        }
+        addressField.value = "4027 Amber Lake Canyon"
         addressField.setAttribute("colspan", "2")
-        val zipField = createTextField {
-            label = tr("邮政编码", "ZIP code")
-            required = true
-        }
-        val cityField = createTextField {
-            label = tr("城市", "City")
-            required = true
-        }
+        zipField.required = true
+        cityField.required = true
         val form = createFormLayout()
         form.responsiveSteps =
             arrayOf(
@@ -181,55 +280,61 @@ internal class DetailsPage : DemoPage() {
                     columns = 2.0
                 },
             )
-        form.append(addressField, zipField, cityField, countryComboBox(tr("国家", "Country")))
-        custom.append(summaryNode, form)
-        summarySection.body.append(exampleBox(null, custom))
+        form.append(addressField, zipField, cityField, countryField)
+        customDetails.append(summaryNode, form)
+        summarySection.body.append(exampleBox(null, customDetails))
         body.append(summarySection.root)
 
-        val disabledSection =
-            sectionBlock(
-                tr("禁用", "Disabling"),
-                tr(
-                    "disabled 让区块无法展开，标题也不会响应点击与键盘。",
-                    "disabled keeps the block from expanding and the header ignores pointer and keyboard input.",
-                ),
-            )
-        val disabledDetails = createDetails {
-            summary = tr("成员（8）", "Members (8)")
-            disabled = true
-        }
-        disabledDetails.append(
-            bulletList(
-                listOf(
-                    "Blake Martin",
-                    "Caroline Clark",
-                    "Avery Torres",
-                    "Khloe Scott",
-                    "Camila Fisher",
-                    "Gavin Lewis",
-                    "Isabella Powell",
-                    "Zoe Wilson",
-                ),
-            ),
-        )
+        val disabledSection = sectionBlock()
+        texts.bind(disabledSection.heading) { it.disabledHeading }
+        texts.bind(disabledSection.hint) { it.disabledHint }
+        disabledDetails.disabled = true
+        disabledDetails.append(bulletList(MEMBERS))
         disabledSection.body.append(exampleBox(null, disabledDetails))
         body.append(disabledSection.root)
 
-        val themes =
-            sectionBlock(
-                tr("主题变体", "Theme variants"),
-                tr(
-                    "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
-                    "filled, reverse and small are theme variants of details and can be combined with an opened block.",
-                ),
-            )
-        themes.body.append(
-            exampleBox("filled", membersDetails(theme = "filled")),
-            exampleBox("reverse", membersDetails(theme = "reverse")),
-            exampleBox("small", membersDetails(theme = "small")),
-        )
+        val themes = sectionBlock()
+        texts.bind(themes.heading) { it.themesHeading }
+        texts.bind(themes.hint) { it.themesHint }
+        val themeNames = listOf("filled", "reverse", "small")
+        themedDetails.forEachIndexed { index, details ->
+            details.opened = true
+            details.addTheme(themeNames[index])
+            details.append(bulletList(MEMBERS))
+        }
+        themes.body.append(exampleBox("filled", themedDetails[0]))
+        themes.body.append(exampleBox("reverse", themedDetails[1]))
+        themes.body.append(exampleBox("small", themedDetails[2]))
         body.append(themes.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = detailsEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        val copy = texts.current
+        basicDetails.summary = copy.contactInformation
+        summaryHeading.textContent = copy.contactInformation
+        errorsSuffix.textContent = copy.errorsSuffix
+        addressField.label = copy.address
+        zipField.label = copy.zip
+        cityField.label = copy.city
+        countryField.label = copy.country
+        disabledDetails.summary = copy.members
+        themedDetails.forEach { it.summary = copy.members }
+        bindGroup(analytics, copy.analytics, copy.analyticsLinks)
+        bindGroup(customers, copy.customers, copy.customerLinks)
+        bindGroup(finances, copy.finances, copy.financeLinks)
+    }
+
+    /** Writes the heading and the link labels of one group; the shape of both languages is the same. */
+    private fun bindGroup(group: LinkGroup, heading: String, links: List<String>) {
+        group.details.summary = heading
+        group.anchors.forEachIndexed { index, anchor -> anchor.textContent = links[index] }
     }
 
     companion object : CustomElementReference<DetailsPage>(DetailsPage::class.js) {
@@ -246,40 +351,3 @@ internal fun newDetailsPage(): DetailsPage {
     DetailsPage.define()
     return DetailsPage.NAME()
 }
-
-private fun linkDetails(summary: String, items: List<String>) =
-    createDetails {
-        this.summary = summary
-        opened = true
-    }.apply {
-        append(kitCol(*items.map { kitAnchor(it, "#/details") }.toTypedArray()))
-    }
-
-/**
- * A details block with the eight members inside, one per theme variant.
- *
- * It stays a factory rather than an element because `vaadin-details` reads what the examples append to
- * it as its own content, so the node that goes into the page has to be the details element itself.
- */
-private fun membersDetails(theme: String) =
-    createDetails {
-        summary = tr("成员（8）", "Members (8)")
-        opened = true
-    }.apply {
-        addTheme(theme)
-        append(
-            bulletList(
-                listOf(
-                    "Blake Martin",
-                    "Caroline Clark",
-                    "Avery Torres",
-                    "Khloe Scott",
-                    "Camila Fisher",
-                    "Gavin Lewis",
-                    "Isabella Powell",
-                    "Zoe Wilson",
-                ),
-            ),
-        )
-    }
-
