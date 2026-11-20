@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -19,9 +24,8 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.jsObject
 import js.objects.Record
 import kotlin.js.JsAny
@@ -57,88 +61,186 @@ val tooltipEntry: CatalogEntry =
                 sourcePath = "pages/overlays/TooltipPage.kt",
             ),
         kitPage = { newTooltipPage() },
-        rebuildsOnLanguage = true,
     )
 
-// endregion
+/** Every string this page shows, in one language. */
+private class TooltipTexts(
+    val slottedHeading: String,
+    val slottedHint: String,
+    val hoverMe: String,
+    val buttonHint: String,
+    val fieldLabel: String,
+    val fieldPlaceholder: String,
+    val fieldHint: String,
+    val search: String,
+    val exactPhrase: String,
+    val linkedHeading: String,
+    val linkedHint: String,
+    val blockText: String,
+    val linkedHintText: String,
+    val headingText: String,
+    val headingHintText: String,
+    val manualHeading: String,
+    val manualHint: String,
+    val markdownHeading: String,
+    val markdownHint: String,
+    val markdownButton: String,
+    val markdownText: String,
+    val slowButton: String,
+    val slowText: String,
+    val generatedHeading: String,
+    val generatedHint: String,
+    val chart: String,
+    val table: String,
+    val map: String,
+    val generatedHintFor: (Int) -> String,
+    val positionsHeading: String,
+    val positionsHint: String,
+)
 
-// region Tooltip
+private val english: TooltipTexts =
+    TooltipTexts(
+        slottedHeading = "Inside a slot",
+        slottedHint = "Add the tooltip as a child with slot=\"tooltip\"; the component shows it on " +
+            "hover / focus.",
+        hoverMe = "Hover me",
+        buttonHint = "Hint on the button",
+        fieldLabel = "Field hint",
+        fieldPlaceholder = "Shown on focus",
+        fieldHint = "Field-level hint text",
+        search = "Search",
+        exactPhrase = "Wrap in “quotes” for exact phrase",
+        linkedHeading = "Linked with for",
+        linkedHint = "Outside a component, point for at the id of the target element; position picks " +
+            "the side.",
+        blockText = "This block has a hint",
+        linkedHintText = "Hint linked to any element",
+        headingText = "Heading with tooltip",
+        headingHintText = "This is a tooltip",
+        manualHeading = "Manual mode",
+        manualHint = "manual turns off the automatic behaviour and leaves it to opened; the suffix " +
+            "icon button toggles it.",
+        markdownHeading = "Delays and Markdown",
+        markdownHint = "hoverDelay / focusDelay / hideDelay are in milliseconds; markdown parses the " +
+            "hint as Markdown.",
+        markdownButton = "Markdown hint",
+        markdownText = "**Bold** and *italic*, plus `code`",
+        slowButton = "One second delay",
+        slowText = "Shown after one second",
+        generatedHeading = "Generated text",
+        generatedHint = "generator receives context and returns the text; one tooltip can serve several " +
+            "elements.",
+        chart = "Chart",
+        table = "Table",
+        map = "Map",
+        generatedHintFor = { index -> "Hint for element ${index + 1}" },
+        positionsHeading = "Position",
+        positionsHint = "position picks the side the overlay opens on; four common values are shown here.",
+    )
+
+private val chinese: TooltipTexts =
+    TooltipTexts(
+        slottedHeading = "放进插槽",
+        slottedHint = "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
+        hoverMe = "悬停我",
+        buttonHint = "这是按钮上的提示",
+        fieldLabel = "字段的提示",
+        fieldPlaceholder = "聚焦后显示",
+        fieldHint = "字段级的提示文本",
+        search = "搜索",
+        exactPhrase = "用「引号」包裹可以精确匹配短语",
+        linkedHeading = "用 for 关联",
+        linkedHint = "不在组件内部时，用 for 指向目标元素的 id；position 决定浮层落在哪一侧。",
+        blockText = "这个区块带有一个提示",
+        linkedHintText = "关联到任意元素的提示",
+        headingText = "带提示的标题",
+        headingHintText = "这是标题上的提示",
+        manualHeading = "手动打开",
+        manualHint = "manual 关闭自动显示，由 opened 控制；这里用后缀图标按钮切换。",
+        markdownHeading = "延迟与 Markdown",
+        markdownHint = "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
+        markdownButton = "Markdown 提示",
+        markdownText = "**粗体** 与 *斜体*，以及 `代码`",
+        slowButton = "延迟 1 秒",
+        slowText = "悬停一秒后出现",
+        generatedHeading = "动态文本",
+        generatedHint = "generator 接收 context，返回要显示的文本；同一个 tooltip 可以服务多个元素。",
+        chart = "图表",
+        table = "表格",
+        map = "地图",
+        generatedHintFor = { index -> "第 ${index + 1} 个元素的说明" },
+        positionsHeading = "位置",
+        positionsHint = "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
+    )
+
+private val tooltipTexts: Translations<TooltipTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
 
 internal class TooltipPage : DemoPage() {
+    private val texts = Binder(tooltipTexts)
+
+    private val frame = PageFrame(tooltipEntry)
 
     init {
-        configureFrame(tooltipEntry)
+        frame.mount(this)
 
-        val slotted =
-            sectionBlock(
-                tr("放进插槽", "Inside a slot"),
-                tr(
-                    "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
-                    "Add the tooltip as a child with slot=\"tooltip\"; the component shows it on hover / focus.",
-                ),
-            )
-        val buttonWithTooltip = createButton { textContent = tr("悬停我", "Hover me") }
-        buttonWithTooltip.append(
-            createTooltip { text = tr("这是按钮上的提示", "Hint on the button") }.apply { slot = "tooltip" },
-        )
-        val fieldWithTooltip =
-            io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
-                label = tr("字段的提示", "Field hint")
-                placeholder = tr("聚焦后显示", "Shown on focus")
-            }
-        fieldWithTooltip.append(
-            createTooltip { text = tr("字段级的提示文本", "Field-level hint text") }.apply { slot = "tooltip" },
-        )
-        val searchField =
-            io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
-                placeholder = tr("搜索", "Search")
-            }
+        val slotted = sectionBlock()
+        texts.bind(slotted.heading) { it.slottedHeading }
+        texts.bind(slotted.hint) { it.slottedHint }
+        val buttonWithTooltip = createButton()
+        texts.bind(buttonWithTooltip) { it.hoverMe }
+        val buttonTooltip = createTooltip()
+        texts.bind(buttonTooltip, { it.buttonHint }) { buttonTooltip.text = it }
+        buttonTooltip.slot = "tooltip"
+        buttonWithTooltip.append(buttonTooltip)
+        val fieldWithTooltip = createTextField()
+        texts.bind(fieldWithTooltip, { it.fieldLabel }) { fieldWithTooltip.label = it }
+        texts.bind(fieldWithTooltip, { it.fieldPlaceholder }) { fieldWithTooltip.placeholder = it }
+        val fieldTooltip = createTooltip()
+        texts.bind(fieldTooltip, { it.fieldHint }) { fieldTooltip.text = it }
+        fieldTooltip.slot = "tooltip"
+        fieldWithTooltip.append(fieldTooltip)
+        val searchField = createTextField()
+        texts.bind(searchField, { it.search }) { searchField.placeholder = it }
+        val searchTooltip = createTooltip()
+        texts.bind(searchTooltip, { it.exactPhrase }) { searchTooltip.text = it }
+        searchTooltip.slot = "tooltip"
         searchField.append(
             createIcon { icon = "lumo:search" }.also { it.slot = "prefix" },
-            createTooltip { text = tr("用「引号」包裹可以精确匹配短语", "Wrap in “quotes” for exact phrase") }
-                .also { it.slot = "tooltip" },
+            searchTooltip,
         )
         slotted.body.append(exampleBox(null, kitRow(buttonWithTooltip, fieldWithTooltip, searchField)))
         body.append(slotted.root)
 
-        val linked =
-            sectionBlock(
-                tr("用 for 关联", "Linked with for"),
-                tr(
-                    "不在组件内部时，用 for 指向目标元素的 id；position 决定浮层落在哪一侧。",
-                    "Outside a component, point for at the id of the target element; position picks the side.",
-                ),
-            )
-        val target = HtmlTagName.div {
-                         className = EXAMPLE
-                     }.apply { textContent = tr("这个区块带有一个提示", "This block has a hint") }
+        val linked = sectionBlock()
+        texts.bind(linked.heading) { it.linkedHeading }
+        texts.bind(linked.hint) { it.linkedHint }
+        val target = HtmlTagName.div { className = EXAMPLE }
+        texts.bind(target) { it.blockText }
         target.id = ElementId("tooltip-target")
         target.style.setProperty("padding", "var(--lumo-space-m)")
-        val tooltip = createTooltip { text = tr("关联到任意元素的提示", "Hint linked to any element") }
+        val tooltip = createTooltip()
+        texts.bind(tooltip, { it.linkedHintText }) { tooltip.text = it }
         tooltip.`for` = "tooltip-target"
-        val headingTarget = heading(3, tr("带提示的标题", "Heading with tooltip"))
+        val headingTarget = heading(3)
+        texts.bind(headingTarget) { it.headingText }
         headingTarget.id = ElementId("tooltip-heading")
-        val headingTooltip = createTooltip { text = tr("这是标题上的提示", "This is a tooltip") }
+        val headingTooltip = createTooltip()
+        texts.bind(headingTooltip, { it.headingHintText }) { headingTooltip.text = it }
         headingTooltip.`for` = "tooltip-heading"
         headingTooltip.position = "top-start"
         linked.body.append(exampleBox(null, kitCol(target, headingTarget), tooltip, headingTooltip))
         body.append(linked.root)
 
-        val manualSection =
-            sectionBlock(
-                tr("手动打开", "Manual mode"),
-                tr(
-                    "manual 关闭自动显示，由 opened 控制；这里用后缀图标按钮切换。",
-                    "manual turns off the automatic behaviour and leaves it to opened; the suffix icon button toggles it.",
-                ),
-            )
-        val manualField = io.github.shijianjs.ktjs.vaadin.textfield.createTextField {
-            placeholder = tr("搜索", "Search")
-        }
-        val manualTooltip = createTooltip {
-            text = tr("用「引号」包裹可以精确匹配短语", "Wrap in “quotes” for exact phrase")
-            manual = true
-        }
+        val manualSection = sectionBlock()
+        texts.bind(manualSection.heading) { it.manualHeading }
+        texts.bind(manualSection.hint) { it.manualHint }
+        val manualField = createTextField()
+        texts.bind(manualField, { it.search }) { manualField.placeholder = it }
+        val manualTooltip = createTooltip { manual = true }
+        texts.bind(manualTooltip, { it.exactPhrase }) { manualTooltip.text = it }
         manualTooltip.slot = "tooltip"
         val infoButton = createButton { textContent = "" }.addTheme("tertiary").apply {
             style.setProperty("padding", "0")
@@ -152,46 +254,43 @@ internal class TooltipPage : DemoPage() {
         manualSection.body.append(exampleBox(null, manualField))
         body.append(manualSection.root)
 
-        val delays =
-            sectionBlock(
-                tr("延迟与 Markdown", "Delays and Markdown"),
-                tr(
-                    "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
-                    "hoverDelay / focusDelay / hideDelay are in milliseconds; markdown parses the hint as Markdown.",
-                ),
-            )
-        val mdTarget = createButton { textContent = tr("Markdown 提示", "Markdown hint") }
+        val delays = sectionBlock()
+        texts.bind(delays.heading) { it.markdownHeading }
+        texts.bind(delays.hint) { it.markdownHint }
+        val mdTarget = createButton()
+        texts.bind(mdTarget) { it.markdownButton }
         mdTarget.id = ElementId("tooltip-markdown")
         val mdTooltip =
             createTooltip {
-                text = tr("**粗体** 与 *斜体*，以及 `代码`", "**Bold** and *italic*, plus `code`")
                 markdown = true
                 hoverDelay = 0.0
             }
+        texts.bind(mdTooltip, { it.markdownText }) { mdTooltip.text = it }
         mdTooltip.`for` = "tooltip-markdown"
-        val slowTarget = createButton { textContent = tr("延迟 1 秒", "One second delay") }
+        val slowTarget = createButton()
+        texts.bind(slowTarget) { it.slowButton }
         slowTarget.id = ElementId("tooltip-slow")
         val slowTooltip =
             createTooltip {
-                text = tr("悬停一秒后出现", "Shown after one second")
                 hoverDelay = 1000.0
                 hideDelay = 500.0
             }
+        texts.bind(slowTooltip, { it.slowText }) { slowTooltip.text = it }
         slowTooltip.`for` = "tooltip-slow"
         delays.body.append(exampleBox(null, kitRow(mdTarget, mdTooltip, slowTarget, slowTooltip)))
         body.append(delays.root)
 
-        val generated =
-            sectionBlock(
-                tr("动态文本", "Generated text"),
-                tr(
-                    "generator 接收 context，返回要显示的文本；同一个 tooltip 可以服务多个元素。",
-                    "generator receives context and returns the text; one tooltip can serve several elements.",
-                ),
-            )
+        val generated = sectionBlock()
+        texts.bind(generated.heading) { it.generatedHeading }
+        texts.bind(generated.hint) { it.generatedHint }
         val generatedTargets = mutableListOf<HTMLElement>()
-        listOf(tr("图表", "Chart"), tr("表格", "Table"), tr("地图", "Map")).forEachIndexed { index, label ->
-            val element = createButton { textContent = label }.addTheme("tertiary")
+        val chart = createButton { }.addTheme("tertiary")
+        texts.bind(chart) { it.chart }
+        val table = createButton { }.addTheme("tertiary")
+        texts.bind(table) { it.table }
+        val map = createButton { }.addTheme("tertiary")
+        texts.bind(map) { it.map }
+        listOf(chart, table, map).forEachIndexed { index, element ->
             element.id = ElementId("tooltip-generated-$index")
             generatedTargets += element
         }
@@ -202,19 +301,14 @@ internal class TooltipPage : DemoPage() {
             jsObject("""{"index": 0}""").unsafeCast<Record<JsString, JsAny>>()
         generatedTooltip.generator = { context ->
             val index: Int = js("(context) => context.index | 0")(context)
-            tr("第 ${index + 1} 个元素的说明", "Hint for element ${index + 1}")
+            texts.current.generatedHintFor(index)
         }
         generated.body.append(exampleBox(null, kitRow(*generatedTargets.toTypedArray(), generatedTooltip)))
         body.append(generated.root)
 
-        val positions =
-            sectionBlock(
-                tr("位置", "Position"),
-                tr(
-                    "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
-                    "position picks the side the overlay opens on; four common values are shown here.",
-                ),
-            )
+        val positions = sectionBlock()
+        texts.bind(positions.heading) { it.positionsHeading }
+        texts.bind(positions.hint) { it.positionsHint }
         val positionedButtons = mutableListOf<HTMLElement>()
         listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
             val element = newIconButton(position, "lumo:info-circle").apply { addTheme("tertiary") }
@@ -228,6 +322,15 @@ internal class TooltipPage : DemoPage() {
         positions.body.append(exampleBox(null, kitRow(*positionedButtons.toTypedArray())))
         body.append(positions.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = tooltipEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
     }
 
     companion object : CustomElementReference<TooltipPage>(TooltipPage::class.js) {
@@ -244,4 +347,3 @@ internal fun newTooltipPage(): TooltipPage {
     TooltipPage.define()
     return TooltipPage.NAME()
 }
-

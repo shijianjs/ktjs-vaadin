@@ -5,6 +5,7 @@ import js.objects.unsafeJso
 import demo.tr
 import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldElement
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
 import web.html.HTMLElement
@@ -23,7 +24,7 @@ internal fun selectOptions(vararg entries: String): Array<SelectItemData> =
 
 
 
-internal fun emailField(label: String): HTMLElement = createEmailField { this.label = label }
+internal fun emailField(label: String): EmailFieldElement = createEmailField { this.label = label }
 
 /** An accordion panel with a summary and one content child. */
 internal fun accordionPanel(summary: String): io.github.shijianjs.ktjs.vaadin.accordion.AccordionPanelElement =

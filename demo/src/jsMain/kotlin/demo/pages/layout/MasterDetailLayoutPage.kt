@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -20,14 +25,14 @@ import demo.Groups
 import demo.bi
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.listen
 import js.objects.unsafeJso
 import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
+import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
@@ -37,10 +42,13 @@ import io.github.shijianjs.ktjs.vaadin.masterdetaillayout.createMasterDetailLayo
 import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
 import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
 import io.github.shijianjs.ktjs.vaadin.select.createSelect
+import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
+import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
+import web.html.HTMLParagraphElement
 import web.cssom.ClassName
 import demo.ui.MUTED_SMALL
 
@@ -65,25 +73,143 @@ val masterDetailLayoutEntry: CatalogEntry =
                 sourcePath = "pages/layout/MasterDetailLayoutPage.kt",
             ),
         kitPage = { newMasterDetailLayoutPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class MasterDetailLayoutTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val phone: String,
+    val sizesHeading: String,
+    val sizesHint: String,
+    val master12: String,
+    val detail16: String,
+    val orientationHeading: String,
+    val orientationHint: String,
+    val master: String,
+    val detail: String,
+    val toggleOrientation: String,
+    val overlayHeading: String,
+    val overlayHint: String,
+    val overlayCaption: String,
+    val placeholderHeading: String,
+    val placeholderHint: String,
+    val adaDetails: String,
+    val showDetail: String,
+    val hideDetail: String,
+    val member: (Int) -> String,
+    val selectMember: String,
+    val nestingHeading: String,
+    val nestingHint: String,
+    val innerMaster: String,
+    val innerDetail: String,
+    val outerMaster: String,
+)
+
+private val english: MasterDetailLayoutTexts =
+    MasterDetailLayoutTexts(
+        basicHeading = "Basic usage",
+        basicHint = "The master goes into the default slot and the detail into slot=\"detail\". " +
+            "Selecting a person updates the form on the right, and the detail turns into an overlay " +
+            "when space runs out.",
+        firstName = "First name",
+        lastName = "Last name",
+        email = "Email address",
+        phone = "Phone number",
+        sizesHeading = "Sizes and expansion",
+        sizesHint = "masterSize defaults to 30rem, while an unset detailSize is measured from the " +
+            "detail content and cached. expandMaster / expandDetail let an area take the remaining width.",
+        master12 = "master · 12rem",
+        detail16 = "detail · 16rem",
+        orientationHeading = "Orientation",
+        orientationHint = "orientation decides whether master and detail sit side by side or stacked; " +
+            "the vertical variant needs enough available height.",
+        master = "master",
+        detail = "detail",
+        toggleOrientation = "Toggle orientation",
+        overlayHeading = "Overlay",
+        overlayHint = "forceOverlay always shows the detail as an overlay, overlaySize sets its size " +
+            "separately and overlayContainment decides whether it covers the layout or the whole page.",
+        overlayCaption = "The overlay covers the layout; page containment covers the viewport.",
+        placeholderHeading = "Detail placeholder",
+        placeholderHint = "While nothing is selected, the slot=\"detail-placeholder\" content fills the " +
+            "detail area and makes way once a detail is provided.",
+        adaDetails = "The details of Ada Lovelace",
+        showDetail = "Show detail",
+        hideDetail = "Hide detail",
+        member = { index -> "Member ${index + 1}" },
+        selectMember = "Select a member to see the details",
+        nestingHeading = "Nesting",
+        nestingHint = "The detail area can host another master-detail layout; the outer one decides " +
+            "when the inner one falls back to an overlay.",
+        innerMaster = "Inner master",
+        innerDetail = "Inner detail",
+        outerMaster = "Outer master",
+    )
+
+private val chinese: MasterDetailLayoutTexts =
+    MasterDetailLayoutTexts(
+        basicHeading = "基本用法",
+        basicHint = "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情自动变成浮层。",
+        firstName = "名",
+        lastName = "姓",
+        email = "邮箱地址",
+        phone = "电话号码",
+        sizesHeading = "尺寸与扩展",
+        sizesHint = "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / " +
+            "expandDetail 让对应区域吃掉剩余宽度。",
+        master12 = "master · 12rem",
+        detail16 = "detail · 16rem",
+        orientationHeading = "方向",
+        orientationHint = "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
+        master = "master",
+        detail = "detail",
+        toggleOrientation = "切换方向",
+        overlayHeading = "浮层",
+        overlayHint = "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment " +
+            "决定浮层覆盖布局还是整个页面。",
+        overlayCaption = "浮层只覆盖布局本身；切到 page 后会遮住整个页面。",
+        placeholderHeading = "详情占位",
+        placeholderHint = "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
+        adaDetails = "Ada Lovelace 的详细资料",
+        showDetail = "显示详情",
+        hideDetail = "隐藏详情",
+        member = { index -> "成员 ${index + 1}" },
+        selectMember = "选择左侧成员查看详情",
+        nestingHeading = "嵌套",
+        nestingHint = "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
+        innerMaster = "二级主区",
+        innerDetail = "二级详情",
+        outerMaster = "一级主区",
+    )
+
+private val masterDetailLayoutTexts: Translations<MasterDetailLayoutTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class MasterDetailLayoutPage : DemoPage() {
+    private val texts = Binder(masterDetailLayoutTexts)
+
+    private val frame = PageFrame(masterDetailLayoutEntry)
+
+    /** The placeholder example's toggle, whose label follows the state as well as the language. */
+    private val detailToggle: ButtonElement = createButton()
+
+    private var detailShown = false
+
+    private var detailToggleCopy: (MasterDetailLayoutTexts) -> String = { it.showDetail }
 
     init {
-        configureFrame(masterDetailLayoutEntry)
+        frame.mount(this)
         val crew = people(6)
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情" +
-                        "自动变成浮层。",
-                    "The master goes into the default slot and the detail into slot=\"detail\". Selecting a person " +
-                        "updates the form on the right, and the detail turns into an overlay when space runs out.",
-                ),
-            )
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
         val layout = createMasterDetailLayout {
             masterSize = "15rem"
             style.setProperty("height", "24rem")
@@ -91,10 +217,14 @@ internal class MasterDetailLayoutPage : DemoPage() {
         layout.dataset["test"] = "master-detail-layout"
 
         val detailName = heading(3, crew.first().displayName)
-        val firstName = createTextField { label = tr("名", "First name") }
-        val lastName = createTextField { label = tr("姓", "Last name") }
-        val emailField = createEmailField { label = tr("邮箱地址", "Email address") }
-        val phoneField = createTextField { label = tr("电话号码", "Phone number") }
+        val firstName = createTextField()
+        texts.bind(firstName, { it.firstName }) { firstName.label = it }
+        val lastName = createTextField()
+        texts.bind(lastName, { it.lastName }) { lastName.label = it }
+        val emailField = createEmailField()
+        texts.bind(emailField, { it.email }) { emailField.label = it }
+        val phoneField = createTextField()
+        texts.bind(phoneField, { it.phone }) { phoneField.label = it }
         val detailForm = createFormLayout { autoResponsive = true }
         detailForm.append(firstName, lastName, emailField, phoneField)
         val detail = HtmlTagName.div().apply {
@@ -116,13 +246,9 @@ internal class MasterDetailLayoutPage : DemoPage() {
             show(person)
         }
 
-        val master = HtmlTagName.div {
-                         className = MASTER_LIST
-                     }
+        val master = HtmlTagName.div { className = MASTER_LIST }
         crew.forEach { person ->
-            val row = HtmlTagName.div {
-                          className = MASTER_LIST_ITEM
-                      }
+            val row = HtmlTagName.div { className = MASTER_LIST_ITEM }
             row.append(
                 createAvatar {
                     name = person.displayName
@@ -146,112 +272,92 @@ internal class MasterDetailLayoutPage : DemoPage() {
         basic.body.append(exampleBox(null, layout))
         body.append(basic.root)
 
-        val sizes =
-            sectionBlock(
-                tr("尺寸与扩展", "Sizes and expansion"),
-                tr(
-                    "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / expandDetail " +
-                        "让对应区域吃掉剩余宽度。",
-                    "masterSize defaults to 30rem, while an unset detailSize is measured from the detail content " +
-                        "and cached. expandMaster / expandDetail let an area take the remaining width.",
-                ),
-            )
+        val sizes = sectionBlock()
+        texts.bind(sizes.heading) { it.sizesHeading }
+        texts.bind(sizes.hint) { it.sizesHint }
         val sized = createMasterDetailLayout {
             masterSize = "12rem"
             detailSize = "16rem"
             style.setProperty("height", "12rem")
         }
         sized.dataset["test"] = "master-detail-sizes"
-        sized.append(
-            newBox(tr("master · 12rem", "master · 12rem")),
-            HtmlTagName.div().apply {
-                slot = "detail"
-                style.setProperty("padding", "var(--lumo-space-m)")
-                textContent = tr("detail · 16rem", "detail · 16rem")
-            },
-        )
-        val expandMasterSwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "expandMaster" }
-        val expandDetailSwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "expandDetail" }
+        val sizedMaster = HtmlTagName.div()
+        texts.bind(sizedMaster) { it.master12 }
+        val sizedDetail = HtmlTagName.div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+        }
+        texts.bind(sizedDetail) { it.detail16 }
+        sized.append(sizedMaster, sizedDetail)
+        val expandMasterSwitch = createSwitch { label = "expandMaster" }
+        val expandDetailSwitch = createSwitch { label = "expandDetail" }
         val sizeReadout = Readout("expandMaster = false · expandDetail = false")
         fun describeSizes() {
             sizeReadout.set("expandMaster = ${sized.expandMaster} · expandDetail = ${sized.expandDetail}")
         }
-        expandMasterSwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
+        expandMasterSwitch.listen(SwitchEvents.checkedChanged) {
             sized.expandMaster = expandMasterSwitch.checked
             describeSizes()
         }
-        expandDetailSwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
+        expandDetailSwitch.listen(SwitchEvents.checkedChanged) {
             sized.expandDetail = expandDetailSwitch.checked
             describeSizes()
         }
         sizes.body.append(exampleBox(null, kitCol(sized, kitRow(expandMasterSwitch, expandDetailSwitch, sizeReadout.root))))
         body.append(sizes.root)
 
-        val orientationSection =
-            sectionBlock(
-                tr("方向", "Orientation"),
-                tr(
-                    "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
-                    "orientation decides whether master and detail sit side by side or stacked; the vertical " +
-                        "variant needs enough available height.",
-                ),
-            )
+        val orientationSection = sectionBlock()
+        texts.bind(orientationSection.heading) { it.orientationHeading }
+        texts.bind(orientationSection.hint) { it.orientationHint }
         val oriented = createMasterDetailLayout {
             masterSize = "10rem"
             detailSize = "8rem"
             style.setProperty("height", "16rem")
         }
-        oriented.append(
-            newBox(tr("master", "master")),
-            HtmlTagName.div().apply {
-                slot = "detail"
-                style.setProperty("padding", "var(--lumo-space-m)")
-                textContent = tr("detail", "detail")
-            },
-        )
+        val orientedMaster = HtmlTagName.div()
+        texts.bind(orientedMaster) { it.master }
+        val orientedDetail = HtmlTagName.div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+        }
+        texts.bind(orientedDetail) { it.detail }
+        oriented.append(orientedMaster, orientedDetail)
         val orientationReadout = Readout("orientation = horizontal")
-        val orientationButton =
-            createButton { textContent = tr("切换方向", "Toggle orientation") }.addTheme("tertiary").apply {
-                clickEvent.addHandler {
-                    oriented.orientation =
-                        if (oriented.orientation == MasterDetailLayoutOrientations.horizontal) {
-                            MasterDetailLayoutOrientations.vertical
-                        } else {
-                            MasterDetailLayoutOrientations.horizontal
-                        }
-                    orientationReadout.set("orientation = ${oriented.orientation.unsafeCast<String>()}")
-                    oriented.recalculateLayout()
-                }
+        val orientationButton = createButton().addTheme("tertiary").apply {
+            clickEvent.addHandler {
+                oriented.orientation =
+                    if (oriented.orientation == MasterDetailLayoutOrientations.horizontal) {
+                        MasterDetailLayoutOrientations.vertical
+                    } else {
+                        MasterDetailLayoutOrientations.horizontal
+                    }
+                orientationReadout.set("orientation = ${oriented.orientation.unsafeCast<String>()}")
+                oriented.recalculateLayout()
             }
+        }
+        texts.bind(orientationButton) { it.toggleOrientation }
         orientationSection.body.append(exampleBox(null, kitCol(oriented, kitRow(orientationButton, orientationReadout.root))))
         body.append(orientationSection.root)
 
-        val overlaySection =
-            sectionBlock(
-                tr("浮层", "Overlay"),
-                tr(
-                    "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment 决定浮层" +
-                        "覆盖布局还是整个页面。",
-                    "forceOverlay always shows the detail as an overlay, overlaySize sets its size separately and " +
-                        "overlayContainment decides whether it covers the layout or the whole page.",
-                ),
-            )
+        val overlaySection = sectionBlock()
+        texts.bind(overlaySection.heading) { it.overlayHeading }
+        texts.bind(overlaySection.hint) { it.overlayHint }
         val overlayLayout = createMasterDetailLayout {
             masterSize = "14rem"
             detailSize = "12rem"
             style.setProperty("height", "12rem")
         }
         overlayLayout.dataset["test"] = "master-detail-overlay"
-        overlayLayout.append(
-            newBox(tr("master", "master")),
-            HtmlTagName.div().apply {
-                slot = "detail"
-                style.setProperty("padding", "var(--lumo-space-m)")
-                textContent = tr("detail", "detail")
-            },
-        )
-        val forceOverlaySwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "forceOverlay" }
-        val fullOverlaySwitch = io.github.shijianjs.ktjs.vaadin.switch.createSwitch { label = "overlaySize = 100%" }
+        val overlayMaster = HtmlTagName.div()
+        texts.bind(overlayMaster) { it.master }
+        val overlayDetail = HtmlTagName.div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-m)")
+        }
+        texts.bind(overlayDetail) { it.detail }
+        overlayLayout.append(overlayMaster, overlayDetail)
+        val forceOverlaySwitch = createSwitch { label = "forceOverlay" }
+        val fullOverlaySwitch = createSwitch { label = "overlaySize = 100%" }
         val containmentSelect =
             createSelect {
                 label = "overlayContainment"
@@ -268,11 +374,11 @@ internal class MasterDetailLayoutPage : DemoPage() {
                     )
                 value = "layout"
             }
-        forceOverlaySwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
+        forceOverlaySwitch.listen(SwitchEvents.checkedChanged) {
             overlayLayout.forceOverlay = forceOverlaySwitch.checked
             overlayLayout.recalculateLayout()
         }
-        fullOverlaySwitch.listen(io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents.checkedChanged) {
+        fullOverlaySwitch.listen(SwitchEvents.checkedChanged) {
             overlayLayout.overlaySize = if (fullOverlaySwitch.checked) "100%" else ""
             overlayLayout.recalculateLayout()
         }
@@ -284,23 +390,18 @@ internal class MasterDetailLayoutPage : DemoPage() {
                     MasterDetailLayoutOverlayContainments.layout
                 }
         }
-        overlaySection.body.append(
+        val overlayCard =
             exampleBox(
-                tr("浮层只覆盖布局本身；切到 page 后会遮住整个页面。", "The overlay covers the layout; page containment covers the viewport."),
+                "",
                 kitCol(overlayLayout, kitRow(forceOverlaySwitch, fullOverlaySwitch, containmentSelect)),
-            ),
-        )
+            )
+        texts.bind(overlayCard.firstElementChild as HTMLParagraphElement) { it.overlayCaption }
+        overlaySection.body.append(overlayCard)
         body.append(overlaySection.root)
 
-        val placeholderSection =
-            sectionBlock(
-                tr("详情占位", "Detail placeholder"),
-                tr(
-                    "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
-                    "While nothing is selected, the slot=\"detail-placeholder\" content fills the detail area and " +
-                        "makes way once a detail is provided.",
-                ),
-            )
+        val placeholderSection = sectionBlock()
+        texts.bind(placeholderSection.heading) { it.placeholderHeading }
+        texts.bind(placeholderSection.hint) { it.placeholderHint }
         val placeholderLayout = createMasterDetailLayout {
             masterSize = "14rem"
             style.setProperty("height", "12rem")
@@ -309,68 +410,76 @@ internal class MasterDetailLayoutPage : DemoPage() {
         val placeholderDetail = HtmlTagName.div().apply {
             slot = "detail"
             style.setProperty("padding", "var(--lumo-space-m)")
-            textContent = tr("Ada Lovelace 的详细资料", "The details of Ada Lovelace")
         }
-        var detailShown = false
-        val detailToggle = createButton { textContent = tr("显示详情", "Show detail") }.addTheme("tertiary")
+        texts.bind(placeholderDetail) { it.adaDetails }
+        detailToggle.addTheme("tertiary")
+        texts.bind(detailToggle) { detailToggleCopy(it) }
         detailToggle.clickEvent.addHandler {
             detailShown = !detailShown
+            detailToggleCopy = if (detailShown) { { copy -> copy.hideDetail } } else { { copy -> copy.showDetail } }
             if (detailShown) placeholderLayout.append(placeholderDetail) else placeholderDetail.remove()
-            detailToggle.textContent = if (detailShown) tr("隐藏详情", "Hide detail") else tr("显示详情", "Show detail")
+            showToggleCopy()
             placeholderLayout.recalculateLayout()
         }
-        placeholderLayout.append(
-            HtmlTagName.div {
-                className = MASTER_LIST
-            }.apply {
-                repeat(3) { index ->
-                    append(HtmlTagName.div {
-                               className = MASTER_LIST_ITEM
-                           }.apply { textContent = tr("成员 ${index + 1}", "Member ${index + 1}") })
-                }
-            },
-            HtmlTagName.div().apply {
-                slot = "detail-placeholder"
-                style.setProperty("padding", "var(--lumo-space-m)")
-                textContent = tr("选择左侧成员查看详情", "Select a member to see the details")
-            },
-        )
+        val members = HtmlTagName.div { className = MASTER_LIST }
+        repeat(3) { index ->
+            val row = HtmlTagName.div { className = MASTER_LIST_ITEM }
+            texts.bind(row, { copy -> copy.member(index) }) { row.textContent = it }
+            members.append(row)
+        }
+        val placeholder = HtmlTagName.div().apply {
+            slot = "detail-placeholder"
+            style.setProperty("padding", "var(--lumo-space-m)")
+        }
+        texts.bind(placeholder) { it.selectMember }
+        placeholderLayout.append(members, placeholder)
         placeholderSection.body.append(exampleBox(null, kitCol(placeholderLayout, detailToggle)))
         body.append(placeholderSection.root)
 
-        val nestingSection =
-            sectionBlock(
-                tr("嵌套", "Nesting"),
-                tr(
-                    "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
-                    "The detail area can host another master-detail layout; the outer one decides when the inner " +
-                        "one falls back to an overlay.",
-                ),
-            )
+        val nestingSection = sectionBlock()
+        texts.bind(nestingSection.heading) { it.nestingHeading }
+        texts.bind(nestingSection.hint) { it.nestingHint }
         val inner = createMasterDetailLayout {
             masterSize = "8rem"
             style.setProperty("height", "100%")
         }
-        inner.append(
-            newBox(tr("二级主区", "Inner master")),
-            HtmlTagName.div().apply {
-                slot = "detail"
-                style.setProperty("padding", "var(--lumo-space-s)")
-                textContent = tr("二级详情", "Inner detail")
-            },
-        )
+        val innerMaster = HtmlTagName.div()
+        texts.bind(innerMaster) { it.innerMaster }
+        val innerDetail = HtmlTagName.div().apply {
+            slot = "detail"
+            style.setProperty("padding", "var(--lumo-space-s)")
+        }
+        texts.bind(innerDetail) { it.innerDetail }
+        inner.append(innerMaster, innerDetail)
         val outer = createMasterDetailLayout {
             masterSize = "10rem"
             detailSize = "1fr"
             style.setProperty("height", "16rem")
         }
+        val outerMaster = HtmlTagName.div()
+        texts.bind(outerMaster) { it.outerMaster }
         outer.append(
-            newBox(tr("一级主区", "Outer master")),
+            outerMaster,
             HtmlTagName.div().apply { slot = "detail"; append(inner) },
         )
         nestingSection.body.append(exampleBox(null, outer))
         body.append(nestingSection.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = masterDetailLayoutEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showToggleCopy()
+    }
+
+    /** Rewrites the toggle's label from the state and the language it is currently in. */
+    private fun showToggleCopy() {
+        detailToggle.textContent = detailToggleCopy(texts.current)
     }
 
     companion object : CustomElementReference<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js) {
@@ -387,4 +496,3 @@ internal fun newMasterDetailLayoutPage(): MasterDetailLayoutPage {
     MasterDetailLayoutPage.define()
     return MasterDetailLayoutPage.NAME()
 }
-

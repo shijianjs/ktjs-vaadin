@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.demo.page.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
@@ -16,14 +21,14 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import demo.ui.Readout
 import demo.ui.joinValues
 import demo.ui.listen
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.checkbox.createCheckbox
+import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupElement
 import io.github.shijianjs.ktjs.vaadin.checkboxgroup.CheckboxGroupEvents
 import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
@@ -52,28 +57,135 @@ val checkboxGroupEntry: CatalogEntry =
                 sourcePath = "pages/selection/CheckboxGroupPage.kt",
             ),
         kitPage = { newCheckboxGroupPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class CheckboxGroupTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val groupLabel: String,
+    val groupHelper: String,
+    val presetHeading: String,
+    val presetHint: String,
+    val skillsLabel: String,
+    val skillsError: String,
+    val validate: String,
+    val validationPrefix: String,
+    val passed: String,
+    val failed: String,
+    val selectedPrefix: String,
+    val featuresHeading: String,
+    val featuresHint: String,
+    val label: String,
+    val helper: String,
+    val tooltipText: String,
+    val item1: String,
+    val item2: String,
+    val item3: String,
+    val optionA: String,
+    val optionB: String,
+    val statesHeading: String,
+    val readonly: String,
+    val disabled: String,
+    val engineering: String,
+    val humanResources: String,
+    val marketing: String,
+)
+
+private val english: CheckboxGroupTexts =
+    CheckboxGroupTexts(
+        basicHeading = "Basic usage",
+        basicHint = "The value of a checkbox-group is an array; the items are told apart by their value " +
+            "property.",
+        groupLabel = "Languages used",
+        groupHelper = "Multiple answers are allowed",
+        presetHeading = "Preset values and validation",
+        presetHint = "value can be preset; required makes validate() fail on an empty selection.",
+        skillsLabel = "Skills (required)",
+        skillsError = "Select at least one",
+        validate = "Validate",
+        validationPrefix = "Validation: ",
+        passed = "passed",
+        failed = "failed",
+        selectedPrefix = "Selected: ",
+        featuresHeading = "Label, helper text and tooltip",
+        featuresHint = "label and helper-text live on the group; a tooltip is attached to the field " +
+            "through slot=\"tooltip\".",
+        label = "Label",
+        helper = "Helper text",
+        tooltipText = "Tooltip text",
+        item1 = "Item 1",
+        item2 = "Item 2",
+        item3 = "Item 3",
+        optionA = "Option A",
+        optionB = "Option B",
+        statesHeading = "Read-only and disabled",
+        readonly = "Read-only",
+        disabled = "Disabled",
+        engineering = "Engineering",
+        humanResources = "Human Resources",
+        marketing = "Marketing",
+    )
+
+private val chinese: CheckboxGroupTexts =
+    CheckboxGroupTexts(
+        basicHeading = "基本用法",
+        basicHint = "checkbox-group 的 value 是数组，子项通过 value 属性区分。",
+        groupLabel = "使用的语言",
+        groupHelper = "可以多选",
+        presetHeading = "预设值与校验",
+        presetHint = "value 可以预先赋值；required 在空选择时让 validate() 失败。",
+        skillsLabel = "技能（必填）",
+        skillsError = "至少选择一项",
+        validate = "校验",
+        validationPrefix = "校验：",
+        passed = "通过",
+        failed = "失败",
+        selectedPrefix = "已选：",
+        featuresHeading = "标签、辅助信息与提示",
+        featuresHint = "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
+        label = "标签",
+        helper = "辅助信息",
+        tooltipText = "提示文本",
+        item1 = "选项 1",
+        item2 = "选项 2",
+        item3 = "选项 3",
+        optionA = "选项 A",
+        optionB = "选项 B",
+        statesHeading = "只读与禁用",
+        readonly = "只读",
+        disabled = "禁用",
+        engineering = "工程",
+        humanResources = "人力资源",
+        marketing = "市场",
+    )
+
+private val checkboxGroupTexts: Translations<CheckboxGroupTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class CheckboxGroupPage : DemoPage() {
+    private val texts = Binder(checkboxGroupTexts)
+
+    private val frame = PageFrame(checkboxGroupEntry)
+
+    /** The last line put in the shared result readout, so a language switch rewrites it in place. */
+    private var lastResult: ((CheckboxGroupTexts) -> Pair<String, String>)? = null
+
+    private val skills: CheckboxGroupElement = createCheckboxGroup()
+
+    private val result = Readout("value = css, html")
 
     init {
-        configureFrame(checkboxGroupEntry)
+        frame.mount(this)
 
-        val basic =
-            sectionBlock(
-                tr("基本用法", "Basic usage"),
-                tr(
-                    "checkbox-group 的 value 是数组，子项通过 value 属性区分。",
-                    "The value of a checkbox-group is an array; the items are told apart by their value " +
-                        "property.",
-                ),
-            )
-        val group =
-            createCheckboxGroup {
-                label = tr("使用的语言", "Languages used")
-                helperText = tr("可以多选", "Multiple answers are allowed")
-            }.addTheme("vertical")
+        val basic = sectionBlock()
+        texts.bind(basic.heading) { it.basicHeading }
+        texts.bind(basic.hint) { it.basicHint }
+        val group = createCheckboxGroup().addTheme("vertical")
+        texts.bind(group, { it.groupLabel }) { group.label = it }
+        texts.bind(group, { it.groupHelper }) { group.helperText = it }
         group.dataset["test"] = "checkbox-group"
         group.append(
             createCheckbox {
@@ -96,20 +208,12 @@ internal class CheckboxGroupPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(group, readout.root)))
         body.append(basic.root)
 
-        val preset =
-            sectionBlock(
-                tr("预设值与校验", "Preset values and validation"),
-                tr(
-                    "value 可以预先赋值；required 在空选择时让 validate() 失败。",
-                    "value can be preset; required makes validate() fail on an empty selection.",
-                ),
-            )
-        val skills =
-            createCheckboxGroup {
-                label = tr("技能（必填）", "Skills (required)")
-                required = true
-                errorMessage = tr("至少选择一项", "Select at least one")
-            }
+        val preset = sectionBlock()
+        texts.bind(preset.heading) { it.presetHeading }
+        texts.bind(preset.hint) { it.presetHint }
+        skills.required = true
+        texts.bind(skills, { it.skillsLabel }) { skills.label = it }
+        texts.bind(skills, { it.skillsError }) { skills.errorMessage = it }
         skills.value = arrayOf("css", "html")
         skills.append(
             createCheckbox {
@@ -125,95 +229,84 @@ internal class CheckboxGroupPage : DemoPage() {
                 textContent = "Kotlin"
             },
         )
-        val result = Readout("value = css, html")
-        val validateButton =
-            createButton { textContent = tr("校验", "Validate") }.apply {
-                clickEvent.addHandler {
-                    result.set(tr("校验：", "Validation: "), if (skills.validate()) tr("通过", "passed") else tr("失败", "failed"))
-                }
+        val validateButton = createButton()
+        texts.bind(validateButton) { it.validate }
+        validateButton.also {
+            clickEvent.addHandler {
+                val ok = skills.validate()
+                lastResult = { copy -> copy.validationPrefix to if (ok) copy.passed else copy.failed }
+                showResult()
             }
+        }
         skills.listen(CheckboxGroupEvents.valueChanged) {
-            result.set(tr("已选：", "Selected: "), joinValues(skills.value).ifEmpty { "[]" })
+            val values = joinValues(skills.value).ifEmpty { "[]" }
+            lastResult = { copy -> copy.selectedPrefix to values }
+            showResult()
         }
         preset.body.append(exampleBox(null, kitCol(skills, kitRow(validateButton, result.root))))
         body.append(preset.root)
 
-        val features =
-            sectionBlock(
-                tr("标签、辅助信息与提示", "Label, helper text and tooltip"),
-                tr(
-                    "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
-                    "label and helper-text live on the group; a tooltip is attached to the field through " +
-                        "slot=\"tooltip\".",
-                ),
-            )
-        val languages =
-            createCheckboxGroup {
-                label = tr("标签", "Label")
-                helperText = tr("辅助信息", "Helper text")
-            }.addTheme("vertical")
-        languages.append(
-            createTooltip { text = tr("提示文本", "Tooltip text") }.apply { setAttribute("slot", "tooltip") },
-            createCheckbox {
-                value = "1"
-                textContent = tr("选项 1", "Item 1")
-            },
-            createCheckbox {
-                value = "2"
-                textContent = tr("选项 2", "Item 2")
-            },
-            createCheckbox {
-                value = "3"
-                textContent = tr("选项 3", "Item 3")
-            },
-        )
-        features.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    createCheckbox {
-                        label = tr("标签", "Label")
-                        helperText = tr("辅助信息", "Helper text")
-                    },
-                    languages,
-                ),
-            ),
-        )
+        val features = sectionBlock()
+        texts.bind(features.heading) { it.featuresHeading }
+        texts.bind(features.hint) { it.featuresHint }
+        val plain = createCheckboxGroup()
+        texts.bind(plain, { it.label }) { plain.label = it }
+        texts.bind(plain, { it.helper }) { plain.helperText = it }
+        val languages = createCheckboxGroup().addTheme("vertical")
+        texts.bind(languages, { it.label }) { languages.label = it }
+        texts.bind(languages, { it.helper }) { languages.helperText = it }
+        val tooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
+        val item1 = createCheckbox { value = "1" }
+        texts.bind(item1) { it.item1 }
+        val item2 = createCheckbox { value = "2" }
+        texts.bind(item2) { it.item2 }
+        val item3 = createCheckbox { value = "3" }
+        texts.bind(item3) { it.item3 }
+        languages.append(tooltip, item1, item2, item3)
+        features.body.append(exampleBox(null, kitCol(plain, languages)))
         body.append(features.root)
 
-        val states = sectionBlock(tr("只读与禁用", "Read-only and disabled"))
-        val readonlyGroup =
-            createCheckboxGroup { label = tr("只读", "Read-only") }.addTheme("vertical")
+        val states = sectionBlock()
+        texts.bind(states.heading) { it.statesHeading }
+        val readonlyGroup = createCheckboxGroup().addTheme("vertical")
+        texts.bind(readonlyGroup, { it.readonly }) { readonlyGroup.label = it }
         readonlyGroup.readonly = true
         readonlyGroup.value = arrayOf("a")
-        readonlyGroup.append(
-            createCheckbox {
-                value = "a"
-                textContent = tr("选项 A", "Option A")
-            },
-            createCheckbox {
-                value = "b"
-                textContent = tr("选项 B", "Option B")
-            },
-        )
-        val disabledGroup =
-            createCheckboxGroup { label = tr("禁用", "Disabled") }.addTheme("vertical")
+        val optionA = createCheckbox { value = "a" }
+        texts.bind(optionA) { it.optionA }
+        val optionB = createCheckbox { value = "b" }
+        texts.bind(optionB) { it.optionB }
+        readonlyGroup.append(optionA, optionB)
+        val disabledGroup = createCheckboxGroup().addTheme("vertical")
+        texts.bind(disabledGroup, { it.disabled }) { disabledGroup.label = it }
         disabledGroup.disabled = true
-        disabledGroup.append(
-            *listOf(
-                tr("工程", "Engineering"),
-                tr("人力资源", "Human Resources"),
-                tr("市场", "Marketing"),
-            ).map { name ->
-                createCheckbox {
-                    value = name
-                    textContent = name
-                }
-            }.toTypedArray(),
-        )
+        val engineering = createCheckbox { value = "engineering" }
+        texts.bind(engineering) { it.engineering }
+        val humanResources = createCheckbox { value = "hr" }
+        texts.bind(humanResources) { it.humanResources }
+        val marketing = createCheckbox { value = "marketing" }
+        texts.bind(marketing) { it.marketing }
+        disabledGroup.append(engineering, humanResources, marketing)
         states.body.append(exampleBox(null, kitRow(readonlyGroup, disabledGroup)))
         body.append(states.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = checkboxGroupEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        showResult()
+    }
+
+    /** Writes the shared result readout from whatever the last event asked it to say. */
+    private fun showResult() {
+        val copy = texts.current
+        lastResult?.invoke(copy)?.let { (prefix, value) -> result.set(prefix, value) }
     }
 
     companion object : CustomElementReference<CheckboxGroupPage>(CheckboxGroupPage::class.js) {
@@ -230,4 +323,3 @@ internal fun newCheckboxGroupPage(): CheckboxGroupPage {
     CheckboxGroupPage.define()
     return CheckboxGroupPage.NAME()
 }
-
