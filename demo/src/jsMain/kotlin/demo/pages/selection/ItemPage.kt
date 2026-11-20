@@ -9,7 +9,6 @@ import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
-import demo.Language
 import demo.LanguageState
 import demo.bi
 import demo.componentApiUrl
@@ -22,7 +21,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.Readout
+import io.github.shijianjs.ktjs.demo.page.newReadout
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
@@ -127,7 +126,7 @@ internal class ItemPage : DemoPage() {
 
     private val texts = Binder(itemTexts)
 
-    private val readout = Readout("selected = true")
+    private val readout = newReadout("selected = true")
 
     private val itemOne = createItem { value = "one" }.apply {
         dataset["test"] = "item-one"
@@ -144,7 +143,7 @@ internal class ItemPage : DemoPage() {
 
 
     init {
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(itemEntry.id))
         links += docs
@@ -183,11 +182,10 @@ internal class ItemPage : DemoPage() {
 
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
-        val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(language))
-        setSummary(meta.summaryFor(language))
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
         // The docs URL itself follows the language (`/latest/zh/` vs `/latest/`).
-        links.first().href = meta.docsUrl
+        links.first().href = meta.docsUrlFor(lang)
     }
 
     companion object : CustomElementReference<ItemPage>(ItemPage::class.js) {

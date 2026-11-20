@@ -1,93 +1,54 @@
 package demo
 
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
 import kotlin.js.js
-import web.dom.document
 
 /**
- * Languages the showcase is available in.
+ * Chinese/English metadata for a catalog entry.
  *
- * [code] is both the value persisted in `localStorage` and the BCP 47 tag written to `<html lang>`, so
- * the demo's own state and the demo kit's `Lang` accept and publish the same strings.
+ * The catalog is declared before anything is built and has to carry every language's copy in the
+ * same breath, so a title is a pair rather than a string resolved at read time.
  */
-enum class Language(val code: String, val label: String) {
-    ZH("zh-Hans", "中文"),
-    EN("en", "English"),
-}
-
-/** A pair of translations, resolved against [LanguageState.current] when the page is built. */
 class Bilingual(private val zh: String, private val en: String) {
-    fun resolve(): String = resolve(LanguageState.current)
-
-    /**
-     * Resolves against [lang] rather than the active language.
-     *
-     * The site's translation table is declared once, before anything is built: it needs every
-     * language's copy in the same breath, so it cannot depend on the language that happens to be
-     * active at that moment.
-     */
-    fun resolve(lang: Language): String = if (lang == Language.EN) en else zh
+    /** This pair written in [lang]. */
+    fun resolve(lang: Lang): String = if (lang == Langs.EN) en else zh
 }
 
 /** Chinese/English metadata for a catalog entry. */
 fun bi(zh: String, en: String): Bilingual = Bilingual(zh, en)
 
-/** Picks [zh] in Chinese mode and [en] in English mode. */
-fun tr(zh: String, en: String): String = if (LanguageState.current == Language.EN) en else zh
+/**
+ * Picks [zh] in Chinese mode and [en] in English mode.
+ *
+ * Only the pages that have not moved to a text table of their own still call this: they resolve their
+ * copy while their DOM is built, so the language has to be settled before they run. Every other page
+ * binds its copy to a `Translations` table and never reads the active language.
+ */
+fun tr(zh: String, en: String): String = if (LanguageState.current == Langs.EN) en else zh
 
 /**
- * Active UI language.
+ * The language the pages that still build their copy with [tr] are built in.
  *
- * The first visit follows the browser (`navigator.languages[0]`); an explicit switch is remembered
- * in `localStorage`. Every page is built from functions that call [tr], so a switch rebuilds the
- * page tree instead of mutating already-rendered copy.
+ * A mirror of the kit's own `LanguageState`, updated by `main` before the layout mounts and on every
+ * switch. It exists only until the last page owns a text table; a page that owns one does not read it.
  */
 object LanguageState {
-    private const val STORAGE_KEY = "ktjs-vaadin-language"
+    var current: Lang = Langs.EN
+        private set
 
-    private val listeners = mutableListOf<(Language) -> Unit>()
-
-    private var active: Language = stored() ?: detect()
-
-    /** The language currently used to build pages. */
-    val current: Language
-        get() = active
-
-    /** Applies the active language to `<html lang>`; called once by [main]. */
-    fun init() {
-        document.documentElement.lang = active.code
+    /** Mirrors [lang]; called by `main` right after the kit's state settles. */
+    fun set(lang: Lang) {
+        current = lang
     }
+}
 
-    /** Switches the language, remembers the choice and notifies the shell. */
-    fun set(language: Language) {
-        if (language == active) return
-        active = language
-        store(language.code)
-        document.documentElement.lang = language.code
-        listeners.toList().forEach { it(language) }
-    }
-
-    /** Registers a listener invoked after [set] changed the language. */
-    fun onChange(listener: (Language) -> Unit) {
-        listeners += listener
-    }
-
-    private fun detect(): Language {
-        val chinese =
-            js(
-                "() => ((navigator.languages && navigator.languages[0]) || navigator.language || '')" +
-                    ".toLowerCase().startsWith('zh')",
-            )() as Boolean
-        return if (chinese) Language.ZH else Language.EN
-    }
-
-    // `localStorage` has no wrapper in kotlin-browser 2026.10.1, so the two calls go through `js`.
-    private fun stored(): Language? {
-        val code =
-            js("() => { try { return localStorage.getItem('$STORAGE_KEY') } catch (e) { return null } }")() as String?
-        return Language.entries.firstOrNull { it.code == code }
-    }
-
-    private fun store(code: String) {
-        js("(value) => { try { localStorage.setItem('$STORAGE_KEY', value) } catch (e) { /* storage disabled */ } }")(code)
-    }
+/** The language a first visit starts in: the browser's, when it asks for Chinese. */
+fun detectedLang(): Lang {
+    val chinese =
+        js(
+            "() => ((navigator.languages && navigator.languages[0]) || navigator.language || '')" +
+                ".toLowerCase().startsWith('zh')",
+        )() as Boolean
+    return if (chinese) Langs.ZH_HANS else Langs.EN
 }

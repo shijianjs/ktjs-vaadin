@@ -13,7 +13,6 @@ import demo.bi
 import demo.tr
 import demo.ui.PageMeta
 import demo.ui.Readout
-import demo.Language
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -210,7 +209,7 @@ internal class FieldHighlighterPage : DemoPage() {
 
 
     init {
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(fieldHighlighterEntry.id))
         links += docs
@@ -285,10 +284,9 @@ internal class FieldHighlighterPage : DemoPage() {
         removeAll.textContent = copy.removeAll
         setEditing(editing)
         setGenerating(generating)
-        val pageLanguage = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(pageLanguage))
-        setSummary(meta.summaryFor(pageLanguage))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
     }
 
     companion object : CustomElementReference<FieldHighlighterPage>(FieldHighlighterPage::class.js) {

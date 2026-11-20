@@ -6,7 +6,6 @@ import web.components.CustomElementReference
 import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import demo.Language
 import demo.LanguageState
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
@@ -387,7 +386,7 @@ internal class ButtonPage : DemoPage() {
 
     init {
         registerVaadinIcons()
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(buttonEntry.id))
         links += docs
@@ -581,10 +580,9 @@ internal class ButtonPage : DemoPage() {
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
         val copy = texts.current
-        val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(language))
-        setSummary(meta.summaryFor(language))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
 
         clickCounter.buttonLabel = copy.saveChanges
         clickCounter.clicksLabel = copy.clicksPrefix

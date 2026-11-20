@@ -1,19 +1,21 @@
 package demo.ui
 
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.Bilingual
 import demo.CatalogEntry
-import demo.Language
 import demo.LanguageState
 import demo.componentApiUrl
-import demo.tr
+import demo.frameTexts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.EventLog as KitEventLog
-import io.github.shijianjs.ktjs.demo.page.Readout as KitReadout
+import io.github.shijianjs.ktjs.demo.page.newEventLog
+import io.github.shijianjs.ktjs.demo.page.newReadout
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import kotlin.js.Date
+import web.html.HTMLAnchorElement
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -33,25 +35,18 @@ class PageMeta(
     private val docsUrlZh = docsUrl
     private val docsNoteText = docsNote
 
-    val title: String
-        get() = titleText.resolve()
-
-    val summary: String
-        get() = summaryText.resolve()
-
     /** The page's name in [lang]; the site's translation table is declared before anything is built. */
-    fun titleFor(lang: Language): String = titleText.resolve(lang)
+    fun titleFor(lang: Lang): String = titleText.resolve(lang)
 
     /** The page's one-line summary in [lang]. */
-    fun summaryFor(lang: Language): String = summaryText.resolve(lang)
+    fun summaryFor(lang: Lang): String = summaryText.resolve(lang)
 
-    /** The official documentation page in the active language. */
-    val docsUrl: String
-        get() =
-            if (LanguageState.current == Language.EN) docsUrlZh.replace(ZH_DOCS_SEGMENT, EN_DOCS_SEGMENT) else docsUrlZh
+    /** The official documentation page in [lang]: the English site has no `/zh/` segment. */
+    fun docsUrlFor(lang: Lang): String =
+        if (lang == Langs.EN) docsUrlZh.replace(ZH_DOCS_SEGMENT, EN_DOCS_SEGMENT) else docsUrlZh
 
-    val docsNote: String?
-        get() = docsNoteText?.resolve()
+    /** The note that explains why [docsUrlFor] is not a page of its own, in [lang]. */
+    fun docsNoteFor(lang: Lang): String? = docsNoteText?.resolve(lang)
 
     private companion object {
         const val ZH_DOCS_SEGMENT = "/latest/zh/"
@@ -62,33 +57,64 @@ class PageMeta(
 internal const val REPO_SOURCE_ROOT = "https://github.com/shijianjs/ktjs-vaadin/blob/main/demo/src/jsMain/kotlin/demo"
 
 /**
- * Fills this page's frame from [entry]: title, summary, the official documentation link, the link to
- * the Kotlin source of the page itself and the Dokka page of the component.
+ * The frame of a catalog page: the three links every page carries and, when the entry says so, the
+ * note explaining the documentation link.
  *
- * A page is its own `vaadin-demo-…-page` element, so the frame is the element's own frame (`body`,
- * `setTitle`, `addLink`); there is no separate "view" object standing between the router and the page.
+ * The links are built once and localized in place — [show] rewrites their labels and the language of
+ * the documentation URL — so a language switch does not build a second frame next to the first. A page
+ * holds one as a field, mounts it in `init` and shows it again from `applyTranslation`.
  *
- * Pages that are not converted to `Translations` yet are still built for the language that is active
- * when the shell creates them, and rebuilt when the language changes.
+ * The title and the summary are not here: they are the page's own copy, taken from its text table.
+ */
+internal class PageFrame(private val entry: CatalogEntry) {
+    private val meta: PageMeta get() = entry.meta
+
+    private val docsLink: HTMLAnchorElement = kitAnchor("", "", external = true)
+
+    private val sourceLink: HTMLAnchorElement = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}", external = true)
+
+    private val apiLink: HTMLAnchorElement = kitAnchor("", componentApiUrl(entry.id))
+
+    /**
+     * The note explains the docs link rather than being one, so it belongs to the body; the link row
+     * accepts anchors only and gives every node it takes the link class.
+     */
+    private val note: HTMLElement? = if (meta.docsNoteFor(Langs.EN) == null) null else paragraph()
+
+    /** Adds the frame to [page]; the copy arrives with [show]. */
+    fun mount(page: DemoPage) {
+        page.addSheet(TEXT_SHEET)
+        page.addLink(docsLink)
+        page.addLink(sourceLink)
+        page.addLink(apiLink)
+        note?.let { page.body.append(it) }
+    }
+
+    /** Writes the frame's copy for [lang]. */
+    fun show(lang: Lang) {
+        val copy = frameTexts[lang]
+        docsLink.textContent = copy.docsLink
+        docsLink.href = meta.docsUrlFor(lang)
+        sourceLink.textContent = copy.sourceLink
+        apiLink.textContent = copy.apiLink
+        note?.let { it.textContent = meta.docsNoteFor(lang) ?: "" }
+    }
+}
+
+/**
+ * Fills this page's frame from [entry], for the pages that do not own a frame field yet.
+ *
+ * Those pages are still rebuilt on a language switch (`CatalogEntry.rebuildsOnLanguage`), so a frame
+ * resolved once at creation is replaced along with the page; a page that owns its text table holds a
+ * [PageFrame] and shows it again from `applyTranslation` instead.
  */
 fun DemoPage.configureFrame(entry: CatalogEntry) {
-    val meta = entry.meta
-    addSheet(TEXT_SHEET)
-    setTitle(meta.title)
-    setSummary(meta.summary)
-    addLink(kitAnchor(tr("Vaadin 官方文档", "Vaadin documentation"), meta.docsUrl, external = true))
-    addLink(
-        kitAnchor(
-            tr("查看 Kotlin 源码", "Kotlin source"),
-            "$REPO_SOURCE_ROOT/${meta.sourcePath}",
-            external = true,
-        ),
-    )
-    addLink(kitAnchor(tr("Kotlin API 文档", "Kotlin API reference"), componentApiUrl(entry.id)))
-    meta.docsNote?.let { note ->
-        // The note explains the docs link rather than being one, so it belongs in the body; the link
-        // row accepts anchors only and gives every node it takes the link class.
-        body.append(paragraph(note))
+    val lang = LanguageState.current
+    setTitle(entry.meta.titleFor(lang))
+    setSummary(entry.meta.summaryFor(lang))
+    PageFrame(entry).apply {
+        mount(this@configureFrame)
+        show(lang)
     }
 }
 
@@ -99,7 +125,7 @@ fun DemoPage.configureFrame(entry: CatalogEntry) {
  * convention for state lines, so it stays here.
  */
 class Readout(initial: String) {
-    private val readout = KitReadout(initial)
+    private val readout = newReadout(initial)
 
     val root: HTMLElement get() = readout.root
 
@@ -109,13 +135,11 @@ class Readout(initial: String) {
 
     /** Renders `prefix value suffix`, with [value] emphasised. */
     fun set(prefix: String, value: String, suffix: String = "") {
-        readout.root.replaceChildren(HtmlTagName.span {
-                                         textContent = prefix
-                                     }, HtmlTagName.strong {
-                                            textContent = value
-                                        }, HtmlTagName.span {
-                                                           textContent = suffix
-                                                       })
+        readout.root.replaceChildren(
+            HtmlTagName.span { textContent = prefix },
+            HtmlTagName.strong { textContent = value },
+            HtmlTagName.span { textContent = suffix },
+        )
     }
 }
 
@@ -125,13 +149,18 @@ class Readout(initial: String) {
  * The box, its monospace type and the line cap belong to the kit; this demo prefixes each line with
  * the wall-clock time, which is only meaningful while a reader is clicking around.
  */
-class EventLog(maxEntries: Int = 8) {
-    private val log = KitEventLog(maxEntries, tr("尚未触发事件", "No events yet"))
+class EventLog(maxEntries: Int = 8, placeholder: String = "") {
+    private val log = newEventLog(maxEntries, placeholder)
 
     val root: HTMLElement get() = log.root
 
     fun add(message: String) {
         log.add("${timestamp()} $message")
+    }
+
+    /** Rewrites the line shown while no event has arrived, so a language switch keeps it local. */
+    fun placeholder(text: String) {
+        log.placeholder(text)
     }
 
     private fun timestamp(): String {

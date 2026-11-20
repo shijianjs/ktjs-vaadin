@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.page.codeText
-import demo.Language
 import demo.LanguageState
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
@@ -441,7 +440,7 @@ internal class ThemingPage : DemoPage() {
     init {
         addSheet(THEMING_SHEET)
 
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(themingEntry.id))
         links += docs
@@ -638,10 +637,9 @@ internal class ThemingPage : DemoPage() {
 
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
-        val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(language))
-        setSummary(meta.summaryFor(language))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
         sync()
     }
 

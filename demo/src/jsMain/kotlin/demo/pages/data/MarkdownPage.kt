@@ -12,7 +12,6 @@ import demo.Groups
 import demo.bi
 import demo.tr
 import demo.ui.PageMeta
-import demo.Language
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -239,10 +238,9 @@ internal class MarkdownPage : DemoPage() {
         withBreaks.content = copy.letterContent
         withoutBreaks.content = copy.letterContent
         caption.textContent = copy.lineCaption
-        val pageLanguage = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(pageLanguage))
-        setSummary(meta.summaryFor(pageLanguage))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
     }
 
     companion object : CustomElementReference<MarkdownPage>(MarkdownPage::class.js) {

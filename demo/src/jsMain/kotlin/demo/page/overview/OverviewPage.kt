@@ -9,8 +9,6 @@ import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
-import demo.Language
-import demo.LanguageState
 import demo.API_DOCS_URL
 import demo.catalog
 import demo.ui.REPO_SOURCE_ROOT
@@ -22,7 +20,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.Readout
+import io.github.shijianjs.ktjs.demo.page.newReadout
 import io.github.shijianjs.ktjs.demo.page.anchor
 import io.github.shijianjs.ktjs.demo.page.grid
 import io.github.shijianjs.ktjs.demo.page.heading
@@ -154,8 +152,6 @@ private val INDEX_SHEET: CSSStyleSheet = cssSheet {
     }
 }
 
-private fun languageOf(lang: Lang): Language = if (lang == Langs.EN) Language.EN else Language.ZH
-
 /** The card and the link around it; a language switch rewrites the title and the summary. */
 private class Card(
     val entry: CatalogEntry,
@@ -179,7 +175,7 @@ private class GroupSection(val title: HTMLElement, val label: HTMLElement, val c
 internal class OverviewPage : DemoPage() {
     private val texts = Binder(overviewTexts)
 
-    private val counter = Readout()
+    private val counter = newReadout()
 
     private val search = createTextField {
         clearButtonVisible = true
@@ -190,7 +186,7 @@ internal class OverviewPage : DemoPage() {
 
     /** A group's heading and its cards: a group hides when every card in it is filtered out. */
     private val groups = mutableListOf<GroupSection>()
-    private var language: Language = Language.EN
+    private var language: Lang = Langs.EN
 
 
     init {
@@ -218,7 +214,7 @@ internal class OverviewPage : DemoPage() {
         catalogGroups.filter { group -> group != Groups.OVERVIEW }.forEach { group ->
             // The group's mark, the same one the drawer draws: the heading and the drawer row are
             // two views of one section, so they carry one icon.
-            val groupLabel = HtmlTagName.span { textContent = group.labelFor(LanguageState.current) }
+            val groupLabel = HtmlTagName.span { textContent = group.labelFor(language) }
             // The mark sits beside the title on one line. A horizontal layout *is* that line — it
             // supplies the gap and the vertical centring through its `spacing` variant — so no
             // declaration is written by hand here.
@@ -280,12 +276,12 @@ internal class OverviewPage : DemoPage() {
             section.title.toggleAttribute("hidden", section.cards.none { !it.link.hasAttribute("hidden") })
         }
         val visible = cards.count { !it.link.hasAttribute("hidden") }
-        counter.set(overviewTexts[langOf(language)].showing(visible, cards.size))
+        counter.set(overviewTexts[language].showing(visible, cards.size))
     }
 
     override fun applyTranslation(lang: Lang) {
         val current = overviewTexts[lang]
-        language = languageOf(lang)
+        language = lang
         setTitle(current.title)
         setSummary(current.summary)
         texts.apply(lang)
@@ -304,9 +300,7 @@ internal class OverviewPage : DemoPage() {
         filter()
     }
 
-    private fun langOf(language: Language): Lang = if (language == Language.EN) Langs.EN else Langs.ZH_HANS
-
-    companion object : CustomElementReference<OverviewPage>(OverviewPage::class.js) {
+        companion object : CustomElementReference<OverviewPage>(OverviewPage::class.js) {
         val NAME: TagName<OverviewPage> = TagName("vaadin-demo-overview-page")
 
         fun define() {

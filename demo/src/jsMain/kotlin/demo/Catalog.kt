@@ -12,6 +12,8 @@ import demo.pages.selection.selectionEntries
 import demo.pages.theming.themingEntries
 import demo.pages.upload.uploadEntries
 import demo.ui.PageMeta
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
 
 /** Base URL of the Vaadin component documentation. Every page links to its own page below it. */
 const val DOCS_BASE = "https://vaadin.com/docs/latest/zh/components"
@@ -37,7 +39,7 @@ class Group(val id: String, private val zh: String, private val en: String, val 
         get() = tr(zh, en)
 
     /** The group's name in [lang], for the site's translation table. */
-    fun labelFor(lang: Language): String = if (lang == Language.EN) en else zh
+    fun labelFor(lang: Lang): String = if (lang == Langs.EN) en else zh
 }
 
 /** Sidebar groups, in navigation order. */

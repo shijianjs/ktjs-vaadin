@@ -9,7 +9,6 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
-import demo.Language
 import demo.LanguageState
 import demo.bi
 import demo.componentApiUrl
@@ -24,7 +23,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.Readout
+import io.github.shijianjs.ktjs.demo.page.newReadout
 import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.row as kitRow
@@ -268,7 +267,7 @@ internal class TimePickerPage : DemoPage() {
 
     private val basicPicker = createTimePicker { value = "07:00" }.apply { dataset["test"] = "time-picker-basic" }
 
-    private val basicReadout = Readout("")
+    private val basicReadout = newReadout("")
 
     private val minutesPicker = createTimePicker {
         value = "12:30"
@@ -286,7 +285,7 @@ internal class TimePickerPage : DemoPage() {
         autoOpenDisabled = true
     }
 
-    private val openedReadout = Readout("opened = false")
+    private val openedReadout = newReadout("opened = false")
 
     private val openButton = createButton().addTheme("tertiary")
 
@@ -300,7 +299,7 @@ internal class TimePickerPage : DemoPage() {
         step = 1800.0
     }
 
-    private val validatedError = Readout("")
+    private val validatedError = newReadout("")
 
     private val validateButton = createButton()
 
@@ -310,7 +309,7 @@ internal class TimePickerPage : DemoPage() {
         step = 1800.0
     }
 
-    private val customError = Readout("")
+    private val customError = newReadout("")
 
     private val customValidateButton = createButton()
 
@@ -341,7 +340,7 @@ internal class TimePickerPage : DemoPage() {
             }
     }
 
-    private val looseReadout = Readout("")
+    private val looseReadout = newReadout("")
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
@@ -360,7 +359,7 @@ internal class TimePickerPage : DemoPage() {
 
     init {
         registerVaadinIcons()
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(timePickerEntry.id))
         links += docs
@@ -532,10 +531,9 @@ internal class TimePickerPage : DemoPage() {
 
     override fun applyTranslation(lang: Lang) {
         texts.apply(lang)
-        val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(language))
-        setSummary(meta.summaryFor(language))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
         renderBasic()
         renderValidatedReadout()
         renderCustomReadout()

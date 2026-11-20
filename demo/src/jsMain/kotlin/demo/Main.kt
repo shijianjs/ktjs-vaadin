@@ -23,21 +23,19 @@ import web.dom.document
  * as `<ktjs-demo-layout id="demo">`, so the browser creates the element and this function configures it.
  */
 fun main() {
-    // The page builders still resolve copy through `tr` while they build, so the language has to be
-    // settled before the first page is created.
-    LanguageState.init()
     // Registers the `lumo:*` icon names used by the docs menu and by the icon examples.
     registerLumoIcons()
 
     val language = KitLanguageState(
         languages = listOf(Langs.EN, Langs.ZH_HANS),
         storageKey = "ktjs-vaadin-language",
-        initial = if (LanguageState.current == Language.EN) Langs.EN else Langs.ZH_HANS,
+        initial = detectedLang(),
     )
 
-    // Registered before the layout mounts: the layout notifies its own listener in `mount`, and the
-    // legacy builders read `LanguageState`, so the demo's state has to move first.
-    language.onChange { lang -> LanguageState.set(if (lang == Langs.EN) Language.EN else Language.ZH) }
+    // The pages that have not moved to a text table of their own resolve their copy through `tr` while
+    // they build, so the demo's mirror has to carry the settled language before the first page is made.
+    LanguageState.set(language.current)
+    language.onChange { lang -> LanguageState.set(lang) }
 
     val theme = Theme(storageKey = "ktjs-vaadin-theme")
     theme.applyStored()

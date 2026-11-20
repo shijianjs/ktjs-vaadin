@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
-import demo.Language
 import demo.bi
 import demo.componentApiUrl
 import demo.pages.overlays.ariaLabel
@@ -190,7 +189,7 @@ internal class InputContainerPage : DemoPage() {
 
 
     init {
-        val docs = kitAnchor("", meta.docsUrl)
+        val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
         val api = kitAnchor("", componentApiUrl(inputContainerEntry.id))
         links += docs
@@ -224,10 +223,9 @@ internal class InputContainerPage : DemoPage() {
         readOnly.input.value = copy.readOnly
         invalid.input.value = copy.invalid
         disabled.input.value = copy.disabled
-        val language = if (lang == Langs.EN) Language.EN else Language.ZH
-        setTitle(meta.titleFor(language))
-        setSummary(meta.summaryFor(language))
-        links.first().href = meta.docsUrl
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        links.first().href = meta.docsUrlFor(lang)
     }
 
     companion object : CustomElementReference<InputContainerPage>(InputContainerPage::class.js) {
