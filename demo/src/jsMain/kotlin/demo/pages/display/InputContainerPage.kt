@@ -13,7 +13,6 @@ import demo.Groups
 import demo.bi
 import demo.componentApiUrl
 import demo.pages.overlays.ariaLabel
-import demo.tr
 import demo.ui.MUTED_SMALL
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT

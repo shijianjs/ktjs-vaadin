@@ -311,6 +311,9 @@ internal class MessageListPage : DemoPage() {
 
     private val chatLines: MutableList<ChatLine> = mutableListOf()
 
+    /** The message item each chat line keeps, so a reply can be streamed into it in place. */
+    private val chatReplies: MutableMap<ChatLine, MessageListItem> = mutableMapOf()
+
     init {
         frame.mount(this)
         addSheet(MESSAGE_SHEET)
@@ -515,8 +518,6 @@ internal class MessageListPage : DemoPage() {
 
         applyTranslation(Langs.EN)
     }
-
-    private val chatReplies = mutableMapOf<ChatLine, MessageListItem>()
 
     private fun ChatLine.message(): MessageListItem {
         val copy = texts.current

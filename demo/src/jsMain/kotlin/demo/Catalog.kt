@@ -35,10 +35,7 @@ const val API_DOCS_URL = "$API_ROOT/index.html"
  * both places read it from one declaration instead of each carrying its own table.
  */
 class Group(val id: String, private val zh: String, private val en: String, val icon: String) {
-    val label: String
-        get() = tr(zh, en)
-
-    /** The group's name in [lang], for the site's translation table. */
+    /** The group's name in [lang], for the sidebar. */
     fun labelFor(lang: Lang): String = if (lang == Langs.EN) en else zh
 }
 
@@ -70,14 +67,6 @@ class CatalogEntry(
     val meta: PageMeta,
     /** Creates the page element; the router mounts [Page.node] and caches one per route. */
     val kitPage: (() -> io.github.shijianjs.ktjs.demo.nav.Page)? = null,
-    /**
-     * `true` while the page resolves its copy with `tr()` as it builds.
-     *
-     * Such a page has no text of its own to rewrite, so a language switch replaces it instead of
-     * calling `applyTranslation`; the slot stays and only the page inside it changes. Pages that own a
-     * `Translations` table rewrite their copy in place and leave this `false`.
-     */
-    val rebuildsOnLanguage: Boolean = false,
 ) {
     /** Builds a fresh instance of the page. The shell caches one per route. */
     fun create(): web.html.HTMLElement {

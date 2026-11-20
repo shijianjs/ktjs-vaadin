@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import io.github.shijianjs.ktjs.demo.page.codeText
-import demo.LanguageState
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -30,7 +29,6 @@ import demo.Groups
 import demo.STYLING_BASE
 import demo.Theme
 import demo.bi
-import demo.tr
 import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.Readout

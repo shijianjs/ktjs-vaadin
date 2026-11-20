@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.page.paragraph
 import demo.Bilingual
 import demo.CatalogEntry
-import demo.LanguageState
 import demo.componentApiUrl
 import demo.frameTexts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
@@ -101,22 +100,6 @@ internal class PageFrame(private val entry: CatalogEntry) {
     }
 }
 
-/**
- * Fills this page's frame from [entry], for the pages that do not own a frame field yet.
- *
- * Those pages are still rebuilt on a language switch (`CatalogEntry.rebuildsOnLanguage`), so a frame
- * resolved once at creation is replaced along with the page; a page that owns its text table holds a
- * [PageFrame] and shows it again from `applyTranslation` instead.
- */
-fun DemoPage.configureFrame(entry: CatalogEntry) {
-    val lang = LanguageState.current
-    setTitle(entry.meta.titleFor(lang))
-    setSummary(entry.meta.summaryFor(lang))
-    PageFrame(entry).apply {
-        mount(this@configureFrame)
-        show(lang)
-    }
-}
 
 /**
  * Text that is updated in place, showing the current state of an example.

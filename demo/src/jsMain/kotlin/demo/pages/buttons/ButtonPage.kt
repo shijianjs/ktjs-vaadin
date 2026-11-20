@@ -6,7 +6,6 @@ import web.components.CustomElementReference
 import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import demo.LanguageState
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import demo.ui.MUTED_SMALL
@@ -31,7 +30,6 @@ import demo.Groups
 import demo.bi
 import demo.pages.layout.emailField
 import demo.pages.overlays.ariaLabel
-import demo.tr
 import demo.ui.EventLog
 import demo.ui.Images
 import demo.ui.PageMeta

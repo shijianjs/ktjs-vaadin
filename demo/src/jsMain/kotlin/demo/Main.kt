@@ -32,11 +32,6 @@ fun main() {
         initial = detectedLang(),
     )
 
-    // The pages that have not moved to a text table of their own resolve their copy through `tr` while
-    // they build, so the demo's mirror has to carry the settled language before the first page is made.
-    LanguageState.set(language.current)
-    language.onChange { lang -> LanguageState.set(lang) }
-
     val theme = Theme(storageKey = "ktjs-vaadin-theme")
     theme.applyStored()
 

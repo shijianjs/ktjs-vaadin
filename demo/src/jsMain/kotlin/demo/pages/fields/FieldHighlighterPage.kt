@@ -10,7 +10,6 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
 import demo.ui.PageMeta
 import demo.ui.Readout
 import demo.componentApiUrl

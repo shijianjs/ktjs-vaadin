@@ -38,11 +38,10 @@ fun siteMenu(): DemoMenu {
         catalog.map { entry ->
             val group = groups.getValue(entry.group.id)
             Entry(entry.id, group) {
-                // A page is an element; the menu only picks it. Pages that own a `Translations` table
-                // rewrite their copy in place, the rest are replaced inside their slot on a language
-                // switch — the element per route is the same code path either way.
+                // A page is an element and owns its copy, so a language switch rewrites the text in
+                // place; the menu only picks the element for the route.
                 val page = entry.kitPage ?: error("entry `${entry.id}` has no page element")
-                if (entry.rebuildsOnLanguage) RebuiltPage(entry) else page()
+                page()
             }
         },
     )

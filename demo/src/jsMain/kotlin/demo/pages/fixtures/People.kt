@@ -1,7 +1,6 @@
 package demo.pages.fixtures
 
 import demo.pages.pickers.pad2
-import demo.tr
 import demo.ui.Images
 import demo.ui.jsArray
 import kotlin.js.JsAny

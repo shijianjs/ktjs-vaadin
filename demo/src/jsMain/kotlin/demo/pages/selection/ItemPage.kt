@@ -9,10 +9,8 @@ import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
-import demo.LanguageState
 import demo.bi
 import demo.componentApiUrl
-import demo.tr
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
