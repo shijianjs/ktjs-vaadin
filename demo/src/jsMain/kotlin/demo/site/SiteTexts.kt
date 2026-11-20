@@ -36,8 +36,15 @@ private fun siteTextsFor(lang: Lang): SiteTexts {
     )
 }
 
-/** The layout's translation table: one [SiteTexts] per language the demo offers. */
-val siteTexts: Translations<SiteTexts> = texts(
-    Langs.EN to siteTextsFor(Langs.EN),
-    Langs.ZH_HANS to siteTextsFor(Langs.ZH_HANS),
-)
+/**
+ * The layout's translation table: one [SiteTexts] per language the demo offers.
+ *
+ * Built `by lazy`: each table reads every page's title from [Catalog], so building it at file
+ * initialisation would pull all sixty entries (and their companions) into the module's startup order.
+ */
+val siteTexts: Translations<SiteTexts> by lazy {
+    texts(
+        Langs.EN to siteTextsFor(Langs.EN),
+        Langs.ZH_HANS to siteTextsFor(Langs.ZH_HANS),
+    )
+}
