@@ -5,13 +5,13 @@ import demo.ui.listen
 import demo.ui.Readout
 import demo.ui.SMALL
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
-import io.github.shijianjs.ktjs.demo.page.col
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.col
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.grid.GridEvents
 import io.github.shijianjs.ktjs.vaadin.grid.createGrid
@@ -19,8 +19,6 @@ import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import io.github.shijianjs.ktjs.vaadin.grid.createGridSelectionColumn
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import kotlin.js.JsAny
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
@@ -151,17 +149,5 @@ class GridToolbar : CustomElementAdapter() {
         readout.set(rowsPrefix + size + rowsSuffix)
     }
 
-    companion object : CustomElementReference<GridToolbar>(GridToolbar::class.js) {
-        val NAME: TagName<GridToolbar> = TagName("vaadin-demo-grid-toolbar")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-grid-toolbar>`. */
-fun newGridToolbar(): GridToolbar {
-    GridToolbar.define()
-    return GridToolbar.NAME()
+    companion object : CustomElementReferenceAdapter<GridToolbar>(GridToolbar::class.js, "vaadin-demo-grid-toolbar")
 }

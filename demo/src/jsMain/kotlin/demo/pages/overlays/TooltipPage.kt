@@ -1,25 +1,20 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -60,43 +55,8 @@ val tooltipEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/tooltip",
                 sourcePath = "pages/overlays/TooltipPage.kt",
             ),
-        kitPage = { newTooltipPage() },
+        kitPage = { TooltipPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class TooltipTexts(
-    val slottedHeading: String,
-    val slottedHint: String,
-    val hoverMe: String,
-    val buttonHint: String,
-    val fieldLabel: String,
-    val fieldPlaceholder: String,
-    val fieldHint: String,
-    val search: String,
-    val exactPhrase: String,
-    val linkedHeading: String,
-    val linkedHint: String,
-    val blockText: String,
-    val linkedHintText: String,
-    val headingText: String,
-    val headingHintText: String,
-    val manualHeading: String,
-    val manualHint: String,
-    val markdownHeading: String,
-    val markdownHint: String,
-    val markdownButton: String,
-    val markdownText: String,
-    val slowButton: String,
-    val slowText: String,
-    val generatedHeading: String,
-    val generatedHint: String,
-    val chart: String,
-    val table: String,
-    val map: String,
-    val generatedHintFor: (Int) -> String,
-    val positionsHeading: String,
-    val positionsHint: String,
-)
 
 private val english: TooltipTexts =
     TooltipTexts(
@@ -186,7 +146,7 @@ internal class TooltipPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val slotted = sectionBlock()
+        val slotted = SectionBlock.NAME { show() }
         texts.bind(slotted.heading) { it.slottedHeading }
         texts.bind(slotted.hint) { it.slottedHint }
         val buttonWithTooltip = createButton()
@@ -214,7 +174,7 @@ internal class TooltipPage : DemoPage() {
         slotted.body.append(exampleBox(null, kitRow(buttonWithTooltip, fieldWithTooltip, searchField)))
         body.append(slotted.root)
 
-        val linked = sectionBlock()
+        val linked = SectionBlock.NAME { show() }
         texts.bind(linked.heading) { it.linkedHeading }
         texts.bind(linked.hint) { it.linkedHint }
         val target = HtmlTagName.div { className = EXAMPLE }
@@ -234,7 +194,7 @@ internal class TooltipPage : DemoPage() {
         linked.body.append(exampleBox(null, kitCol(target, headingTarget), tooltip, headingTooltip))
         body.append(linked.root)
 
-        val manualSection = sectionBlock()
+        val manualSection = SectionBlock.NAME { show() }
         texts.bind(manualSection.heading) { it.manualHeading }
         texts.bind(manualSection.hint) { it.manualHint }
         val manualField = createTextField()
@@ -254,7 +214,7 @@ internal class TooltipPage : DemoPage() {
         manualSection.body.append(exampleBox(null, manualField))
         body.append(manualSection.root)
 
-        val delays = sectionBlock()
+        val delays = SectionBlock.NAME { show() }
         texts.bind(delays.heading) { it.markdownHeading }
         texts.bind(delays.hint) { it.markdownHint }
         val mdTarget = createButton()
@@ -280,7 +240,7 @@ internal class TooltipPage : DemoPage() {
         delays.body.append(exampleBox(null, kitRow(mdTarget, mdTooltip, slowTarget, slowTooltip)))
         body.append(delays.root)
 
-        val generated = sectionBlock()
+        val generated = SectionBlock.NAME { show() }
         texts.bind(generated.heading) { it.generatedHeading }
         texts.bind(generated.hint) { it.generatedHint }
         val generatedTargets = mutableListOf<HTMLElement>()
@@ -306,7 +266,7 @@ internal class TooltipPage : DemoPage() {
         generated.body.append(exampleBox(null, kitRow(*generatedTargets.toTypedArray(), generatedTooltip)))
         body.append(generated.root)
 
-        val positions = sectionBlock()
+        val positions = SectionBlock.NAME { show() }
         texts.bind(positions.heading) { it.positionsHeading }
         texts.bind(positions.hint) { it.positionsHint }
         val positionedButtons = mutableListOf<HTMLElement>()
@@ -333,17 +293,5 @@ internal class TooltipPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReference<TooltipPage>(TooltipPage::class.js) {
-        val NAME: TagName<TooltipPage> = TagName("vaadin-demo-tooltip-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-tooltip-page>`. */
-internal fun newTooltipPage(): TooltipPage {
-    TooltipPage.define()
-    return TooltipPage.NAME()
+    companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page")
 }

@@ -2,9 +2,7 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /**
  * `<demo-layout-box>`: the tinted placeholder the layout examples are built out of.
@@ -37,17 +35,12 @@ internal class Box : CustomElementAdapter() {
         height?.let { style.setProperty("height", it) }
     }
 
-    companion object : CustomElementReference<Box>(Box::class.js) {
-        val NAME: TagName<Box> = TagName("demo-layout-box")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<Box>(Box::class.js, "demo-layout-box")
 }
 
 /** Creates a defined `<demo-layout-box>` showing [text]. */
 internal fun newBox(text: String, height: String? = null): Box {
-    Box.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    Box.NAME
     return Box.NAME().also { it.show(text, height) }
 }

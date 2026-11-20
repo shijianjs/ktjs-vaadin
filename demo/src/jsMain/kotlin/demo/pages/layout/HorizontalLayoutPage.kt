@@ -1,22 +1,18 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -41,44 +37,8 @@ val horizontalLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/horizontal-layout",
                 sourcePath = "pages/layout/HorizontalLayoutPage.kt",
             ),
-        kitPage = { newHorizontalLayoutPage() },
+        kitPage = { HorizontalLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class HorizontalLayoutTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val verticalHeading: String,
-    val verticalHint: String,
-    val individualHeading: String,
-    val individualHint: String,
-    val horizontalHeading: String,
-    val horizontalHint: String,
-    val spacingHeading: String,
-    val spacingHint: String,
-    val paddingHeading: String,
-    val paddingHint: String,
-    val marginHeading: String,
-    val marginHint: String,
-    val wrappingHeading: String,
-    val wrappingHint: String,
-    val wrappingSlotsHeading: String,
-    val wrappingSlotsHint: String,
-    val expandingHeading: String,
-    val expandingHint: String,
-    val item: (Int) -> String,
-    val start: String,
-    val middle: String,
-    val end: String,
-    val withoutSpacing: String,
-    val withSpacing: String,
-    val withoutPadding: String,
-    val withPadding: String,
-    val withoutMargin: String,
-    val withMargin: String,
-    val withoutWrap: String,
-    val withWrap: String,
-)
 
 private val english: HorizontalLayoutTexts =
     HorizontalLayoutTexts(
@@ -185,7 +145,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 texts.bind(this, copy) { textContent = it }
             }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         basic.body.append(
@@ -199,7 +159,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(basic.root)
 
-        val verticalAlignment = sectionBlock()
+        val verticalAlignment = SectionBlock.NAME { show() }
         texts.bind(verticalAlignment.heading) { it.verticalHeading }
         texts.bind(verticalAlignment.hint) { it.verticalHint }
         verticalAlignment.body.append(
@@ -224,7 +184,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(verticalAlignment.root)
 
-        val individual = sectionBlock()
+        val individual = SectionBlock.NAME { show() }
         texts.bind(individual.heading) { it.individualHeading }
         texts.bind(individual.hint) { it.individualHint }
         individual.body.append(
@@ -244,7 +204,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(individual.root)
 
-        val horizontalAlignment = sectionBlock()
+        val horizontalAlignment = SectionBlock.NAME { show() }
         texts.bind(horizontalAlignment.heading) { it.horizontalHeading }
         texts.bind(horizontalAlignment.hint) { it.horizontalHint }
         val startBox = newBox("").also { texts.bind(it, { it.start }) { copy -> it.textContent = copy } }
@@ -275,7 +235,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(horizontalAlignment.root)
 
-        val spacing = sectionBlock()
+        val spacing = SectionBlock.NAME { show() }
         texts.bind(spacing.heading) { it.spacingHeading }
         texts.bind(spacing.hint) { it.spacingHint }
         spacing.body.append(
@@ -298,7 +258,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(spacing.root)
 
-        val padding = sectionBlock()
+        val padding = SectionBlock.NAME { show() }
         texts.bind(padding.heading) { it.paddingHeading }
         texts.bind(padding.hint) { it.paddingHint }
         padding.body.append(
@@ -321,7 +281,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(padding.root)
 
-        val margin = sectionBlock()
+        val margin = SectionBlock.NAME { show() }
         texts.bind(margin.heading) { it.marginHeading }
         texts.bind(margin.hint) { it.marginHint }
         margin.body.append(
@@ -354,7 +314,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(margin.root)
 
-        val wrapping = sectionBlock()
+        val wrapping = SectionBlock.NAME { show() }
         texts.bind(wrapping.heading) { it.wrappingHeading }
         texts.bind(wrapping.hint) { it.wrappingHint }
         wrapping.body.append(
@@ -379,7 +339,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(wrapping.root)
 
-        val wrappingSlots = sectionBlock()
+        val wrappingSlots = SectionBlock.NAME { show() }
         texts.bind(wrappingSlots.heading) { it.wrappingSlotsHeading }
         texts.bind(wrappingSlots.hint) { it.wrappingSlotsHint }
         fun group(slot: String?, copy: (HorizontalLayoutTexts) -> String, count: Int): HTMLElement =
@@ -407,7 +367,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         )
         body.append(wrappingSlots.root)
 
-        val expanding = sectionBlock()
+        val expanding = SectionBlock.NAME { show() }
         texts.bind(expanding.heading) { it.expandingHeading }
         texts.bind(expanding.hint) { it.expandingHint }
         expanding.body.append(
@@ -436,17 +396,5 @@ internal class HorizontalLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReference<HorizontalLayoutPage>(HorizontalLayoutPage::class.js) {
-        val NAME: TagName<HorizontalLayoutPage> = TagName("vaadin-demo-horizontal-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-horizontal-layout-page>`. */
-internal fun newHorizontalLayoutPage(): HorizontalLayoutPage {
-    HorizontalLayoutPage.define()
-    return HorizontalLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page")
 }

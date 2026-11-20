@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -32,7 +28,6 @@ import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
-import web.html.HTMLSpanElement
 import web.html.HtmlTagName
 import demo.ui.MUTED_SMALL
 
@@ -47,28 +42,8 @@ val progressBarEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/progress-bar",
                 sourcePath = "pages/display/ProgressBarPage.kt",
             ),
-        kitPage = { newProgressBarPage() },
+        kitPage = { ProgressBarPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class ProgressBarTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val determinateHeading: String,
-    val determinateHint: String,
-    val reset: String,
-    val indeterminateHeading: String,
-    val indeterminateHint: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val labelHeading: String,
-    val labelHint: String,
-    val processing: String,
-    val completionHeading: String,
-    val completionHint: String,
-    val generating: String,
-    val slowHint: String,
-)
 
 private val english: ProgressBarTexts = ProgressBarTexts(
     basicHeading = "Basic usage",
@@ -140,7 +115,7 @@ internal class ProgressBarPage : DemoPage() {
         frame.mount(this)
 
         // --- Basic usage (progressbar/progress-bar-basic.ts) --------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val half = createProgressBar { value = 0.5 }
@@ -148,7 +123,7 @@ internal class ProgressBarPage : DemoPage() {
         body.append(basic.root)
 
         // --- Determinate (progressbar/progress-bar-determinate.ts) --------------------------------
-        val determinate = sectionBlock()
+        val determinate = SectionBlock.NAME { show() }
         texts.bind(determinate.heading) { it.determinateHeading }
         texts.bind(determinate.hint) { it.determinateHint }
         val progress =
@@ -174,7 +149,7 @@ internal class ProgressBarPage : DemoPage() {
         body.append(determinate.root)
 
         // --- Indeterminate (progressbar/progress-bar-indeterminate.ts) ---------------------------
-        val indeterminateSection = sectionBlock()
+        val indeterminateSection = SectionBlock.NAME { show() }
         texts.bind(indeterminateSection.heading) { it.indeterminateHeading }
         texts.bind(indeterminateSection.hint) { it.indeterminateHint }
         val indeterminateBar = createProgressBar { indeterminate = true }
@@ -185,7 +160,7 @@ internal class ProgressBarPage : DemoPage() {
         body.append(indeterminateSection.root)
 
         // --- Bounds and initial value (progressbar/progress-bar-custom-range.ts) -----------------
-        val range = sectionBlock()
+        val range = SectionBlock.NAME { show() }
         texts.bind(range.heading) { it.rangeHeading }
         texts.bind(range.hint) { it.rangeHint }
         range.body.append(
@@ -201,7 +176,7 @@ internal class ProgressBarPage : DemoPage() {
         body.append(range.root)
 
         // --- Provide a label (progressbar/progress-bar-label.ts) --------------------------------
-        val labelSection = sectionBlock()
+        val labelSection = SectionBlock.NAME { show() }
         texts.bind(labelSection.heading) { it.labelHeading }
         texts.bind(labelSection.hint) { it.labelHint }
         val labelId = "progress-bar-label"
@@ -216,7 +191,7 @@ internal class ProgressBarPage : DemoPage() {
         body.append(labelSection.root)
 
         // --- Estimate completion time (progressbar/progress-bar-completion-time.ts) --------------
-        val completion = sectionBlock()
+        val completion = SectionBlock.NAME { show() }
         texts.bind(completion.heading) { it.completionHeading }
         texts.bind(completion.hint) { it.completionHint }
         val titleId = "progress-bar-title"
@@ -245,17 +220,5 @@ internal class ProgressBarPage : DemoPage() {
         reset.textContent = texts.current.reset
     }
 
-    companion object : CustomElementReference<ProgressBarPage>(ProgressBarPage::class.js) {
-        val NAME: TagName<ProgressBarPage> = TagName("vaadin-demo-progress-bar-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-progress-bar-page>`. */
-internal fun newProgressBarPage(): ProgressBarPage {
-    ProgressBarPage.define()
-    return ProgressBarPage.NAME()
+    companion object : CustomElementReferenceAdapter<ProgressBarPage>(ProgressBarPage::class.js, "vaadin-demo-progress-bar-page")
 }

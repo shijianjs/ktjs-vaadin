@@ -1,61 +1,42 @@
 package demo.pages.buttons
 
-
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
-import demo.ui.MUTED_SMALL
-import demo.ui.SMALL
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import web.html.HTMLAnchorElement
-import io.github.shijianjs.ktjs.demo.page.exampleCaption
-import io.github.shijianjs.ktjs.vaadin.verticallayout.VerticalLayoutElement
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
 import demo.pages.layout.emailField
 import demo.pages.overlays.ariaLabel
-import demo.ui.EventLog
 import demo.ui.Images
 import demo.ui.PageMeta
-import demo.ui.Readout
-import demo.ui.jsArray
-import demo.ui.listen
 import js.objects.unsafeJso
-import kotlin.js.JsAny
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutLabelsPositions
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
 import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
-import io.github.shijianjs.ktjs.vaadin.grid.GridEvents
-import io.github.shijianjs.ktjs.vaadin.grid.createGrid
-import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
-import io.github.shijianjs.ktjs.vaadin.grid.createGridSelectionColumn
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
-import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
-import web.dom.clickEvent
-import web.dom.document
-import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -74,81 +55,8 @@ val buttonEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/button",
                 sourcePath = "pages/buttons/ButtonPage.kt",
             ),
-        kitPage = { newButtonPage() },
+        kitPage = { ButtonPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class ButtonTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val basicTitle: String,
-    val basicHint: String,
-    val clicksPrefix: String,
-    val saveChanges: String,
-    val eventLog: String,
-    val clickLogPrefix: String,
-    val clickLogSuffix: String,
-    val iconsTitle: String,
-    val iconsHint: String,
-    val addItem: String,
-    val close: String,
-    val closeDialog: String,
-    val left: String,
-    val right: String,
-    val imagesTitle: String,
-    val imagesHint: String,
-    val vaadinLogo: String,
-    val disabledTitle: String,
-    val disabledHint: String,
-    val enabledButton: String,
-    val enable: String,
-    val disable: String,
-    val statePrefix: String,
-    val stateEnabled: String,
-    val stateEnabledClicked: String,
-    val stateDisabled: String,
-    val focusTitle: String,
-    val focusHint: String,
-    val keyboardFocus: String,
-    val plainButton: String,
-    val formsTitle: String,
-    val formsHint: String,
-    val emailAddress: String,
-    val firstName: String,
-    val lastName: String,
-    val createAccount: String,
-    val cancel: String,
-    val delete: String,
-    val formActions: String,
-    val dialogFooter: String,
-    val labelsTitle: String,
-    val labelsHint: String,
-    val primaryEmail: String,
-    val secondaryEmail: String,
-    val remove: String,
-    val sizesTitle: String,
-    val sizesHint: String,
-    val stylesTitle: String,
-    val stylesHint: String,
-    val variantsHintCaption: String,
-    val defaultVariant: String,
-    val coloursTitle: String,
-    val coloursHint: String,
-    val toolbarTitle: String,
-    val toolbarHint: String,
-    val email: String,
-    val editProfile: String,
-    val managePermissions: String,
-    val resetPassword: String,
-    val rowsPrefix: String,
-    val rowsSuffix: String,
-    val users: String,
-    val addUser: String,
-    val longTitle: String,
-    val longHint: String,
-    val perform: String,
-)
 
 private val buttonEnglish: ButtonTexts = ButtonTexts(
     docsLink = "Vaadin documentation",
@@ -320,24 +228,23 @@ private val buttonTexts: Translations<ButtonTexts> = texts(
 internal class ButtonPage : DemoPage() {
     private val meta: PageMeta = buttonEntry.meta
 
-
     private val texts = Binder(buttonTexts)
 
     // --- one element per example that owns state ---------------------------------------------------
 
-    private val clickCounter = newClickCounter()
+    private val clickCounter = ClickCounter.NAME()
 
-    private val enabledToggle = newEnabledToggle()
+    private val enabledToggle = EnabledToggle.NAME()
 
-    private val variantLog = newVariantLog()
+    private val variantLog = VariantLog.NAME()
 
-    private val gridToolbar = newGridToolbar()
+    private val gridToolbar = GridToolbar.NAME()
 
-    private val longAction = newLongAction()
+    private val longAction = LongAction.NAME()
 
-    private val primaryEmailRow = newEmailRow()
+    private val primaryEmailRow = EmailRow.NAME()
 
-    private val secondaryEmailRow = newEmailRow()
+    private val secondaryEmailRow = EmailRow.NAME()
 
     // --- single components whose text is translated, in examples without state ----------------------
 
@@ -381,7 +288,6 @@ internal class ButtonPage : DemoPage() {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-
     init {
         registerVaadinIcons()
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
@@ -413,7 +319,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun basicSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.basicTitle })
         texts.bind(section.hint, { it.basicHint })
         section.body.append(exampleBox(null, clickCounter))
@@ -421,7 +327,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun iconsSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.iconsTitle })
         texts.bind(section.hint, { it.iconsHint })
         if (addItemButton.childElementCount == 0) {
@@ -437,7 +343,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun imagesSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.imagesTitle })
         texts.bind(section.hint, { it.imagesHint })
         texts.bind(logo, { it.vaadinLogo }) { text -> logo.alt = text }
@@ -447,7 +353,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun disabledSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.disabledTitle })
         texts.bind(section.hint, { it.disabledHint })
         // The three disabled variants carry the variant names themselves — those are the values, not copy.
@@ -461,7 +367,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun focusSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.focusTitle })
         texts.bind(section.hint, { it.focusHint })
         section.body.append(exampleBox(null, kitRow(focusButton, plainFocusButton)))
@@ -469,7 +375,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun formsSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.formsTitle })
         texts.bind(section.hint, { it.formsHint })
         val form = createFormLayout().apply {
@@ -497,7 +403,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun labelsSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.labelsTitle })
         texts.bind(section.hint, { it.labelsHint })
         section.body.append(exampleBox(null, kitCol(primaryEmailRow, secondaryEmailRow)))
@@ -505,7 +411,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun sizesSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.sizesTitle })
         texts.bind(section.hint, { it.sizesHint })
         section.body.append(
@@ -522,7 +428,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun stylesSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
         val variants = kitRow(
@@ -540,7 +446,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun coloursSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.coloursTitle })
         texts.bind(section.hint, { it.coloursHint })
         // The variant names are the captions here; they are the same word in both languages.
@@ -560,7 +466,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun toolbarSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.toolbarTitle })
         texts.bind(section.hint, { it.toolbarHint })
         section.body.append(exampleBox(null, gridToolbar))
@@ -568,7 +474,7 @@ internal class ButtonPage : DemoPage() {
     }
 
     private fun longSection(): HTMLElement {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.longTitle })
         texts.bind(section.hint, { it.longHint })
         section.body.append(exampleBox(null, longAction))
@@ -637,19 +543,5 @@ internal class ButtonPage : DemoPage() {
         dialogCreateButton.textContent = copy.createAccount
     }
 
-    companion object : CustomElementReference<ButtonPage>(ButtonPage::class.js) {
-        val NAME: TagName<ButtonPage> = TagName("vaadin-demo-button-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<ButtonPage>(ButtonPage::class.js, "vaadin-demo-button-page")
 }
-
-/** Creates a defined `<vaadin-demo-button-page>`. */
-internal fun newButtonPage(): ButtonPage {
-    ButtonPage.define()
-    return ButtonPage.NAME()
-}
-
-

@@ -1,27 +1,21 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -34,6 +28,7 @@ import demo.ui.RecordedLog
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.cssom.AlignItems
 import web.cssom.Display
 import web.cssom.px
@@ -86,7 +81,7 @@ val popoverEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/popover",
                 sourcePath = "pages/overlays/PopoverPage.kt",
             ),
-        kitPage = { newPopoverPage() },
+        kitPage = { PopoverPage.NAME() },
     )
 
 /** Select items described by a JSON array of `{label, value}` objects. */
@@ -101,72 +96,6 @@ private fun selectData(vararg pairs: Pair<String, String>): Array<SelectItemData
 // endregion
 
 // region Popover
-
-/** Every string this page shows, in one language. */
-private class PopoverTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val clickToOpen: String,
-    val overlayContent: String,
-    val anyDom: String,
-    val openedLine: (Boolean) -> String,
-    val positionHeading: String,
-    val positionHint: String,
-    val open: String,
-    val position: String,
-    val popoverContent: String,
-    val arrowHeading: String,
-    val arrowHint: String,
-    val notifications: String,
-    val noNotifications: String,
-    val modalHeading: String,
-    val modalHint: String,
-    val discount: String,
-    val discountCode: String,
-    val apply: String,
-    val openModal: String,
-    val interactiveHeading: String,
-    val interactiveHint: String,
-    val cvvHeading: String,
-    val cvvText: String,
-    val cvvLink: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val searchRange: String,
-    val commonRanges: String,
-    val selectPreset: String,
-    val today: String,
-    val lastWeek: String,
-    val lastMonth: String,
-    val yearToDate: String,
-    val lastYear: String,
-    val past5Years: String,
-    val from: String,
-    val to: String,
-    val rangeAria: String,
-    val panelHeading: String,
-    val panelHint: String,
-    val markAllRead: String,
-    val unread: String,
-    val all: String,
-    val message: (Int) -> String,
-    val userMenuHeading: String,
-    val userMenuHint: String,
-    val userMenu: String,
-    val userProfile: String,
-    val preferences: String,
-    val signOut: String,
-    val columnsHeading: String,
-    val columnsHint: String,
-    val showHideColumns: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val profession: String,
-    val configureColumns: String,
-    val showAll: String,
-    val reset: String,
-)
 
 private val english: PopoverTexts =
     PopoverTexts(
@@ -403,7 +332,7 @@ internal class PopoverPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val trigger = createButton().addTheme("primary")
@@ -422,7 +351,7 @@ internal class PopoverPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(kitRow(trigger, basicPopover), log.root)))
         body.append(basic.root)
 
-        val positioning = sectionBlock()
+        val positioning = SectionBlock.NAME { show() }
         texts.bind(positioning.heading) { it.positionHeading }
         texts.bind(positioning.hint) { it.positionHint }
         val positionTarget = createButton().addTheme("primary")
@@ -449,7 +378,7 @@ internal class PopoverPage : DemoPage() {
         )
         body.append(positioning.root)
 
-        val arrow = sectionBlock()
+        val arrow = SectionBlock.NAME { show() }
         texts.bind(arrow.heading) { it.arrowHeading }
         texts.bind(arrow.hint) { it.arrowHint }
         val bell = newIconButton("lumo:bell")
@@ -461,7 +390,7 @@ internal class PopoverPage : DemoPage() {
         arrow.body.append(exampleBox(null, kitRow(bell, arrowPopover)))
         body.append(arrow.root)
 
-        val modal = sectionBlock()
+        val modal = SectionBlock.NAME { show() }
         texts.bind(modal.heading) { it.modalHeading }
         texts.bind(modal.hint) { it.modalHint }
         texts.bind(discountButton) { it.discount }
@@ -478,7 +407,7 @@ internal class PopoverPage : DemoPage() {
         modal.body.append(exampleBox(null, kitCol(kitRow(discountButton, modalPopover), openModalButton)))
         body.append(modal.root)
 
-        val interactive = sectionBlock()
+        val interactive = SectionBlock.NAME { show() }
         texts.bind(interactive.heading) { it.interactiveHeading }
         texts.bind(interactive.hint) { it.interactiveHint }
         cvvField.id = ElementId("popover-cvv-field")
@@ -497,7 +426,7 @@ internal class PopoverPage : DemoPage() {
         interactive.body.append(cvvPopover)
         body.append(interactive.root)
 
-        val rangeField = sectionBlock()
+        val rangeField = SectionBlock.NAME { show() }
         texts.bind(rangeField.heading) { it.rangeHeading }
         texts.bind(rangeField.hint) { it.rangeHint }
         texts.bind(rangeInput, { it.searchRange }) { rangeInput.label = it }
@@ -552,7 +481,7 @@ internal class PopoverPage : DemoPage() {
         rangeField.body.append(exampleBox(null, kitCol(rangeInput, rangePopover)))
         body.append(rangeField.root)
 
-        val panel = sectionBlock()
+        val panel = SectionBlock.NAME { show() }
         texts.bind(panel.heading) { it.panelHeading }
         texts.bind(panel.hint) { it.panelHint }
         val notificationBell = newIconButton("lumo:bell")
@@ -584,7 +513,7 @@ internal class PopoverPage : DemoPage() {
         panel.body.append(exampleBox(null, kitRow(notificationBell, notificationsPopover)))
         body.append(panel.root)
 
-        val userMenuSection = sectionBlock()
+        val userMenuSection = SectionBlock.NAME { show() }
         texts.bind(userMenuSection.heading) { it.userMenuHeading }
         texts.bind(userMenuSection.hint) { it.userMenuHint }
         val user = people(1).first()
@@ -634,7 +563,7 @@ internal class PopoverPage : DemoPage() {
         userMenuSection.body.append(exampleBox(null, kitRow(avatarButton, userPopover)))
         body.append(userMenuSection.root)
 
-        val columns = sectionBlock()
+        val columns = SectionBlock.NAME { show() }
         texts.bind(columns.heading) { it.columnsHeading }
         texts.bind(columns.hint) { it.columnsHint }
         val grid = createGrid()
@@ -740,19 +669,7 @@ internal class PopoverPage : DemoPage() {
         log.replay(false)
     }
 
-    companion object : CustomElementReference<PopoverPage>(PopoverPage::class.js) {
-        val NAME: TagName<PopoverPage> = TagName("vaadin-demo-popover-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-popover-page>`. */
-internal fun newPopoverPage(): PopoverPage {
-    PopoverPage.define()
-    return PopoverPage.NAME()
+    companion object : CustomElementReferenceAdapter<PopoverPage>(PopoverPage::class.js, "vaadin-demo-popover-page")
 }
 
 private fun notificationMessages(count: Int, copy: PopoverTexts): Array<MessageListItem> {

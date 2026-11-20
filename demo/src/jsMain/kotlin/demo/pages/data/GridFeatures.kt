@@ -6,9 +6,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.events.Event
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -17,6 +14,7 @@ import demo.pages.fixtures.people
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.cssom.Display
 import web.cssom.FlexWrap
 import web.cssom.px
@@ -103,18 +101,13 @@ internal class PersonDetails : CustomElementAdapter(), GridTranslatable {
         gridTexts.apply(lang)
     }
 
-    companion object : CustomElementReference<PersonDetails>(PersonDetails::class.js) {
-        val NAME: TagName<PersonDetails> = TagName("vaadin-demo-person-details")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<PersonDetails>(PersonDetails::class.js, "vaadin-demo-person-details")
 }
 
 /** Creates a defined `<vaadin-demo-person-details>`. */
 internal fun newPersonDetails(item: JsAny?): PersonDetails {
-    PersonDetails.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    PersonDetails.NAME
     return PersonDetails.NAME().also { it.show(item) }
 }
 

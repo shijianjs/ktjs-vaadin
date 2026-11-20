@@ -1,21 +1,17 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -47,47 +43,8 @@ val sliderEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/slider",
                 sourcePath = "pages/selection/SliderPage.kt",
             ),
-        kitPage = { newSliderPage() },
+        kitPage = { SliderPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class SliderTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val volume: String,
-    val valuePrefix: String,
-    val committedPrefix: String,
-    val helperHeading: String,
-    val helperHint: String,
-    val label: String,
-    val helperText: String,
-    val minMaxHeading: String,
-    val minMaxHint: String,
-    val temperature: String,
-    val visibleHeading: String,
-    val visibleHint: String,
-    val brightness: String,
-    val stepHeading: String,
-    val stepHint: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val priceRange: String,
-    val minPrice: String,
-    val maxPrice: String,
-    val rangePrefix: String,
-    val rangeValidationHeading: String,
-    val rangeValidationHint: String,
-    val priceRangeLabel: String,
-    val priceError: String,
-    val modesHeading: String,
-    val modesHint: String,
-    val rating: String,
-    val livePrefix: String,
-    val committedValuePrefix: String,
-    val statesHeading: String,
-    val readonly: String,
-    val disabled: String,
-)
 
 private val english: SliderTexts =
     SliderTexts(
@@ -223,7 +180,7 @@ internal class SliderPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         texts.bind(slider, { it.volume }) { slider.label = it }
@@ -239,7 +196,7 @@ internal class SliderPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(slider, readout.root)))
         body.append(basic.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.helperHeading }
         texts.bind(features.hint) { it.helperHint }
         val helperSlider = createSlider()
@@ -248,7 +205,7 @@ internal class SliderPage : DemoPage() {
         features.body.append(exampleBox(null, helperSlider))
         body.append(features.root)
 
-        val minMax = sectionBlock()
+        val minMax = SectionBlock.NAME { show() }
         texts.bind(minMax.heading) { it.minMaxHeading }
         texts.bind(minMax.hint) { it.minMaxHint }
         val temperature =
@@ -262,7 +219,7 @@ internal class SliderPage : DemoPage() {
         minMax.body.append(exampleBox(null, temperature))
         body.append(minMax.root)
 
-        val alwaysVisible = sectionBlock()
+        val alwaysVisible = SectionBlock.NAME { show() }
         texts.bind(alwaysVisible.heading) { it.visibleHeading }
         texts.bind(alwaysVisible.hint) { it.visibleHint }
         val brightness =
@@ -276,7 +233,7 @@ internal class SliderPage : DemoPage() {
         alwaysVisible.body.append(exampleBox(null, brightness))
         body.append(alwaysVisible.root)
 
-        val stepSection = sectionBlock()
+        val stepSection = SectionBlock.NAME { show() }
         texts.bind(stepSection.heading) { it.stepHeading }
         texts.bind(stepSection.hint) { it.stepHint }
         texts.bind(stepped, { it.volume }) { stepped.label = it }
@@ -284,7 +241,7 @@ internal class SliderPage : DemoPage() {
         stepSection.body.append(exampleBox(null, kitCol(stepped, stepReadout.root)))
         body.append(stepSection.root)
 
-        val range = sectionBlock()
+        val range = SectionBlock.NAME { show() }
         texts.bind(range.heading) { it.rangeHeading }
         texts.bind(range.hint) { it.rangeHint }
         texts.bind(rangeSlider, { it.priceRange }) { rangeSlider.label = it }
@@ -294,7 +251,7 @@ internal class SliderPage : DemoPage() {
         range.body.append(exampleBox(null, kitCol(rangeSlider, rangeReadout.root)))
         body.append(range.root)
 
-        val rangeValidation = sectionBlock()
+        val rangeValidation = SectionBlock.NAME { show() }
         texts.bind(rangeValidation.heading) { it.rangeValidationHeading }
         texts.bind(rangeValidation.hint) { it.rangeValidationHint }
         texts.bind(priceRange, { it.priceRangeLabel }) { priceRange.label = it }
@@ -308,7 +265,7 @@ internal class SliderPage : DemoPage() {
         rangeValidation.body.append(exampleBox(null, priceRange))
         body.append(rangeValidation.root)
 
-        val valueModes = sectionBlock()
+        val valueModes = SectionBlock.NAME { show() }
         texts.bind(valueModes.heading) { it.modesHeading }
         texts.bind(valueModes.hint) { it.modesHint }
         texts.bind(modeSlider, { it.rating }) { modeSlider.label = it }
@@ -323,7 +280,7 @@ internal class SliderPage : DemoPage() {
         valueModes.body.append(exampleBox(null, kitCol(modeSlider, kitRow(liveValue.root, committedValue.root))))
         body.append(valueModes.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         val readonlySlider =
             createSlider {
@@ -382,17 +339,5 @@ internal class SliderPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReference<SliderPage>(SliderPage::class.js) {
-        val NAME: TagName<SliderPage> = TagName("vaadin-demo-slider-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-slider-page>`. */
-internal fun newSliderPage(): SliderPage {
-    SliderPage.define()
-    return SliderPage.NAME()
+    companion object : CustomElementReferenceAdapter<SliderPage>(SliderPage::class.js, "vaadin-demo-slider-page")
 }

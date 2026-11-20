@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -29,14 +25,11 @@ import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
-import io.github.shijianjs.ktjs.vaadin.tabs.TabElement
 import io.github.shijianjs.ktjs.vaadin.tabs.createTab
 import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
-import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetElement
 import io.github.shijianjs.ktjs.vaadin.tabsheet.TabSheetEvents
 import io.github.shijianjs.ktjs.vaadin.tabsheet.createTabSheet
 import web.dom.ElementId
-import web.html.HTMLElement
 
 val tabsheetEntry: CatalogEntry =
     CatalogEntry(
@@ -54,26 +47,8 @@ val tabsheetEntry: CatalogEntry =
                 docsNote = bi("Tab Sheet 与 Tabs 共用一页官方文档。", "Tab Sheet shares the Tabs documentation page."),
                 sourcePath = "pages/layout/TabSheetPage.kt",
             ),
-        kitPage = { newTabSheetPage() },
+        kitPage = { TabSheetPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class TabSheetTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val lazyHeading: String,
-    val lazyHint: String,
-    val prefixHeading: String,
-    val prefixHint: String,
-    val themeHeading: String,
-    val themeHint: String,
-    /** The labels of the three tabs, in tab order. */
-    val tabLabels: List<String>,
-    /** The content of the three panels, in the same order as the tabs. */
-    val panelContents: List<String>,
-    val closeAll: String,
-    val addTab: String,
-)
 
 private val english: TabSheetTexts = TabSheetTexts(
     basicHeading = "Basic usage",
@@ -120,9 +95,6 @@ private val tabSheetTexts: Translations<TabSheetTexts> = texts(
     Langs.ZH_HANS to chinese,
 )
 
-/** A sheet with its three tab labels and three panel bodies, so the page can rewrite them. */
-private class SheetParts(val sheet: TabSheetElement, val tabs: List<TabElement>, val panels: List<HTMLElement>)
-
 /** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
 private fun demoTabSheet(key: String, theme: String? = null): SheetParts {
     val sheet = createTabSheet()
@@ -163,7 +135,7 @@ internal class TabSheetPage : DemoPage() {
         basicParts.sheet.dataset["test"] = "tab-sheet"
         lazyParts.sheet.dataset["test"] = "tab-sheet-lazy"
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val selected = Readout("selected = 0")
@@ -173,7 +145,7 @@ internal class TabSheetPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(basicParts.sheet, selected.root)))
         body.append(basic.root)
 
-        val lazy = sectionBlock()
+        val lazy = SectionBlock.NAME { show() }
         texts.bind(lazy.heading) { it.lazyHeading }
         texts.bind(lazy.hint) { it.lazyHint }
         val visited = mutableSetOf(0)
@@ -189,7 +161,7 @@ internal class TabSheetPage : DemoPage() {
         lazy.body.append(exampleBox(null, kitCol(lazyParts.sheet, visitedReadout.root)))
         body.append(lazy.root)
 
-        val prefixSuffix = sectionBlock()
+        val prefixSuffix = SectionBlock.NAME { show() }
         texts.bind(prefixSuffix.heading) { it.prefixHeading }
         texts.bind(prefixSuffix.hint) { it.prefixHint }
         closeAll.slot = "prefix"
@@ -201,7 +173,7 @@ internal class TabSheetPage : DemoPage() {
         prefixSuffix.body.append(exampleBox(null, adornedParts.sheet))
         body.append(prefixSuffix.root)
 
-        val bordered = sectionBlock()
+        val bordered = SectionBlock.NAME { show() }
         texts.bind(bordered.heading) { it.themeHeading }
         texts.bind(bordered.hint) { it.themeHint }
         bordered.body.append(exampleBox(null, borderedParts.sheet))
@@ -230,17 +202,5 @@ internal class TabSheetPage : DemoPage() {
         addTab.setAttribute("aria-label", copy.addTab)
     }
 
-    companion object : CustomElementReference<TabSheetPage>(TabSheetPage::class.js) {
-        val NAME: TagName<TabSheetPage> = TagName("vaadin-demo-tab-sheet-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-tab-sheet-page>`. */
-internal fun newTabSheetPage(): TabSheetPage {
-    TabSheetPage.define()
-    return TabSheetPage.NAME()
+    companion object : CustomElementReferenceAdapter<TabSheetPage>(TabSheetPage::class.js, "vaadin-demo-tab-sheet-page")
 }

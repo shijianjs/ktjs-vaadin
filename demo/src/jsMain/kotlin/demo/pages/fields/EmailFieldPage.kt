@@ -1,21 +1,17 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -48,44 +44,11 @@ val emailFieldEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/email-field",
                 sourcePath = "pages/fields/EmailFieldPage.kt",
             ),
-        kitPage = { newEmailFieldPage() },
+        kitPage = { EmailFieldPage.NAME() },
     )
 
 /** Pattern of `email-field-validation.ts`: only addresses in the `example.com` domain. */
 private const val EMAIL_EXAMPLE_PATTERN = "^[a-zA-Z0-9_\\-+]+(?:\\.[a-zA-Z0-9_\\-+]+)*@example\\.com$"
-
-/** Every string this page shows, in one language. */
-private class EmailFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val emailAddress: String,
-    val invalidMessage: String,
-    val helper: String,
-    val validInvalidCaption: String,
-    val validityCaption: String,
-    val validityLine: (Boolean, String) -> String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val onlyExample: String,
-    val notChecked: String,
-    val requiredMessage: String,
-    val patternMessage: String,
-    val checkPrefix: String,
-    val passed: String,
-    val failed: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-)
 
 private val english: EmailFieldTexts =
     EmailFieldTexts(
@@ -191,7 +154,7 @@ internal class EmailFieldPage : DemoPage() {
         registerVaadinIcons()
 
         // --- Basic usage (email-field-basic.ts) -----------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val validEmail =
@@ -232,7 +195,7 @@ internal class EmailFieldPage : DemoPage() {
         body.append(basic.root)
 
         // --- Basic features (email-field-basic-features.ts) -----------------------------------------
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featureField = createEmailField { clearButtonVisible = true }
@@ -249,7 +212,7 @@ internal class EmailFieldPage : DemoPage() {
         body.append(features.root)
 
         // --- Validation (email-field-validation.ts) -------------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         restricted.required = true
@@ -272,7 +235,7 @@ internal class EmailFieldPage : DemoPage() {
         body.append(validation.root)
 
         // --- Read-only and disabled (email-field-readonly-and-disabled.ts) --------------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readonlyField = createEmailField {
@@ -286,7 +249,7 @@ internal class EmailFieldPage : DemoPage() {
         body.append(states.root)
 
         // --- Style variants (email-field-styles.ts) -------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styledField =
@@ -336,17 +299,5 @@ internal class EmailFieldPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReference<EmailFieldPage>(EmailFieldPage::class.js) {
-        val NAME: TagName<EmailFieldPage> = TagName("vaadin-demo-email-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-email-field-page>`. */
-internal fun newEmailFieldPage(): EmailFieldPage {
-    EmailFieldPage.define()
-    return EmailFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<EmailFieldPage>(EmailFieldPage::class.js, "vaadin-demo-email-field-page")
 }

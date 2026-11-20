@@ -1,15 +1,9 @@
 package demo.pages.layout
 
 import io.github.shijianjs.ktjs.demo.i18n.Binder
-import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-
-/** A card-page element that holds a text table of its own and can be handed the current language. */
-internal interface CardTranslatable {
-    fun applyTranslation(lang: Lang)
-}
 
 /** Every string the card page and its card elements show, in one language. */
 internal class CardTexts(

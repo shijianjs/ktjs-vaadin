@@ -1,20 +1,15 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -32,7 +27,6 @@ import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormRow
 import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldElement
 import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
-import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
@@ -55,32 +49,8 @@ val formLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/form-layout",
                 sourcePath = "pages/layout/FormLayoutPage.kt",
             ),
-        kitPage = { newFormLayoutPage() },
+        kitPage = { FormLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class FormLayoutTexts(
-    val autoHeading: String,
-    val autoHint: String,
-    val firstName: String,
-    val lastName: String,
-    val emailAddress: String,
-    val password: String,
-    val confirmPassword: String,
-    val labelsHeading: String,
-    val labelsHint: String,
-    val columnsHeading: String,
-    val columnsHint: String,
-    val colspanHeading: String,
-    val colspanHint: String,
-    val street: String,
-    val postal: String,
-    val city: String,
-    val country: String,
-    val stepsHeading: String,
-    val stepsHint: String,
-    val asideCaption: String,
-)
 
 private val english: FormLayoutTexts =
     FormLayoutTexts(
@@ -168,7 +138,7 @@ internal class FormLayoutPage : DemoPage() {
             return formItem
         }
 
-        val autoSection = sectionBlock()
+        val autoSection = SectionBlock.NAME { show() }
         texts.bind(autoSection.heading) { it.autoHeading }
         texts.bind(autoSection.hint) { it.autoHint }
         val basicForm = createFormLayout { autoResponsive = true }
@@ -181,7 +151,7 @@ internal class FormLayoutPage : DemoPage() {
         autoSection.body.append(exampleBox(null, newFormFrame(basicForm)))
         body.append(autoSection.root)
 
-        val labelsSection = sectionBlock()
+        val labelsSection = SectionBlock.NAME { show() }
         texts.bind(labelsSection.heading) { it.labelsHeading }
         texts.bind(labelsSection.hint) { it.labelsHint }
         val asideForm = createFormLayout {
@@ -197,7 +167,7 @@ internal class FormLayoutPage : DemoPage() {
         labelsSection.body.append(exampleBox(null, newFormFrame(asideForm)))
         body.append(labelsSection.root)
 
-        val columnsSection = sectionBlock()
+        val columnsSection = SectionBlock.NAME { show() }
         texts.bind(columnsSection.heading) { it.columnsHeading }
         texts.bind(columnsSection.hint) { it.columnsHint }
         val expandColumnsForm = createFormLayout {
@@ -227,7 +197,7 @@ internal class FormLayoutPage : DemoPage() {
         )
         body.append(columnsSection.root)
 
-        val colspan = sectionBlock()
+        val colspan = SectionBlock.NAME { show() }
         texts.bind(colspan.heading) { it.colspanHeading }
         texts.bind(colspan.hint) { it.colspanHint }
         val spanForm = createFormLayout {
@@ -247,7 +217,7 @@ internal class FormLayoutPage : DemoPage() {
         colspan.body.append(exampleBox(null, newFormFrame(spanForm)))
         body.append(colspan.root)
 
-        val stepsSection = sectionBlock()
+        val stepsSection = SectionBlock.NAME { show() }
         texts.bind(stepsSection.heading) { it.stepsHeading }
         texts.bind(stepsSection.hint) { it.stepsHint }
         val stepsForm = createFormLayout()
@@ -299,19 +269,7 @@ internal class FormLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReference<FormLayoutPage>(FormLayoutPage::class.js) {
-        val NAME: TagName<FormLayoutPage> = TagName("vaadin-demo-form-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-form-layout-page>`. */
-internal fun newFormLayoutPage(): FormLayoutPage {
-    FormLayoutPage.define()
-    return FormLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page")
 }
 
 /**
@@ -319,33 +277,11 @@ internal fun newFormLayoutPage(): FormLayoutPage {
  * examples do — dragging the splitter changes the width of the form and the responsive column count
  * follows it.
  */
-internal class FormFrame : CustomElementAdapter() {
-    private val split = createSplitLayout().apply {
-        style.setProperty("height", "18rem")
-    }
-
-    /** Takes [form] into the frame; the form fills the first pane and nothing fills the second. */
-    fun show(form: HTMLElement) {
-        form.style.setProperty("width", "100%")
-        split.append(form, HtmlTagName.div().apply { style.setProperty("background", "var(--lumo-contrast-5pct)") })
-    }
-
-    init {
-        attachShadowRoot().append(split)
-    }
-
-    companion object : CustomElementReference<FormFrame>(FormFrame::class.js) {
-        val NAME: TagName<FormFrame> = TagName("vaadin-demo-form-frame")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-form-frame>` around [form]. */
 internal fun newFormFrame(form: HTMLElement): FormFrame {
-    FormFrame.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    FormFrame.NAME
     return FormFrame.NAME().also { it.show(form) }
 }
 

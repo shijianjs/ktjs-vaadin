@@ -1,19 +1,12 @@
 package demo.pages.display
 
-
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
 import demo.componentApiUrl
-import demo.pages.overlays.ariaLabel
-import demo.ui.MUTED_SMALL
 import demo.ui.PageMeta
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -22,11 +15,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.anchor
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.inputcontainer.createInputContainer
 import web.cssom.Border
@@ -60,7 +53,7 @@ val inputContainerEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/display/InputContainerPage.kt",
             ),
-        kitPage = { newInputContainerPage() },
+        kitPage = { InputContainerPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -75,8 +68,10 @@ val inputContainerEntry: CatalogEntry =
  * have a typed value, but `font` is a shorthand of seven properties and the generated factories all
  * take concrete sizes rather than the `inherit` keyword, so this one declaration stays a style
  * property. Everything else on this element is a typed value.
+ *
+ * `StateExample` builds the same input for its own box, so the helper is `internal`, not file-private.
  */
-private fun containerInput(value: String = "") =
+internal fun containerInput(value: String = "") =
     HtmlTagName.input().apply {
         this.value = value
         inlineStyle.apply {
@@ -89,24 +84,9 @@ private fun containerInput(value: String = "") =
         style.setProperty("font", "inherit")
     }
 
-
 // ---------------------------------------------------------------------------------------------
 // The same page on kit blocks
 // ---------------------------------------------------------------------------------------------
-
-/** Every string this page shows, in one language. */
-private class InputContainerTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val basicTitle: String,
-    val basicHint: String,
-    val statesTitle: String,
-    val statesHint: String,
-    val readOnly: String,
-    val invalid: String,
-    val disabled: String,
-)
 
 private val inputContainerEnglish: InputContainerTexts = InputContainerTexts(
     docsLink = "Vaadin documentation",
@@ -140,25 +120,6 @@ private val inputContainerTexts: Translations<InputContainerTexts> = texts(
     Langs.ZH_HANS to inputContainerChinese,
 )
 
-/** One state example: the container, the input inside it, and the caption under it. */
-private class StateExample(readOnly: Boolean = false, invalid: Boolean = false, disabled: Boolean = false) {
-    val input = containerInput()
-
-    val container: HTMLElement = createInputContainer().apply {
-        this.readonly = readOnly
-        this.invalid = invalid
-        this.disabled = disabled
-        append(input)
-    }
-
-    val caption: HTMLElement = paragraph("")
-
-    val root: HTMLElement = HtmlTagName.div().apply {
-        inlineStyle.apply { width = 12.rem }
-        append(container, caption)
-    }
-}
-
 /**
  * The page on kit blocks: nodes are built once and a language switch only rewrites their text.
  *
@@ -167,7 +128,6 @@ private class StateExample(readOnly: Boolean = false, invalid: Boolean = false, 
  */
 internal class InputContainerPage : DemoPage() {
     private val meta: PageMeta = inputContainerEntry.meta
-
 
     private val texts = Binder(inputContainerTexts)
 
@@ -186,7 +146,6 @@ internal class InputContainerPage : DemoPage() {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-
     init {
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
@@ -198,13 +157,13 @@ internal class InputContainerPage : DemoPage() {
         addLink(texts.bind(source, { it.sourceLink }))
         addLink(texts.bind(api, { it.apiLink }))
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         basic.body.append(exampleBox(null, basicContainer))
         body.append(basic.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading, { it.statesTitle })
         texts.bind(states.hint, { it.statesHint })
         texts.bind(readOnly.caption, { it.readOnly })
@@ -227,19 +186,5 @@ internal class InputContainerPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReference<InputContainerPage>(InputContainerPage::class.js) {
-        val NAME: TagName<InputContainerPage> = TagName("vaadin-demo-input-container-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page")
 }
-
-/** Creates a defined `<vaadin-demo-input-container-page>`. */
-internal fun newInputContainerPage(): InputContainerPage {
-    InputContainerPage.define()
-    return InputContainerPage.NAME()
-}
-
-

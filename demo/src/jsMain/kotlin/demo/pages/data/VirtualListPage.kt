@@ -6,15 +6,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -52,25 +50,8 @@ val virtualListEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/virtual-list",
                 sourcePath = "pages/data/VirtualListPage.kt",
             ),
-        kitPage = { newVirtualListPage() },
+        kitPage = { VirtualListPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class VirtualListTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val mathematician: String,
-    val computerScientist: String,
-    val cryptanalyst: String,
-    val aerospaceEngineer: String,
-    val contactInfo: String,
-    val jumpHeading: String,
-    val jumpHint: String,
-    val goToFirst: String,
-    val goTo300: String,
-    /** The label of the [index]th row in the second list. */
-    val row: (Int) -> String,
-)
 
 private val english: VirtualListTexts = VirtualListTexts(
     basicHeading = "Basic usage",
@@ -131,7 +112,7 @@ internal class VirtualListPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         list.dataset["test"] = "virtual-list"
@@ -186,7 +167,7 @@ internal class VirtualListPage : DemoPage() {
         basic.body.append(exampleBox(null, list))
         body.append(basic.root)
 
-        val jump = sectionBlock()
+        val jump = SectionBlock.NAME { show() }
         texts.bind(jump.heading) { it.jumpHeading }
         texts.bind(jump.hint) { it.jumpHint }
         jumpList.items = jsArray<JsAny>((1..500).joinToString(",", "[", "]"))
@@ -271,17 +252,5 @@ internal class VirtualListPage : DemoPage() {
         jumpList.requestContentUpdate()
     }
 
-    companion object : CustomElementReference<VirtualListPage>(VirtualListPage::class.js) {
-        val NAME: TagName<VirtualListPage> = TagName("vaadin-demo-virtual-list-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-virtual-list-page>`. */
-internal fun newVirtualListPage(): VirtualListPage {
-    VirtualListPage.define()
-    return VirtualListPage.NAME()
+    companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page")
 }

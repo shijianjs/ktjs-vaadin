@@ -3,18 +3,15 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Binder
-import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Grid
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -34,6 +31,7 @@ import web.html.HTMLElement
 import web.html.HtmlTagName
 import web.cssom.ClassName
 import io.github.shijianjs.ktjs.dom.css.dsl.className
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /** The single-card width the docs examples use; the sheet keys on this same object. */
 private val CARD_DEMO: ClassName = ClassName("card-demo")
@@ -55,7 +53,7 @@ val cardEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/card",
                 sourcePath = "pages/layout/CardPage.kt",
             ),
-        kitPage = { newCardPage() },
+        kitPage = { CardPage.NAME() },
     )
 
 /**
@@ -79,7 +77,7 @@ internal class CardPage : DemoPage() {
         addSheet(CARD_SHEET)
         registerVaadinIcons()
 
-        val content = sectionBlock()
+        val content = SectionBlock.NAME { show() }
         texts.bind(
             content.heading,
             { it.contentHeading },
@@ -97,7 +95,7 @@ internal class CardPage : DemoPage() {
         content.body.append(exampleBox(null, contentCard))
         body.append(content.root)
 
-        val titles = sectionBlock()
+        val titles = SectionBlock.NAME { show() }
         texts.bind(titles.heading, { it.titlesHeading }) { titles.heading.textContent = it }
         texts.bind(titles.hint, { it.titlesHint }) { titles.hint.textContent = it }
         val slotTitles = createCard()
@@ -113,13 +111,13 @@ internal class CardPage : DemoPage() {
         propertyTitle.append(HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } })
         slotTitles.className = CARD_DEMO
         propertyTitle.className = CARD_DEMO
-        titles.body.append(exampleBox(null, kitGrid(260, slotTitles, propertyTitle)))
+        titles.body.append(exampleBox(null, Grid.NAME { show(260); add(slotTitles, propertyTitle) }))
         body.append(titles.root)
 
-        val header = sectionBlock()
+        val header = SectionBlock.NAME { show() }
         texts.bind(header.heading, { it.headerHeading }) { header.heading.textContent = it }
         texts.bind(header.hint, { it.headerHint }) { header.hint.textContent = it }
-        val headerCard = newCardHeader().also { translatables += it }
+        val headerCard = CardHeader.NAME().also { translatables += it }
         headerCard.append(HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } })
         val prefixCard = createCard()
         prefixCard.append(
@@ -141,10 +139,10 @@ internal class CardPage : DemoPage() {
             },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
-        header.body.append(exampleBox(null, kitGrid(260, headerCard, prefixCard, suffixCard)))
+        header.body.append(exampleBox(null, Grid.NAME { show(260); add(headerCard, prefixCard, suffixCard) }))
         body.append(header.root)
 
-        val media = sectionBlock()
+        val media = SectionBlock.NAME { show() }
         texts.bind(media.heading, { it.mediaHeading }) { media.heading.textContent = it }
         texts.bind(media.hint, { it.mediaHint }) { media.hint.textContent = it }
         val imageCard = createCard()
@@ -154,7 +152,7 @@ internal class CardPage : DemoPage() {
         )
         val iconCard = createCard()
         iconCard.append(
-            newCardMediaIcon(),
+            CardMediaIcon.NAME(),
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val avatarCard = createCard()
@@ -165,10 +163,10 @@ internal class CardPage : DemoPage() {
             },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
-        media.body.append(exampleBox(null, kitGrid(260, imageCard, iconCard, avatarCard)))
+        media.body.append(exampleBox(null, Grid.NAME { show(260); add(imageCard, iconCard, avatarCard) }))
         body.append(media.root)
 
-        val footer = sectionBlock()
+        val footer = SectionBlock.NAME { show() }
         texts.bind(footer.heading, { it.footerHeading }) { footer.heading.textContent = it }
         texts.bind(footer.hint, { it.footerHint }) { footer.hint.textContent = it }
         val footerCard = createCard()
@@ -189,28 +187,24 @@ internal class CardPage : DemoPage() {
         footer.body.append(exampleBox(null, footerCard))
         body.append(footer.root)
 
-        val variants = sectionBlock()
+        val variants = SectionBlock.NAME { show() }
         texts.bind(variants.heading, { it.variantsHeading }) { variants.heading.textContent = it }
         texts.bind(variants.hint, { it.variantsHint }) { variants.hint.textContent = it }
         variants.body.append(
             exampleBox(
                 null,
-                kitGrid(260,
-                    createCard { cardTitle = "Default" }.apply {
+                Grid.NAME { show(260); add(createCard { cardTitle = "Default" }.apply {
                         append(HtmlTagName.div().also { node -> texts.bind(node, { it.defaultCardText }) { node.textContent = it } })
-                    },
-                    createCard { cardTitle = "Outlined" }.addTheme("outlined").apply {
+                    }, createCard { cardTitle = "Outlined" }.addTheme("outlined").apply {
                         append(HtmlTagName.div().also { node -> texts.bind(node, { it.outlinedCardText }) { node.textContent = it } })
-                    },
-                    createCard { cardTitle = "Elevated" }.addTheme("elevated").apply {
+                    }, createCard { cardTitle = "Elevated" }.addTheme("elevated").apply {
                         append(HtmlTagName.div().also { node -> texts.bind(node, { it.elevatedCardText }) { node.textContent = it } })
-                    },
-                ),
+                    }) },
             ),
         )
         body.append(variants.root)
 
-        val combined = sectionBlock()
+        val combined = SectionBlock.NAME { show() }
         texts.bind(combined.heading, { it.combinedHeading }) { combined.heading.textContent = it }
         texts.bind(combined.hint, { it.combinedHint }) { combined.hint.textContent = it }
         val combinedCard = createCard()
@@ -241,15 +235,15 @@ internal class CardPage : DemoPage() {
             newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
-        combined.body.append(exampleBox(null, kitGrid(260, combinedCard, stretchCard, horizontalCard)))
+        combined.body.append(exampleBox(null, Grid.NAME { show(260); add(combinedCard, stretchCard, horizontalCard) }))
         body.append(combined.root)
 
-        val playgroundSection = sectionBlock()
+        val playgroundSection = SectionBlock.NAME { show() }
         texts.bind(playgroundSection.heading, { it.playgroundHeading }) {
             playgroundSection.heading.textContent = it
         }
         texts.bind(playgroundSection.hint, { it.playgroundHint }) { playgroundSection.hint.textContent = it }
-        val playground = newCardPlayground().also { translatables += it }
+        val playground = CardPlayground.NAME().also { translatables += it }
         playgroundSection.body.append(exampleBox(null, playground))
         body.append(playgroundSection.root)
 
@@ -265,17 +259,5 @@ internal class CardPage : DemoPage() {
         translatables.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReference<CardPage>(CardPage::class.js) {
-        val NAME: TagName<CardPage> = TagName("vaadin-demo-card-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-card-page>`. */
-internal fun newCardPage(): CardPage {
-    CardPage.define()
-    return CardPage.NAME()
+    companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page")
 }

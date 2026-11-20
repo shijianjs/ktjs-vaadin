@@ -4,10 +4,7 @@ import demo.ui.Images
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLImageElement
 import web.html.HtmlTagName
 
@@ -58,18 +55,13 @@ internal class CardMediaImage : CustomElementAdapter() {
         }
     }
 
-    companion object : CustomElementReference<CardMediaImage>(CardMediaImage::class.js) {
-        val NAME: TagName<CardMediaImage> = TagName("demo-card-media-image")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<CardMediaImage>(CardMediaImage::class.js, "demo-card-media-image")
 }
 
 /** Creates a defined `<demo-card-media-image>`; [width] pins the thumbnail, absent lets the card size it. */
 internal fun newCardMediaImage(width: Int? = null): CardMediaImage {
-    CardMediaImage.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    CardMediaImage.NAME
     return CardMediaImage.NAME().also { it.show(width) }
 }
 
@@ -77,33 +69,3 @@ internal fun newCardMediaImage(width: Int? = null): CardMediaImage {
  * `<demo-card-media-icon>`: the card's media slot filled with the photo icon, tinted so it reads as an
  * image rather than as a button.
  */
-internal class CardMediaIcon : CustomElementAdapter() {
-    private val icon = createIcon {
-        icon = "lumo:photo"
-        style.setProperty("background", "var(--lumo-primary-color-10pct)")
-        style.setProperty("color", "var(--lumo-primary-color)")
-    }
-
-    init {
-        attachShadowRoot().append(icon)
-    }
-
-    /** The host is the slot the card reads; an attribute may not be set before the element connects. */
-    override fun connectedCallback() {
-        slot = "media"
-    }
-
-    companion object : CustomElementReference<CardMediaIcon>(CardMediaIcon::class.js) {
-        val NAME: TagName<CardMediaIcon> = TagName("demo-card-media-icon")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-card-media-icon>`. */
-internal fun newCardMediaIcon(): CardMediaIcon {
-    CardMediaIcon.define()
-    return CardMediaIcon.NAME()
-}

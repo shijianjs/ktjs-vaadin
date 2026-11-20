@@ -2,16 +2,14 @@ package demo.pages.buttons
 
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -61,17 +59,5 @@ class LongAction : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(row(perform, progress))
     }
 
-    companion object : CustomElementReference<LongAction>(LongAction::class.js) {
-        val NAME: TagName<LongAction> = TagName("vaadin-demo-long-action")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-long-action>`. */
-fun newLongAction(): LongAction {
-    LongAction.define()
-    return LongAction.NAME()
+    companion object : CustomElementReferenceAdapter<LongAction>(LongAction::class.js, "vaadin-demo-long-action")
 }

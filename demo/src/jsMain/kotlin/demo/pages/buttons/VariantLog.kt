@@ -3,16 +3,14 @@ package demo.pages.buttons
 import demo.ui.EventLog
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.col
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.col
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -51,17 +49,5 @@ class VariantLog : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(col(buttons, log.root))
     }
 
-    companion object : CustomElementReference<VariantLog>(VariantLog::class.js) {
-        val NAME: TagName<VariantLog> = TagName("vaadin-demo-variant-log")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-variant-log>`. */
-fun newVariantLog(): VariantLog {
-    VariantLog.define()
-    return VariantLog.NAME()
+    companion object : CustomElementReferenceAdapter<VariantLog>(VariantLog::class.js, "vaadin-demo-variant-log")
 }

@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -30,7 +26,6 @@ import io.github.shijianjs.ktjs.vaadin.a11ybase.ListOrientations
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.item.ItemElement
 import io.github.shijianjs.ktjs.vaadin.item.createItem
-import io.github.shijianjs.ktjs.vaadin.listbox.ListBoxElement
 import io.github.shijianjs.ktjs.vaadin.listbox.ListBoxEvents
 import io.github.shijianjs.ktjs.vaadin.listbox.createListBox
 import web.html.HTMLSpanElement
@@ -52,42 +47,8 @@ val listBoxEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/list-box",
                 sourcePath = "pages/selection/ListBoxPage.kt",
             ),
-        kitPage = { newListBoxPage() },
+        kitPage = { ListBoxPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class ListBoxTexts(
-    val dividersHeading: String,
-    val dividersHint: String,
-    val assignee: String,
-    val dueDate: String,
-    val status: String,
-    val thumbnail: String,
-    val preview: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val inProgressWithCount: String,
-    val doneWithCount: String,
-    val cancelledWithCount: String,
-    val singleHeading: String,
-    val singleHint: String,
-    val inProgress: String,
-    val done: String,
-    val cancelled: String,
-    val multipleHeading: String,
-    val multipleHint: String,
-    val presentationHeading: String,
-    val presentationHint: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val one: String,
-    val two: String,
-    val three: String,
-    val disabledItemOne: String,
-    val disabledItemTwo: String,
-    /** The professions of the fixture people, in the order [people] assigns them. */
-    val professions: List<String>,
-)
 
 private val english: ListBoxTexts = ListBoxTexts(
     dividersHeading = "Dividers",
@@ -191,7 +152,7 @@ internal class ListBoxPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val dividers = sectionBlock()
+        val dividers = SectionBlock.NAME { show() }
         texts.bind(dividers.heading) { it.dividersHeading }
         texts.bind(dividers.hint) { it.dividersHint }
         val separated = createListBox { multiple = true }
@@ -216,7 +177,7 @@ internal class ListBoxPage : DemoPage() {
         dividers.body.append(exampleBox(null, kitCol(separated, separatedReadout.root)))
         body.append(dividers.root)
 
-        val disabledItemsSection = sectionBlock()
+        val disabledItemsSection = SectionBlock.NAME { show() }
         texts.bind(disabledItemsSection.heading) { it.disabledHeading }
         texts.bind(disabledItemsSection.hint) { it.disabledHint }
         val withDisabled = createListBox()
@@ -229,7 +190,7 @@ internal class ListBoxPage : DemoPage() {
         disabledItemsSection.body.append(exampleBox(null, withDisabled))
         body.append(disabledItemsSection.root)
 
-        val single = sectionBlock()
+        val single = SectionBlock.NAME { show() }
         texts.bind(single.heading) { it.singleHeading }
         texts.bind(single.hint) { it.singleHint }
         val singleBox = createListBox()
@@ -246,7 +207,7 @@ internal class ListBoxPage : DemoPage() {
         single.body.append(exampleBox(null, kitRow(singleBox, readout.root)))
         body.append(single.root)
 
-        val multipleSection = sectionBlock()
+        val multipleSection = SectionBlock.NAME { show() }
         texts.bind(multipleSection.heading) { it.multipleHeading }
         texts.bind(multipleSection.hint) { it.multipleHint }
         val multiBox = createListBox { multiple = true }
@@ -262,7 +223,7 @@ internal class ListBoxPage : DemoPage() {
         multipleSection.body.append(exampleBox(null, kitCol(multiBox, multiReadout.root)))
         body.append(multipleSection.root)
 
-        val presentation = sectionBlock()
+        val presentation = SectionBlock.NAME { show() }
         texts.bind(presentation.heading) { it.presentationHeading }
         texts.bind(presentation.hint) { it.presentationHint }
         val rich = createListBox { multiple = true }
@@ -289,7 +250,7 @@ internal class ListBoxPage : DemoPage() {
         presentation.body.append(exampleBox(null, rich))
         body.append(presentation.root)
 
-        val orientationSection = sectionBlock()
+        val orientationSection = SectionBlock.NAME { show() }
         texts.bind(orientationSection.heading) { it.orientationHeading }
         texts.bind(orientationSection.hint) { it.orientationHint }
         val horizontal = createListBox { orientation = ListOrientations.horizontal }
@@ -316,17 +277,5 @@ internal class ListBoxPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReference<ListBoxPage>(ListBoxPage::class.js) {
-        val NAME: TagName<ListBoxPage> = TagName("vaadin-demo-list-box-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-list-box-page>`. */
-internal fun newListBoxPage(): ListBoxPage {
-    ListBoxPage.define()
-    return ListBoxPage.NAME()
+    companion object : CustomElementReferenceAdapter<ListBoxPage>(ListBoxPage::class.js, "vaadin-demo-list-box-page")
 }

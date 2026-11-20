@@ -1,0 +1,48 @@
+package demo.pages.layout
+
+import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.css.dsl.invoke
+
+/** Every string this page shows, in one language. */
+internal class SideNavTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val dashboard: String,
+    val inbox: String,
+    val calendar: String,
+    val settings: String,
+    val website: String,
+    val currentHeading: String,
+    val currentHint: String,
+    val currentPage: String,
+    val anotherPage: String,
+    val nestedParent: String,
+    val suffixHeading: String,
+    val suffixHint: String,
+    val unreadMessages: String,
+    val upcomingAppointment: String,
+    val hierarchyHeading: String,
+    val hierarchyHint: String,
+    val messages: String,
+    val sent: String,
+    val trash: String,
+    val admin: String,
+    val users: String,
+    val permissions: String,
+    val labelledHeading: String,
+    val labelledHint: String,
+    val newTabHeading: String,
+    val newTabHint: String,
+    val exampleSite: String,
+    val scrollingHeading: String,
+    val scrollingHint: String,
+    val item: (Int) -> String,
+    val stylingHeading: String,
+    val stylingHint: String,
+    val keyboardHeading: String,
+    val keyboardHint: String,
+    val tabLine: String,
+    val toggleLine: String,
+    val enterLine: String,
+    val collapsed: (Boolean) -> String,
+)

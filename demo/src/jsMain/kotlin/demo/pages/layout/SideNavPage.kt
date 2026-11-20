@@ -1,24 +1,19 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.bulletList
+import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -37,6 +32,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.child
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.CSSStyleSheet
 import web.cssom.ident
@@ -70,7 +66,7 @@ val sideNavEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/side-nav",
                 sourcePath = "pages/layout/SideNavPage.kt",
             ),
-        kitPage = { newSideNavPage() },
+        kitPage = { SideNavPage.NAME() },
     )
 
 /** The emphasis colour this page gives an external link; the sheet and the item share it. */
@@ -94,50 +90,6 @@ private val SIDE_NAV_SHEET: CSSStyleSheet = cssSheet {
     compound(externalItem, pseudo(Pseudos.hover), linkPart).invoke { color = ACCENT }
     (externalItem child tag(VaadinTagName.icon)).invoke { color = ACCENT }
 }
-
-/** Every string this page shows, in one language. */
-private class SideNavTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val dashboard: String,
-    val inbox: String,
-    val calendar: String,
-    val settings: String,
-    val website: String,
-    val currentHeading: String,
-    val currentHint: String,
-    val currentPage: String,
-    val anotherPage: String,
-    val nestedParent: String,
-    val suffixHeading: String,
-    val suffixHint: String,
-    val unreadMessages: String,
-    val upcomingAppointment: String,
-    val hierarchyHeading: String,
-    val hierarchyHint: String,
-    val messages: String,
-    val sent: String,
-    val trash: String,
-    val admin: String,
-    val users: String,
-    val permissions: String,
-    val labelledHeading: String,
-    val labelledHint: String,
-    val newTabHeading: String,
-    val newTabHint: String,
-    val exampleSite: String,
-    val scrollingHeading: String,
-    val scrollingHint: String,
-    val item: (Int) -> String,
-    val stylingHeading: String,
-    val stylingHint: String,
-    val keyboardHeading: String,
-    val keyboardHint: String,
-    val tabLine: String,
-    val toggleLine: String,
-    val enterLine: String,
-    val collapsed: (Boolean) -> String,
-)
 
 private val english: SideNavTexts =
     SideNavTexts(
@@ -307,7 +259,7 @@ internal class SideNavPage : DemoPage() {
             return badge
         }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val basicNav =
@@ -324,7 +276,7 @@ internal class SideNavPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(basicNav, log.root)))
         body.append(basic.root)
 
-        val current = sectionBlock()
+        val current = SectionBlock.NAME { show() }
         texts.bind(current.heading) { it.currentHeading }
         texts.bind(current.hint) { it.currentHint }
         val currentNav =
@@ -341,7 +293,7 @@ internal class SideNavPage : DemoPage() {
         current.body.append(exampleBox(null, currentNav))
         body.append(current.root)
 
-        val suffix = sectionBlock()
+        val suffix = SectionBlock.NAME { show() }
         texts.bind(suffix.heading) { it.suffixHeading }
         texts.bind(suffix.hint) { it.suffixHint }
         val suffixNav =
@@ -359,7 +311,7 @@ internal class SideNavPage : DemoPage() {
         suffix.body.append(exampleBox(null, suffixNav))
         body.append(suffix.root)
 
-        val hierarchy = sectionBlock()
+        val hierarchy = SectionBlock.NAME { show() }
         texts.bind(hierarchy.heading) { it.hierarchyHeading }
         texts.bind(hierarchy.hint) { it.hierarchyHint }
         val messages =
@@ -382,7 +334,7 @@ internal class SideNavPage : DemoPage() {
         hierarchy.body.append(exampleBox(null, hierarchyNav))
         body.append(hierarchy.root)
 
-        val labelled = sectionBlock()
+        val labelled = SectionBlock.NAME { show() }
         texts.bind(labelled.heading) { it.labelledHeading }
         texts.bind(labelled.hint) { it.labelledHint }
         fun labelNode(copy: (SideNavTexts) -> String): HTMLElement =
@@ -423,7 +375,7 @@ internal class SideNavPage : DemoPage() {
         )
         body.append(labelled.root)
 
-        val newTab = sectionBlock()
+        val newTab = SectionBlock.NAME { show() }
         texts.bind(newTab.heading) { it.newTabHeading }
         texts.bind(newTab.hint) { it.newTabHint }
         val newTabNav =
@@ -432,7 +384,7 @@ internal class SideNavPage : DemoPage() {
         newTab.body.append(exampleBox(null, newTabNav))
         body.append(newTab.root)
 
-        val scrolling = sectionBlock()
+        val scrolling = SectionBlock.NAME { show() }
         texts.bind(scrolling.heading) { it.scrollingHeading }
         texts.bind(scrolling.hint) { it.scrollingHint }
         val longNav =
@@ -445,7 +397,7 @@ internal class SideNavPage : DemoPage() {
         scrolling.body.append(exampleBox(null, scroller))
         body.append(scrolling.root)
 
-        val styling = sectionBlock()
+        val styling = SectionBlock.NAME { show() }
         texts.bind(styling.heading) { it.stylingHeading }
         texts.bind(styling.hint) { it.stylingHint }
         val stylingNav =
@@ -461,7 +413,7 @@ internal class SideNavPage : DemoPage() {
         styling.body.append(exampleBox(null, stylingNav))
         body.append(styling.root)
 
-        val keyboard = sectionBlock()
+        val keyboard = SectionBlock.NAME { show() }
         texts.bind(keyboard.heading) { it.keyboardHeading }
         texts.bind(keyboard.hint) { it.keyboardHint }
         keyboard.body.append(exampleBox(null, keyboardList))
@@ -469,8 +421,6 @@ internal class SideNavPage : DemoPage() {
 
         applyTranslation(Langs.EN)
     }
-
-
 
     private fun showCollapsed() {
         collapsed.set(texts.current.collapsed(adminNav.collapsed))
@@ -491,17 +441,5 @@ internal class SideNavPage : DemoPage() {
         keyboardList.replaceChildren(bulletList(listOf(copy.tabLine, copy.toggleLine, copy.enterLine)))
     }
 
-    companion object : CustomElementReference<SideNavPage>(SideNavPage::class.js) {
-        val NAME: TagName<SideNavPage> = TagName("vaadin-demo-side-nav-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-side-nav-page>`. */
-internal fun newSideNavPage(): SideNavPage {
-        SideNavPage.define()
-        return SideNavPage.NAME()
+    companion object : CustomElementReferenceAdapter<SideNavPage>(SideNavPage::class.js, "vaadin-demo-side-nav-page")
 }

@@ -1,11 +1,7 @@
 package demo.page.overview
 
-
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -20,17 +16,16 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.newReadout
-import io.github.shijianjs.ktjs.demo.page.anchor
-import io.github.shijianjs.ktjs.demo.page.grid
-import io.github.shijianjs.ktjs.demo.page.heading
-import io.github.shijianjs.ktjs.demo.page.icon
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.row
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.icon
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
+import io.github.shijianjs.ktjs.demo.page.Grid
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.vaadin.card.CardElement
 import io.github.shijianjs.ktjs.vaadin.card.CardVariants
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
@@ -46,6 +41,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoClass
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.HtmlAttributes
@@ -57,25 +53,7 @@ import web.cssom.TextDecorationLine
 import web.cssom.Display
 import web.cssom.px
 import web.dom.Node
-import web.html.HTMLAnchorElement
-import web.html.HTMLElement
 import web.html.HtmlTagName
-
-/** Every string this page shows, in one language. */
-private class OverviewTexts(
-    val title: String,
-    val summary: String,
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val whatHeading: String,
-    val whatBody: String,
-    val indexHeading: String,
-    val indexHint: String,
-    val findLabel: String,
-    val findPlaceholder: String,
-    val showing: (Int, Int) -> String,
-)
 
 private val overviewEnglish: OverviewTexts = OverviewTexts(
     title = "Component overview",
@@ -152,19 +130,10 @@ private val INDEX_SHEET: CSSStyleSheet = cssSheet {
     }
 }
 
-/** The card and the link around it; a language switch rewrites the title and the summary. */
-private class Card(
-    val entry: CatalogEntry,
-    val node: CardElement,
-    val link: HTMLAnchorElement,
-    val summary: HTMLElement,
-)
-
 /**
  * One section of the index: the heading(whose mark and text are separate nodes, so a language switch
  * rewrites the text without touching the icon) and the cards under it.
  */
-private class GroupSection(val title: HTMLElement, val label: HTMLElement, val cards: List<Card>)
 
 /**
  * Landing page: what the showcase covers and an index of every component page.
@@ -175,7 +144,7 @@ private class GroupSection(val title: HTMLElement, val label: HTMLElement, val c
 internal class OverviewPage : DemoPage() {
     private val texts = Binder(overviewTexts)
 
-    private val counter = newReadout()
+    private val counter = Readout.NAME { show() }
 
     private val search = createTextField {
         clearButtonVisible = true
@@ -188,17 +157,16 @@ internal class OverviewPage : DemoPage() {
     private val groups = mutableListOf<GroupSection>()
     private var language: Lang = Langs.EN
 
-
     init {
         addLink(texts.bind(kitAnchor("", DOCS_BASE), { it.docsLink }))
         addLink(texts.bind(kitAnchor("", REPO_SOURCE_ROOT + "/page/overview/OverviewPage.kt"), { it.sourceLink }))
         addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
 
-        val what = sectionBlock()
+        val what = SectionBlock.NAME { show() }
         texts.bind(what.heading, { it.whatHeading })
         what.body.append(texts.bind(paragraph(), { it.whatBody }))
 
-        val index = sectionBlock()
+        val index = SectionBlock.NAME { show() }
         texts.bind(index.heading, { it.indexHeading })
         texts.bind(index.hint, { it.indexHint })
         index.body.append(row(search, counter.root), *buildIndex().toTypedArray())
@@ -221,7 +189,7 @@ internal class OverviewPage : DemoPage() {
             val groupTitle = row(icon(group.icon), heading(3).apply { append(groupLabel) })
             // Cards flow in as many columns as the width allows: a component name plus its one-line
             // summary reads well in a card, and a vertical list of fifty-nine of them is a wall.
-            val list = grid(240)
+            val list = Grid.NAME { show(240) }
             val groupCards = catalogEntriesOf(group).map { entry ->
                 val card = card(entry)
                 list.append(card.link)
@@ -300,18 +268,5 @@ internal class OverviewPage : DemoPage() {
         filter()
     }
 
-        companion object : CustomElementReference<OverviewPage>(OverviewPage::class.js) {
-        val NAME: TagName<OverviewPage> = TagName("vaadin-demo-overview-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+        companion object : CustomElementReferenceAdapter<OverviewPage>(OverviewPage::class.js, "vaadin-demo-overview-page")
 }
-
-/** Creates a defined `<vaadin-demo-overview-page>`. */
-internal fun newOverviewPage(): OverviewPage {
-    OverviewPage.define()
-    return OverviewPage.NAME()
-}
-

@@ -8,26 +8,13 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
 import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
 import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
-
-/** The seven destinations of the shared side navigation, in one language. */
-private class AppSideNavTexts(
-    val dashboard: String,
-    val orders: String,
-    val customers: String,
-    val products: String,
-    val documents: String,
-    val tasks: String,
-    val analytics: String,
-)
 
 private val english: AppSideNavTexts =
     AppSideNavTexts(
@@ -98,17 +85,5 @@ internal class AppSideNav : CustomElementAdapter() {
         texts.apply(lang)
     }
 
-    companion object : CustomElementReference<AppSideNav>(AppSideNav::class.js) {
-        val NAME: TagName<AppSideNav> = TagName("demo-app-side-nav")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-app-side-nav>`. */
-internal fun newAppSideNav(): AppSideNav {
-    AppSideNav.define()
-    return AppSideNav.NAME()
+    companion object : CustomElementReferenceAdapter<AppSideNav>(AppSideNav::class.js, "demo-app-side-nav")
 }

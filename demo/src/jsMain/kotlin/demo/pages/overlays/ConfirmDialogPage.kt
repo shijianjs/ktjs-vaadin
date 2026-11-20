@@ -1,11 +1,8 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
@@ -13,11 +10,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -49,47 +45,8 @@ val confirmDialogEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/confirm-dialog",
                 sourcePath = "pages/overlays/ConfirmDialogPage.kt",
             ),
-        kitPage = { newConfirmDialogPage() },
+        kitPage = { ConfirmDialogPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class ConfirmDialogTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val statusPrefix: String,
-    val deleted: String,
-    val canceled: String,
-    val deleteRecord: String,
-    val deleteHeader: String,
-    val deleteMessage: String,
-    val delete: String,
-    val keep: String,
-    val cancelButton: String,
-    val rejectButton: String,
-    val threeHeading: String,
-    val threeHint: String,
-    val saveHeader: String,
-    val saveMessage: String,
-    val save: String,
-    val discard: String,
-    val back: String,
-    val logConfirmSave: String,
-    val logRejectDiscard: String,
-    val logCancelBack: String,
-    val openThree: String,
-    val cancelHeading: String,
-    val cancelHint: String,
-    val deleteReportHeader: String,
-    val deleteReportMessage: String,
-    val deleteReport: String,
-    val confirmOnlyHeading: String,
-    val confirmOnlyHint: String,
-    val exportHeader: String,
-    val ok: String,
-    val exportMessage: String,
-    val exportReport: String,
-    val acknowledged: String,
-)
 
 private val english: ConfirmDialogTexts =
     ConfirmDialogTexts(
@@ -200,7 +157,7 @@ internal class ConfirmDialogPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val log = EventLog(6)
@@ -235,7 +192,7 @@ internal class ConfirmDialogPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(kitRow(openButton, status.root), confirm, log.root)))
         body.append(basic.root)
 
-        val threeWay = sectionBlock()
+        val threeWay = SectionBlock.NAME { show() }
         texts.bind(threeWay.heading) { it.threeHeading }
         texts.bind(threeWay.hint) { it.threeHint }
         val threeWayDialog = createConfirmDialog()
@@ -266,7 +223,7 @@ internal class ConfirmDialogPage : DemoPage() {
         )
         body.append(threeWay.root)
 
-        val cancelSection = sectionBlock()
+        val cancelSection = SectionBlock.NAME { show() }
         texts.bind(cancelSection.heading) { it.cancelHeading }
         texts.bind(cancelSection.hint) { it.cancelHint }
         val deleteDialog = createConfirmDialog()
@@ -294,7 +251,7 @@ internal class ConfirmDialogPage : DemoPage() {
         )
         body.append(cancelSection.root)
 
-        val confirmOnlySection = sectionBlock()
+        val confirmOnlySection = SectionBlock.NAME { show() }
         texts.bind(confirmOnlySection.heading) { it.confirmOnlyHeading }
         texts.bind(confirmOnlySection.hint) { it.confirmOnlyHint }
         val exportDialog = createConfirmDialog()
@@ -349,17 +306,5 @@ internal class ConfirmDialogPage : DemoPage() {
         exportStatus.set(copy.statusPrefix, lastExportStatus?.invoke(copy) ?: "")
     }
 
-    companion object : CustomElementReference<ConfirmDialogPage>(ConfirmDialogPage::class.js) {
-        val NAME: TagName<ConfirmDialogPage> = TagName("vaadin-demo-confirm-dialog-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-confirm-dialog-page>`. */
-internal fun newConfirmDialogPage(): ConfirmDialogPage {
-    ConfirmDialogPage.define()
-    return ConfirmDialogPage.NAME()
+    companion object : CustomElementReferenceAdapter<ConfirmDialogPage>(ConfirmDialogPage::class.js, "vaadin-demo-confirm-dialog-page")
 }

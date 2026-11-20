@@ -5,19 +5,15 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -52,26 +48,8 @@ val overlayEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/overlays/OverlayPage.kt",
             ),
-        kitPage = { newOverlayPage() },
+        kitPage = { OverlayPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class OverlayTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val bareOverlay: String,
-    val close: String,
-    val openOverlay: String,
-    val modelessHeading: String,
-    val modelessHint: String,
-    val modelessBody: String,
-    val openModeless: String,
-    val sizedHeading: String,
-    val sizedHint: String,
-    val scrollableContent: String,
-    val line: (Int) -> String,
-    val openSized: String,
-)
 
 private val english: OverlayTexts = OverlayTexts(
     basicHeading = "Basic usage",
@@ -129,7 +107,7 @@ internal class OverlayPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val overlay = createOverlay()
@@ -146,7 +124,7 @@ internal class OverlayPage : DemoPage() {
         basic.body.append(exampleBox(null, kitRow(openButton, overlay)))
         body.append(basic.root)
 
-        val modeless = sectionBlock()
+        val modeless = SectionBlock.NAME { show() }
         texts.bind(modeless.heading) { it.modelessHeading }
         texts.bind(modeless.hint) { it.modelessHint }
         val modelessOverlay = createOverlay()
@@ -163,7 +141,7 @@ internal class OverlayPage : DemoPage() {
         modeless.body.append(exampleBox(null, kitRow(openModeless, modelessOverlay)))
         body.append(modeless.root)
 
-        val sized = sectionBlock()
+        val sized = SectionBlock.NAME { show() }
         texts.bind(sized.heading) { it.sizedHeading }
         texts.bind(sized.hint) { it.sizedHint }
         val sizedOverlay = createOverlay()
@@ -212,17 +190,5 @@ internal class OverlayPage : DemoPage() {
         openSized.textContent = copy.openSized
     }
 
-    companion object : CustomElementReference<OverlayPage>(OverlayPage::class.js) {
-        val NAME: TagName<OverlayPage> = TagName("vaadin-demo-overlay-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-overlay-page>`. */
-internal fun newOverlayPage(): OverlayPage {
-    OverlayPage.define()
-    return OverlayPage.NAME()
+    companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page")
 }

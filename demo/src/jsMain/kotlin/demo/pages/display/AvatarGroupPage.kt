@@ -5,16 +5,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -49,7 +45,7 @@ val avatarGroupEntry: CatalogEntry =
                 docsNote = bi("Avatar Group 与 Avatar 共用一页官方文档。", "Avatar Group shares the Avatar documentation page."),
                 sourcePath = "pages/display/AvatarGroupPage.kt",
             ),
-        kitPage = { newAvatarGroupPage() },
+        kitPage = { AvatarGroupPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -78,25 +74,6 @@ private fun groupItem(name: String? = null, colorIndex: Double? = null, img: Str
         colorIndex?.let { this.colorIndex = it }
         img?.let { this.img = it }
     }
-
-/** Every string this page shows, in one language. */
-private class AvatarGroupTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val limitHeading: String,
-    val limitHint: String,
-    val coloursHeading: String,
-    val coloursHint: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-    val anonymous: String,
-    val activeOne: String,
-    val activeMany: String,
-    val joined: String,
-    val left: String,
-    val addMember: String,
-    val removeMember: String,
-)
 
 private val english: AvatarGroupTexts = AvatarGroupTexts(
     basicHeading = "Basic usage",
@@ -181,7 +158,7 @@ internal class AvatarGroupPage : DemoPage() {
         frame.mount(this)
 
         // --- Basic usage (avatar/avatar-group-basic.ts) ---------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val three = SIMULATED_PEOPLE.take(3).map { groupItem(name = it) }
@@ -192,7 +169,7 @@ internal class AvatarGroupPage : DemoPage() {
         body.append(basic.root)
 
         // --- Maximum number of items (avatar/avatar-group-max-items.ts) -----------------------------
-        val limit = sectionBlock()
+        val limit = SectionBlock.NAME { show() }
         texts.bind(limit.heading) { it.limitHeading }
         texts.bind(limit.hint) { it.limitHint }
         val six = SIMULATED_PEOPLE.map { groupItem(name = it) }
@@ -217,7 +194,7 @@ internal class AvatarGroupPage : DemoPage() {
         body.append(limit.root)
 
         // --- Background colour (avatar/avatar-group-bg-color.ts) -----------------------------------
-        val colours = sectionBlock()
+        val colours = SectionBlock.NAME { show() }
         texts.bind(colours.heading) { it.coloursHeading }
         texts.bind(colours.hint) { it.coloursHint }
         val coloured = createAvatarGroup()
@@ -228,7 +205,7 @@ internal class AvatarGroupPage : DemoPage() {
         body.append(colours.root)
 
         // --- Internationalisation (avatar/avatar-group-internationalisation.ts) --------------------
-        val i18n = sectionBlock()
+        val i18n = SectionBlock.NAME { show() }
         texts.bind(i18n.heading) { it.i18nHeading }
         texts.bind(i18n.hint) { it.i18nHint }
         val baseMembers = listOf(groupItem(), groupItem(name = "Ada Lovelace"), groupItem(name = "Grace Hopper"))
@@ -258,17 +235,5 @@ internal class AvatarGroupPage : DemoPage() {
             if (hasExtraMember) texts.current.removeMember else texts.current.addMember
     }
 
-    companion object : CustomElementReference<AvatarGroupPage>(AvatarGroupPage::class.js) {
-        val NAME: TagName<AvatarGroupPage> = TagName("vaadin-demo-avatar-group-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-avatar-group-page>`. */
-internal fun newAvatarGroupPage(): AvatarGroupPage {
-    AvatarGroupPage.define()
-    return AvatarGroupPage.NAME()
+    companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page")
 }

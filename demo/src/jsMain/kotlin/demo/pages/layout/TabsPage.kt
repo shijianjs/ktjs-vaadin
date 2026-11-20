@@ -1,22 +1,18 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -55,55 +51,8 @@ val tabsEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/tabs",
                 sourcePath = "pages/layout/TabsPage.kt",
             ),
-        kitPage = { newTabsPage() },
+        kitPage = { TabsPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class TabsTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val details: String,
-    val payment: String,
-    val shipping: String,
-    val selectedChanged: (Int) -> String,
-    val statesHeading: String,
-    val statesHint: String,
-    val selected: String,
-    val unselected: String,
-    val disabled: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val analytics: String,
-    val customers: String,
-    val dashboards: String,
-    val documents: String,
-    val orders: String,
-    val products: String,
-    val tasks: String,
-    val horizontalCaption: String,
-    val hiddenCaptions: String,
-    val verticalCaption: String,
-    val iconsHeading: String,
-    val iconsHint: String,
-    val profile: String,
-    val settings: String,
-    val notifications: String,
-    val iconsHorizontalCaption: String,
-    val iconsVerticalCaption: String,
-    val badgesCaption: String,
-    val open: String,
-    val completed: String,
-    val cancelled: String,
-    val themesHeading: String,
-    val themesHint: String,
-    val focusHeading: String,
-    val focusHint: String,
-    val switchingHeading: String,
-    val switchingHint: String,
-    val dashboard: String,
-    val dashboardContent: String,
-    val contentFor: (String) -> String,
-)
 
 private val english: TabsTexts =
     TabsTexts(
@@ -255,7 +204,7 @@ internal class TabsPage : DemoPage() {
             configure: TabsElement.() -> Unit = {},
         ): TabsElement = tabsOf(*copy, configure = configure)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val tabs = tabsOf({ it.details }, { it.payment }, { it.shipping })
@@ -267,7 +216,7 @@ internal class TabsPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(tabs, log.root)))
         body.append(basic.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val stateTabs = tabsOf({ it.selected }, { it.unselected })
@@ -276,7 +225,7 @@ internal class TabsPage : DemoPage() {
         states.body.append(exampleBox(null, stateTabs))
         body.append(states.root)
 
-        val orientationSection = sectionBlock()
+        val orientationSection = SectionBlock.NAME { show() }
         texts.bind(orientationSection.heading) { it.orientationHeading }
         texts.bind(orientationSection.hint) { it.orientationHint }
         val horizontalTabs =
@@ -334,7 +283,7 @@ internal class TabsPage : DemoPage() {
         )
         body.append(orientationSection.root)
 
-        val icons = sectionBlock()
+        val icons = SectionBlock.NAME { show() }
         texts.bind(icons.heading) { it.iconsHeading }
         texts.bind(icons.hint) { it.iconsHint }
         fun iconTab(icon: String, copy: (TabsTexts) -> String, onTop: Boolean): TabElement =
@@ -380,7 +329,7 @@ internal class TabsPage : DemoPage() {
         )
         body.append(icons.root)
 
-        val themes = sectionBlock()
+        val themes = SectionBlock.NAME { show() }
         texts.bind(themes.heading) { it.themesHeading }
         texts.bind(themes.hint) { it.themesHint }
         listOf("centered", "equal-width-tabs", "minimal", "small").forEach { theme ->
@@ -396,7 +345,7 @@ internal class TabsPage : DemoPage() {
         }
         body.append(themes.root)
 
-        val focus = sectionBlock()
+        val focus = SectionBlock.NAME { show() }
         texts.bind(focus.heading) { it.focusHeading }
         texts.bind(focus.hint) { it.focusHint }
         val focusTabs = tabsOf({ it.details }, { it.payment }, { it.shipping })
@@ -405,7 +354,7 @@ internal class TabsPage : DemoPage() {
         focus.body.append(exampleBox(null, focusTabs))
         body.append(focus.root)
 
-        val switching = sectionBlock()
+        val switching = SectionBlock.NAME { show() }
         texts.bind(switching.heading) { it.switchingHeading }
         texts.bind(switching.hint) { it.switchingHint }
         contentTabs.dataset["test"] = "tabs-content"
@@ -445,17 +394,5 @@ internal class TabsPage : DemoPage() {
         content.textContent = if (name == null) copy.dashboardContent else copy.contentFor(name)
     }
 
-    companion object : CustomElementReference<TabsPage>(TabsPage::class.js) {
-        val NAME: TagName<TabsPage> = TagName("vaadin-demo-tabs-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-tabs-page>`. */
-internal fun newTabsPage(): TabsPage {
-    TabsPage.define()
-    return TabsPage.NAME()
+    companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page")
 }

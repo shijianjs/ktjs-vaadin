@@ -1,23 +1,19 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -52,7 +48,7 @@ val textAreaEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/text-area",
                 sourcePath = "pages/fields/TextAreaPage.kt",
             ),
-        kitPage = { newTextAreaPage() },
+        kitPage = { TextAreaPage.NAME() },
     )
 
 /** Sentence pattern of `text-area-validation.ts`: one sentence, capitalised, ending with a period. */
@@ -74,60 +70,6 @@ private fun hasPatternMismatch(pattern: String, value: String): Boolean {
     if (pattern.isEmpty() || value.isEmpty()) return false
     return runCatching { !Regex(pattern).matches(value) }.getOrDefault(false)
 }
-
-/** Every string this page shows, in one language. */
-private class TextAreaTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val comment: String,
-    val characters: (Int, Int) -> String,
-    val heightHeading: String,
-    val heightHint: String,
-    val description: String,
-    val descriptionBounded: String,
-    val threeToFiveRows: String,
-    val threeLines: String,
-    val singleRow: String,
-    val growCaption: String,
-    val boundedCaption: String,
-    val rowsCaption: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val sentence: String,
-    val sentenceHelper: String,
-    val notValidated: String,
-    val required: String,
-    val tooShort: (Int) -> String,
-    val tooLong: (Int) -> String,
-    val pattern: String,
-    val checkPrefix: String,
-    val passed: String,
-    val failed: String,
-    val constraintsCaption: String,
-    val requiredNote: String,
-    val requiredError: String,
-    val validate: String,
-    val validateCaption: String,
-    val resultPrefix: String,
-    val valid: String,
-    val invalid: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val value: String,
-    val counterHeading: String,
-    val counterHint: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val typeHere: String,
-)
 
 private val english: TextAreaTexts =
     TextAreaTexts(
@@ -284,7 +226,7 @@ internal class TextAreaPage : DemoPage() {
         registerVaadinIcons()
 
         // --- Basic usage (text-area-basic.ts) -------------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val initialComment = "Great job. This is excellent!"
@@ -302,7 +244,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(basic.root)
 
         // --- Automatic height (text-area-auto-height.ts, text-area-height.ts) -----------------------
-        val height = sectionBlock()
+        val height = SectionBlock.NAME { show() }
         texts.bind(height.heading) { it.heightHeading }
         texts.bind(height.hint) { it.heightHint }
         fun area(copy: (TextAreaTexts) -> String): TextAreaElement =
@@ -330,7 +272,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(height.root)
 
         // --- Basic features (text-area-basic-features.ts) -------------------------------------------
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featureField = createTextArea()
@@ -350,7 +292,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(features.root)
 
         // --- Validation (text-area-validation.ts) ---------------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         texts.bind(sentence, { it.sentence }) { sentence.label = it }
@@ -390,7 +332,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(validation.root)
 
         // --- Read-only and disabled (text-area-readonly-and-disabled.ts) ----------------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readonlyArea = area { it.readonly }
@@ -400,7 +342,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(states.root)
 
         // --- Character counter (text-area-helper.ts) ------------------------------------------------
-        val counterSection = sectionBlock()
+        val counterSection = SectionBlock.NAME { show() }
         texts.bind(counterSection.heading) { it.counterHeading }
         texts.bind(counterSection.hint) { it.counterHint }
         val longArea = area { it.description }
@@ -413,7 +355,7 @@ internal class TextAreaPage : DemoPage() {
         body.append(counterSection.root)
 
         // --- Style variants (text-area-styles.ts) ---------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styledArea = area { it.label }
@@ -484,17 +426,5 @@ internal class TextAreaPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReference<TextAreaPage>(TextAreaPage::class.js) {
-        val NAME: TagName<TextAreaPage> = TagName("vaadin-demo-text-area-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-text-area-page>`. */
-internal fun newTextAreaPage(): TextAreaPage {
-    TextAreaPage.define()
-    return TextAreaPage.NAME()
+    companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page")
 }

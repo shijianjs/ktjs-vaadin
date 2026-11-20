@@ -5,20 +5,16 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.codeText
+import io.github.shijianjs.ktjs.demo.page.Blocks.codeText
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -52,34 +48,8 @@ val iconsEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/icons",
                 sourcePath = "pages/display/IconSetsPage.kt",
             ),
-        kitPage = { newIconSetsPage() },
+        kitPage = { IconSetsPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class IconSetsTexts(
-    val vaadinHeading: String,
-    val vaadinHint: String,
-    val notifications: String,
-    val lumoHeading: String,
-    val lumoHint: String,
-    val mixingHeading: String,
-    val mixingHint: String,
-    val a11yHeading: String,
-    val a11yHint: String,
-    val closeDialog: String,
-    val favorite: String,
-    val favoriteCaption: String,
-    val favoriteNote: String,
-    val standaloneHeading: String,
-    val standaloneHint: String,
-    val spritesHeading: String,
-    val spritesHint: String,
-    val paddingHeading: String,
-    val paddingHint: String,
-    val generatorHeading: String,
-    val generatorHint: String,
-    val generatorCaption: String,
-)
 
 private val english: IconSetsTexts = IconSetsTexts(
     vaadinHeading = "Vaadin icons",
@@ -169,7 +139,6 @@ internal class IconSetsPage : DemoPage() {
     /** The note under the favourite icon and the caption of the generator example. */
     private val favouriteNote: HTMLParagraphElement = HtmlTagName.p()
 
-
     init {
         frame.mount(this)
         // The `vaadin` set is a few hundred SVGs; registering it here keeps the cost on this page.
@@ -178,7 +147,7 @@ internal class IconSetsPage : DemoPage() {
         registerLumoIcons()
 
         // --- Vaadin icons (icons/vaadin-icons.ts) --------------------------------------------------
-        val vaadinSet = sectionBlock()
+        val vaadinSet = SectionBlock.NAME { show() }
         texts.bind(vaadinSet.heading) { it.vaadinHeading }
         texts.bind(vaadinSet.hint) { it.vaadinHint }
         vaadinButton.addTheme("icon")
@@ -197,7 +166,7 @@ internal class IconSetsPage : DemoPage() {
         body.append(vaadinSet.root)
 
         // --- Lumo icons (icons/lumo-icons.ts) ----------------------------------------------------
-        val lumoSet = sectionBlock()
+        val lumoSet = SectionBlock.NAME { show() }
         texts.bind(lumoSet.heading) { it.lumoHeading }
         texts.bind(lumoSet.hint) { it.lumoHint }
         lumoButton.addTheme("icon")
@@ -216,7 +185,7 @@ internal class IconSetsPage : DemoPage() {
         body.append(lumoSet.root)
 
         // --- Mixing both sets (wrapper extra) ----------------------------------------------------
-        val mixing = sectionBlock()
+        val mixing = SectionBlock.NAME { show() }
         texts.bind(mixing.heading) { it.mixingHeading }
         texts.bind(mixing.hint) { it.mixingHint }
         mixing.body.append(
@@ -233,7 +202,7 @@ internal class IconSetsPage : DemoPage() {
         body.append(mixing.root)
 
         // --- Accessibility (icons/icons-accessibility.ts) ---------------------------------------
-        val accessibility = sectionBlock()
+        val accessibility = SectionBlock.NAME { show() }
         texts.bind(accessibility.heading) { it.a11yHeading }
         texts.bind(accessibility.hint) { it.a11yHint }
         closeButton.addTheme("icon")
@@ -250,14 +219,14 @@ internal class IconSetsPage : DemoPage() {
         body.append(accessibility.root)
 
         // --- Standalone SVG (icons/svg-standalone.ts) --------------------------------------------
-        val standalone = sectionBlock()
+        val standalone = SectionBlock.NAME { show() }
         texts.bind(standalone.heading) { it.standaloneHeading }
         texts.bind(standalone.hint) { it.standaloneHint }
         standalone.body.append(exampleBox(null, createIcon { src = Images.codeBranchIcon }))
         body.append(standalone.root)
 
         // --- SVG sprites (icons/svg-sprites.ts) -------------------------------------------------
-        val sprites = sectionBlock()
+        val sprites = SectionBlock.NAME { show() }
         texts.bind(sprites.heading) { it.spritesHeading }
         texts.bind(sprites.hint) { it.spritesHint }
         sprites.body.append(
@@ -278,7 +247,7 @@ internal class IconSetsPage : DemoPage() {
         body.append(sprites.root)
 
         // --- Padding (icons/icons-padding.ts) ---------------------------------------------------
-        val padding = sectionBlock()
+        val padding = SectionBlock.NAME { show() }
         texts.bind(padding.heading) { it.paddingHeading }
         texts.bind(padding.hint) { it.paddingHint }
         fun paddedIcon(visualSize: String?): HTMLElement =
@@ -292,7 +261,7 @@ internal class IconSetsPage : DemoPage() {
         body.append(padding.root)
 
         // --- Icon set generator (icons/iconset-generator.ts, icons/iconset-helpers.ts) -----------
-        val generator = sectionBlock()
+        val generator = SectionBlock.NAME { show() }
         texts.bind(generator.heading) { it.generatorHeading }
         texts.bind(generator.hint) { it.generatorHint }
         val iconset = createIconset()
@@ -344,19 +313,7 @@ internal class IconSetsPage : DemoPage() {
         favourite.ariaLabel = copy.favorite
     }
 
-    companion object : CustomElementReference<IconSetsPage>(IconSetsPage::class.js) {
-        val NAME: TagName<IconSetsPage> = TagName("vaadin-demo-icon-sets-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-icon-sets-page>`. */
-internal fun newIconSetsPage(): IconSetsPage {
-    IconSetsPage.define()
-    return IconSetsPage.NAME()
+    companion object : CustomElementReferenceAdapter<IconSetsPage>(IconSetsPage::class.js, "vaadin-demo-icon-sets-page")
 }
 
 /** Builds one `<g id="name">` entry of an iconset from a single path, filled with `currentColor`. */

@@ -1,11 +1,8 @@
 package demo.pages.selection
 
-
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -19,33 +16,16 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.newReadout
-import io.github.shijianjs.ktjs.demo.page.anchor
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.item.createItem
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLAnchorElement
-
-/** Every string this page shows, in one language. */
-private class ItemTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val basicTitle: String,
-    val basicHint: String,
-    val itemLabel: String,
-    val itemSlot: String,
-    val itemDisabled: String,
-    val selectedTitle: String,
-    val selectedHint: String,
-    val selectedItem: String,
-    val toggle: String,
-)
 
 private val itemEnglish: ItemTexts = ItemTexts(
     docsLink = "Vaadin documentation",
@@ -103,7 +83,7 @@ val itemEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/selection/ItemPage.kt",
             ),
-        kitPage = { newItemPage() },
+        kitPage = { ItemPage.NAME() },
     )
 
 /**
@@ -121,10 +101,9 @@ val itemEntry: CatalogEntry =
 internal class ItemPage : DemoPage() {
     private val meta: PageMeta = itemEntry.meta
 
-
     private val texts = Binder(itemTexts)
 
-    private val readout = newReadout("selected = true")
+    private val readout = Readout.NAME { show("selected = true") }
 
     private val itemOne = createItem { value = "one" }.apply {
         dataset["test"] = "item-one"
@@ -139,7 +118,6 @@ internal class ItemPage : DemoPage() {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-
     init {
         val docs = kitAnchor("", meta.docsUrlFor(Langs.EN))
         val source = kitAnchor("", "$REPO_SOURCE_ROOT/${meta.sourcePath}")
@@ -151,7 +129,7 @@ internal class ItemPage : DemoPage() {
         addLink(texts.bind(source, { it.sourceLink }))
         addLink(texts.bind(api, { it.apiLink }))
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         texts.bind(itemTwo, { it.itemSlot })
@@ -159,7 +137,7 @@ internal class ItemPage : DemoPage() {
         basic.body.append(exampleBox(null, kitRow(itemOne, itemTwo, itemThree)))
         body.append(basic.root)
 
-        val selection = sectionBlock()
+        val selection = SectionBlock.NAME { show() }
         texts.bind(selection.heading, { it.selectedTitle })
         texts.bind(selection.hint, { it.selectedHint })
         texts.bind(selectedItem, { it.selectedItem })
@@ -186,19 +164,5 @@ internal class ItemPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReference<ItemPage>(ItemPage::class.js) {
-        val NAME: TagName<ItemPage> = TagName("vaadin-demo-item-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<ItemPage>(ItemPage::class.js, "vaadin-demo-item-page")
 }
-
-/** Creates a defined `<vaadin-demo-item-page>`. */
-internal fun newItemPage(): ItemPage {
-    ItemPage.define()
-    return ItemPage.NAME()
-}
-
-

@@ -1,21 +1,17 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -59,68 +55,8 @@ val numberFieldEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/number-field",
                 sourcePath = "pages/fields/NumberFieldPage.kt",
             ),
-        kitPage = { newNumberFieldPage() },
+        kitPage = { NumberFieldPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class NumberFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val balance: String,
-    val valuePrefix: String,
-    val empty: String,
-    val stepHeading: String,
-    val stepHint: String,
-    val adults: String,
-    val children: String,
-    val childrenAge: String,
-    val infants: String,
-    val guestsPrefix: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val quantity: String,
-    val quantityHelper: String,
-    val notValidated: String,
-    val badFormat: String,
-    val required: String,
-    val atLeast: (Int) -> String,
-    val atMost: (Int) -> String,
-    val validatedPrefix: String,
-    val stepUnitHeading: String,
-    val stepUnitHint: String,
-    val duration: String,
-    val stepMultiple: (String) -> String,
-    val variantsHeading: String,
-    val variantsHint: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val amount: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val unitPrice: String,
-    val unitPriceError: String,
-    val validate: String,
-    val resultPrefix: String,
-    val valid: String,
-    val failed: String,
-    val modesHeading: String,
-    val modesHint: String,
-    val onChange: String,
-    val eager: String,
-    val changePrefix: String,
-    val inputPrefix: String,
-    val notFired: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val label: String,
-)
 
 private val english: NumberFieldTexts =
     NumberFieldTexts(
@@ -334,7 +270,7 @@ internal class NumberFieldPage : DemoPage() {
             }
 
         // --- Basic ----------------------------------------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         balance.value = "200"
@@ -355,7 +291,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(basic.root)
 
         // --- Step buttons ---------------------------------------------------------------------------
-        val stepButtons = sectionBlock()
+        val stepButtons = SectionBlock.NAME { show() }
         texts.bind(stepButtons.heading) { it.stepHeading }
         texts.bind(stepButtons.hint) { it.stepHint }
         listOf(adults, childrenField, infants).forEach { field ->
@@ -386,7 +322,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(stepButtons.root)
 
         // --- Validation -----------------------------------------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         texts.bind(quantity, { it.quantity }) { quantity.label = it }
@@ -410,7 +346,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(validation.root)
 
         // --- Step -----------------------------------------------------------------------------------
-        val fractional = sectionBlock()
+        val fractional = SectionBlock.NAME { show() }
         texts.bind(fractional.heading) { it.stepUnitHeading }
         texts.bind(fractional.hint) { it.stepUnitHint }
         texts.bind(duration, { it.duration }) { duration.label = it }
@@ -430,7 +366,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(fractional.root)
 
         // --- Number type variants -------------------------------------------------------------------
-        val variants = sectionBlock()
+        val variants = SectionBlock.NAME { show() }
         texts.bind(variants.heading) { it.variantsHeading }
         texts.bind(variants.hint) { it.variantsHint }
         val variantLayout =
@@ -446,7 +382,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(variants.root)
 
         // --- Basic features -------------------------------------------------------------------------
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featured = number { it.amount }
@@ -465,7 +401,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(features.root)
 
         // --- Read-only and disabled -----------------------------------------------------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readonlyField = number { it.readonly }
@@ -483,7 +419,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(states.root)
 
         // --- Custom range validation ----------------------------------------------------------------
-        val range = sectionBlock()
+        val range = SectionBlock.NAME { show() }
         texts.bind(range.heading) { it.rangeHeading }
         texts.bind(range.hint) { it.rangeHint }
         texts.bind(price, { it.unitPrice }) { price.label = it }
@@ -502,7 +438,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(range.root)
 
         // --- Value change modes ---------------------------------------------------------------------
-        val modes = sectionBlock()
+        val modes = SectionBlock.NAME { show() }
         texts.bind(modes.heading) { it.modesHeading }
         texts.bind(modes.hint) { it.modesHint }
         texts.bind(onChange, { it.onChange }) { onChange.label = it }
@@ -521,7 +457,7 @@ internal class NumberFieldPage : DemoPage() {
         body.append(modes.root)
 
         // --- Styles ---------------------------------------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styled = number { it.label }
@@ -606,17 +542,5 @@ internal class NumberFieldPage : DemoPage() {
         showModes()
     }
 
-    companion object : CustomElementReference<NumberFieldPage>(NumberFieldPage::class.js) {
-        val NAME: TagName<NumberFieldPage> = TagName("vaadin-demo-number-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-number-field-page>`. */
-internal fun newNumberFieldPage(): NumberFieldPage {
-    NumberFieldPage.define()
-    return NumberFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<NumberFieldPage>(NumberFieldPage::class.js, "vaadin-demo-number-field-page")
 }

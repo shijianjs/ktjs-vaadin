@@ -1,33 +1,22 @@
 package demo.pages.data
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.ui.jsArray
-import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.demo.style.Palette
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import kotlin.js.Date
 import kotlin.js.JsAny
 import kotlin.js.js
-import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
-import web.cssom.AlignItems
-import web.cssom.Display
-import web.cssom.FlexDirection
-import web.cssom.px
 import io.github.shijianjs.ktjs.vaadin.grid.GridElement
 import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirection
 import io.github.shijianjs.ktjs.vaadin.grid.GridSorterDirections
 import io.github.shijianjs.ktjs.vaadin.grid.createGrid
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
-import web.html.HTMLElement
 
 // region Fixture
 
@@ -156,18 +145,13 @@ internal class GridHeader : CustomElementAdapter() {
             setAttribute("title", value)
         }
 
-    companion object : CustomElementReference<GridHeader>(GridHeader::class.js) {
-        val NAME: TagName<GridHeader> = TagName("vaadin-demo-grid-header")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<GridHeader>(GridHeader::class.js, "vaadin-demo-grid-header")
 }
 
 /** Creates a defined `<vaadin-demo-grid-header>`. */
 internal fun newGridHeader(label: String, icon: String, title: String): GridHeader {
-    GridHeader.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    GridHeader.NAME
     return GridHeader.NAME().also { it.show(label, icon, title) }
 }
 
@@ -190,55 +174,11 @@ internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorter
  * renderer. The cell is an element so a renderer hands back one node with its own shadow rather than
  * a `div` rebuilt per row.
  */
-internal class PersonCell : CustomElementAdapter() {
-    private val avatar = createAvatar { }
-    private val displayName = HtmlTagName.span().apply { style.setProperty("font-weight", "600") }
-    private val email = HtmlTagName.span().apply {
-        inlineStyle.apply {
-            color = Palette.muted
-            fontSize = 12.px
-        }
-    }
-
-    init {
-        val lines = HtmlTagName.div().apply {
-            inlineStyle.apply {
-                display = Display.flex
-                flexDirection = FlexDirection.column
-            }
-        }
-        lines.append(displayName, email)
-        val root = HtmlTagName.div().apply {
-            inlineStyle.apply {
-                display = Display.flex
-                alignItems = AlignItems.center
-                columnGap = 8.px
-            }
-        }
-        root.append(avatar, lines)
-        attachShadowRoot().append(root)
-    }
-
-    /** Fills the cell from the grid's item. */
-    fun show(item: JsAny?) {
-        avatar.name = "${itemText(item, "firstName")} ${itemText(item, "lastName")}"
-        avatar.img = itemText(item, "pictureUrl")
-        displayName.textContent = itemText(item, "displayName")
-        email.textContent = itemText(item, "email")
-    }
-
-    companion object : CustomElementReference<PersonCell>(PersonCell::class.js) {
-        val NAME: TagName<PersonCell> = TagName("vaadin-demo-person-cell")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-person-cell>`. */
 internal fun newPersonCell(item: JsAny?): PersonCell {
-    PersonCell.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    PersonCell.NAME
     return PersonCell.NAME().also { it.show(item) }
 }
 

@@ -6,7 +6,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -17,8 +17,6 @@ import io.github.shijianjs.ktjs.vaadin.checkboxgroup.createCheckboxGroup
 import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
 import io.github.shijianjs.ktjs.vaadin.select.createSelect
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -40,16 +38,16 @@ internal class CardPlayground : CustomElementAdapter(), CardTranslatable {
         style.setProperty("max-width", "24rem")
     }
 
-    private val mediaNodes: Array<HTMLElement> = arrayOf(newCardMediaImage(), newCardMediaIcon(), newCardMediaAvatar("L"))
+    private val mediaNodes: Array<HTMLElement> = arrayOf(newCardMediaImage(), CardMediaIcon.NAME(), newCardMediaAvatar("L"))
 
     private val contentNodes: Array<HTMLElement> =
-        arrayOf(newCardContentText(), newCardContentScroller(), newCardContentImage())
+        arrayOf(CardContentText.NAME(), CardContentScroller.NAME(), CardContentImage.NAME())
 
     private var mediaNode: HTMLElement = mediaNodes[0]
 
     private var contentNode: HTMLElement = contentNodes[0]
 
-    private val header = newCardHeader()
+    private val header = CardHeader.NAME()
 
     private val titleNode = newCardSlotText("title", "")
 
@@ -193,17 +191,5 @@ internal class CardPlayground : CustomElementAdapter(), CardTranslatable {
         }
     }
 
-    companion object : CustomElementReference<CardPlayground>(CardPlayground::class.js) {
-        val NAME: TagName<CardPlayground> = TagName("demo-card-playground")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-card-playground>`. */
-internal fun newCardPlayground(): CardPlayground {
-    CardPlayground.define()
-    return CardPlayground.NAME()
+    companion object : CustomElementReferenceAdapter<CardPlayground>(CardPlayground::class.js, "demo-card-playground")
 }

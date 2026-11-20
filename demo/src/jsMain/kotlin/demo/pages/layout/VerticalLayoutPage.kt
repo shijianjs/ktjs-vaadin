@@ -1,23 +1,19 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -37,37 +33,8 @@ val verticalLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/vertical-layout",
                 sourcePath = "pages/layout/VerticalLayoutPage.kt",
             ),
-        kitPage = { newVerticalLayoutPage() },
+        kitPage = { VerticalLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class VerticalLayoutTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val verticalHeading: String,
-    val verticalHint: String,
-    val horizontalHeading: String,
-    val horizontalHint: String,
-    val individualHeading: String,
-    val individualHint: String,
-    val spacingHeading: String,
-    val spacingHint: String,
-    val paddingHeading: String,
-    val paddingHint: String,
-    val marginHeading: String,
-    val marginHint: String,
-    val wrappingHeading: String,
-    val wrappingHint: String,
-    val item: (Int) -> String,
-    val withoutSpacing: String,
-    val withSpacing: String,
-    val withoutPadding: String,
-    val withPadding: String,
-    val withoutMargin: String,
-    val withMargin: String,
-    val withoutWrap: String,
-    val withWrap: String,
-)
 
 private val english: VerticalLayoutTexts =
     VerticalLayoutTexts(
@@ -162,7 +129,7 @@ internal class VerticalLayoutPage : DemoPage() {
             return node
         }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         basic.body.append(
@@ -176,7 +143,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(basic.root)
 
-        val verticalAlignment = sectionBlock()
+        val verticalAlignment = SectionBlock.NAME { show() }
         texts.bind(verticalAlignment.heading) { it.verticalHeading }
         texts.bind(verticalAlignment.hint) { it.verticalHint }
         verticalAlignment.body.append(
@@ -192,7 +159,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(verticalAlignment.root)
 
-        val horizontalAlignment = sectionBlock()
+        val horizontalAlignment = SectionBlock.NAME { show() }
         texts.bind(horizontalAlignment.heading) { it.horizontalHeading }
         texts.bind(horizontalAlignment.hint) { it.horizontalHint }
         horizontalAlignment.body.append(
@@ -207,7 +174,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(horizontalAlignment.root)
 
-        val individual = sectionBlock()
+        val individual = SectionBlock.NAME { show() }
         texts.bind(individual.heading) { it.individualHeading }
         texts.bind(individual.hint) { it.individualHint }
         individual.body.append(
@@ -226,7 +193,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(individual.root)
 
-        val spacing = sectionBlock()
+        val spacing = SectionBlock.NAME { show() }
         texts.bind(spacing.heading) { it.spacingHeading }
         texts.bind(spacing.hint) { it.spacingHint }
         spacing.body.append(
@@ -249,7 +216,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(spacing.root)
 
-        val padding = sectionBlock()
+        val padding = SectionBlock.NAME { show() }
         texts.bind(padding.heading) { it.paddingHeading }
         texts.bind(padding.hint) { it.paddingHint }
         padding.body.append(
@@ -272,7 +239,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(padding.root)
 
-        val margin = sectionBlock()
+        val margin = SectionBlock.NAME { show() }
         texts.bind(margin.heading) { it.marginHeading }
         texts.bind(margin.hint) { it.marginHint }
         margin.body.append(
@@ -305,7 +272,7 @@ internal class VerticalLayoutPage : DemoPage() {
         )
         body.append(margin.root)
 
-        val wrapping = sectionBlock()
+        val wrapping = SectionBlock.NAME { show() }
         texts.bind(wrapping.heading) { it.wrappingHeading }
         texts.bind(wrapping.hint) { it.wrappingHint }
         wrapping.body.append(
@@ -345,17 +312,5 @@ internal class VerticalLayoutPage : DemoPage() {
         captionKeys.forEach { (node, copy) -> node.textContent = copy(texts.current) }
     }
 
-    companion object : CustomElementReference<VerticalLayoutPage>(VerticalLayoutPage::class.js) {
-        val NAME: TagName<VerticalLayoutPage> = TagName("vaadin-demo-vertical-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-vertical-layout-page>`. */
-internal fun newVerticalLayoutPage(): VerticalLayoutPage {
-    VerticalLayoutPage.define()
-    return VerticalLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page")
 }

@@ -4,16 +4,14 @@ import demo.ui.EventLog
 import demo.ui.Readout
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.col
-import io.github.shijianjs.ktjs.demo.page.exampleCaption
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.col
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -72,17 +70,5 @@ class ClickCounter : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(col(row(button, readout.root), caption, log.root))
     }
 
-    companion object : CustomElementReference<ClickCounter>(ClickCounter::class.js) {
-        val NAME: TagName<ClickCounter> = TagName("vaadin-demo-click-counter")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-click-counter>`. */
-fun newClickCounter(): ClickCounter {
-    ClickCounter.define()
-    return ClickCounter.NAME()
+    companion object : CustomElementReferenceAdapter<ClickCounter>(ClickCounter::class.js, "vaadin-demo-click-counter")
 }

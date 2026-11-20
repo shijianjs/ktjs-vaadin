@@ -1,20 +1,14 @@
 package demo.pages.data
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import web.html.HTMLElement
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -42,6 +36,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.ident
@@ -61,7 +56,7 @@ val messageListEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/message-list",
                 sourcePath = "pages/data/MessageListPage.kt",
             ),
-        kitPage = { newMessageListPage() },
+        kitPage = { MessageListPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -88,52 +83,6 @@ private val MESSAGE_SHEET: CSSStyleSheet = cssSheet {
         pseudo(pseudoElement("part"), ident("name")),
     ).invoke { fontWeight = FontWeight.bold }
 }
-
-/** Every string this page shows, in one language. */
-private class MessageTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val quote: String,
-    val yesterday: String,
-    val quoteTwo: String,
-    val justNow: String,
-    val markdownHeading: String,
-    val markdownHint: String,
-    val markdownHello: String,
-    val markdownReport: String,
-    val attachmentsHeading: String,
-    val attachmentsHint: String,
-    val attachmentIntro: String,
-    val attachmentThanks: String,
-    val fiftyMinutesAgo: String,
-    val clickHint: String,
-    val clickedPrefix: String,
-    val bubbleHeading: String,
-    val bubbleHint: String,
-    val bubbleAsk: String,
-    val bubbleReply: String,
-    val bubbleThanks: String,
-    val fortyMinutesAgo: String,
-    val oneToOneHeading: String,
-    val oneToOneHint: String,
-    val whichOrders: String,
-    val fiveMinutesAgo: String,
-    val orderReport: String,
-    val fourMinutesAgo: String,
-    val assistant: String,
-    val classNameHeading: String,
-    val classNameHint: String,
-    val aiHeading: String,
-    val aiHint: String,
-    val greeting: String,
-    val me: String,
-    val processing: String,
-    val newMessage: String,
-    val plan: String,
-    val joiner: String,
-    val typingHeading: String,
-    val typingHint: String,
-)
 
 private val english: MessageTexts =
     MessageTexts(
@@ -323,7 +272,7 @@ internal class MessageListPage : DemoPage() {
             fill: (MessageTexts) -> Array<MessageListItem>,
         ): MessageListElement = createMessageList(configure).also { lists += it to fill }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val messages = list { copy ->
@@ -347,7 +296,7 @@ internal class MessageListPage : DemoPage() {
         basic.body.append(exampleBox(null, messages))
         body.append(basic.root)
 
-        val markdownSection = sectionBlock()
+        val markdownSection = SectionBlock.NAME { show() }
         texts.bind(markdownSection.heading) { it.markdownHeading }
         texts.bind(markdownSection.hint) { it.markdownHint }
         val markdownList =
@@ -360,7 +309,7 @@ internal class MessageListPage : DemoPage() {
         markdownSection.body.append(exampleBox(null, markdownList))
         body.append(markdownSection.root)
 
-        val attachmentsSection = sectionBlock()
+        val attachmentsSection = SectionBlock.NAME { show() }
         texts.bind(attachmentsSection.heading) { it.attachmentsHeading }
         texts.bind(attachmentsSection.hint) { it.attachmentsHint }
         val attachmentList =
@@ -401,7 +350,7 @@ internal class MessageListPage : DemoPage() {
         attachmentsSection.body.append(exampleBox(null, kitCol(attachmentList, attachmentReadout.root)))
         body.append(attachmentsSection.root)
 
-        val bubbleSection = sectionBlock()
+        val bubbleSection = SectionBlock.NAME { show() }
         texts.bind(bubbleSection.heading) { it.bubbleHeading }
         texts.bind(bubbleSection.hint) { it.bubbleHint }
         val bubbles =
@@ -431,7 +380,7 @@ internal class MessageListPage : DemoPage() {
         bubbleSection.body.append(exampleBox(null, bubbles))
         body.append(bubbleSection.root)
 
-        val oneToOneSection = sectionBlock()
+        val oneToOneSection = SectionBlock.NAME { show() }
         texts.bind(oneToOneSection.heading) { it.oneToOneHeading }
         texts.bind(oneToOneSection.hint) { it.oneToOneHint }
         val oneToOne =
@@ -457,7 +406,7 @@ internal class MessageListPage : DemoPage() {
         oneToOneSection.body.append(exampleBox(null, oneToOne))
         body.append(oneToOneSection.root)
 
-        val classNameSection = sectionBlock()
+        val classNameSection = SectionBlock.NAME { show() }
         texts.bind(classNameSection.heading) { it.classNameHeading }
         texts.bind(classNameSection.hint) { it.classNameHint }
         val classNameList =
@@ -481,7 +430,7 @@ internal class MessageListPage : DemoPage() {
         classNameSection.body.append(exampleBox(null, classNameList))
         body.append(classNameSection.root)
 
-        val aiSection = sectionBlock()
+        val aiSection = SectionBlock.NAME { show() }
         texts.bind(aiSection.heading) { it.aiHeading }
         texts.bind(aiSection.hint) { it.aiHint }
         announcement.setAttribute("aria-live", "polite")
@@ -511,7 +460,7 @@ internal class MessageListPage : DemoPage() {
         aiSection.body.append(exampleBox(null, kitCol(announcement, chat, chatInput)))
         body.append(aiSection.root)
 
-        val typingSection = sectionBlock()
+        val typingSection = SectionBlock.NAME { show() }
         texts.bind(typingSection.heading) { it.typingHeading }
         texts.bind(typingSection.hint) { it.typingHint }
         body.append(typingSection.root)
@@ -563,17 +512,5 @@ internal class MessageListPage : DemoPage() {
         showChat()
     }
 
-    companion object : CustomElementReference<MessageListPage>(MessageListPage::class.js) {
-        val NAME: TagName<MessageListPage> = TagName("vaadin-demo-message-list-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-message-list-page>`. */
-internal fun newMessageListPage(): MessageListPage {
-    MessageListPage.define()
-    return MessageListPage.NAME()
+    companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page")
 }

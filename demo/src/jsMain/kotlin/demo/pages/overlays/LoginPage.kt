@@ -1,24 +1,20 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -62,44 +58,8 @@ val loginEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/login",
                 sourcePath = "pages/overlays/LoginPage.kt",
             ),
-        kitPage = { newLoginPage() },
+        kitPage = { LoginPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class LoginTexts(
-    val formHeading: String,
-    val formHint: String,
-    val showError: String,
-    val disableForm: String,
-    val disableHeading: String,
-    val disableHint: String,
-    val ready: String,
-    val submitting: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-    val overlayHeading: String,
-    val overlayHint: String,
-    val overlayDescription: String,
-    val openOverlay: String,
-    val partsHeading: String,
-    val partsHint: String,
-    val oneTimeCode: String,
-    val privacyNote: String,
-    val openCode: String,
-    val openFooter: String,
-    val headerHeading: String,
-    val headerHint: String,
-    val brandedDescription: String,
-    val openBranded: String,
-    val openLocalized: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val contact: String,
-    val openError: String,
-    val openExtra: String,
-    val richHeading: String,
-    val richHint: String,
-)
 
 private val english: LoginTexts =
     LoginTexts(
@@ -199,7 +159,7 @@ internal class LoginPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val formSection = sectionBlock()
+        val formSection = SectionBlock.NAME { show() }
         texts.bind(formSection.heading) { it.formHeading }
         texts.bind(formSection.hint) { it.formHint }
         val log = EventLog(5)
@@ -221,7 +181,7 @@ internal class LoginPage : DemoPage() {
         formSection.body.append(exampleBox(null, kitRow(loginForm, kitCol(errorSwitch, disabledSwitch, log.root))))
         body.append(formSection.root)
 
-        val eventSection = sectionBlock()
+        val eventSection = SectionBlock.NAME { show() }
         texts.bind(eventSection.heading) { it.disableHeading }
         texts.bind(eventSection.hint) { it.disableHint }
         val slowForm = createLoginForm()
@@ -242,7 +202,7 @@ internal class LoginPage : DemoPage() {
         eventSection.body.append(exampleBox(null, kitRow(slowForm, kitCol(slowStatus.root))))
         body.append(eventSection.root)
 
-        val i18nSection = sectionBlock()
+        val i18nSection = SectionBlock.NAME { show() }
         texts.bind(i18nSection.heading) { it.i18nHeading }
         texts.bind(i18nSection.hint) { it.i18nHint }
         val finnishForm = createLoginForm()
@@ -268,7 +228,7 @@ internal class LoginPage : DemoPage() {
         i18nSection.body.append(exampleBox(null, finnishForm))
         body.append(i18nSection.root)
 
-        val overlay = sectionBlock()
+        val overlay = SectionBlock.NAME { show() }
         texts.bind(overlay.heading) { it.overlayHeading }
         texts.bind(overlay.hint) { it.overlayHint }
         val loginOverlay = createLoginOverlay { opened = false }
@@ -283,7 +243,7 @@ internal class LoginPage : DemoPage() {
         overlay.body.append(exampleBox(null, kitRow(openLogin, loginOverlay)))
         body.append(overlay.root)
 
-        val overlayParts = sectionBlock()
+        val overlayParts = SectionBlock.NAME { show() }
         texts.bind(overlayParts.heading) { it.partsHeading }
         texts.bind(overlayParts.hint) { it.partsHint }
         val codeOverlay = createLoginOverlay { opened = false }
@@ -307,7 +267,7 @@ internal class LoginPage : DemoPage() {
         )
         body.append(overlayParts.root)
 
-        val overlayHeader = sectionBlock()
+        val overlayHeader = SectionBlock.NAME { show() }
         texts.bind(overlayHeader.heading) { it.headerHeading }
         texts.bind(overlayHeader.hint) { it.headerHint }
         val brandedOverlay = createLoginOverlay { opened = false }
@@ -340,7 +300,7 @@ internal class LoginPage : DemoPage() {
         )
         body.append(overlayHeader.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val errorOverlay = createLoginOverlay { opened = false }
@@ -356,7 +316,7 @@ internal class LoginPage : DemoPage() {
         )
         body.append(states.root)
 
-        val rich = sectionBlock()
+        val rich = SectionBlock.NAME { show() }
         texts.bind(rich.heading) { it.richHeading }
         texts.bind(rich.hint) { it.richHint }
         val richForm = createLoginForm()
@@ -405,17 +365,5 @@ internal class LoginPage : DemoPage() {
             clickEvent.addHandler { overlay.opened = true }
         }
 
-    companion object : CustomElementReference<LoginPage>(LoginPage::class.js) {
-        val NAME: TagName<LoginPage> = TagName("vaadin-demo-login-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-login-page>`. */
-internal fun newLoginPage(): LoginPage {
-    LoginPage.define()
-    return LoginPage.NAME()
+    companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page")
 }

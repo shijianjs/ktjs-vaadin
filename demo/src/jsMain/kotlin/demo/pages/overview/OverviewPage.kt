@@ -4,8 +4,9 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.page.overview.newOverviewPage
+import demo.page.overview.OverviewPage
 import demo.ui.PageMeta
+import io.github.shijianjs.ktjs.dom.element.invoke
 
 /**
  * The landing entry of the catalog.
@@ -30,7 +31,7 @@ val overviewEntry: CatalogEntry =
                 docsNote = bi("官方文档的组件索引页", "Component index of the official documentation"),
                 sourcePath = "page/overview/OverviewPage.kt",
             ),
-        kitPage = { newOverviewPage() },
+        kitPage = { OverviewPage.NAME() },
     )
 
 

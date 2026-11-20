@@ -1,0 +1,42 @@
+package demo.pages.overlays
+
+import io.github.shijianjs.ktjs.dom.element.invoke
+
+/** Every string this page shows, in one language. */
+internal class ConfirmDialogTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val statusPrefix: String,
+    val deleted: String,
+    val canceled: String,
+    val deleteRecord: String,
+    val deleteHeader: String,
+    val deleteMessage: String,
+    val delete: String,
+    val keep: String,
+    val cancelButton: String,
+    val rejectButton: String,
+    val threeHeading: String,
+    val threeHint: String,
+    val saveHeader: String,
+    val saveMessage: String,
+    val save: String,
+    val discard: String,
+    val back: String,
+    val logConfirmSave: String,
+    val logRejectDiscard: String,
+    val logCancelBack: String,
+    val openThree: String,
+    val cancelHeading: String,
+    val cancelHint: String,
+    val deleteReportHeader: String,
+    val deleteReportMessage: String,
+    val deleteReport: String,
+    val confirmOnlyHeading: String,
+    val confirmOnlyHint: String,
+    val exportHeader: String,
+    val ok: String,
+    val exportMessage: String,
+    val exportReport: String,
+    val acknowledged: String,
+)

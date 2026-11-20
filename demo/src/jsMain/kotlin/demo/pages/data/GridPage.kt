@@ -1,24 +1,20 @@
 package demo.pages.data
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.exampleCaption
-import io.github.shijianjs.ktjs.demo.page.newReadout
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Grid
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -88,15 +84,8 @@ val gridEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/grid",
                 sourcePath = "pages/data/GridPage.kt",
             ),
-        kitPage = { newGridPage() },
+        kitPage = { GridPage.NAME() },
     )
-
-/** The sort order the programmatic example currently shows. */
-private enum class SortState {
-    NONE,
-    ASCENDING,
-    DESCENDING,
-}
 
 /**
  * `<vaadin-demo-grid-page>`: every grid example of the docs, from basic usage to lazy columns.
@@ -118,33 +107,33 @@ internal class GridPage : DemoPage(), GridTranslatable {
     /** Grids whose cells show copy; they redraw when the language changes. */
     private val cells: MutableList<GridElement> = mutableListOf()
 
-    private val selectionReadout: Readout = newReadout()
+    private val selectionReadout: Readout = Readout.NAME { show() }
 
     private var selectedRows: Int = 0
 
-    private val directionReadout: Readout = newReadout()
+    private val directionReadout: Readout = Readout.NAME { show() }
 
     private var sortState: SortState = SortState.NONE
 
-    private val menuReadout: Readout = newReadout()
+    private val menuReadout: Readout = Readout.NAME { show() }
 
     private var menuPerson: String = ""
 
     private var menuValue: String = ""
 
-    private val singleReadout: Readout = newReadout()
+    private val singleReadout: Readout = Readout.NAME { show() }
 
     private var singleName: String? = null
 
-    private val multiReadout: Readout = newReadout()
+    private val multiReadout: Readout = Readout.NAME { show() }
 
     private var multiNames: List<String> = emptyList()
 
-    private val rangeReadout: Readout = newReadout()
+    private val rangeReadout: Readout = Readout.NAME { show() }
 
     private val rangeSelectedIds: MutableSet<Int> = mutableSetOf()
 
-    private val pageReadout: Readout = newReadout()
+    private val pageReadout: Readout = Readout.NAME { show() }
 
     private var pageIndex: Int = 0
 
@@ -191,7 +180,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
 
     /** A section whose heading and hint are both bound to the table. */
     private fun section(heading: (GridTexts) -> String, hint: (GridTexts) -> String): SectionBlock =
-        sectionBlock().apply {
+        SectionBlock.NAME { show() }.apply {
             texts.bind(this.heading, heading)
             texts.bind(this.hint, hint)
         }
@@ -1134,7 +1123,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
             exampleBox(
                 null,
                 caption { it.variantsCaption },
-                kitGrid(260, *variantColumns.map { theme -> kitCol(paragraph(theme), themedGrid(theme)) }.toTypedArray()),
+                Grid.NAME { show(260); add(*variantColumns.map { theme -> kitCol(paragraph(theme), themedGrid(theme)) }.toTypedArray()) },
             ),
         )
 
@@ -1217,17 +1206,5 @@ internal class GridPage : DemoPage(), GridTranslatable {
         body.append(lazy.root)
     }
 
-    companion object : CustomElementReference<GridPage>(GridPage::class.js) {
-        val NAME: TagName<GridPage> = TagName("vaadin-demo-grid-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-grid-page>`. */
-internal fun newGridPage(): GridPage {
-    GridPage.define()
-    return GridPage.NAME()
+    companion object : CustomElementReferenceAdapter<GridPage>(GridPage::class.js, "vaadin-demo-grid-page")
 }

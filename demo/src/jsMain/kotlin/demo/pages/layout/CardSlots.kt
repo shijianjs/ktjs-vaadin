@@ -1,15 +1,9 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.i18n.Lang
-import io.github.shijianjs.ktjs.demo.i18n.Langs
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /**
  * `<demo-card-slot-text>`: a text node for one of the card's named slots (title, subtitle, …).
@@ -33,18 +27,13 @@ internal class CardSlotText : CustomElementAdapter() {
         slot = slotName
     }
 
-    companion object : CustomElementReference<CardSlotText>(CardSlotText::class.js) {
-        val NAME: TagName<CardSlotText> = TagName("demo-card-slot-text")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<CardSlotText>(CardSlotText::class.js, "demo-card-slot-text")
 }
 
 /** Creates a defined `<demo-card-slot-text>` for [slotName]. */
 internal fun newCardSlotText(slotName: String, text: String): CardSlotText {
-    CardSlotText.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    CardSlotText.NAME
     return CardSlotText.NAME().also { it.show(slotName, text) }
 }
 
@@ -54,45 +43,3 @@ internal fun newCardSlotText(slotName: String, text: String): CardSlotText {
  * The kicker is the small uppercase line, and the title is the same `<h2>` the kit's heading block draws,
  * so the header reads like the rest of the demo pages. Both lines come from the shared card text table.
  */
-internal class CardHeader : CustomElementAdapter(), CardTranslatable {
-    private val kicker = HtmlTagName.div().apply {
-        style.setProperty("font-size", "0.8125rem")
-        style.setProperty("text-transform", "uppercase")
-    }
-
-    private val headingNode = heading(2, "")
-
-    init {
-        cardTexts.bind(kicker, { it.exoticNorth }) { kicker.textContent = it }
-        cardTexts.bind(headingNode, { it.lapland }) { headingNode.textContent = it }
-        attachShadowRoot().append(
-            HtmlTagName.div().apply {
-                style.setProperty("line-height", "1.25")
-                append(kicker, headingNode)
-            },
-        )
-        cardTexts.apply(Langs.EN)
-    }
-
-    override fun applyTranslation(lang: Lang) {
-        cardTexts.apply(lang)
-    }
-
-    override fun connectedCallback() {
-        slot = "header"
-    }
-
-    companion object : CustomElementReference<CardHeader>(CardHeader::class.js) {
-        val NAME: TagName<CardHeader> = TagName("demo-card-header")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-card-header>`. */
-internal fun newCardHeader(): CardHeader {
-    CardHeader.define()
-    return CardHeader.NAME()
-}

@@ -1,27 +1,21 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -60,70 +54,10 @@ val notificationEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/notification",
                 sourcePath = "pages/overlays/NotificationPage.kt",
             ),
-        kitPage = { newNotificationPage() },
+        kitPage = { NotificationPage.NAME() },
     )
 
 // region Notification
-
-/** Every string this page shows, in one language. */
-private class NotificationTexts(
-    val positionsHeading: String,
-    val positionsHint: String,
-    val topEnd: String,
-    val topEndMessage: String,
-    val topCenter: String,
-    val topCenterMessage: String,
-    val bottomCenterDefault: String,
-    val bottomCenterMessage: String,
-    val allPositionsHeading: String,
-    val allPositionsHint: String,
-    val themesHeading: String,
-    val themesHint: String,
-    val saved: String,
-    val saveFailed: String,
-    val contrast: String,
-    val info: String,
-    val warning: String,
-    val persistentHeading: String,
-    val persistentHint: String,
-    val persistentText: String,
-    val close: String,
-    val showPersistent: String,
-    val richHeading: String,
-    val richHint: String,
-    val submitted: String,
-    val view: String,
-    val reportFailed: String,
-    val retry: String,
-    val mentioned: String,
-    val projectQ4: String,
-    val showRich: String,
-    val errorShort: String,
-    val mentionShort: String,
-    val actionsHeading: String,
-    val actionsHint: String,
-    val deletedTasks: String,
-    val undo: String,
-    val undoLine: String,
-    val retryLine: String,
-    val undoNotification: String,
-    val linkNotification: String,
-    val retryNotification: String,
-    val keyboardHeading: String,
-    val keyboardHint: String,
-    val undoCtrlZ: String,
-    val showNotification: String,
-    val lengthsHeading: String,
-    val lengthsHint: String,
-    val ariaName: String,
-    val ariaText: String,
-    val newMessageFrom: String,
-    val longMessage: String,
-    val recommendedCaption: String,
-    val discouragedCaption: String,
-    val showRecommended: String,
-    val showDiscouraged: String,
-)
 
 private val english: NotificationTexts =
     NotificationTexts(
@@ -348,7 +282,7 @@ internal class NotificationPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val positions = sectionBlock()
+        val positions = SectionBlock.NAME { show() }
         texts.bind(positions.heading) { it.positionsHeading }
         texts.bind(positions.hint) { it.positionsHint }
         val topEndButton = createButton().addTheme("tertiary")
@@ -381,7 +315,7 @@ internal class NotificationPage : DemoPage() {
         positions.body.append(exampleBox(null, kitRow(topEndButton, topCenterButton, bottomCenterButton)))
         body.append(positions.root)
 
-        val allPositions = sectionBlock()
+        val allPositions = SectionBlock.NAME { show() }
         texts.bind(allPositions.heading) { it.allPositionsHeading }
         texts.bind(allPositions.hint) { it.allPositionsHint }
         val positionNames =
@@ -417,7 +351,7 @@ internal class NotificationPage : DemoPage() {
         )
         body.append(allPositions.root)
 
-        val themes = sectionBlock()
+        val themes = SectionBlock.NAME { show() }
         texts.bind(themes.heading) { it.themesHeading }
         texts.bind(themes.hint) { it.themesHint }
 
@@ -444,7 +378,7 @@ internal class NotificationPage : DemoPage() {
         addThemeButton("warning") { it.warning }
         body.append(themes.root)
 
-        val persistent = sectionBlock()
+        val persistent = SectionBlock.NAME { show() }
         texts.bind(persistent.heading) { it.persistentHeading }
         texts.bind(persistent.hint) { it.persistentHint }
         persistentNote.duration = 0.0
@@ -463,7 +397,7 @@ internal class NotificationPage : DemoPage() {
         persistent.body.append(exampleBox(null, kitRow(showPersistent, hidePersistent, persistentNote)))
         body.append(persistent.root)
 
-        val rich = sectionBlock()
+        val rich = SectionBlock.NAME { show() }
         texts.bind(rich.heading) { it.richHeading }
         texts.bind(rich.hint) { it.richHint }
         successNote.duration = 0.0
@@ -514,7 +448,7 @@ internal class NotificationPage : DemoPage() {
         )
         body.append(rich.root)
 
-        val actions = sectionBlock()
+        val actions = SectionBlock.NAME { show() }
         texts.bind(actions.heading) { it.actionsHeading }
         texts.bind(actions.hint) { it.actionsHint }
         undoNote.duration = 10000.0
@@ -575,7 +509,7 @@ internal class NotificationPage : DemoPage() {
         )
         body.append(actions.root)
 
-        val keyboard = sectionBlock()
+        val keyboard = SectionBlock.NAME { show() }
         texts.bind(keyboard.heading) { it.keyboardHeading }
         texts.bind(keyboard.hint) { it.keyboardHint }
         keyboardNote.duration = 10000.0
@@ -599,7 +533,7 @@ internal class NotificationPage : DemoPage() {
         keyboard.body.append(exampleBox(null, kitCol(showKeyboard, keyboardNote)))
         body.append(keyboard.root)
 
-        val lengths = sectionBlock()
+        val lengths = SectionBlock.NAME { show() }
         texts.bind(lengths.heading) { it.lengthsHeading }
         texts.bind(lengths.hint) { it.lengthsHint }
         texts.bind(recommendedCaption, { it.recommendedCaption }) { recommendedCaption.textContent = it }
@@ -666,19 +600,7 @@ internal class NotificationPage : DemoPage() {
         actionLog.replay("undo")
     }
 
-    companion object : CustomElementReference<NotificationPage>(NotificationPage::class.js) {
-        val NAME: TagName<NotificationPage> = TagName("vaadin-demo-notification-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-notification-page>`. */
-internal fun newNotificationPage(): NotificationPage {
-    NotificationPage.define()
-    return NotificationPage.NAME()
+    companion object : CustomElementReferenceAdapter<NotificationPage>(NotificationPage::class.js, "vaadin-demo-notification-page")
 }
 
 /**
@@ -687,32 +609,10 @@ internal fun newNotificationPage(): NotificationPage {
  * The host is what the notification slots, so `slot="end"` stays on it; the button and its icon sit
  * in the shadow root and the action is handed in as [show]'s callback.
  */
-internal class CloseIcon : CustomElementAdapter() {
-    private val button = createButton { textContent = "" }.addTheme("icon")
-    private val icon = createIcon { icon = "lumo:cross" }
-
-    init {
-        button.append(icon)
-        attachShadowRoot().append(button)
-    }
-
-    /** Sets the accessible name and the action the click runs. */
-    fun show(name: String, onClick: () -> Unit) {
-        button.setAttribute("aria-label", name)
-        button.clickEvent.addHandler { onClick() }
-    }
-
-    companion object : CustomElementReference<CloseIcon>(CloseIcon::class.js) {
-        val NAME: TagName<CloseIcon> = TagName("vaadin-demo-close-icon")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-close-icon>`. */
 internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
-    CloseIcon.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    CloseIcon.NAME
     return CloseIcon.NAME().also { it.show(name, onClick) }
 }

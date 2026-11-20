@@ -1,23 +1,19 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -51,7 +47,7 @@ val passwordFieldEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/password-field",
                 sourcePath = "pages/fields/PasswordFieldPage.kt",
             ),
-        kitPage = { newPasswordFieldPage() },
+        kitPage = { PasswordFieldPage.NAME() },
     )
 
 /** Pattern of `password-field-helper.ts`: at least eight characters, one letter and one digit. */
@@ -59,53 +55,6 @@ private const val PASSWORD_HELPER_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8}.*$"
 
 /** Pattern of `password-field-validation.ts`: letters A-Z and digits only. */
 private const val PASSWORD_LETTERS_AND_DIGITS = "^[A-Za-z0-9]+$"
-
-/** Every string this page shows, in one language. */
-private class PasswordFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val password: String,
-    val atLeastEight: String,
-    val visible: (Boolean, Int) -> String,
-    val revealCaption: String,
-    val revealHeading: String,
-    val revealHint: String,
-    val revealShown: String,
-    val revealHidden: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val validationHelper: String,
-    val notValidated: String,
-    val required: String,
-    val tooShort: (Int) -> String,
-    val tooLong: (Int) -> String,
-    val pattern: String,
-    val checkPrefix: String,
-    val passed: String,
-    val failed: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val practicesHeading: String,
-    val practicesHint: String,
-    val requirementsHelper: String,
-    val invalidPassword: String,
-    val requirementsCaption: String,
-    val strengthCaption: String,
-    val strengthPrefix: String,
-    val weak: String,
-    val moderate: String,
-    val strong: String,
-)
 
 private val english: PasswordFieldTexts =
     PasswordFieldTexts(
@@ -253,7 +202,7 @@ internal class PasswordFieldPage : DemoPage() {
             createPasswordField().also { node -> texts.bind(node, copy) { node.label = it } }
 
         // --- Basic usage (password-field-basic.ts) --------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val docsField = field { it.password }
@@ -277,7 +226,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(basic.root)
 
         // --- Reveal button (password-field-reveal-button-hidden.ts) --------------------------------
-        val reveal = sectionBlock()
+        val reveal = SectionBlock.NAME { show() }
         texts.bind(reveal.heading) { it.revealHeading }
         texts.bind(reveal.hint) { it.revealHint }
         val shown = field { it.revealShown }
@@ -289,7 +238,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(reveal.root)
 
         // --- Basic features (password-field-basic-features.ts) --------------------------------------
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featureField = createPasswordField()
@@ -304,7 +253,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(features.root)
 
         // --- Validation (password-field-validation.ts) ----------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         texts.bind(password, { it.password }) { password.label = it }
@@ -329,7 +278,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(validation.root)
 
         // --- Read-only and disabled (password-field-readonly-and-disabled.ts) -----------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readonlyField = field { it.readonly }
@@ -340,7 +289,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(states.root)
 
         // --- Style variants (password-field-styles.ts) ----------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styledField = field { it.label }
@@ -351,7 +300,7 @@ internal class PasswordFieldPage : DemoPage() {
         body.append(styles.root)
 
         // --- Best practices (password-field-helper.ts, password-field-advanced-helper.ts) -----------
-        val practices = sectionBlock()
+        val practices = SectionBlock.NAME { show() }
         texts.bind(practices.heading) { it.practicesHeading }
         texts.bind(practices.hint) { it.practicesHint }
         texts.bind(requirements, { it.password }) { requirements.label = it }
@@ -454,17 +403,5 @@ internal class PasswordFieldPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReference<PasswordFieldPage>(PasswordFieldPage::class.js) {
-        val NAME: TagName<PasswordFieldPage> = TagName("vaadin-demo-password-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-password-field-page>`. */
-internal fun newPasswordFieldPage(): PasswordFieldPage {
-    PasswordFieldPage.define()
-    return PasswordFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<PasswordFieldPage>(PasswordFieldPage::class.js, "vaadin-demo-password-field-page")
 }

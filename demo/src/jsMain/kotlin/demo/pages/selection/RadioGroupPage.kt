@@ -1,20 +1,15 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
@@ -32,6 +27,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.descendant
 import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.style.Palette
 import web.cssom.CSSStyleSheet
 import web.cssom.ClassName
@@ -67,7 +63,7 @@ val radioGroupEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/selection/RadioGroupPage.kt",
             ),
-        kitPage = { newRadioGroupPage() },
+        kitPage = { RadioGroupPage.NAME() },
     )
 
 /** The option box of the custom-label example; the sheet and the three options share it. */
@@ -84,78 +80,6 @@ private val RADIO_SHEET: CSSStyleSheet = cssSheet {
         color = Palette.muted
     }
 }
-
-/** Every string this page shows, in one language. */
-private class RadioGroupTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val plan: String,
-    val basicOption: String,
-    val standardOption: String,
-    val proOption: String,
-    val noneSelected: String,
-    val defaultsHeading: String,
-    val defaultsHint: String,
-    val repeat: String,
-    val never: String,
-    val daily: String,
-    val weekly: String,
-    val monthly: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val status: String,
-    val pending: String,
-    val submitted: String,
-    val confirmed: String,
-    val travelClass: String,
-    val economy: String,
-    val business: String,
-    val firstClass: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helperText: String,
-    val tooltipText: String,
-    val item1: String,
-    val item2: String,
-    val item3: String,
-    val requiredHeading: String,
-    val requiredHint: String,
-    val paymentMethod: String,
-    val choosePayment: String,
-    val card: String,
-    val bankTransfer: String,
-    val readOnly: String,
-    val yes: String,
-    val no: String,
-    val disabled: String,
-    val inProgress: String,
-    val done: String,
-    val notValidated: String,
-    val validate: String,
-    val validationPrefix: String,
-    val passed: String,
-    val failed: String,
-    val customOptionHeading: String,
-    val customOptionHint: String,
-    val visaLine: String,
-    val expires: String,
-    val other: String,
-    val enterCardNumber: String,
-    val cardNumber: String,
-    val alternativeHeading: String,
-    val alternativeHint: String,
-    val replyBehavior: String,
-    val reply: String,
-    val replyAll: String,
-    val checkboxLabel: String,
-    val presentationHeading: String,
-    val presentationHint: String,
-    val account: (Int) -> String,
-    val holder: (String) -> String,
-    val stylesHeading: String,
-    val stylesHint: String,
-)
 
 private val english: RadioGroupTexts =
     RadioGroupTexts(
@@ -346,7 +270,7 @@ internal class RadioGroupPage : DemoPage() {
         frame.mount(this)
         addSheet(RADIO_SHEET)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val group = createRadioGroup().addTheme("vertical")
@@ -367,7 +291,7 @@ internal class RadioGroupPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(group, valueReadout.root)))
         body.append(basic.root)
 
-        val defaults = sectionBlock()
+        val defaults = SectionBlock.NAME { show() }
         texts.bind(defaults.heading) { it.defaultsHeading }
         texts.bind(defaults.hint) { it.defaultsHint }
         val repeat = createRadioGroup().addTheme("vertical")
@@ -385,7 +309,7 @@ internal class RadioGroupPage : DemoPage() {
         defaults.body.append(exampleBox(null, repeat))
         body.append(defaults.root)
 
-        val orientation = sectionBlock()
+        val orientation = SectionBlock.NAME { show() }
         texts.bind(orientation.heading) { it.orientationHeading }
         texts.bind(orientation.hint) { it.orientationHint }
         val horizontal = createRadioGroup().addTheme("horizontal")
@@ -407,7 +331,7 @@ internal class RadioGroupPage : DemoPage() {
         orientation.body.append(exampleBox(null, horizontal), exampleBox(null, vertical))
         body.append(orientation.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val labeled = createRadioGroup().addTheme("vertical")
@@ -422,7 +346,7 @@ internal class RadioGroupPage : DemoPage() {
         features.body.append(exampleBox(null, labeled))
         body.append(features.root)
 
-        val required = sectionBlock()
+        val required = SectionBlock.NAME { show() }
         texts.bind(required.heading) { it.requiredHeading }
         texts.bind(required.hint) { it.requiredHint }
         val payment = createRadioGroup()
@@ -455,7 +379,7 @@ internal class RadioGroupPage : DemoPage() {
         )
         body.append(required.root)
 
-        val customOption = sectionBlock()
+        val customOption = SectionBlock.NAME { show() }
         texts.bind(customOption.heading) { it.customOptionHeading }
         texts.bind(customOption.hint) { it.customOptionHint }
         val cardGroup = createRadioGroup().addTheme("vertical")
@@ -490,7 +414,7 @@ internal class RadioGroupPage : DemoPage() {
         customOption.body.append(exampleBox(null, kitCol(cardGroup, cardNumber)))
         body.append(customOption.root)
 
-        val alternative = sectionBlock()
+        val alternative = SectionBlock.NAME { show() }
         texts.bind(alternative.heading) { it.alternativeHeading }
         texts.bind(alternative.hint) { it.alternativeHint }
         val replyGroup = createRadioGroup().addTheme("horizontal")
@@ -503,7 +427,7 @@ internal class RadioGroupPage : DemoPage() {
         alternative.body.append(exampleBox(null, kitCol(plainCheckbox, replyGroup)))
         body.append(alternative.root)
 
-        val presentation = sectionBlock()
+        val presentation = SectionBlock.NAME { show() }
         texts.bind(presentation.heading) { it.presentationHeading }
         texts.bind(presentation.hint) { it.presentationHint }
         val accounts = createRadioGroup().addTheme("vertical")
@@ -528,7 +452,7 @@ internal class RadioGroupPage : DemoPage() {
         presentation.body.append(exampleBox(null, accounts))
         body.append(presentation.root)
 
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styled = createRadioGroup().addTheme("helper-above-field", "vertical")
@@ -553,17 +477,5 @@ internal class RadioGroupPage : DemoPage() {
         showValidation()
     }
 
-    companion object : CustomElementReference<RadioGroupPage>(RadioGroupPage::class.js) {
-        val NAME: TagName<RadioGroupPage> = TagName("vaadin-demo-radio-group-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-radio-group-page>`. */
-internal fun newRadioGroupPage(): RadioGroupPage {
-    RadioGroupPage.define()
-    return RadioGroupPage.NAME()
+    companion object : CustomElementReferenceAdapter<RadioGroupPage>(RadioGroupPage::class.js, "vaadin-demo-radio-group-page")
 }

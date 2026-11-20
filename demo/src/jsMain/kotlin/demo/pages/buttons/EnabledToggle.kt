@@ -3,15 +3,13 @@ package demo.pages.buttons
 import demo.ui.Readout
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -102,17 +100,5 @@ class EnabledToggle : CustomElementAdapter() {
         readout.set(statePrefix + state)
     }
 
-    companion object : CustomElementReference<EnabledToggle>(EnabledToggle::class.js) {
-        val NAME: TagName<EnabledToggle> = TagName("vaadin-demo-enabled-toggle")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-enabled-toggle>`. */
-fun newEnabledToggle(): EnabledToggle {
-    EnabledToggle.define()
-    return EnabledToggle.NAME()
+    companion object : CustomElementReferenceAdapter<EnabledToggle>(EnabledToggle::class.js, "vaadin-demo-enabled-toggle")
 }

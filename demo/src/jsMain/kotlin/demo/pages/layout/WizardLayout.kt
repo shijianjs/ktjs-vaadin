@@ -2,14 +2,12 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutElement
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
 import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import js.objects.unsafeJso
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HTMLElement
 
 /**
@@ -48,17 +46,12 @@ internal class WizardLayout : CustomElementAdapter() {
         form.append(*fields)
     }
 
-    companion object : CustomElementReference<WizardLayout>(WizardLayout::class.js) {
-        val NAME: TagName<WizardLayout> = TagName("demo-wizard-layout")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<WizardLayout>(WizardLayout::class.js, "demo-wizard-layout")
 }
 
 /** Creates a defined `<demo-wizard-layout>` holding [fields]. */
 internal fun newWizardLayout(vararg fields: HTMLElement): WizardLayout {
-    WizardLayout.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    WizardLayout.NAME
     return WizardLayout.NAME().also { it.add(*fields) }
 }

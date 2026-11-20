@@ -1,25 +1,19 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -41,9 +35,7 @@ import io.github.shijianjs.ktjs.vaadin.grid.GridElement
 import io.github.shijianjs.ktjs.vaadin.grid.createGrid
 import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
-import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import web.dom.clickEvent
 import web.events.addHandler
@@ -67,41 +59,8 @@ val appLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/app-layout",
                 sourcePath = "pages/layout/AppLayoutPage.kt",
             ),
-        kitPage = { newAppLayoutPage() },
+        kitPage = { AppLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class AppLayoutTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val myApp: String,
-    val contentText: String,
-    val navbarHeading: String,
-    val navbarHint: String,
-    val dashboard: String,
-    val orders: String,
-    val customers: String,
-    val products: String,
-    val contentArea: String,
-    val placementHeading: String,
-    val placementHint: String,
-    val dashboardContent: String,
-    val togglePrimary: String,
-    val scrollingHeading: String,
-    val scrollingHint: String,
-    val autoHeight: String,
-    val fixedHeight: String,
-    val bottomHeading: String,
-    val bottomHint: String,
-    val viewTitleContent: String,
-    val secondaryHeading: String,
-    val secondaryHint: String,
-    val all: String,
-    val open: String,
-    val completed: String,
-    val cancelled: String,
-    val orderList: String,
-)
 
 private val english: AppLayoutTexts =
     AppLayoutTexts(
@@ -197,13 +156,13 @@ internal class AppLayoutPage : DemoPage() {
         frame.mount(this)
         registerVaadinIcons()
 
-        fun drawer(): AppDrawer = newAppDrawer().also { drawers += it }
+        fun drawer(): AppDrawer = AppDrawer.NAME().also { drawers += it }
 
         fun content(copy: (AppLayoutTexts) -> String): AppContent =
-            newAppContent().also { node -> texts.bind(node, copy) { node.show(it) } }
+            AppContent.NAME().also { node -> texts.bind(node, copy) { node.show(it) } }
 
         fun link(icon: String? = null, copy: (AppLayoutTexts) -> String): NavLink =
-            newNavLink().also { node -> texts.bind(node, copy) { node.show(it, icon) } }
+            NavLink.NAME().also { node -> texts.bind(node, copy) { node.show(it, icon) } }
 
         fun navTitle(copy: (AppLayoutTexts) -> String): HTMLElement {
             val node = heading(3, "")
@@ -213,12 +172,12 @@ internal class AppLayoutPage : DemoPage() {
             return node
         }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val layout = boxedAppLayout("22rem")
         layout.dataset["test"] = "app-layout"
-        val navbar = newAppNavbar()
+        val navbar = AppNavbar.NAME()
         texts.bind(navbar.captionNode) { it.myApp }
         layout.append(navbar, drawer(), content { it.contentText })
         val readout = Readout("drawerOpened = false")
@@ -228,7 +187,7 @@ internal class AppLayoutPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(layout, readout.root)))
         body.append(basic.root)
 
-        val navbarSection = sectionBlock()
+        val navbarSection = SectionBlock.NAME { show() }
         texts.bind(navbarSection.heading) { it.navbarHeading }
         texts.bind(navbarSection.hint) { it.navbarHint }
         val navbarLayout = boxedAppLayout("12rem")
@@ -250,12 +209,12 @@ internal class AppLayoutPage : DemoPage() {
         navbarSection.body.append(exampleBox(null, navbarLayout))
         body.append(navbarSection.root)
 
-        val placement = sectionBlock()
+        val placement = SectionBlock.NAME { show() }
         texts.bind(placement.heading) { it.placementHeading }
         texts.bind(placement.hint) { it.placementHint }
         val sideLayout = boxedAppLayout("20rem") { primarySection = AppLayoutPrimarySections.drawer }
         sideLayout.dataset["test"] = "app-layout-placement"
-        val sideNavbar = newAppNavbar()
+        val sideNavbar = AppNavbar.NAME()
         texts.bind(sideNavbar.captionNode) { it.dashboard }
         sideLayout.append(sideNavbar, drawer(), content { it.dashboardContent })
         val placementReadout = Readout("primarySection = drawer")
@@ -275,7 +234,7 @@ internal class AppLayoutPage : DemoPage() {
         placement.body.append(exampleBox(null, kitCol(sideLayout, kitRow(placementButton, placementReadout.root))))
         body.append(placement.root)
 
-        val scrolling = sectionBlock()
+        val scrolling = SectionBlock.NAME { show() }
         texts.bind(scrolling.heading) { it.scrollingHeading }
         texts.bind(scrolling.hint) { it.scrollingHint }
         val autoFrame = HtmlTagName.div().apply {
@@ -313,7 +272,7 @@ internal class AppLayoutPage : DemoPage() {
         scrolling.body.append(autoCard, fullCard)
         body.append(scrolling.root)
 
-        val bottomNavbar = sectionBlock()
+        val bottomNavbar = SectionBlock.NAME { show() }
         texts.bind(bottomNavbar.heading) { it.bottomHeading }
         texts.bind(bottomNavbar.hint) { it.bottomHint }
         val bottomLayout = boxedAppLayout("18rem")
@@ -338,7 +297,7 @@ internal class AppLayoutPage : DemoPage() {
         bottomNavbar.body.append(exampleBox(null, bottomLayout))
         body.append(bottomNavbar.root)
 
-        val secondary = sectionBlock()
+        val secondary = SectionBlock.NAME { show() }
         texts.bind(secondary.heading) { it.secondaryHeading }
         texts.bind(secondary.hint) { it.secondaryHint }
         val secondaryLayout = boxedAppLayout("22rem") { primarySection = AppLayoutPrimarySections.drawer }
@@ -395,176 +354,23 @@ internal class AppLayoutPage : DemoPage() {
         drawers.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReference<AppLayoutPage>(AppLayoutPage::class.js) {
-        val NAME: TagName<AppLayoutPage> = TagName("vaadin-demo-app-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-app-layout-page>`. */
-internal fun newAppLayoutPage(): AppLayoutPage {
-    AppLayoutPage.define()
-    return AppLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<AppLayoutPage>(AppLayoutPage::class.js, "vaadin-demo-app-layout-page")
 }
 
 /**
  * `<vaadin-demo-app-navbar>`: the navbar of the app layout examples — drawer toggle plus the
  * application title. The host carries the slot, the nodes sit in its shadow root.
  */
-internal class AppNavbar : CustomElementAdapter() {
-    private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
-
-    private val caption = heading(3, "").apply {
-        style.setProperty("margin", "0")
-        style.setProperty("white-space", "nowrap")
-    }
-
-    /** The heading a page binds its title to; the caption lives in the shadow root. */
-    val captionNode: HTMLElement get() = caption
-
-    init {
-        attachShadowRoot().append(
-            createHorizontalLayout().apply {
-                style.setProperty("align-items", "center")
-                style.setProperty("gap", "var(--lumo-space-s)")
-                append(toggle, caption)
-            },
-        )
-    }
-
-    /** Sets the application title next to the drawer toggle. */
-    fun show(title: String) {
-        caption.textContent = title
-    }
-
-    override fun connectedCallback() {
-        slot = "navbar"
-    }
-
-    companion object : CustomElementReference<AppNavbar>(AppNavbar::class.js) {
-        val NAME: TagName<AppNavbar> = TagName("vaadin-demo-app-navbar")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-app-navbar>`. */
-internal fun newAppNavbar(): AppNavbar {
-    AppNavbar.define()
-    return AppNavbar.NAME()
-}
 
 /**
  * `<vaadin-demo-app-drawer>`: the drawer of the app layout examples, a scroller holding the main
  * side navigation.
  */
-internal class AppDrawer : CustomElementAdapter() {
-    private val sideNav = newAppSideNav()
-
-    init {
-        attachShadowRoot().append(createScroller().apply { append(sideNav) })
-    }
-
-    override fun connectedCallback() {
-        slot = "drawer"
-    }
-
-    /** Writes the shared side navigation in [lang]. */
-    fun applyTranslation(lang: Lang) {
-        sideNav.applyTranslation(lang)
-    }
-
-    companion object : CustomElementReference<AppDrawer>(AppDrawer::class.js) {
-        val NAME: TagName<AppDrawer> = TagName("vaadin-demo-app-drawer")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-app-drawer>`. */
-internal fun newAppDrawer(): AppDrawer {
-    AppDrawer.define()
-    return AppDrawer.NAME()
-}
-
-/** `<vaadin-demo-app-content>`: padding filler for the app layout examples' content area. */
-internal class AppContent : CustomElementAdapter() {
-    /** Sets the text the content area shows. */
-    fun show(text: String) {
-        textContent = text
-    }
-
-    override fun connectedCallback() {
-        style.setProperty("display", "block")
-        style.setProperty("padding", "var(--lumo-space-m)")
-    }
-
-    companion object : CustomElementReference<AppContent>(AppContent::class.js) {
-        val NAME: TagName<AppContent> = TagName("vaadin-demo-app-content")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-app-content>`. */
-internal fun newAppContent(): AppContent {
-    AppContent.define()
-    return AppContent.NAME()
-}
 
 /**
  * `<vaadin-demo-nav-link>`: a demo navigation link that stays on the current hash route. The host is
  * a wrapper around the anchor, because an element cannot take over the `a` tag itself.
  */
-internal class NavLink : CustomElementAdapter() {
-    private val anchor = HtmlTagName.a().apply {
-        href = "#/app-layout"
-        style.setProperty("display", "flex")
-        style.setProperty("align-items", "center")
-        style.setProperty("padding", "0 1rem")
-        style.setProperty("font-weight", "500")
-        style.setProperty("text-decoration", "none")
-        style.setProperty("color", "inherit")
-    }
-
-    init {
-        attachShadowRoot().append(anchor)
-    }
-
-    /** Sets the label; with an [icon] the label moves to `aria-label` and the icon stands in for it. */
-    fun show(label: String, icon: String? = null) {
-        anchor.textContent = ""
-        if (icon == null) {
-            anchor.textContent = label
-        } else {
-            anchor.setAttribute("aria-label", label)
-            anchor.append(createIcon { this.icon = icon })
-        }
-    }
-
-    companion object : CustomElementReference<NavLink>(NavLink::class.js) {
-        val NAME: TagName<NavLink> = TagName("vaadin-demo-nav-link")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-nav-link>`. */
-internal fun newNavLink(): NavLink {
-    NavLink.define()
-    return NavLink.NAME()
-}
 
 /**
  * An app layout example that stays inside its card. The layout fixes its drawer to the viewport,

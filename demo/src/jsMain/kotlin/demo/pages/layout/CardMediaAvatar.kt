@@ -3,12 +3,10 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 
 /**
  * `<demo-card-media-avatar>`: the card example's media slot, filled with a large initials avatar.
@@ -33,17 +31,12 @@ internal class CardMediaAvatar : CustomElementAdapter() {
         avatar.abbr = abbr
     }
 
-    companion object : CustomElementReference<CardMediaAvatar>(CardMediaAvatar::class.js) {
-        val NAME: TagName<CardMediaAvatar> = TagName("demo-card-media-avatar")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<CardMediaAvatar>(CardMediaAvatar::class.js, "demo-card-media-avatar")
 }
 
 /** Creates a defined `<demo-card-media-avatar>` showing [abbr]. */
 internal fun newCardMediaAvatar(abbr: String): CardMediaAvatar {
-    CardMediaAvatar.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    CardMediaAvatar.NAME
     return CardMediaAvatar.NAME().also { it.show(abbr) }
 }

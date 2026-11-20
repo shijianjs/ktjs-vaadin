@@ -6,14 +6,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -44,28 +42,13 @@ val iconEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/icons",
                 sourcePath = "pages/display/IconPage.kt",
             ),
-        kitPage = { newIconPage() },
+        kitPage = { IconPage.NAME() },
     )
 
 /** A single star, passed to [unsafeSvgLiteral] by the SVG literal example. */
 private const val STAR_SVG_FRAGMENT =
     "<path d='M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z' " +
         "fill='currentColor'/>"
-
-/** Every string this page shows, in one language. */
-private class IconTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val nextIcon: String,
-    val sizingHeading: String,
-    val sizingHint: String,
-    val colourHeading: String,
-    val colourHint: String,
-    val fontsHeading: String,
-    val fontsHint: String,
-    val literalsHeading: String,
-    val literalsHint: String,
-)
 
 private val english: IconTexts = IconTexts(
     basicHeading = "Basic usage",
@@ -142,7 +125,7 @@ internal class IconPage : DemoPage() {
         registerVaadinIcons()
 
         // --- Basic usage (icons/icon-basic.ts) -----------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val gallery =
@@ -163,7 +146,7 @@ internal class IconPage : DemoPage() {
         body.append(basic.root)
 
         // --- Size (icons/icons-sizing.ts) ---------------------------------------------------------
-        val sizing = sectionBlock()
+        val sizing = SectionBlock.NAME { show() }
         texts.bind(sizing.heading) { it.sizingHeading }
         texts.bind(sizing.hint) { it.sizingHint }
         fun sizedIcon(size: String): HTMLElement =
@@ -176,7 +159,7 @@ internal class IconPage : DemoPage() {
         body.append(sizing.root)
 
         // --- Colour (icons/icons-color.ts) -------------------------------------------------------
-        val colours = sectionBlock()
+        val colours = SectionBlock.NAME { show() }
         texts.bind(colours.heading) { it.colourHeading }
         texts.bind(colours.hint) { it.colourHint }
         val redSvg = createIcon { src = Images.codeBranchIcon }.apply { style.color = "red" }
@@ -193,7 +176,7 @@ internal class IconPage : DemoPage() {
         body.append(colours.root)
 
         // --- Font icons (icons/icon-fonts.ts) ----------------------------------------------------
-        val fonts = sectionBlock()
+        val fonts = SectionBlock.NAME { show() }
         texts.bind(fonts.heading) { it.fontsHeading }
         texts.bind(fonts.hint) { it.fontsHint }
         fun fontIcon(char: String, size: String = "1.5rem"): HTMLElement =
@@ -207,7 +190,7 @@ internal class IconPage : DemoPage() {
         body.append(fonts.root)
 
         // --- SVG literals (wrapper API; see vaadin/icon/IconTypes.kt) -----------------------------
-        val literals = sectionBlock()
+        val literals = SectionBlock.NAME { show() }
         texts.bind(literals.heading) { it.literalsHeading }
         texts.bind(literals.hint) { it.literalsHint }
         val star = createIcon {
@@ -236,17 +219,5 @@ internal class IconPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReference<IconPage>(IconPage::class.js) {
-        val NAME: TagName<IconPage> = TagName("vaadin-demo-icon-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-icon-page>`. */
-internal fun newIconPage(): IconPage {
-    IconPage.define()
-    return IconPage.NAME()
+    companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page")
 }

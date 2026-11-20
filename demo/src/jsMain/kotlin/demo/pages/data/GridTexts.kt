@@ -1,15 +1,9 @@
 package demo.pages.data
 
 import io.github.shijianjs.ktjs.demo.i18n.Binder
-import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-
-/** Anything on the grid page that owns text of its own and wants the current language. */
-internal interface GridTranslatable {
-    fun applyTranslation(lang: Lang)
-}
 
 /**
  * The copy of the grid page: section headings and hints, example captions, column headers, readouts

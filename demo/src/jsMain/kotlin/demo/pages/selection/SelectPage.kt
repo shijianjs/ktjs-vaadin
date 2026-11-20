@@ -1,22 +1,18 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -61,7 +57,7 @@ val selectEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/select",
                 sourcePath = "pages/selection/SelectPage.kt",
             ),
-        kitPage = { newSelectPage() },
+        kitPage = { SelectPage.NAME() },
     )
 
 private const val SIZES_JSON =
@@ -87,49 +83,6 @@ private const val DIVIDED_SORT_ITEMS_JSON =
       {"label": "Price: low to high", "value": "price-asc"}
     ]
     """
-
-/** Every string this page shows, in one language. */
-private class SelectTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val city: String,
-    val chooseOne: String,
-    val none: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val sortBy: String,
-    val helper: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val dividersHeading: String,
-    val dividersHint: String,
-    val size: String,
-    val overlayHeading: String,
-    val overlayHint: String,
-    val employee: String,
-    val placeholderHeading: String,
-    val placeholderHint: String,
-    val team: String,
-    val nothingSelected: String,
-    val currentPrefix: String,
-    val empty: String,
-    val clear: String,
-    val emptySelectionHeading: String,
-    val emptySelectionHint: String,
-    val customLabelHeading: String,
-    val customLabelHint: String,
-    val assignee: String,
-    val presentationHeading: String,
-    val presentationHint: String,
-    val chooseDoctor: String,
-    val statesHeading: String,
-    val readonly: String,
-    val disabled: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val label: String,
-    val helperText: String,
-)
 
 private val english: SelectTexts =
     SelectTexts(
@@ -252,7 +205,7 @@ internal class SelectPage : DemoPage() {
         fun field(copy: (SelectTexts) -> String): SelectElement =
             createSelect().also { node -> texts.bind(node, copy) { node.label = it } }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         cities.value = "helsinki"
@@ -264,7 +217,7 @@ internal class SelectPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(cities, readout.root)))
         body.append(basic.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val sortBy = field { it.sortBy }
@@ -277,7 +230,7 @@ internal class SelectPage : DemoPage() {
         features.body.append(exampleBox(null, sortBy))
         body.append(features.root)
 
-        val dividersAndDisabled = sectionBlock()
+        val dividersAndDisabled = SectionBlock.NAME { show() }
         texts.bind(dividersAndDisabled.heading) { it.dividersHeading }
         texts.bind(dividersAndDisabled.hint) { it.dividersHint }
         val divided = field { it.sortBy }
@@ -289,7 +242,7 @@ internal class SelectPage : DemoPage() {
         dividersAndDisabled.body.append(exampleBox(null, kitRow(divided, sizes)))
         body.append(dividersAndDisabled.root)
 
-        val overlay = sectionBlock()
+        val overlay = SectionBlock.NAME { show() }
         texts.bind(overlay.heading) { it.overlayHeading }
         texts.bind(overlay.hint) { it.overlayHint }
         val noOverlap = field { it.sortBy }
@@ -310,7 +263,7 @@ internal class SelectPage : DemoPage() {
         overlay.body.append(exampleBox(null, kitRow(noOverlap, wide)))
         body.append(overlay.root)
 
-        val placeholderSection = sectionBlock()
+        val placeholderSection = SectionBlock.NAME { show() }
         texts.bind(placeholderSection.heading) { it.placeholderHeading }
         texts.bind(placeholderSection.hint) { it.placeholderHint }
         team.items =
@@ -330,12 +283,12 @@ internal class SelectPage : DemoPage() {
         placeholderSection.body.append(exampleBox(null, kitCol(team, kitRow(clear, teamReadout.root))))
         body.append(placeholderSection.root)
 
-        val emptySelection = sectionBlock()
+        val emptySelection = SectionBlock.NAME { show() }
         texts.bind(emptySelection.heading) { it.emptySelectionHeading }
         texts.bind(emptySelection.hint) { it.emptySelectionHint }
         body.append(emptySelection.root)
 
-        val customLabel = sectionBlock()
+        val customLabel = SectionBlock.NAME { show() }
         texts.bind(customLabel.heading) { it.customLabelHeading }
         texts.bind(customLabel.hint) { it.customLabelHint }
         val assignee = field { it.assignee }
@@ -360,7 +313,7 @@ internal class SelectPage : DemoPage() {
         customLabel.body.append(exampleBox(null, assignee))
         body.append(customLabel.root)
 
-        val presentation = sectionBlock()
+        val presentation = SectionBlock.NAME { show() }
         texts.bind(presentation.heading) { it.presentationHeading }
         texts.bind(presentation.hint) { it.presentationHint }
         val doctors = field { it.chooseDoctor }
@@ -389,7 +342,7 @@ internal class SelectPage : DemoPage() {
         presentation.body.append(exampleBox(null, doctors))
         body.append(presentation.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         val readonlySelect =
             createSelect {
@@ -425,7 +378,7 @@ internal class SelectPage : DemoPage() {
         states.body.append(exampleBox(null, kitRow(readonlySelect, disabledSelect)))
         body.append(states.root)
 
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styled = createSelect { value = "recent" }.addTheme("align-right", "small", "helper-above-field")
@@ -457,19 +410,7 @@ internal class SelectPage : DemoPage() {
         teamReadout.set(copy.currentPrefix, team.value.ifEmpty { copy.empty })
     }
 
-    companion object : CustomElementReference<SelectPage>(SelectPage::class.js) {
-        val NAME: TagName<SelectPage> = TagName("vaadin-demo-select-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-select-page>`. */
-internal fun newSelectPage(): SelectPage {
-    SelectPage.define()
-    return SelectPage.NAME()
+    companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page")
 }
 
 /** Parses a JSON array of `{label, value, ...}` entries into the type `<vaadin-select>` takes. */

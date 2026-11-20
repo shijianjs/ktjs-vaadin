@@ -1,26 +1,21 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -57,6 +52,7 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.compound
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 
@@ -75,7 +71,7 @@ val contextMenuEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/context-menu",
                 sourcePath = "pages/overlays/ContextMenuPage.kt",
             ),
-        kitPage = { newContextMenuPage() },
+        kitPage = { ContextMenuPage.NAME() },
     )
 
 private fun copyMenuItem(text: String, value: String): CopyMenuItem =
@@ -130,66 +126,6 @@ private fun componentEntry(
         component = HTMLElementOrString(node)
         this.children = children
     }
-
-/** Every string this page shows, in one language. */
-private class ContextMenuTexts(
-    val rightClickHeading: String,
-    val rightClickHint: String,
-    val surface: String,
-    val view: String,
-    val copy: String,
-    val paste: String,
-    val more: String,
-    val exportCsv: String,
-    val exportJson: String,
-    val selectedLine: String,
-    val openedLine: (Boolean) -> String,
-    val gridRowsHeading: String,
-    val gridRowsHint: String,
-    val edit: String,
-    val delete: String,
-    val checkableHeading: String,
-    val checkableHint: String,
-    val assigneePrefix: String,
-    val classNamesHeading: String,
-    val classNamesHint: String,
-    val share: String,
-    val duplicate: String,
-    val actions: String,
-    val customDataHeading: String,
-    val customDataHint: String,
-    val nothingCopied: String,
-    val copiedPrefix: String,
-    val copyAsPlain: String,
-    val copyAsHtml: String,
-    val copyAsMarkdown: String,
-    val copyTextHint: String,
-    val dividersHeading: String,
-    val dividersHint: String,
-    val preview: String,
-    val export: String,
-    val copyLink: String,
-    val email: String,
-    val leftClickHeading: String,
-    val leftClickHint: String,
-    val customItemsHeading: String,
-    val customItemsHint: String,
-    val open: String,
-    val assign: String,
-    val tooltipsHeading: String,
-    val tooltipsHint: String,
-    val tooltipEdit: String,
-    val tooltipCopyLink: String,
-    val tooltipEmail: String,
-    val bestPracticeHeading: String,
-    val bestPracticeHint: String,
-    val fileHeader: String,
-    val sizeHeader: String,
-    val firstNameHeader: String,
-    val lastNameHeader: String,
-    val emailHeader: String,
-    val professionHeader: String,
-)
 
 private val english: ContextMenuTexts =
     ContextMenuTexts(
@@ -377,7 +313,7 @@ internal class ContextMenuPage : DemoPage() {
             )
         }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.rightClickHeading }
         texts.bind(basic.hint) { it.rightClickHint }
         // The right-click target: a dashed box that reads as "click me", inline because nothing else on
@@ -402,7 +338,7 @@ internal class ContextMenuPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(surface, log.root, menu)))
         body.append(basic.root)
 
-        val gridSection = sectionBlock()
+        val gridSection = SectionBlock.NAME { show() }
         texts.bind(gridSection.heading) { it.gridRowsHeading }
         texts.bind(gridSection.hint) { it.gridRowsHint }
         val rowMenu = createContextMenu()
@@ -413,7 +349,7 @@ internal class ContextMenuPage : DemoPage() {
         gridSection.body.append(exampleBox(null, rowMenu))
         body.append(gridSection.root)
 
-        val checkable = sectionBlock()
+        val checkable = SectionBlock.NAME { show() }
         texts.bind(checkable.heading) { it.checkableHeading }
         texts.bind(checkable.hint) { it.checkableHint }
         val assignees =
@@ -438,7 +374,7 @@ internal class ContextMenuPage : DemoPage() {
         checkable.body.append(exampleBox(null, kitCol(assigneeMenu, assigneeReadout.root)))
         body.append(checkable.root)
 
-        val classNames = sectionBlock()
+        val classNames = SectionBlock.NAME { show() }
         texts.bind(classNames.heading) { it.classNamesHeading }
         texts.bind(classNames.hint) { it.classNamesHint }
         classMenu.openOn = "click"
@@ -455,7 +391,7 @@ internal class ContextMenuPage : DemoPage() {
         classNames.body.append(exampleBox(null, classMenu))
         body.append(classNames.root)
 
-        val customData = sectionBlock()
+        val customData = SectionBlock.NAME { show() }
         texts.bind(customData.heading) { it.customDataHeading }
         texts.bind(customData.hint) { it.customDataHint }
         menus += copyMenu to { copy ->
@@ -475,7 +411,7 @@ internal class ContextMenuPage : DemoPage() {
         customData.body.append(exampleBox(null, kitCol(copyMenu, copyReadout.root)))
         body.append(customData.root)
 
-        val dividers = sectionBlock()
+        val dividers = SectionBlock.NAME { show() }
         texts.bind(dividers.heading) { it.dividersHeading }
         texts.bind(dividers.hint) { it.dividersHint }
         val dividerMenu = createContextMenu()
@@ -504,7 +440,7 @@ internal class ContextMenuPage : DemoPage() {
         dividers.body.append(exampleBox(null, dividerMenu))
         body.append(dividers.root)
 
-        val leftClick = sectionBlock()
+        val leftClick = SectionBlock.NAME { show() }
         texts.bind(leftClick.heading) { it.leftClickHeading }
         texts.bind(leftClick.hint) { it.leftClickHint }
         val clickActions = createButton().addTheme("tertiary")
@@ -515,7 +451,7 @@ internal class ContextMenuPage : DemoPage() {
         leftClick.body.append(exampleBox(null, kitRow(clickActions, clickMenu)))
         body.append(leftClick.root)
 
-        val customItems = sectionBlock()
+        val customItems = SectionBlock.NAME { show() }
         texts.bind(customItems.heading) { it.customItemsHeading }
         texts.bind(customItems.hint) { it.customItemsHint }
         fun menuItem(iconName: String, copy: (ContextMenuTexts) -> String): ContextMenuItemData {
@@ -562,7 +498,7 @@ internal class ContextMenuPage : DemoPage() {
         customItems.body.append(exampleBox(null, presentMenu))
         body.append(customItems.root)
 
-        val tooltips = sectionBlock()
+        val tooltips = SectionBlock.NAME { show() }
         texts.bind(tooltips.heading) { it.tooltipsHeading }
         texts.bind(tooltips.hint) { it.tooltipsHint }
         menus += tooltipMenu to { copy ->
@@ -585,7 +521,7 @@ internal class ContextMenuPage : DemoPage() {
         tooltips.body.append(exampleBox(null, tooltipMenu))
         body.append(tooltips.root)
 
-        val bestPractice = sectionBlock()
+        val bestPractice = SectionBlock.NAME { show() }
         texts.bind(bestPractice.heading) { it.bestPracticeHeading }
         texts.bind(bestPractice.hint) { it.bestPracticeHint }
         val filesMenu = createContextMenu()
@@ -644,19 +580,7 @@ internal class ContextMenuPage : DemoPage() {
         log.replay("selected")
     }
 
-    companion object : CustomElementReference<ContextMenuPage>(ContextMenuPage::class.js) {
-        val NAME: TagName<ContextMenuPage> = TagName("vaadin-demo-context-menu-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-context-menu-page>`. */
-internal fun newContextMenuPage(): ContextMenuPage {
-    ContextMenuPage.define()
-    return ContextMenuPage.NAME()
+    companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page")
 }
 
 // endregion

@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -56,34 +52,8 @@ val integerFieldEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/fields/IntegerFieldPage.kt",
             ),
-        kitPage = { newIntegerFieldPage() },
+        kitPage = { IntegerFieldPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class IntegerFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val valuePrefix: String,
-    val empty: String,
-    val itemCount: String,
-    val eventLog: String,
-    val unparsable: String,
-    val variantsHeading: String,
-    val variantsHint: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val age: String,
-    val ageError: String,
-    val notValidated: String,
-    val validate: String,
-    val resultPrefix: String,
-    val valid: String,
-    val failed: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val quantity: String,
-    val helper: String,
-)
 
 private val english: IntegerFieldTexts = IntegerFieldTexts(
     basicHeading = "Basic usage",
@@ -175,7 +145,7 @@ internal class IntegerFieldPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         count.step = 1.0
@@ -202,7 +172,7 @@ internal class IntegerFieldPage : DemoPage() {
         )
         body.append(basic.root)
 
-        val variants = sectionBlock()
+        val variants = SectionBlock.NAME { show() }
         texts.bind(variants.heading) { it.variantsHeading }
         texts.bind(variants.hint) { it.variantsHint }
         val variantLayout =
@@ -223,7 +193,7 @@ internal class IntegerFieldPage : DemoPage() {
         variants.body.append(exampleBox(null, variantLayout))
         body.append(variants.root)
 
-        val range = sectionBlock()
+        val range = SectionBlock.NAME { show() }
         texts.bind(range.heading) { it.rangeHeading }
         texts.bind(range.hint) { it.rangeHint }
         age.value = "30"
@@ -236,7 +206,7 @@ internal class IntegerFieldPage : DemoPage() {
         range.body.append(exampleBox(null, kitCol(age, kitRow(validateButton, result.root))))
         body.append(range.root)
 
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         quantity.value = "42"
@@ -284,17 +254,5 @@ internal class IntegerFieldPage : DemoPage() {
         renderLog()
     }
 
-    companion object : CustomElementReference<IntegerFieldPage>(IntegerFieldPage::class.js) {
-        val NAME: TagName<IntegerFieldPage> = TagName("vaadin-demo-integer-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-integer-field-page>`. */
-internal fun newIntegerFieldPage(): IntegerFieldPage {
-    IntegerFieldPage.define()
-    return IntegerFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page")
 }

@@ -1,23 +1,17 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -35,7 +29,6 @@ import demo.ui.listen
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
-import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxElement
 import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxEvents
@@ -45,7 +38,6 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
-import web.html.HTMLElement
 
 val comboBoxEntry: CatalogEntry =
     CatalogEntry(
@@ -63,7 +55,7 @@ val comboBoxEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/combo-box",
                 sourcePath = "pages/selection/ComboBoxPage.kt",
             ),
-        kitPage = { newComboBoxPage() },
+        kitPage = { ComboBoxPage.NAME() },
     )
 
 // The docs examples load these fixtures from a backend; the ids stay strings so the selected value
@@ -85,64 +77,6 @@ private val countryNames: List<String> =
         "Czechia", "Slovakia", "Hungary", "Romania", "Bulgaria", "Greece", "Croatia", "Slovenia",
         "Estonia", "Latvia", "Lithuania", "Luxembourg", "Malta", "Cyprus",
     )
-
-/** Every string this page shows, in one language. */
-private class ComboBoxTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val owner: String,
-    val empty: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helper: String,
-    val placeholder: String,
-    val tooltip: String,
-    val customHeading: String,
-    val customHint: String,
-    val browser: String,
-    val browserHelper: String,
-    val customValuePrefix: String,
-    val customValueEmpty: String,
-    val classNamesHeading: String,
-    val classNamesHint: String,
-    val fruit: String,
-    val autoOpenHeading: String,
-    val autoOpenHint: String,
-    val country: String,
-    val popupHeading: String,
-    val popupHint: String,
-    val employee: String,
-    val filterHeading: String,
-    val filterHint: String,
-    val totalItems: (Int) -> String,
-    val matchedItems: (Int) -> String,
-    val partialHeading: String,
-    val partialHint: String,
-    val lazyHeading: String,
-    val lazyHint: String,
-    val noRequest: String,
-    val pageLine: (Int, Int, Int) -> String,
-    val validationHeading: String,
-    val validationHint: String,
-    val countryCode: String,
-    val codeHelper: String,
-    val requiredError: String,
-    val validate: String,
-    val notValidated: String,
-    val checkPrefix: String,
-    val passed: String,
-    val failed: String,
-    val presentationHeading: String,
-    val presentationHint: String,
-    val chooseDoctor: String,
-    val statesHeading: String,
-    val readonly: String,
-    val disabled: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val value: String,
-)
 
 private val english: ComboBoxTexts =
     ComboBoxTexts(
@@ -316,7 +250,7 @@ internal class ComboBoxPage : DemoPage() {
             configure: ComboBoxElement.() -> Unit = {},
         ): ComboBoxElement = createComboBox(configure)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         owners.itemLabelPath = "name"
@@ -330,7 +264,7 @@ internal class ComboBoxPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(owners, readout.root)))
         body.append(basic.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featured = field()
@@ -348,7 +282,7 @@ internal class ComboBoxPage : DemoPage() {
         features.body.append(exampleBox(null, featured))
         body.append(features.root)
 
-        val customValueSection = sectionBlock()
+        val customValueSection = SectionBlock.NAME { show() }
         texts.bind(customValueSection.heading) { it.customHeading }
         texts.bind(customValueSection.hint) { it.customHint }
         val browsers = jsArray<JsAny>("""["Chrome", "Edge", "Firefox", "Safari"]""")
@@ -365,7 +299,7 @@ internal class ComboBoxPage : DemoPage() {
         customValueSection.body.append(exampleBox(null, kitCol(browser, customReadout.root)))
         body.append(customValueSection.root)
 
-        val classNames = sectionBlock()
+        val classNames = SectionBlock.NAME { show() }
         texts.bind(classNames.heading) { it.classNamesHeading }
         texts.bind(classNames.hint) { it.classNamesHint }
         val fruit = field()
@@ -375,7 +309,7 @@ internal class ComboBoxPage : DemoPage() {
         classNames.body.append(exampleBox(null, fruit))
         body.append(classNames.root)
 
-        val autoOpen = sectionBlock()
+        val autoOpen = SectionBlock.NAME { show() }
         texts.bind(autoOpen.heading) { it.autoOpenHeading }
         texts.bind(autoOpen.hint) { it.autoOpenHint }
         val country = field()
@@ -387,7 +321,7 @@ internal class ComboBoxPage : DemoPage() {
         autoOpen.body.append(exampleBox(null, country))
         body.append(autoOpen.root)
 
-        val popupWidth = sectionBlock()
+        val popupWidth = SectionBlock.NAME { show() }
         texts.bind(popupWidth.heading) { it.popupHeading }
         texts.bind(popupWidth.hint) { it.popupHint }
         val employeeItems = personItems(people(5), withDisplayName = true)
@@ -400,7 +334,7 @@ internal class ComboBoxPage : DemoPage() {
         popupWidth.body.append(exampleBox(null, employee))
         body.append(popupWidth.root)
 
-        val customFiltering = sectionBlock()
+        val customFiltering = SectionBlock.NAME { show() }
         texts.bind(customFiltering.heading) { it.filterHeading }
         texts.bind(customFiltering.hint) { it.filterHint }
         val filterPeople = people(6)
@@ -423,7 +357,7 @@ internal class ComboBoxPage : DemoPage() {
         customFiltering.body.append(exampleBox(null, kitCol(filtered, filterReadout.root)))
         body.append(customFiltering.root)
 
-        val partialMatch = sectionBlock()
+        val partialMatch = SectionBlock.NAME { show() }
         texts.bind(partialMatch.heading) { it.partialHeading }
         texts.bind(partialMatch.hint) { it.partialHint }
         val partial = field()
@@ -435,7 +369,7 @@ internal class ComboBoxPage : DemoPage() {
         partialMatch.body.append(exampleBox(null, partial))
         body.append(partialMatch.root)
 
-        val lazyLoading = sectionBlock()
+        val lazyLoading = SectionBlock.NAME { show() }
         texts.bind(lazyLoading.heading) { it.lazyHeading }
         texts.bind(lazyLoading.hint) { it.lazyHint }
         texts.bind(lazy, { it.country }) { lazy.label = it }
@@ -452,7 +386,7 @@ internal class ComboBoxPage : DemoPage() {
         lazyLoading.body.append(exampleBox(null, kitCol(lazy, lazyReadout.root)))
         body.append(lazyLoading.root)
 
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         texts.bind(countryCode, { it.countryCode }) { countryCode.label = it }
@@ -473,7 +407,7 @@ internal class ComboBoxPage : DemoPage() {
         )
         body.append(validation.root)
 
-        val presentation = sectionBlock()
+        val presentation = SectionBlock.NAME { show() }
         texts.bind(presentation.heading) { it.presentationHeading }
         texts.bind(presentation.hint) { it.presentationHint }
         val doctors = people(6)
@@ -504,7 +438,7 @@ internal class ComboBoxPage : DemoPage() {
         presentation.body.append(exampleBox(null, doctorCombo))
         body.append(presentation.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         val readonlyField = field { items = jsArray("""["Value"]"""); value = "Value"; readonly = true }
         texts.bind(readonlyField, { it.readonly }) { readonlyField.label = it }
@@ -513,7 +447,7 @@ internal class ComboBoxPage : DemoPage() {
         states.body.append(exampleBox(null, kitRow(readonlyField, disabledField)))
         body.append(states.root)
 
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styled = field { items = jsArray("""["Value"]"""); value = "Value" }
@@ -572,19 +506,7 @@ internal class ComboBoxPage : DemoPage() {
         filterReadout.set(if (count == null) texts.current.totalItems(6) else texts.current.matchedItems(count))
     }
 
-    companion object : CustomElementReference<ComboBoxPage>(ComboBoxPage::class.js) {
-        val NAME: TagName<ComboBoxPage> = TagName("vaadin-demo-combo-box-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-combo-box-page>`. */
-internal fun newComboBoxPage(): ComboBoxPage {
-    ComboBoxPage.define()
-    return ComboBoxPage.NAME()
+    companion object : CustomElementReferenceAdapter<ComboBoxPage>(ComboBoxPage::class.js, "vaadin-demo-combo-box-page")
 }
 
 /** Appends a typed string to a JS array without rebuilding the original items. */
@@ -597,35 +519,10 @@ private fun appendItem(items: Array<JsAny>, value: String): Array<JsAny> =
  * The combo box hands its renderer a container and asks it to fill that container, so the item has to
  * be a node of its own; it is an element, which keeps the assembling inside a component class.
  */
-internal class ComboPersonRow : CustomElementAdapter() {
-    /** Fills the row from [person]; the item content fills the overlay row, so the host is a block. */
-    fun show(person: Person) {
-        style.setProperty("display", "block")
-        replaceChildren(
-            kitRow(
-                createAvatar {
-                    name = person.displayName
-                    img = person.pictureUrl
-                },
-                kitCol(
-                    HtmlTagName.span { textContent = person.displayName },
-                    HtmlTagName.span { textContent = person.profession },
-                ),
-            ),
-        )
-    }
-
-    companion object : CustomElementReference<ComboPersonRow>(ComboPersonRow::class.js) {
-        val NAME: TagName<ComboPersonRow> = TagName("vaadin-demo-combo-person")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-combo-person>` already showing [person]. */
 internal fun newComboPersonRow(person: Person): ComboPersonRow {
-    ComboPersonRow.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    ComboPersonRow.NAME
     return ComboPersonRow.NAME().apply { show(person) }
 }

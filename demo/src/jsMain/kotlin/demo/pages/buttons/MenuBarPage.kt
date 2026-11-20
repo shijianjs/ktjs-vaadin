@@ -1,11 +1,8 @@
 package demo.pages.buttons
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
@@ -13,11 +10,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.dom.TagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -63,7 +60,7 @@ val menuBarEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/menu-bar",
                 sourcePath = "pages/buttons/MenuBarPage.kt",
             ),
-        kitPage = { newMenuBarPage() },
+        kitPage = { MenuBarPage.NAME() },
     )
 
 /** Parses a declarative menu tree into the typed `items` array. */
@@ -105,90 +102,6 @@ private fun componentItem(
         if (tooltip != null) this.tooltip = tooltip
         if (children != null) this.children = children
     }
-
-/** Every string this page shows, in one language. */
-private class MenuBarTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val nothingSelected: String,
-    val clickedItem: String,
-    val eventLog: String,
-    val checkableHeading: String,
-    val checkableHint: String,
-    val options: String,
-    val saveAutomatically: String,
-    val notifyWatchers: String,
-    val dividersHeading: String,
-    val dividersHint: String,
-    val dropDownHeading: String,
-    val dropDownHint: String,
-    val iconsHeading: String,
-    val iconsHint: String,
-    val iconsWithText: String,
-    val iconOnly: String,
-    val comboButtons: String,
-    val customDataHeading: String,
-    val customDataHint: String,
-    val nothingCopied: String,
-    val copied: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val classNamesHeading: String,
-    val classNamesHint: String,
-    val indicatorsHeading: String,
-    val indicatorsHint: String,
-    val overflowHeading: String,
-    val overflowHint: String,
-    val moveSplitter: String,
-    val rightAlignedHeading: String,
-    val rightAlignedHint: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val defaultVariant: String,
-    val tertiaryVariant: String,
-    val primaryVariant: String,
-    val smallVariant: String,
-    val itemText: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-    val moreActions: String,
-    val tooltipsHeading: String,
-    val tooltipsHint: String,
-    val chooseFolder: String,
-    val toArchive: String,
-    val moveToArchive: String,
-    val behaviourHeading: String,
-    val behaviourHint: String,
-    val openOnHover: String,
-    val tabNavigation: String,
-    val disabledSwitch: String,
-    val view: String,
-    val edit: String,
-    val share: String,
-    val onSocialMedia: String,
-    val byEmail: String,
-    val getLink: String,
-    val move: String,
-    val toFolder: String,
-    val toFolderEllipsis: String,
-    val toTrash: String,
-    val duplicate: String,
-    val setPermissions: String,
-    val profile: String,
-    val account: String,
-    val preferences: String,
-    val signOut: String,
-    val save: String,
-    val otherSaveOptions: String,
-    val saveAsDraft: String,
-    val saveAsCopy: String,
-    val saveAndPublish: String,
-    val copy: String,
-    val copyAsPlainText: String,
-    val copyAsHtml: String,
-    val copyAsMarkdown: String,
-    val delete: String,
-)
 
 private val english: MenuBarTexts =
     MenuBarTexts(
@@ -452,7 +365,7 @@ internal class MenuBarPage : DemoPage() {
         registerVaadinIcons()
 
         // --- Basic usage ----------------------------------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val menuBar = createMenuBar()
@@ -473,7 +386,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(basic.root)
 
         // --- Checkable items ------------------------------------------------------------------------
-        val checkable = sectionBlock()
+        val checkable = SectionBlock.NAME { show() }
         texts.bind(checkable.heading) { it.checkableHeading }
         texts.bind(checkable.hint) { it.checkableHint }
         checkedState = true
@@ -500,7 +413,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(checkable.root)
 
         // --- Dividers -------------------------------------------------------------------------------
-        val dividers = sectionBlock()
+        val dividers = SectionBlock.NAME { show() }
         texts.bind(dividers.heading) { it.dividersHeading }
         texts.bind(dividers.hint) { it.dividersHint }
         val dividerBar = createMenuBar()
@@ -524,7 +437,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(dividers.root)
 
         // --- Drop-down ------------------------------------------------------------------------------
-        val dropDown = sectionBlock()
+        val dropDown = SectionBlock.NAME { show() }
         texts.bind(dropDown.heading) { it.dropDownHeading }
         texts.bind(dropDown.hint) { it.dropDownHint }
         val accountBar = createMenuBar()
@@ -547,7 +460,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(dropDown.root)
 
         // --- Icons ----------------------------------------------------------------------------------
-        val icons = sectionBlock()
+        val icons = SectionBlock.NAME { show() }
         texts.bind(icons.heading) { it.iconsHeading }
         texts.bind(icons.hint) { it.iconsHint }
         val iconBar = createMenuBar()
@@ -626,7 +539,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(icons.root)
 
         // --- Custom item data -----------------------------------------------------------------------
-        val customData = sectionBlock()
+        val customData = SectionBlock.NAME { show() }
         texts.bind(customData.heading) { it.customDataHeading }
         texts.bind(customData.hint) { it.customDataHint }
         val copyBar = createMenuBar()
@@ -656,7 +569,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(customData.root)
 
         // --- Disabled items -------------------------------------------------------------------------
-        val disabled = sectionBlock()
+        val disabled = SectionBlock.NAME { show() }
         texts.bind(disabled.heading) { it.disabledHeading }
         texts.bind(disabled.hint) { it.disabledHint }
         val disabledBar = createMenuBar()
@@ -678,7 +591,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(disabled.root)
 
         // --- Class names ----------------------------------------------------------------------------
-        val classNames = sectionBlock()
+        val classNames = SectionBlock.NAME { show() }
         texts.bind(classNames.heading) { it.classNamesHeading }
         texts.bind(classNames.hint) { it.classNamesHint }
         val classBar = createMenuBar()
@@ -700,7 +613,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(classNames.root)
 
         // --- Drop-down indicators -------------------------------------------------------------------
-        val indicators = sectionBlock()
+        val indicators = SectionBlock.NAME { show() }
         texts.bind(indicators.heading) { it.indicatorsHeading }
         texts.bind(indicators.hint) { it.indicatorsHint }
         val indicatorBar = createMenuBar().addTheme("dropdown-indicators")
@@ -709,7 +622,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(indicators.root)
 
         // --- Overflow -------------------------------------------------------------------------------
-        val overflow = sectionBlock()
+        val overflow = SectionBlock.NAME { show() }
         texts.bind(overflow.heading) { it.overflowHeading }
         texts.bind(overflow.hint) { it.overflowHint }
         val split = createSplitLayout()
@@ -723,7 +636,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(overflow.root)
 
         // --- Right-aligned --------------------------------------------------------------------------
-        val rightAligned = sectionBlock()
+        val rightAligned = SectionBlock.NAME { show() }
         texts.bind(rightAligned.heading) { it.rightAlignedHeading }
         texts.bind(rightAligned.hint) { it.rightAlignedHint }
         val rightBar = createMenuBar().addTheme("end-aligned")
@@ -733,7 +646,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(rightAligned.root)
 
         // --- Style variants -------------------------------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         fun menuBarVariant(copy: (MenuBarTexts) -> String, vararg themes: String): HTMLElement {
@@ -757,7 +670,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(styles.root)
 
         // --- Internationalization -------------------------------------------------------------------
-        val i18nSection = sectionBlock()
+        val i18nSection = SectionBlock.NAME { show() }
         texts.bind(i18nSection.heading) { it.i18nHeading }
         texts.bind(i18nSection.hint) { it.i18nHint }
         val localizedBar = createMenuBar()
@@ -768,7 +681,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(i18nSection.root)
 
         // --- Tooltips -------------------------------------------------------------------------------
-        val tooltips = sectionBlock()
+        val tooltips = SectionBlock.NAME { show() }
         texts.bind(tooltips.heading) { it.tooltipsHeading }
         texts.bind(tooltips.hint) { it.tooltipsHint }
         val tooltipBar = createMenuBar()
@@ -806,7 +719,7 @@ internal class MenuBarPage : DemoPage() {
         body.append(tooltips.root)
 
         // --- Behaviour switches ---------------------------------------------------------------------
-        val behaviour = sectionBlock()
+        val behaviour = SectionBlock.NAME { show() }
         texts.bind(behaviour.heading) { it.behaviourHeading }
         texts.bind(behaviour.hint) { it.behaviourHint }
         texts.bind(hoverSwitch, { it.openOnHover }) { hoverSwitch.label = it }
@@ -850,17 +763,5 @@ internal class MenuBarPage : DemoPage() {
         showReadouts()
     }
 
-    companion object : CustomElementReference<MenuBarPage>(MenuBarPage::class.js) {
-        val NAME: TagName<MenuBarPage> = TagName("vaadin-demo-menu-bar-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-menu-bar-page>`. */
-internal fun newMenuBarPage(): MenuBarPage {
-    MenuBarPage.define()
-    return MenuBarPage.NAME()
+    companion object : CustomElementReferenceAdapter<MenuBarPage>(MenuBarPage::class.js, "vaadin-demo-menu-bar-page")
 }

@@ -1,16 +1,11 @@
 package demo.pages.theming
 
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HTMLAnchorElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.codeText
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.codeText
 import demo.componentApiUrl
 import demo.ui.REPO_SOURCE_ROOT
 import io.github.shijianjs.ktjs.demo.i18n.Binder
@@ -19,11 +14,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.Groups
 import demo.STYLING_BASE
@@ -44,14 +39,11 @@ import web.cssom.ClassName
 import web.cssom.Color
 import web.dom.clickEvent
 import web.events.addHandler
-import web.html.HTMLElement
 import demo.ui.SMALL
 import demo.ui.MUTED_SMALL
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
-import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
-import web.cssom.ident
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
 private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
@@ -86,7 +78,7 @@ val themingEntry: CatalogEntry =
                 docsUrl = "$STYLING_BASE/themes/lumo",
                 sourcePath = "pages/theming/ThemingPage.kt",
             ),
-        kitPage = { newThemingPage() },
+        kitPage = { ThemingPage.NAME() },
     )
 
 /**
@@ -94,36 +86,11 @@ val themingEntry: CatalogEntry =
  *
  * The element itself is the chip, so the property lands on its own style instead of on a child.
  */
-internal class SwatchChip : CustomElementAdapter() {
-    private var cssVariable: String? = null
-
-    /** Shows the colour held by [cssVariable]. */
-    fun show(cssVariable: String) {
-        this.cssVariable = cssVariable
-        style.setProperty("display", "block")
-        style.setProperty("width", "3rem")
-        style.setProperty("height", "3rem")
-        style.setProperty("border-radius", "var(--lumo-border-radius-m)")
-        style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-        style.setProperty("background", "var($cssVariable)")
-    }
-
-    override fun connectedCallback() {
-        cssVariable?.let { show(it) }
-    }
-
-    companion object : CustomElementReference<SwatchChip>(SwatchChip::class.js) {
-        val NAME: TagName<SwatchChip> = TagName("vaadin-demo-swatch-chip")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-swatch-chip>`. */
 internal fun newSwatchChip(cssVariable: String): SwatchChip {
-    SwatchChip.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    SwatchChip.NAME
     return SwatchChip.NAME().also { it.show(cssVariable) }
 }
 
@@ -133,44 +100,11 @@ internal fun newSwatchChip(cssVariable: String): SwatchChip {
  * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
  * and the code block are kit pieces whose look comes from the page's sheet.
  */
-internal class EntryPoint : CustomElementAdapter() {
-    private var name: String? = null
-    private var value: String? = null
-    private var built = false
-
-    /** Sets the constant and its value; the row is built once, whichever call comes first. */
-    fun show(name: String, value: String) {
-        this.name = name
-        this.value = value
-        build()
-    }
-
-    override fun connectedCallback() {
-        build()
-    }
-
-    private fun build() {
-        val name = name ?: return
-        val value = value ?: return
-        if (built) return
-        built = true
-        append(
-            kitRow(HtmlTagName.p { className = SMALL; textContent = name }, codeText(value)),
-        )
-    }
-
-    companion object : CustomElementReference<EntryPoint>(EntryPoint::class.js) {
-        val NAME: TagName<EntryPoint> = TagName("vaadin-demo-entry-point")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-entry-point>`. */
 internal fun newEntryPoint(name: String, value: String): EntryPoint {
-    EntryPoint.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    EntryPoint.NAME
     return EntryPoint.NAME().also { it.show(name, value) }
 }
 
@@ -178,26 +112,6 @@ internal fun newEntryPoint(name: String, value: String): EntryPoint {
  * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
  * the page's binder.
  */
-internal class DescribedEntryPoint : CustomElementAdapter() {
-    private val description = HtmlTagName.p { className = SMALL }
-    private var built = false
-
-    /** Registers [field] with [binder] and builds the row once. */
-    fun show(name: String, binder: Binder<ThemingTexts>, field: (ThemingTexts) -> String) {
-        binder.bind(description, field)
-        if (built) return
-        built = true
-        append(kitRow(HtmlTagName.p { className = SMALL; textContent = name }, description))
-    }
-
-    companion object : CustomElementReference<DescribedEntryPoint>(DescribedEntryPoint::class.js) {
-        val NAME: TagName<DescribedEntryPoint> = TagName("vaadin-demo-described-entry-point")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-described-entry-point>`. */
 internal fun newDescribedEntryPoint(
@@ -205,59 +119,10 @@ internal fun newDescribedEntryPoint(
     binder: Binder<ThemingTexts>,
     field: (ThemingTexts) -> String,
 ): DescribedEntryPoint {
-    DescribedEntryPoint.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    DescribedEntryPoint.NAME
     return DescribedEntryPoint.NAME().also { it.show(name, binder, field) }
 }
-
-/** Every string this page shows, in one language. */
-internal class ThemingTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val switchTitle: String,
-    val switchHint: String,
-    val now: String,
-    val nowLight: String,
-    val nowDark: String,
-    val light: String,
-    val dark: String,
-    val toggle: String,
-    val tokensTitle: String,
-    val tokensHint: String,
-    val primary: String,
-    val success: String,
-    val error: String,
-    val divider: String,
-    val base: String,
-    val entryTitle: String,
-    val entryHint: String,
-    val entryNote: String,
-    val variantsTitle: String,
-    val variantsHint: String,
-    val smallLabel: String,
-    val smallPlaceholder: String,
-    val helperText: String,
-    val cardTitle: String,
-    val cardText: String,
-    val propertiesTitle: String,
-    val propertiesHint: String,
-    val styledButton: String,
-    val partsTitle: String,
-    val partsHint: String,
-    val partButton: String,
-    val utilitiesTitle: String,
-    val utilitiesHint: String,
-    val utilitiesText: String,
-    val i18nTitle: String,
-    val i18nHint: String,
-    val i18nText: String,
-    val internalsTitle: String,
-    val internalsHint: String,
-    val internalsIntro: String,
-    val elementMixin: String,
-    val inputControl: String,
-    val tagNames: String,
-)
 
 private val themingEnglish: ThemingTexts = ThemingTexts(
     docsLink = "Vaadin documentation",
@@ -401,7 +266,6 @@ private val themingTexts: Translations<ThemingTexts> = texts(
 internal class ThemingPage : DemoPage() {
     private val meta: PageMeta = themingEntry.meta
 
-
     private val texts = Binder(themingTexts)
 
     private val readout = Readout("")
@@ -434,7 +298,6 @@ internal class ThemingPage : DemoPage() {
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
-
     init {
         addSheet(THEMING_SHEET)
 
@@ -462,7 +325,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildSwitch() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.switchTitle })
         texts.bind(section.hint, { it.switchHint })
         texts.bind(lightButton, { it.light })
@@ -490,7 +353,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildTokens() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.tokensTitle })
         texts.bind(section.hint, { it.tokensHint })
         val swatches =
@@ -511,7 +374,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildEntryPoints() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.entryTitle })
         texts.bind(section.hint, { it.entryHint })
         texts.bind(entryNote, { it.entryNote })
@@ -531,7 +394,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildVariants() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.variantsTitle })
         texts.bind(section.hint, { it.variantsHint })
         texts.bind(compactField, { it.smallLabel }) { text -> compactField.label = text }
@@ -552,7 +415,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildProperties() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.propertiesTitle })
         texts.bind(section.hint, { it.propertiesHint })
         texts.bind(styledButton, { it.styledButton })
@@ -574,7 +437,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildParts() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.partsTitle })
         texts.bind(section.hint, { it.partsHint })
         texts.bind(partButton, { it.partButton })
@@ -588,7 +451,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildUtilities() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.utilitiesTitle })
         texts.bind(section.hint, { it.utilitiesHint })
         texts.bind(utilityText, { it.utilitiesText })
@@ -603,7 +466,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildBuiltInCopy() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.i18nTitle })
         texts.bind(section.hint, { it.i18nHint })
         val note = HtmlTagName.p { className = MUTED_SMALL }
@@ -613,7 +476,7 @@ internal class ThemingPage : DemoPage() {
     }
 
     private fun buildInternals() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.internalsTitle })
         texts.bind(section.hint, { it.internalsHint })
         val intro = HtmlTagName.p { className = SMALL }
@@ -646,19 +509,5 @@ internal class ThemingPage : DemoPage() {
         readout.set(copy.now + if (Theme.isDark) copy.nowDark else copy.nowLight)
     }
 
-    companion object : CustomElementReference<ThemingPage>(ThemingPage::class.js) {
-        val NAME: TagName<ThemingPage> = TagName("vaadin-demo-theming-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page")
 }
-
-/** Creates a defined `<vaadin-demo-theming-page>`. */
-internal fun newThemingPage(): ThemingPage {
-    ThemingPage.define()
-    return ThemingPage.NAME()
-}
-
-

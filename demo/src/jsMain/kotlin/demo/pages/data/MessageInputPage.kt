@@ -6,13 +6,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -44,25 +42,8 @@ val messageInputEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/message-input",
                 sourcePath = "pages/data/MessageInputPage.kt",
             ),
-        kitPage = { newMessageInputPage() },
+        kitPage = { MessageInputPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class MessageInputTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val notSentYet: String,
-    val sentPrefix: String,
-    val receivedPrefix: String,
-    val combinedHeading: String,
-    val combinedHint: String,
-    val saySomething: String,
-    val rightNow: String,
-    val milla: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val noEvents: String,
-)
 
 private val english: MessageInputTexts = MessageInputTexts(
     basicHeading = "Basic usage",
@@ -131,7 +112,7 @@ internal class MessageInputPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
 
@@ -152,7 +133,7 @@ internal class MessageInputPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(input, readout.root, log.root)))
         body.append(basic.root)
 
-        val combined = sectionBlock()
+        val combined = SectionBlock.NAME { show() }
         texts.bind(combined.heading) { it.combinedHeading }
         texts.bind(combined.hint) { it.combinedHint }
 
@@ -180,7 +161,7 @@ internal class MessageInputPage : DemoPage() {
         combined.body.append(exampleBox(null, kitCol(liveList, liveInput, liveLog.root)))
         body.append(combined.root)
 
-        val disabled = sectionBlock()
+        val disabled = SectionBlock.NAME { show() }
         texts.bind(disabled.heading) { it.disabledHeading }
         texts.bind(disabled.hint) { it.disabledHint }
         val disabledInput = createMessageInput()
@@ -214,17 +195,5 @@ internal class MessageInputPage : DemoPage() {
         if ((liveList.items?.size ?: 0) <= 1) liveList.items = arrayOf(seed(copy))
     }
 
-    companion object : CustomElementReference<MessageInputPage>(MessageInputPage::class.js) {
-        val NAME: TagName<MessageInputPage> = TagName("vaadin-demo-message-input-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-message-input-page>`. */
-internal fun newMessageInputPage(): MessageInputPage {
-    MessageInputPage.define()
-    return MessageInputPage.NAME()
+    companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page")
 }

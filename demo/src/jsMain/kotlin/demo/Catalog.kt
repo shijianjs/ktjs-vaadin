@@ -11,7 +11,6 @@ import demo.pages.pickers.pickersEntries
 import demo.pages.selection.selectionEntries
 import demo.pages.theming.themingEntries
 import demo.pages.upload.uploadEntries
-import demo.ui.PageMeta
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 
@@ -39,20 +38,6 @@ class Group(val id: String, private val zh: String, private val en: String, val 
     fun labelFor(lang: Lang): String = if (lang == Langs.EN) en else zh
 }
 
-/** Sidebar groups, in navigation order. */
-object Groups {
-    val OVERVIEW = Group("overview", "概览", "Overview", "lucide:layers")
-    val BUTTONS = Group("buttons", "按钮与操作", "Buttons & actions", "lucide:mouse-pointer-click")
-    val FIELDS = Group("fields", "输入字段", "Input fields", "lucide:text-cursor-input")
-    val SELECTION = Group("selection", "选择控件", "Selection", "lucide:check-square")
-    val PICKERS = Group("pickers", "日期与时间", "Date & time", "lucide:calendar")
-    val OVERLAYS = Group("overlays", "浮层与反馈", "Overlays & feedback", "lucide:panels-top-left")
-    val DATA = Group("data", "数据展示", "Data display", "lucide:table")
-    val LAYOUT = Group("layout", "布局与导航", "Layout & navigation", "lucide:layout-dashboard")
-    val DISPLAY = Group("display", "基础展示", "Display", "lucide:image")
-    val THEMING = Group("theming", "主题与样式", "Theming & styling", "lucide:palette")
-}
-
 /**
  * One entry of the showcase: the route id, the sidebar group it belongs to, the page metadata and
  * the page element that renders it.
@@ -61,19 +46,6 @@ object Groups {
  * its tag, not a function that assembles DOM. A `buildXxxPage(meta): PageView` was the shape this
  * architecture does not allow — DOM only ever grows inside the element that owns it.
  */
-class CatalogEntry(
-    val id: String,
-    val group: Group,
-    val meta: PageMeta,
-    /** Creates the page element; the router mounts [Page.node] and caches one per route. */
-    val kitPage: (() -> io.github.shijianjs.ktjs.demo.nav.Page)? = null,
-) {
-    /** Builds a fresh instance of the page. The shell caches one per route. */
-    fun create(): web.html.HTMLElement {
-        val page = kitPage ?: error("page `$id` has no element factory")
-        return page().node
-    }
-}
 
 /**
  * Dokka package page of the component behind [id].
@@ -121,4 +93,3 @@ fun catalogEntry(id: String): CatalogEntry? = catalogById[id]
 
 /** Entries of one sidebar group, in declaration order. */
 fun catalogEntriesOf(group: Group): List<CatalogEntry> = catalog.filter { it.group == group }
-

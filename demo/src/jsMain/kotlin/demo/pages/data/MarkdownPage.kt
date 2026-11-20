@@ -1,11 +1,8 @@
 package demo.pages.data
 
-
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -19,12 +16,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.anchor
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.paragraph
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.vaadin.markdown.MarkdownElement
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import web.html.HTMLAnchorElement
@@ -44,7 +40,7 @@ val markdownEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/markdown",
                 sourcePath = "pages/data/MarkdownPage.kt",
             ),
-        kitPage = { newMarkdownPage() },
+        kitPage = { MarkdownPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -56,20 +52,6 @@ val markdownEntry: CatalogEntry =
 // ---------------------------------------------------------------------------------------------
 // The same page on kit blocks
 // ---------------------------------------------------------------------------------------------
-
-/** Every string this page shows, in one language. */
-private class MarkdownTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val basicTitle: String,
-    val basicHint: String,
-    val richContent: String,
-    val lineTitle: String,
-    val lineHint: String,
-    val letterContent: String,
-    val lineCaption: String,
-)
 
 private val markdownEnglish: MarkdownTexts = MarkdownTexts(
     docsLink = "Vaadin documentation",
@@ -186,16 +168,15 @@ private val markdownTexts: Translations<MarkdownTexts> = texts(
 internal class MarkdownPage : DemoPage() {
     private val meta: PageMeta = markdownEntry.meta
 
-
     private val texts = Binder(markdownTexts)
 
     private var language: Lang = Langs.EN
 
     private val copy: MarkdownTexts get() = markdownTexts[language]
 
-    private val basic = sectionBlock()
+    private val basic = SectionBlock.NAME { show() }
 
-    private val lineBreaks = sectionBlock()
+    private val lineBreaks = SectionBlock.NAME { show() }
 
     private val rich: MarkdownElement = createMarkdown().apply { dataset["test"] = "markdown" }
 
@@ -206,7 +187,6 @@ internal class MarkdownPage : DemoPage() {
     private val caption = paragraph("")
 
     private val links = mutableListOf<HTMLAnchorElement>()
-
 
     init {
         val docs = kitAnchor("", "$DOCS_BASE/markdown")
@@ -242,19 +222,5 @@ internal class MarkdownPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReference<MarkdownPage>(MarkdownPage::class.js) {
-        val NAME: TagName<MarkdownPage> = TagName("vaadin-demo-markdown-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page")
 }
-
-/** Creates a defined `<vaadin-demo-markdown-page>`. */
-internal fun newMarkdownPage(): MarkdownPage {
-    MarkdownPage.define()
-    return MarkdownPage.NAME()
-}
-
-

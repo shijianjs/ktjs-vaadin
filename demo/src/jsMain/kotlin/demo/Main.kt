@@ -14,6 +14,7 @@ import io.github.shijianjs.ktjs.demo.style.Theme
 import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
 import web.dom.ElementId
 import web.dom.document
+import io.github.shijianjs.ktjs.dom.element.invoke
 
 /**
  * Entry point of the component showcase.
@@ -35,7 +36,8 @@ fun main() {
     val theme = Theme(storageKey = "ktjs-vaadin-theme")
     theme.applyStored()
 
-    DemoLayout.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    DemoLayout.NAME
     val layout = document.getElementById(ElementId("demo")) as? DemoLayout
         ?: error("index.html has no <ktjs-demo-layout id=\"demo\">")
 

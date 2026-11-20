@@ -1,21 +1,17 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -56,41 +52,8 @@ val checkboxGroupEntry: CatalogEntry =
                     ),
                 sourcePath = "pages/selection/CheckboxGroupPage.kt",
             ),
-        kitPage = { newCheckboxGroupPage() },
+        kitPage = { CheckboxGroupPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class CheckboxGroupTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val groupLabel: String,
-    val groupHelper: String,
-    val presetHeading: String,
-    val presetHint: String,
-    val skillsLabel: String,
-    val skillsError: String,
-    val validate: String,
-    val validationPrefix: String,
-    val passed: String,
-    val failed: String,
-    val selectedPrefix: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helper: String,
-    val tooltipText: String,
-    val item1: String,
-    val item2: String,
-    val item3: String,
-    val optionA: String,
-    val optionB: String,
-    val statesHeading: String,
-    val readonly: String,
-    val disabled: String,
-    val engineering: String,
-    val humanResources: String,
-    val marketing: String,
-)
 
 private val english: CheckboxGroupTexts =
     CheckboxGroupTexts(
@@ -180,7 +143,7 @@ internal class CheckboxGroupPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val group = createCheckboxGroup().addTheme("vertical")
@@ -208,7 +171,7 @@ internal class CheckboxGroupPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(group, readout.root)))
         body.append(basic.root)
 
-        val preset = sectionBlock()
+        val preset = SectionBlock.NAME { show() }
         texts.bind(preset.heading) { it.presetHeading }
         texts.bind(preset.hint) { it.presetHint }
         skills.required = true
@@ -246,7 +209,7 @@ internal class CheckboxGroupPage : DemoPage() {
         preset.body.append(exampleBox(null, kitCol(skills, kitRow(validateButton, result.root))))
         body.append(preset.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val plain = createCheckboxGroup()
@@ -267,7 +230,7 @@ internal class CheckboxGroupPage : DemoPage() {
         features.body.append(exampleBox(null, kitCol(plain, languages)))
         body.append(features.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         val readonlyGroup = createCheckboxGroup().addTheme("vertical")
         texts.bind(readonlyGroup, { it.readonly }) { readonlyGroup.label = it }
@@ -309,17 +272,5 @@ internal class CheckboxGroupPage : DemoPage() {
         lastResult?.invoke(copy)?.let { (prefix, value) -> result.set(prefix, value) }
     }
 
-    companion object : CustomElementReference<CheckboxGroupPage>(CheckboxGroupPage::class.js) {
-        val NAME: TagName<CheckboxGroupPage> = TagName("vaadin-demo-checkbox-group-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-checkbox-group-page>`. */
-internal fun newCheckboxGroupPage(): CheckboxGroupPage {
-    CheckboxGroupPage.define()
-    return CheckboxGroupPage.NAME()
+    companion object : CustomElementReferenceAdapter<CheckboxGroupPage>(CheckboxGroupPage::class.js, "vaadin-demo-checkbox-group-page")
 }

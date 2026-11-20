@@ -6,9 +6,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HtmlTagName
 
 /**
@@ -42,17 +40,5 @@ internal class CardContentImage : CustomElementAdapter(), CardTranslatable {
         cardTexts.apply(lang)
     }
 
-    companion object : CustomElementReference<CardContentImage>(CardContentImage::class.js) {
-        val NAME: TagName<CardContentImage> = TagName("demo-card-content-image")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-card-content-image>`. */
-internal fun newCardContentImage(): CardContentImage {
-    CardContentImage.define()
-    return CardContentImage.NAME()
+    companion object : CustomElementReferenceAdapter<CardContentImage>(CardContentImage::class.js, "demo-card-content-image")
 }

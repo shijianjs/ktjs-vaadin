@@ -1,26 +1,17 @@
 package demo.pages.overlays
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import demo.pages.fixtures.Person
 import demo.pages.fixtures.people
 import demo.pages.fixtures.personItems
-import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.contextmenu.ContextMenuItemData
 import io.github.shijianjs.ktjs.vaadin.grid.GridElement
 import io.github.shijianjs.ktjs.vaadin.grid.createGrid
 import io.github.shijianjs.ktjs.vaadin.grid.GridColumnElement
 import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import io.github.shijianjs.ktjs.vaadin.grid.createGridSelectionColumn
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.events.EventType
 import web.html.HTMLElement
 import web.keyboard.KeyboardEvent
@@ -75,37 +66,11 @@ internal val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
  * The host wraps the button because the theme a caller adds (`tertiary` on the tooltip targets) belongs
  * on the button, and [addTheme] hands it there.
  */
-internal class IconButton : CustomElementAdapter() {
-    private val button = createButton { textContent = "" }.apply { addTheme("icon") }
-
-    init {
-        attachShadowRoot().append(button)
-    }
-
-    /** Sets the accessible name and the icons the button shows. */
-    fun show(name: String, vararg iconNames: String) {
-        button.setAttribute("aria-label", name)
-        button.textContent = ""
-        iconNames.forEach { button.append(createIcon { icon = it }) }
-    }
-
-    /** Adds [themes] to the wrapped button, not to the host. */
-    fun addTheme(vararg themes: String) {
-        button.tokenListAttribute("theme").add(*themes)
-    }
-
-    companion object : CustomElementReference<IconButton>(IconButton::class.js) {
-        val NAME: TagName<IconButton> = TagName("vaadin-demo-icon-button")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-icon-button>`. */
 internal fun newIconButton(name: String, vararg iconNames: String): IconButton {
-    IconButton.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    IconButton.NAME
     return IconButton.NAME().also { it.show(name, *iconNames) }
 }
 

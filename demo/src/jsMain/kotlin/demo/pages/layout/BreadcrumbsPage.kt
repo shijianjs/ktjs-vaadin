@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
-import io.github.shijianjs.ktjs.demo.page.bulletList
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
+import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -51,36 +47,8 @@ val breadcrumbsEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/breadcrumbs",
                 sourcePath = "pages/layout/BreadcrumbsPage.kt",
             ),
-        kitPage = { newBreadcrumbsPage() },
+        kitPage = { BreadcrumbsPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class BreadcrumbsTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val home: String,
-    val components: String,
-    val breadcrumbs: String,
-    val itemsHeading: String,
-    val itemsHint: String,
-    val orders: String,
-    val orderDetails: String,
-    val overflowHeading: String,
-    val overflowHint: String,
-    val catalog: String,
-    val electronics: String,
-    val computers: String,
-    val laptops: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-    val moreItems: String,
-    val a11yHeading: String,
-    val a11yHint: String,
-    val a11yNavigation: String,
-    val a11yCurrent: String,
-    val a11yFocusable: String,
-    val a11yOverflow: String,
-)
 
 private val english: BreadcrumbsTexts = BreadcrumbsTexts(
     basicHeading = "Basic usage",
@@ -192,7 +160,7 @@ internal class BreadcrumbsPage : DemoPage() {
         frame.mount(this)
         registerVaadinIcons()
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val crumbs = createBreadcrumbs()
@@ -201,7 +169,7 @@ internal class BreadcrumbsPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(crumbs, log.root)))
         body.append(basic.root)
 
-        val items = sectionBlock()
+        val items = SectionBlock.NAME { show() }
         texts.bind(items.heading) { it.itemsHeading }
         texts.bind(items.hint) { it.itemsHint }
         val iconCrumbs = createBreadcrumbs()
@@ -210,7 +178,7 @@ internal class BreadcrumbsPage : DemoPage() {
         items.body.append(exampleBox(null, iconCrumbs))
         body.append(items.root)
 
-        val overflow = sectionBlock()
+        val overflow = SectionBlock.NAME { show() }
         texts.bind(overflow.heading) { it.overflowHeading }
         texts.bind(overflow.hint) { it.overflowHint }
         val many = createBreadcrumbs()
@@ -220,7 +188,7 @@ internal class BreadcrumbsPage : DemoPage() {
         overflow.body.append(exampleBox(null, many))
         body.append(overflow.root)
 
-        val i18nSection = sectionBlock()
+        val i18nSection = SectionBlock.NAME { show() }
         texts.bind(i18nSection.heading) { it.i18nHeading }
         texts.bind(i18nSection.hint) { it.i18nHint }
         localised.dataset["test"] = "breadcrumbs-i18n"
@@ -229,7 +197,7 @@ internal class BreadcrumbsPage : DemoPage() {
         i18nSection.body.append(exampleBox(null, localised))
         body.append(i18nSection.root)
 
-        val accessibility = sectionBlock()
+        val accessibility = SectionBlock.NAME { show() }
         texts.bind(accessibility.heading) { it.a11yHeading }
         texts.bind(accessibility.hint) { it.a11yHint }
         val statements = listOf<(BreadcrumbsTexts) -> String>(
@@ -273,19 +241,7 @@ internal class BreadcrumbsPage : DemoPage() {
         trail.forEachIndexed { index, item -> item.textContent = labels[index] }
     }
 
-    companion object : CustomElementReference<BreadcrumbsPage>(BreadcrumbsPage::class.js) {
-        val NAME: TagName<BreadcrumbsPage> = TagName("vaadin-demo-breadcrumbs-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-breadcrumbs-page>`. */
-internal fun newBreadcrumbsPage(): BreadcrumbsPage {
-    BreadcrumbsPage.define()
-    return BreadcrumbsPage.NAME()
+    companion object : CustomElementReferenceAdapter<BreadcrumbsPage>(BreadcrumbsPage::class.js, "vaadin-demo-breadcrumbs-page")
 }
 
 /** A breadcrumbs item; the ones with a path navigate nowhere and report their path to [onPath]. */

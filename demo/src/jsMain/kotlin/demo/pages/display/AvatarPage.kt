@@ -6,14 +6,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.exampleCaption
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -36,25 +34,8 @@ val avatarEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/avatar",
                 sourcePath = "pages/display/AvatarPage.kt",
             ),
-        kitPage = { newAvatarPage() },
+        kitPage = { AvatarPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class AvatarTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val namingHeading: String,
-    val namingHint: String,
-    val namingCaption: String,
-    val imageHeading: String,
-    val imageHint: String,
-    val sizesHeading: String,
-    val sizesHint: String,
-    val coloursHeading: String,
-    val coloursHint: String,
-    /** The name of the [index]th avatar in the colour row. */
-    val user: (Int) -> String,
-)
 
 private val english: AvatarTexts = AvatarTexts(
     basicHeading = "Basic usage",
@@ -117,7 +98,7 @@ internal class AvatarPage : DemoPage() {
         frame.mount(this)
 
         // --- Basic usage (avatar/avatar-basic.ts) ---------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val anonymous = createAvatar()
@@ -138,7 +119,7 @@ internal class AvatarPage : DemoPage() {
         body.append(basic.root)
 
         // --- Name and abbreviation (avatar/avatar-name.ts, avatar/avatar-abbreviation.ts) -----------
-        val naming = sectionBlock()
+        val naming = SectionBlock.NAME { show() }
         texts.bind(naming.heading) { it.namingHeading }
         texts.bind(naming.hint) { it.namingHint }
         val namingCaption = texts.bind(exampleCaption(), { it.namingCaption })
@@ -162,7 +143,7 @@ internal class AvatarPage : DemoPage() {
         body.append(naming.root)
 
         // --- Image (avatar/avatar-image.ts) ---------------------------------------------------------
-        val image = sectionBlock()
+        val image = SectionBlock.NAME { show() }
         texts.bind(image.heading) { it.imageHeading }
         texts.bind(image.hint) { it.imageHint }
         image.body.append(
@@ -183,7 +164,7 @@ internal class AvatarPage : DemoPage() {
         body.append(image.root)
 
         // --- Sizes (avatar/avatar-sizes.ts) ---------------------------------------------------------
-        val sizes = sectionBlock()
+        val sizes = SectionBlock.NAME { show() }
         texts.bind(sizes.heading) { it.sizesHeading }
         texts.bind(sizes.hint) { it.sizesHint }
         sizes.body.append(
@@ -201,7 +182,7 @@ internal class AvatarPage : DemoPage() {
         body.append(sizes.root)
 
         // --- Background colour (wrapper extra, see avatar-group-bg-color.ts) ------------------------
-        val colours = sectionBlock()
+        val colours = SectionBlock.NAME { show() }
         texts.bind(colours.heading) { it.coloursHeading }
         texts.bind(colours.hint) { it.coloursHint }
         colours.body.append(exampleBox(null, kitRow(*colourAvatars.toTypedArray())))
@@ -220,17 +201,5 @@ internal class AvatarPage : DemoPage() {
         colourAvatars.forEachIndexed { index, avatar -> avatar.name = copy.user(index) }
     }
 
-    companion object : CustomElementReference<AvatarPage>(AvatarPage::class.js) {
-        val NAME: TagName<AvatarPage> = TagName("vaadin-demo-avatar-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-avatar-page>`. */
-internal fun newAvatarPage(): AvatarPage {
-    AvatarPage.define()
-    return AvatarPage.NAME()
+    companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page")
 }

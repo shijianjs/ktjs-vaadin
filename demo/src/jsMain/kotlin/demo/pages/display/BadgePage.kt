@@ -1,22 +1,18 @@
 package demo.pages.display
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -57,7 +53,7 @@ val badgeEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/badge",
                 sourcePath = "pages/display/BadgePage.kt",
             ),
-        kitPage = { newBadgePage() },
+        kitPage = { BadgePage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -110,67 +106,6 @@ private fun BadgeElement.labelSpan(): HTMLElement = children.item(1) as HTMLElem
 
 /** The four professions the interactive example offers, in the order they appear. */
 private val PROFESSIONS = listOf("engineer", "designer", "product-manager", "researcher")
-
-/** Every string this page shows, in one language. */
-private class BadgeTexts(
-    val labelHeading: String,
-    val labelHint: String,
-    val pending: String,
-    val confirmed: String,
-    val warning: String,
-    val denied: String,
-    val colourHeading: String,
-    val colourHint: String,
-    val defaultCaption: String,
-    val filledCaption: String,
-    val iconsHeading: String,
-    val iconsHint: String,
-    val iconOnlyHeading: String,
-    val iconOnlyHint: String,
-    val name: String,
-    val view: String,
-    val comment: String,
-    val edit: String,
-    val cancelled: String,
-    val permissionsCaption: String,
-    val numberHeading: String,
-    val numberHint: String,
-    val newMessages: String,
-    val completed: String,
-    val failed: String,
-    val numberOnlyHeading: String,
-    val numberOnlyHint: String,
-    val alerts: String,
-    val highlightHeading: String,
-    val highlightHint: String,
-    val report: String,
-    val dueDate: String,
-    val assignee: String,
-    val status: String,
-    val inProgress: String,
-    val onHold: String,
-    val interactiveHeading: String,
-    val interactiveHint: String,
-    val profession: String,
-    val professionName: (String) -> String,
-    val noFilters: String,
-    val filtersPrefix: String,
-    val clearFilter: (String) -> String,
-    val counterHeading: String,
-    val counterHint: String,
-    val unreadMessages: String,
-    val inbox: String,
-    val important: String,
-    val spam: String,
-    val archive: String,
-    val dotHeading: String,
-    val dotHint: String,
-    val downloads: String,
-    val completedLower: String,
-    val liveHeading: String,
-    val liveHint: String,
-    val addOne: String,
-)
 
 private val english: BadgeTexts =
     BadgeTexts(
@@ -448,7 +383,7 @@ internal class BadgePage : DemoPage() {
         registerVaadinIcons()
 
         // --- Label (badge/badge-basic.ts) -----------------------------------------------------------
-        val labelSection = sectionBlock()
+        val labelSection = SectionBlock.NAME { show() }
         texts.bind(labelSection.heading) { it.labelHeading }
         texts.bind(labelSection.hint) { it.labelHint }
         val numeric = createBadge { number = 4.0 }
@@ -467,7 +402,7 @@ internal class BadgePage : DemoPage() {
         body.append(labelSection.root)
 
         // --- Colour variants (badge/badge-color.ts) -----------------------------------------------
-        val colour = sectionBlock()
+        val colour = SectionBlock.NAME { show() }
         texts.bind(colour.heading) { it.colourHeading }
         texts.bind(colour.hint) { it.colourHint }
         fun badgeSet(vararg themes: String): HTMLElement {
@@ -500,7 +435,7 @@ internal class BadgePage : DemoPage() {
         body.append(colour.root)
 
         // --- Icons (badge/badge-icons.ts) ----------------------------------------------------------
-        val withIcons = sectionBlock()
+        val withIcons = SectionBlock.NAME { show() }
         texts.bind(withIcons.heading) { it.iconsHeading }
         texts.bind(withIcons.hint) { it.iconsHint }
         fun iconRow(vararg icons: String): HTMLElement {
@@ -525,7 +460,7 @@ internal class BadgePage : DemoPage() {
         body.append(withIcons.root)
 
         // --- Icon-only + icon-only table (badge-icons-only.ts, badge-icons-only-table.ts) ----------
-        val iconOnly = sectionBlock()
+        val iconOnly = SectionBlock.NAME { show() }
         texts.bind(iconOnly.heading) { it.iconOnlyHeading }
         texts.bind(iconOnly.hint) { it.iconOnlyHint }
         permissions.style.setProperty("height", "14rem")
@@ -550,7 +485,7 @@ internal class BadgePage : DemoPage() {
         body.append(iconOnly.root)
 
         // --- Number (badge/badge-number.ts) --------------------------------------------------------
-        val numberSection = sectionBlock()
+        val numberSection = SectionBlock.NAME { show() }
         texts.bind(numberSection.heading) { it.numberHeading }
         texts.bind(numberSection.hint) { it.numberHint }
         fun numberBadge(number: Double, copy: (BadgeTexts) -> String, vararg themes: String): BadgeElement {
@@ -572,7 +507,7 @@ internal class BadgePage : DemoPage() {
         body.append(numberSection.root)
 
         // --- Number-only (badge/badge-number-only.ts) ---------------------------------------------
-        val numberOnly = sectionBlock()
+        val numberOnly = SectionBlock.NAME { show() }
         texts.bind(numberOnly.heading) { it.numberOnlyHeading }
         texts.bind(numberOnly.hint) { it.numberOnlyHint }
         numberOnly.body.append(
@@ -587,7 +522,7 @@ internal class BadgePage : DemoPage() {
         body.append(numberOnly.root)
 
         // --- Highlighting information (badge/badge-highlight.ts) ----------------------------------
-        val highlight = sectionBlock()
+        val highlight = SectionBlock.NAME { show() }
         texts.bind(highlight.heading) { it.highlightHeading }
         texts.bind(highlight.hint) { it.highlightHint }
         reports.style.setProperty("height", "14rem")
@@ -607,7 +542,7 @@ internal class BadgePage : DemoPage() {
         body.append(highlight.root)
 
         // --- Interactive content (badge/badge-interactive.ts) -------------------------------------
-        val interactive = sectionBlock()
+        val interactive = SectionBlock.NAME { show() }
         texts.bind(interactive.heading) { it.interactiveHeading }
         texts.bind(interactive.hint) { it.interactiveHint }
         texts.bind(professionCombo, { it.profession }) { professionCombo.label = it }
@@ -621,7 +556,7 @@ internal class BadgePage : DemoPage() {
         body.append(interactive.root)
 
         // --- Counter (badge/badge-counter.ts) -----------------------------------------------------
-        val counter = sectionBlock()
+        val counter = SectionBlock.NAME { show() }
         texts.bind(counter.heading) { it.counterHeading }
         texts.bind(counter.hint) { it.counterHint }
         val tabs = createTabs()
@@ -647,7 +582,7 @@ internal class BadgePage : DemoPage() {
         body.append(counter.root)
 
         // --- Dot (badge/badge-dot.ts) ------------------------------------------------------------
-        val dot = sectionBlock()
+        val dot = SectionBlock.NAME { show() }
         texts.bind(dot.heading) { it.dotHeading }
         texts.bind(dot.hint) { it.dotHint }
         val download = createButton().addTheme("icon")
@@ -680,7 +615,7 @@ internal class BadgePage : DemoPage() {
         body.append(dot.root)
 
         // --- Live number (wrapper extra, exercised by the end-to-end suite) ------------------------
-        val live = sectionBlock()
+        val live = SectionBlock.NAME { show() }
         texts.bind(live.heading) { it.liveHeading }
         texts.bind(live.hint) { it.liveHint }
         val liveBadge = createBadge { number = 0.0 }
@@ -708,17 +643,5 @@ internal class BadgePage : DemoPage() {
         syncFilters()
     }
 
-    companion object : CustomElementReference<BadgePage>(BadgePage::class.js) {
-        val NAME: TagName<BadgePage> = TagName("vaadin-demo-badge-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-badge-page>`. */
-internal fun newBadgePage(): BadgePage {
-    BadgePage.define()
-    return BadgePage.NAME()
+    companion object : CustomElementReferenceAdapter<BadgePage>(BadgePage::class.js, "vaadin-demo-badge-page")
 }

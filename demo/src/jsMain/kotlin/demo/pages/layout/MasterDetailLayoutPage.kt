@@ -1,24 +1,20 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -72,42 +68,8 @@ val masterDetailLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/master-detail-layout",
                 sourcePath = "pages/layout/MasterDetailLayoutPage.kt",
             ),
-        kitPage = { newMasterDetailLayoutPage() },
+        kitPage = { MasterDetailLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class MasterDetailLayoutTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val phone: String,
-    val sizesHeading: String,
-    val sizesHint: String,
-    val master12: String,
-    val detail16: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val master: String,
-    val detail: String,
-    val toggleOrientation: String,
-    val overlayHeading: String,
-    val overlayHint: String,
-    val overlayCaption: String,
-    val placeholderHeading: String,
-    val placeholderHint: String,
-    val adaDetails: String,
-    val showDetail: String,
-    val hideDetail: String,
-    val member: (Int) -> String,
-    val selectMember: String,
-    val nestingHeading: String,
-    val nestingHint: String,
-    val innerMaster: String,
-    val innerDetail: String,
-    val outerMaster: String,
-)
 
 private val english: MasterDetailLayoutTexts =
     MasterDetailLayoutTexts(
@@ -207,7 +169,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         frame.mount(this)
         val crew = people(6)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val layout = createMasterDetailLayout {
@@ -272,7 +234,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         basic.body.append(exampleBox(null, layout))
         body.append(basic.root)
 
-        val sizes = sectionBlock()
+        val sizes = SectionBlock.NAME { show() }
         texts.bind(sizes.heading) { it.sizesHeading }
         texts.bind(sizes.hint) { it.sizesHint }
         val sized = createMasterDetailLayout {
@@ -306,7 +268,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         sizes.body.append(exampleBox(null, kitCol(sized, kitRow(expandMasterSwitch, expandDetailSwitch, sizeReadout.root))))
         body.append(sizes.root)
 
-        val orientationSection = sectionBlock()
+        val orientationSection = SectionBlock.NAME { show() }
         texts.bind(orientationSection.heading) { it.orientationHeading }
         texts.bind(orientationSection.hint) { it.orientationHint }
         val oriented = createMasterDetailLayout {
@@ -339,7 +301,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         orientationSection.body.append(exampleBox(null, kitCol(oriented, kitRow(orientationButton, orientationReadout.root))))
         body.append(orientationSection.root)
 
-        val overlaySection = sectionBlock()
+        val overlaySection = SectionBlock.NAME { show() }
         texts.bind(overlaySection.heading) { it.overlayHeading }
         texts.bind(overlaySection.hint) { it.overlayHint }
         val overlayLayout = createMasterDetailLayout {
@@ -399,7 +361,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         overlaySection.body.append(overlayCard)
         body.append(overlaySection.root)
 
-        val placeholderSection = sectionBlock()
+        val placeholderSection = SectionBlock.NAME { show() }
         texts.bind(placeholderSection.heading) { it.placeholderHeading }
         texts.bind(placeholderSection.hint) { it.placeholderHint }
         val placeholderLayout = createMasterDetailLayout {
@@ -436,7 +398,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         placeholderSection.body.append(exampleBox(null, kitCol(placeholderLayout, detailToggle)))
         body.append(placeholderSection.root)
 
-        val nestingSection = sectionBlock()
+        val nestingSection = SectionBlock.NAME { show() }
         texts.bind(nestingSection.heading) { it.nestingHeading }
         texts.bind(nestingSection.hint) { it.nestingHint }
         val inner = createMasterDetailLayout {
@@ -482,17 +444,5 @@ internal class MasterDetailLayoutPage : DemoPage() {
         detailToggle.textContent = detailToggleCopy(texts.current)
     }
 
-    companion object : CustomElementReference<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js) {
-        val NAME: TagName<MasterDetailLayoutPage> = TagName("vaadin-demo-master-detail-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-master-detail-layout-page>`. */
-internal fun newMasterDetailLayoutPage(): MasterDetailLayoutPage {
-    MasterDetailLayoutPage.define()
-    return MasterDetailLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js, "vaadin-demo-master-detail-layout-page")
 }

@@ -1,21 +1,17 @@
 package demo.pages.pickers
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -38,7 +34,6 @@ import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDate
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadata
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataArrayOrPromise
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerDateMetadataProvider
-import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerElement
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerEvents
 import io.github.shijianjs.ktjs.vaadin.datepicker.DatePickerI18n
 import io.github.shijianjs.ktjs.vaadin.datepicker.createDate
@@ -69,94 +64,12 @@ val datePickerEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/date-picker",
                 sourcePath = "pages/pickers/DatePickerPage.kt",
             ),
-        kitPage = { newDatePickerPage() },
+        kitPage = { DatePickerPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
 // Date picker
 // ---------------------------------------------------------------------------------------------
-
-/** Every string this page shows, in one language. */
-private class DatePickerTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val startDate: String,
-    val basicHelper: String,
-    val empty: String,
-    val eventStream: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val appointmentDate: String,
-    val businessDayHelper: String,
-    val errorPrefix: String,
-    val none: String,
-    val badFormat: String,
-    val required: String,
-    val tooEarly: String,
-    val tooLate: String,
-    val closed: String,
-    val validate: String,
-    val customHeading: String,
-    val customHint: String,
-    val meetingDate: String,
-    val weekdaysOnly: String,
-    val selectWeekday: String,
-    val metadataHeading: String,
-    val metadataHint: String,
-    val almostFullHelper: String,
-    val providerReady: String,
-    val chosenDate: String,
-    val weekNumbersHeading: String,
-    val weekNumbersHint: String,
-    val vacationStart: String,
-    val initialHeading: String,
-    val initialHint: String,
-    val q4Deadline: String,
-    val autoOpenHeading: String,
-    val autoOpenHint: String,
-    val open: String,
-    val close: String,
-    val localizationHeading: String,
-    val localizationHint: String,
-    val germanCaption: String,
-    val basicsHeading: String,
-    val basicsHint: String,
-    val label: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readOnly: String,
-    val disabled: String,
-    val rangeHeading: String,
-    val rangeHint: String,
-    val departure: String,
-    val returnDate: String,
-    val rangeReadout: (String, String) -> String,
-    val individualHeading: String,
-    val individualHint: String,
-    val year: String,
-    val month: String,
-    val day: String,
-    val selectedDate: String,
-    val formatHeading: String,
-    val formatHint: String,
-    val formatHelper: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val customFunctionsHeading: String,
-    val customFunctionsHint: String,
-    val selectDate: String,
-    val isoHelper: String,
-    val inputText: String,
-    val customFormatsHeading: String,
-    val customFormatsHint: String,
-    val flexibleHelper: String,
-    val localeHeading: String,
-    val localeHint: String,
-    val finnishHelper: String,
-)
 
 private val english: DatePickerTexts =
     DatePickerTexts(
@@ -353,9 +266,6 @@ private val datePickerTexts: Translations<DatePickerTexts> = texts(
     Langs.ZH_HANS to chinese,
 )
 
-/** The message a validation example shows; the copy is chosen when the page is drawn. */
-private enum class DateMessage { NONE, BAD_FORMAT, REQUIRED, TOO_EARLY, TOO_LATE, CLOSED, WEEKDAY }
-
 internal class DatePickerPage : DemoPage() {
     private val texts = Binder(datePickerTexts)
 
@@ -465,7 +375,7 @@ internal class DatePickerPage : DemoPage() {
         val todayDate = todayAtMidnight()
 
         // --- 1. Basic usage (date-picker-basic.ts) -------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val basicLog = EventLog(6)
@@ -490,7 +400,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(basic.root)
 
         // --- 2. Validation (date-picker-validation.ts) ---------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         val closedDates = listOf(formatISODate(addDays(todayDate, 3)), formatISODate(addDays(todayDate, 4)))
@@ -528,7 +438,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(validation.root)
 
         // --- 3. Custom validation (date-picker-custom-validation.ts) --------------------------------
-        val weekday = sectionBlock()
+        val weekday = SectionBlock.NAME { show() }
         texts.bind(weekday.heading) { it.customHeading }
         texts.bind(weekday.hint) { it.customHint }
         texts.bind(weekdayPicker, { it.meetingDate }) { weekdayPicker.label = it }
@@ -557,7 +467,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(weekday.root)
 
         // --- 4. Date metadata (date-picker-date-metadata.ts) ----------------------------------------
-        val metadata = sectionBlock()
+        val metadata = SectionBlock.NAME { show() }
         texts.bind(metadata.heading) { it.metadataHeading }
         texts.bind(metadata.hint) { it.metadataHint }
         val metadataProvider: DatePickerDateMetadataProvider = { range ->
@@ -605,7 +515,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(metadata.root)
 
         // --- 5. Week numbers (date-picker-week-numbers.ts) ------------------------------------------
-        val weekNumbers = sectionBlock()
+        val weekNumbers = SectionBlock.NAME { show() }
         texts.bind(weekNumbers.heading) { it.weekNumbersHeading }
         texts.bind(weekNumbers.hint) { it.weekNumbersHint }
         val weekPicker = createDatePicker()
@@ -616,7 +526,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(weekNumbers.root)
 
         // --- 6. Initial position (date-picker-initial-position.ts) ----------------------------------
-        val initial = sectionBlock()
+        val initial = SectionBlock.NAME { show() }
         texts.bind(initial.heading) { it.initialHeading }
         texts.bind(initial.hint) { it.initialHint }
         val initialIso = formatISODate(lastDayOfYear(todayDate))
@@ -627,7 +537,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(initial.root)
 
         // --- 7. Auto open (date-picker-auto-open.ts) ------------------------------------------------
-        val autoOpen = sectionBlock()
+        val autoOpen = SectionBlock.NAME { show() }
         texts.bind(autoOpen.heading) { it.autoOpenHeading }
         texts.bind(autoOpen.hint) { it.autoOpenHint }
         val autoPicker = createDatePicker()
@@ -651,7 +561,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(autoOpen.root)
 
         // --- 8. Internationalization (date-picker-internationalization.ts) --------------------------
-        val localization = sectionBlock()
+        val localization = SectionBlock.NAME { show() }
         texts.bind(localization.heading) { it.localizationHeading }
         texts.bind(localization.hint) { it.localizationHint }
         val germanPicker =
@@ -687,7 +597,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(localization.root)
 
         // --- 9. Basic features (date-picker-basic-features.ts) --------------------------------------
-        val basics = sectionBlock()
+        val basics = SectionBlock.NAME { show() }
         texts.bind(basics.heading) { it.basicsHeading }
         texts.bind(basics.hint) { it.basicsHint }
         val featuredPicker = createDatePicker()
@@ -703,7 +613,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(basics.root)
 
         // --- 10. Read-only and disabled (date-picker-readonly-and-disabled.ts) ----------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readOnlyPicker = createDatePicker()
@@ -717,7 +627,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(states.root)
 
         // --- 11. Date range (date-picker-date-range.ts) ---------------------------------------------
-        val range = sectionBlock()
+        val range = SectionBlock.NAME { show() }
         texts.bind(range.heading) { it.rangeHeading }
         texts.bind(range.hint) { it.rangeHint }
         texts.bind(departurePicker, { it.departure }) { departurePicker.label = it }
@@ -737,7 +647,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(range.root)
 
         // --- 12. Individual input fields (date-picker-individual-input-fields.ts) -------------------
-        val individual = sectionBlock()
+        val individual = SectionBlock.NAME { show() }
         texts.bind(individual.heading) { it.individualHeading }
         texts.bind(individual.hint) { it.individualHint }
         texts.bind(yearCombo, { it.year }) { yearCombo.label = it }
@@ -781,7 +691,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(individual.root)
 
         // --- 13. Show the date format (date-picker-date-format-indicator.ts) -------------------------
-        val formatHint = sectionBlock()
+        val formatHint = SectionBlock.NAME { show() }
         texts.bind(formatHint.heading) { it.formatHeading }
         texts.bind(formatHint.hint) { it.formatHint }
         val formatPicker = createDatePicker()
@@ -792,7 +702,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(formatHint.root)
 
         // --- 14. Styles (date-picker-styles.ts) -----------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styledPicker = createDatePicker()
@@ -804,7 +714,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(styles.root)
 
         // --- 15. Custom format functions (date-formats.adoc, custom-functions.ts) -------------------
-        val customFunctions = sectionBlock()
+        val customFunctions = SectionBlock.NAME { show() }
         texts.bind(customFunctions.heading) { it.customFunctionsHeading }
         texts.bind(customFunctions.hint) { it.customFunctionsHint }
         texts.bind(customFunctionsPicker, { it.selectDate }) { customFunctionsPicker.label = it }
@@ -824,7 +734,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(customFunctions.root)
 
         // --- 16. Custom parse formats (date-formats.adoc, custom-format.ts, Flow only) -------------
-        val customFormats = sectionBlock()
+        val customFormats = SectionBlock.NAME { show() }
         texts.bind(customFormats.heading) { it.customFormatsHeading }
         texts.bind(customFormats.hint) { it.customFormatsHint }
         val customFormatsPicker = createDatePicker()
@@ -840,7 +750,7 @@ internal class DatePickerPage : DemoPage() {
         body.append(customFormats.root)
 
         // --- 17. Locale (date-formats.adoc, locale.ts, Flow only) -----------------------------------
-        val locale = sectionBlock()
+        val locale = SectionBlock.NAME { show() }
         texts.bind(locale.heading) { it.localeHeading }
         texts.bind(locale.hint) { it.localeHint }
         val localePicker = createDatePicker()
@@ -879,19 +789,7 @@ internal class DatePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReference<DatePickerPage>(DatePickerPage::class.js) {
-        val NAME: TagName<DatePickerPage> = TagName("vaadin-demo-date-picker-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-date-picker-page>`. */
-internal fun newDatePickerPage(): DatePickerPage {
-    DatePickerPage.define()
-    return DatePickerPage.NAME()
+    companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page")
 }
 
 private fun lastDayOfYear(date: Date): Date = createDate(date.getFullYear().toDouble(), 11.0, 31.0)

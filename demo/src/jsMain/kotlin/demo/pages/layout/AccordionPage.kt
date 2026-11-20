@@ -1,25 +1,19 @@
 package demo.pages.layout
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -34,7 +28,6 @@ import io.github.shijianjs.ktjs.vaadin.accordion.createAccordionPanel
 import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
@@ -59,52 +52,8 @@ val accordionEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/accordion",
                 sourcePath = "pages/layout/AccordionPage.kt",
             ),
-        kitPage = { newAccordionPage() },
+        kitPage = { AccordionPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class AccordionTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val summaryHeading: String,
-    val summaryHint: String,
-    val customerStep: String,
-    val billingStep: String,
-    val paymentStep: String,
-    val continueLabel: String,
-    val finish: String,
-    val firstName: String,
-    val lastName: String,
-    val emailAddress: String,
-    val phoneNumber: String,
-    val address: String,
-    val zip: String,
-    val city: String,
-    val country: String,
-    val cardNumber: String,
-    val expiry: String,
-    val contentHeading: String,
-    val contentHint: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val themesHeading: String,
-    val themesHint: String,
-    val personalInfo: String,
-    val billingAddressSummary: String,
-    val paymentSummary: String,
-    val expiresAt: String,
-    val analytics: String,
-    val dashboard: String,
-    val reports: String,
-    val dataSources: String,
-    val customers: String,
-    val accounts: String,
-    val contacts: String,
-    val finances: String,
-    val invoices: String,
-    val transactions: String,
-    val statements: String,
-)
 
 private val english: AccordionTexts =
     AccordionTexts(
@@ -212,7 +161,7 @@ internal class AccordionPage : DemoPage() {
         frame.mount(this)
         registerVaadinIcons()
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val accordion = infoAccordion()
@@ -221,14 +170,14 @@ internal class AccordionPage : DemoPage() {
         basic.body.append(exampleBox(null, accordion))
         body.append(basic.root)
 
-        val summarySection = sectionBlock()
+        val summarySection = SectionBlock.NAME { show() }
         texts.bind(summarySection.heading) { it.summaryHeading }
         texts.bind(summarySection.hint) { it.summaryHint }
         val wizard = createAccordion { opened = 0.0 }
         wizard.dataset["test"] = "accordion-wizard"
-        val customerIcon = newCompletionIcon()
-        val billingIcon = newCompletionIcon()
-        val paymentIcon = newCompletionIcon()
+        val customerIcon = CompletionIcon.NAME()
+        val billingIcon = CompletionIcon.NAME()
+        val paymentIcon = CompletionIcon.NAME()
 
         fun step(
             icon: HTMLElement,
@@ -293,19 +242,19 @@ internal class AccordionPage : DemoPage() {
         summarySection.body.append(exampleBox(null, wizard))
         body.append(summarySection.root)
 
-        val contentSection = sectionBlock()
+        val contentSection = SectionBlock.NAME { show() }
         texts.bind(contentSection.heading) { it.contentHeading }
         texts.bind(contentSection.hint) { it.contentHint }
         contentSection.body.append(exampleBox(null, linksAccordion()))
         body.append(contentSection.root)
 
-        val disabledSection = sectionBlock()
+        val disabledSection = SectionBlock.NAME { show() }
         texts.bind(disabledSection.heading) { it.disabledHeading }
         texts.bind(disabledSection.hint) { it.disabledHint }
         disabledSection.body.append(exampleBox(null, infoAccordion(disabledIndexes = intArrayOf(1, 2))))
         body.append(disabledSection.root)
 
-        val themes = sectionBlock()
+        val themes = SectionBlock.NAME { show() }
         texts.bind(themes.heading) { it.themesHeading }
         texts.bind(themes.hint) { it.themesHint }
         themes.body.append(
@@ -393,19 +342,7 @@ internal class AccordionPage : DemoPage() {
             }
         }
 
-    companion object : CustomElementReference<AccordionPage>(AccordionPage::class.js) {
-        val NAME: TagName<AccordionPage> = TagName("vaadin-demo-accordion-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-accordion-page>`. */
-internal fun newAccordionPage(): AccordionPage {
-    AccordionPage.define()
-    return AccordionPage.NAME()
+    companion object : CustomElementReferenceAdapter<AccordionPage>(AccordionPage::class.js, "vaadin-demo-accordion-page")
 }
 
 /**
@@ -414,36 +351,3 @@ internal fun newAccordionPage(): AccordionPage {
  * The icon is hidden until the step's button opens the next panel, and the step toggles `hidden` on
  * the host, so the host is the icon's wrapper rather than something the page has to reach into.
  */
-internal class CompletionIcon : CustomElementAdapter() {
-    private val icon = createIcon {
-        icon = "vaadin:check"
-        style.setProperty("--vaadin-icon-size", "1rem")
-    }
-
-    private var startedHidden = false
-
-    init {
-        attachShadowRoot().append(icon)
-    }
-
-    /** The step's button clears `hidden`; a reconnect must not put it back. */
-    override fun connectedCallback() {
-        if (startedHidden) return
-        startedHidden = true
-        toggleAttribute("hidden", true)
-    }
-
-    companion object : CustomElementReference<CompletionIcon>(CompletionIcon::class.js) {
-        val NAME: TagName<CompletionIcon> = TagName("vaadin-demo-completion-icon")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-completion-icon>`. */
-internal fun newCompletionIcon(): CompletionIcon {
-    CompletionIcon.define()
-    return CompletionIcon.NAME()
-}

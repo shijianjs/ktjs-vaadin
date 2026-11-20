@@ -1,21 +1,17 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -52,36 +48,8 @@ val multiSelectComboBoxEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/multi-select-combo-box",
                 sourcePath = "pages/selection/MultiSelectComboBoxPage.kt",
             ),
-        kitPage = { newMultiSelectComboBoxPage() },
+        kitPage = { MultiSelectComboBoxPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class MultiSelectComboBoxTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val countries: String,
-    val selectedCount: (Int) -> String,
-    val selectedPrefix: (Int) -> String,
-    val presetHeading: String,
-    val presetHint: String,
-    val changeHeading: String,
-    val changeHint: String,
-    val selectedCountries: String,
-    val readonlyHeading: String,
-    val readonlyHint: String,
-    val expandHeading: String,
-    val expandHint: String,
-    val onTopHeading: String,
-    val onTopHint: String,
-    val collapseHeading: String,
-    val collapseHint: String,
-    val collapseChips: String,
-    val classNamesHeading: String,
-    val classNamesHint: String,
-    val fruit: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-)
 
 private val english: MultiSelectComboBoxTexts =
     MultiSelectComboBoxTexts(
@@ -164,7 +132,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
 
         val countries = jsArray<JsAny>(COUNTRIES_JSON)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         multi.itemLabelPath = "name"
@@ -177,7 +145,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(multi, readout.root)))
         body.append(basic.root)
 
-        val selection = sectionBlock()
+        val selection = SectionBlock.NAME { show() }
         texts.bind(selection.heading) { it.presetHeading }
         texts.bind(selection.hint) { it.presetHint }
         val preset =
@@ -192,7 +160,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         selection.body.append(exampleBox(null, preset))
         body.append(selection.root)
 
-        val selectionChange = sectionBlock()
+        val selectionChange = SectionBlock.NAME { show() }
         texts.bind(selectionChange.heading) { it.changeHeading }
         texts.bind(selectionChange.hint) { it.changeHint }
         val summary = createTextArea { readonly = true }
@@ -210,7 +178,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         selectionChange.body.append(exampleBox(null, kitRow(changing, summary)))
         body.append(selectionChange.root)
 
-        val readonly = sectionBlock()
+        val readonly = SectionBlock.NAME { show() }
         texts.bind(readonly.heading) { it.readonlyHeading }
         texts.bind(readonly.hint) { it.readonlyHint }
         val readonlyBox =
@@ -226,7 +194,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         readonly.body.append(exampleBox(null, readonlyBox))
         body.append(readonly.root)
 
-        val autoExpand = sectionBlock()
+        val autoExpand = SectionBlock.NAME { show() }
         texts.bind(autoExpand.heading) { it.expandHeading }
         texts.bind(autoExpand.hint) { it.expandHint }
         val expanding =
@@ -242,7 +210,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         autoExpand.body.append(exampleBox(null, expanding))
         body.append(autoExpand.root)
 
-        val selectedOnTop = sectionBlock()
+        val selectedOnTop = SectionBlock.NAME { show() }
         texts.bind(selectedOnTop.heading) { it.onTopHeading }
         texts.bind(selectedOnTop.hint) { it.onTopHint }
         val onTop =
@@ -257,7 +225,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         selectedOnTop.body.append(exampleBox(null, onTop))
         body.append(selectedOnTop.root)
 
-        val collapseChipsSection = sectionBlock()
+        val collapseChipsSection = SectionBlock.NAME { show() }
         texts.bind(collapseChipsSection.heading) { it.collapseHeading }
         texts.bind(collapseChipsSection.hint) { it.collapseHint }
         val collapsing =
@@ -277,7 +245,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         collapseChipsSection.body.append(exampleBox(null, kitCol(collapsing, collapseToggle)))
         body.append(collapseChipsSection.root)
 
-        val classNames = sectionBlock()
+        val classNames = SectionBlock.NAME { show() }
         texts.bind(classNames.heading) { it.classNamesHeading }
         texts.bind(classNames.hint) { it.classNamesHint }
         val fruits = jsArray<JsAny>(FRUITS_JSON)
@@ -292,7 +260,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         classNames.body.append(exampleBox(null, fruit))
         body.append(classNames.root)
 
-        val i18nSection = sectionBlock()
+        val i18nSection = SectionBlock.NAME { show() }
         texts.bind(i18nSection.heading) { it.i18nHeading }
         texts.bind(i18nSection.hint) { it.i18nHint }
         val localized =
@@ -341,19 +309,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReference<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js) {
-        val NAME: TagName<MultiSelectComboBoxPage> = TagName("vaadin-demo-multi-select-combo-box-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-multi-select-combo-box-page>`. */
-internal fun newMultiSelectComboBoxPage(): MultiSelectComboBoxPage {
-    MultiSelectComboBoxPage.define()
-    return MultiSelectComboBoxPage.NAME()
+    companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page")
 }
 
 /** Reads the `name` field of the selected country objects. */

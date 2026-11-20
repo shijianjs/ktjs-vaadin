@@ -1,11 +1,8 @@
 package demo.pages.overlays
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
@@ -13,11 +10,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.paragraph
+import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -56,68 +52,8 @@ val dialogEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/dialog",
                 sourcePath = "pages/overlays/DialogPage.kt",
             ),
-        kitPage = { newDialogPage() },
+        kitPage = { DialogPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class DialogTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val basicContent: String,
-    val basicEscape: String,
-    val close: String,
-    val exampleDialog: String,
-    val openDialog: String,
-    val openedLine: (Boolean) -> String,
-    val closedLine: String,
-    val formHeading: String,
-    val formHint: String,
-    val newEmployee: String,
-    val firstName: String,
-    val lastName: String,
-    val cancel: String,
-    val add: String,
-    val openForm: String,
-    val optionsHeading: String,
-    val optionsHint: String,
-    val notClosableTitle: String,
-    val onlyButton: String,
-    val openCustomSize: String,
-    val modelessTitle: String,
-    val modelessNote: String,
-    val openModeless: String,
-    val draggableHeading: String,
-    val draggableHint: String,
-    val addNoteTitle: String,
-    val noteTitle: String,
-    val noteDescription: String,
-    val addNote: String,
-    val openDraggable: String,
-    val headerHeading: String,
-    val headerHint: String,
-    val userDetails: String,
-    val name: String,
-    val email: String,
-    val address: String,
-    val addressValue: String,
-    val openUserDetails: String,
-    val footerHeading: String,
-    val footerHint: String,
-    val deleteTitle: (String) -> String,
-    val deleteQuestion: String,
-    val delete: String,
-    val deleteUser: String,
-    val noPaddingHeading: String,
-    val noPaddingHint: String,
-    val filterTitle: String,
-    val filter: String,
-    val openFilter: String,
-    val resizableHeading: String,
-    val resizableHint: String,
-    val employeeList: String,
-    val openResizable: String,
-    val professionHeader: String,
-)
 
 private val english: DialogTexts =
     DialogTexts(
@@ -289,7 +225,7 @@ internal class DialogPage : DemoPage() {
             texts.bind(dialogNode, copy) { dialogNode.headerTitle = it }
         }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         dialog.dataset["test"] = "dialog-basic"
@@ -322,7 +258,7 @@ internal class DialogPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(openButton, dialog, log.root)))
         body.append(basic.root)
 
-        val formSection = sectionBlock()
+        val formSection = SectionBlock.NAME { show() }
         texts.bind(formSection.heading) { it.formHeading }
         texts.bind(formSection.hint) { it.formHint }
         val employeeForm =
@@ -348,7 +284,7 @@ internal class DialogPage : DemoPage() {
         formSection.body.append(exampleBox(null, kitRow(openForm, formDialog)))
         body.append(formSection.root)
 
-        val options = sectionBlock()
+        val options = SectionBlock.NAME { show() }
         texts.bind(options.heading) { it.optionsHeading }
         texts.bind(options.hint) { it.optionsHint }
         title(configured) { it.notClosableTitle }
@@ -386,7 +322,7 @@ internal class DialogPage : DemoPage() {
         )
         body.append(options.root)
 
-        val draggableSection = sectionBlock()
+        val draggableSection = SectionBlock.NAME { show() }
         texts.bind(draggableSection.heading) { it.draggableHeading }
         texts.bind(draggableSection.hint) { it.draggableHint }
         title(noteDialog) { it.addNoteTitle }
@@ -414,7 +350,7 @@ internal class DialogPage : DemoPage() {
         draggableSection.body.append(exampleBox(null, kitRow(openNote, noteDialog)))
         body.append(draggableSection.root)
 
-        val headerSection = sectionBlock()
+        val headerSection = SectionBlock.NAME { show() }
         texts.bind(headerSection.heading) { it.headerHeading }
         texts.bind(headerSection.hint) { it.headerHint }
         val user = people(1).first()
@@ -444,7 +380,7 @@ internal class DialogPage : DemoPage() {
         headerSection.body.append(exampleBox(null, kitRow(openUser, userDialog)))
         body.append(headerSection.root)
 
-        val footerSection = sectionBlock()
+        val footerSection = SectionBlock.NAME { show() }
         texts.bind(footerSection.heading) { it.footerHeading }
         texts.bind(footerSection.hint) { it.footerHint }
         texts.bind(deleteDialog, { copy -> copy.deleteTitle(user.displayName) }) {
@@ -463,7 +399,7 @@ internal class DialogPage : DemoPage() {
         footerSection.body.append(exampleBox(null, kitRow(openDelete, deleteDialog)))
         body.append(footerSection.root)
 
-        val noPaddingSection = sectionBlock()
+        val noPaddingSection = SectionBlock.NAME { show() }
         texts.bind(noPaddingSection.heading) { it.noPaddingHeading }
         texts.bind(noPaddingSection.hint) { it.noPaddingHint }
         title(filterDialog) { it.filterTitle }
@@ -479,7 +415,7 @@ internal class DialogPage : DemoPage() {
         noPaddingSection.body.append(exampleBox(null, kitRow(openFilter, filterDialog)))
         body.append(noPaddingSection.root)
 
-        val resizableSection = sectionBlock()
+        val resizableSection = SectionBlock.NAME { show() }
         texts.bind(resizableSection.heading) { it.resizableHeading }
         texts.bind(resizableSection.hint) { it.resizableHint }
         title(employeeDialog) { it.employeeList }
@@ -506,17 +442,5 @@ internal class DialogPage : DemoPage() {
         log.replay("close")
     }
 
-    companion object : CustomElementReference<DialogPage>(DialogPage::class.js) {
-        val NAME: TagName<DialogPage> = TagName("vaadin-demo-dialog-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-dialog-page>`. */
-internal fun newDialogPage(): DialogPage {
-    DialogPage.define()
-    return DialogPage.NAME()
+    companion object : CustomElementReferenceAdapter<DialogPage>(DialogPage::class.js, "vaadin-demo-dialog-page")
 }

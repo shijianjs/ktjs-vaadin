@@ -5,20 +5,16 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.bulletList
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -43,7 +39,6 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
-import web.html.HTMLAnchorElement
 import web.html.HTMLSpanElement
 
 val detailsEntry: CatalogEntry =
@@ -61,7 +56,7 @@ val detailsEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/details",
                 sourcePath = "pages/layout/DetailsPage.kt",
             ),
-        kitPage = { newDetailsPage() },
+        kitPage = { DetailsPage.NAME() },
     )
 
 /** A combo box over a fixed list of countries, labelled through `item-label-path`. */
@@ -78,33 +73,6 @@ internal fun countryComboBox(label: String): ComboBoxElement =
                 """,
             )
     }
-
-/** Every string this page shows, in one language. */
-private class DetailsTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val contactInformation: String,
-    val contentHeading: String,
-    val contentHint: String,
-    val analytics: String,
-    val analyticsLinks: List<String>,
-    val customers: String,
-    val customerLinks: List<String>,
-    val finances: String,
-    val financeLinks: List<String>,
-    val summaryHeading: String,
-    val summaryHint: String,
-    val errorsSuffix: String,
-    val address: String,
-    val zip: String,
-    val city: String,
-    val country: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val members: String,
-    val themesHeading: String,
-    val themesHint: String,
-)
 
 private val english: DetailsTexts = DetailsTexts(
     basicHeading = "Basic usage",
@@ -177,9 +145,6 @@ private val MEMBERS = listOf(
     "Zoe Wilson",
 )
 
-/** One link group of the content example: the details block and the anchors inside it. */
-private class LinkGroup(val details: DetailsElement, val anchors: List<HTMLAnchorElement>)
-
 private fun linkGroup(itemCount: Int): LinkGroup {
     val anchors = List(itemCount) { kitAnchor("", "#/details") }
     val details = createDetails { opened = true }
@@ -226,7 +191,7 @@ internal class DetailsPage : DemoPage() {
         frame.mount(this)
         registerVaadinIcons()
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         basicDetails.opened = true
@@ -241,7 +206,7 @@ internal class DetailsPage : DemoPage() {
         basic.body.append(exampleBox(null, basicDetails))
         body.append(basic.root)
 
-        val contentSection = sectionBlock()
+        val contentSection = SectionBlock.NAME { show() }
         texts.bind(contentSection.heading) { it.contentHeading }
         texts.bind(contentSection.hint) { it.contentHint }
 
@@ -250,7 +215,7 @@ internal class DetailsPage : DemoPage() {
         )
         body.append(contentSection.root)
 
-        val summarySection = sectionBlock()
+        val summarySection = SectionBlock.NAME { show() }
         texts.bind(summarySection.heading) { it.summaryHeading }
         texts.bind(summarySection.hint) { it.summaryHint }
         customDetails.dataset["test"] = "details-custom-summary"
@@ -285,7 +250,7 @@ internal class DetailsPage : DemoPage() {
         summarySection.body.append(exampleBox(null, customDetails))
         body.append(summarySection.root)
 
-        val disabledSection = sectionBlock()
+        val disabledSection = SectionBlock.NAME { show() }
         texts.bind(disabledSection.heading) { it.disabledHeading }
         texts.bind(disabledSection.hint) { it.disabledHint }
         disabledDetails.disabled = true
@@ -293,7 +258,7 @@ internal class DetailsPage : DemoPage() {
         disabledSection.body.append(exampleBox(null, disabledDetails))
         body.append(disabledSection.root)
 
-        val themes = sectionBlock()
+        val themes = SectionBlock.NAME { show() }
         texts.bind(themes.heading) { it.themesHeading }
         texts.bind(themes.hint) { it.themesHint }
         val themeNames = listOf("filled", "reverse", "small")
@@ -337,17 +302,5 @@ internal class DetailsPage : DemoPage() {
         group.anchors.forEachIndexed { index, anchor -> anchor.textContent = links[index] }
     }
 
-    companion object : CustomElementReference<DetailsPage>(DetailsPage::class.js) {
-        val NAME: TagName<DetailsPage> = TagName("vaadin-demo-details-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-details-page>`. */
-internal fun newDetailsPage(): DetailsPage {
-    DetailsPage.define()
-    return DetailsPage.NAME()
+    companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page")
 }

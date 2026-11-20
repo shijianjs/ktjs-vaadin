@@ -1,23 +1,19 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -56,76 +52,11 @@ val textFieldEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/text-field",
                 sourcePath = "pages/fields/TextFieldPage.kt",
             ),
-        kitPage = { newTextFieldPage() },
+        kitPage = { TextFieldPage.NAME() },
     )
 
 /** Phone pattern of `text-field-validation.ts` (documents grouped digits with optional separators). */
 private const val PHONE_PATTERN = "^[+]?\\(?[0-9]{3}\\)?-?[0-9]{3}-?[0-9]{4,6}$"
-
-/** Every string this page shows, in one language. */
-private class TextFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val streetAddress: String,
-    val addressCaption: String,
-    val valuePrefix: String,
-    val empty: String,
-    val readoutCaption: String,
-    val logCaption: String,
-    val name: String,
-    val namePlaceholder: String,
-    val nameHelper: String,
-    val changeLine: (String) -> String,
-    val valueChangedLine: (String) -> String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val label: String,
-    val helperText: String,
-    val placeholder: String,
-    val tooltipText: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val phone: String,
-    val phoneHelper: String,
-    val notValidated: String,
-    val required: String,
-    val tooShort: (Int) -> String,
-    val tooLong: (Int) -> String,
-    val phonePattern: String,
-    val checkPrefix: String,
-    val passed: String,
-    val failed: String,
-    val constraintsCaption: String,
-    val code: String,
-    val codeHelper: String,
-    val codeError: String,
-    val validate: String,
-    val valid: String,
-    val invalidWith: (Boolean) -> String,
-    val reset: String,
-    val resetPrefix: String,
-    val manualCaption: String,
-    val resultPrefix: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val value: String,
-    val autoselectHeading: String,
-    val autoselectHint: String,
-    val autoselect: String,
-    val inputModeHeading: String,
-    val inputModeHint: String,
-    val url: String,
-    val email: String,
-    val search: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val stylesCaption: String,
-    val alignmentCaption: String,
-    val typeHere: String,
-    val typeHerePlaceholder: String,
-)
 
 private val english: TextFieldTexts =
     TextFieldTexts(
@@ -320,7 +251,7 @@ internal class TextFieldPage : DemoPage() {
             }
 
         // --- Basic usage (text-field-basic.ts) ------------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val address = field { it.streetAddress }
@@ -352,7 +283,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(basic.root)
 
         // --- Basic features (text-field-basic-features.ts) ------------------------------------------
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         val featureField = createTextField()
@@ -371,7 +302,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(features.root)
 
         // --- Validation (text-field-validation.ts) --------------------------------------------------
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         texts.bind(phone, { it.phone }) { phone.label = it }
@@ -424,7 +355,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(validation.root)
 
         // --- Read-only and disabled (text-field-readonly-and-disabled.ts) ---------------------------
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         val readonlyField = field { it.readonly }
@@ -434,7 +365,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(states.root)
 
         // --- Autoselect -----------------------------------------------------------------------------
-        val autoselectSection = sectionBlock()
+        val autoselectSection = SectionBlock.NAME { show() }
         texts.bind(autoselectSection.heading) { it.autoselectHeading }
         texts.bind(autoselectSection.hint) { it.autoselectHint }
         val autoselectField = field { it.value }
@@ -449,7 +380,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(autoselectSection.root)
 
         // --- Input mode -----------------------------------------------------------------------------
-        val inputMode = sectionBlock()
+        val inputMode = SectionBlock.NAME { show() }
         texts.bind(inputMode.heading) { it.inputModeHeading }
         texts.bind(inputMode.hint) { it.inputModeHint }
         inputMode.body.append(
@@ -474,7 +405,7 @@ internal class TextFieldPage : DemoPage() {
         body.append(inputMode.root)
 
         // --- Style variants (text-field-styles.ts) --------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styledField = field { it.label }
@@ -548,17 +479,5 @@ internal class TextFieldPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReference<TextFieldPage>(TextFieldPage::class.js) {
-        val NAME: TagName<TextFieldPage> = TagName("vaadin-demo-text-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-text-field-page>`. */
-internal fun newTextFieldPage(): TextFieldPage {
-    TextFieldPage.define()
-    return TextFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<TextFieldPage>(TextFieldPage::class.js, "vaadin-demo-text-field-page")
 }

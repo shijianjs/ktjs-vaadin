@@ -1,24 +1,19 @@
 package demo.pages.upload
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.grid as kitGrid
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Grid
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -30,9 +25,9 @@ import demo.ui.Readout
 import demo.ui.jsObject
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLElement
 import web.cssom.AlignItems
-
 import web.cssom.Display
 import web.cssom.JustifyContent
 import web.cssom.px
@@ -74,90 +69,8 @@ val uploadEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/upload",
                 sourcePath = "pages/upload/UploadPage.kt",
             ),
-        kitPage = { newUploadPage() },
+        kitPage = { UploadPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class UploadTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val uploadFailed: String,
-    val dragHeading: String,
-    val dragHint: String,
-    val dragEnabled: String,
-    val dragDisabled: String,
-    val autoHeading: String,
-    val autoHint: String,
-    val selectFilesMany: String,
-    val autoDisabledCaption: String,
-    val uploadAllCaption: String,
-    val notUploading: String,
-    val uploadStatus: String,
-    val uploadAllFiles: String,
-    val restrictionsHeading: String,
-    val restrictionsHint: String,
-    val uploadReport: String,
-    val acceptedPdf: String,
-    val uploadReportOne: String,
-    val dropReportOne: String,
-    val incorrectPdf: String,
-    val uploadFilesHeading: String,
-    val maxThreeFiles: String,
-    val tooManyFiles: String,
-    val uploadFileHeading: String,
-    val maxSize10: String,
-    val fileTooBig: String,
-    val actionsHeading: String,
-    val actionsHint: String,
-    val clearCaption: String,
-    val retryCaption: String,
-    val startCaption: String,
-    val somethingWrong: String,
-    val i18nHeading: String,
-    val i18nHint: String,
-    val customHeading: String,
-    val customHint: String,
-    val uploadPdf: String,
-    val dropPdf: String,
-    val buttonLimitHint: String,
-    val errorPrefix: String,
-    val customButtonCaption: String,
-    val cloudText: String,
-    val privacyPolicy: String,
-    val dropLabelCaption: String,
-    val listenersHeading: String,
-    val listenersHint: String,
-    val startUpload: String,
-    val bestHeading: String,
-    val bestHint: String,
-    val buttonLabellingCaption: String,
-    val helperCaption: String,
-    val uploadSpreadsheet: String,
-    val tooBigOneMb: String,
-    val spreadsheetOnly: String,
-    val uploadSpreadsheetOne: String,
-    val dropSpreadsheetOne: String,
-    val supportedFormats: String,
-    val errorsHeading: String,
-    val errorsHint: String,
-    val cautionCaption: String,
-    val recommendedCaption: String,
-    val unexpectedServerError: String,
-    val fileNotUploaded: String,
-    val modularHeading: String,
-    val modularHint: String,
-    val modularBasicCaption: String,
-    val selectFilesOne: String,
-    val browse: String,
-    val dropHereOr: String,
-    val dropZoneCaption: String,
-    val thumbnailsCaption: String,
-    val disabledHeading: String,
-    val disabledHint: String,
-    val uploadDisabled: String,
-    val disabledManagerCaption: String,
-    val queued: String,
-)
 
 private val english: UploadTexts =
     UploadTexts(
@@ -433,7 +346,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendBasic() {
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val upload = mockedUpload { target = "/api/fileupload" }
@@ -455,7 +368,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendDragAndDrop() {
-        val dragAndDrop = sectionBlock()
+        val dragAndDrop = SectionBlock.NAME { show() }
         texts.bind(dragAndDrop.heading) { it.dragHeading }
         texts.bind(dragAndDrop.hint) { it.dragHint }
         val dropEnabled = mockedUpload { nodrop = false }
@@ -469,17 +382,14 @@ internal class UploadPage : DemoPage() {
         dragAndDrop.body.append(
             exampleBox(
                 null,
-                kitGrid(260,
-                    kitCol(enabledLabel, dropEnabled),
-                    kitCol(disabledLabel, dropDisabled),
-                ),
+                Grid.NAME { show(260); add(kitCol(enabledLabel, dropEnabled), kitCol(disabledLabel, dropDisabled)) },
             ),
         )
         body.append(dragAndDrop.root)
     }
 
     private fun appendAutoUpload() {
-        val autoUpload = sectionBlock()
+        val autoUpload = SectionBlock.NAME { show() }
         texts.bind(autoUpload.heading) { it.autoHeading }
         texts.bind(autoUpload.hint) { it.autoHint }
 
@@ -535,7 +445,7 @@ internal class UploadPage : DemoPage() {
     private var notUploadingReadout: Readout? = null
 
     private fun appendRestrictions() {
-        val restrictions = sectionBlock()
+        val restrictions = SectionBlock.NAME { show() }
         texts.bind(restrictions.heading) { it.restrictionsHeading }
         texts.bind(restrictions.hint) { it.restrictionsHint }
 
@@ -598,7 +508,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendFileActions() {
-        val actions = sectionBlock()
+        val actions = SectionBlock.NAME { show() }
         texts.bind(actions.heading) { it.actionsHeading }
         texts.bind(actions.hint) { it.actionsHint }
         val inProgress = mockedUpload()
@@ -636,7 +546,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendInternationalization() {
-        val i18nSection = sectionBlock()
+        val i18nSection = SectionBlock.NAME { show() }
         texts.bind(i18nSection.heading) { it.i18nHeading }
         texts.bind(i18nSection.hint) { it.i18nHint }
         val upload = mockedUpload()
@@ -648,7 +558,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendCustomization() {
-        val customization = sectionBlock()
+        val customization = SectionBlock.NAME { show() }
         texts.bind(customization.heading) { it.customHeading }
         texts.bind(customization.hint) { it.customHint }
 
@@ -703,7 +613,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendListeners() {
-        val listeners = sectionBlock()
+        val listeners = SectionBlock.NAME { show() }
         texts.bind(listeners.heading) { it.listenersHeading }
         texts.bind(listeners.hint) { it.listenersHint }
         val upload = mockedUpload { target = "/api/fileupload" }
@@ -725,7 +635,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendBestPractices() {
-        val bestPractices = sectionBlock()
+        val bestPractices = SectionBlock.NAME { show() }
         texts.bind(bestPractices.heading) { it.bestHeading }
         texts.bind(bestPractices.hint) { it.bestHint }
 
@@ -777,7 +687,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendErrorMessages() {
-        val errorMessages = sectionBlock()
+        val errorMessages = SectionBlock.NAME { show() }
         texts.bind(errorMessages.heading) { it.errorsHeading }
         texts.bind(errorMessages.hint) { it.errorsHint }
         val caution = mockedUpload { nodrop = true }
@@ -810,17 +720,14 @@ internal class UploadPage : DemoPage() {
         errorMessages.body.append(
             exampleBox(
                 null,
-                kitGrid(260,
-                    kitCol(cautionLabel, caution),
-                    kitCol(recommendedLabel, recommended),
-                ),
+                Grid.NAME { show(260); add(kitCol(cautionLabel, caution), kitCol(recommendedLabel, recommended)) },
             ),
         )
         body.append(errorMessages.root)
     }
 
     private fun appendModular() {
-        val modular = sectionBlock()
+        val modular = SectionBlock.NAME { show() }
         texts.bind(modular.heading) { it.modularHeading }
         texts.bind(modular.hint) { it.modularHint }
 
@@ -916,7 +823,7 @@ internal class UploadPage : DemoPage() {
     }
 
     private fun appendDisabled() {
-        val disabled = sectionBlock()
+        val disabled = SectionBlock.NAME { show() }
         texts.bind(disabled.heading) { it.disabledHeading }
         texts.bind(disabled.hint) { it.disabledHint }
         val upload = mockedUpload {
@@ -957,17 +864,5 @@ internal class UploadPage : DemoPage() {
         notUploadingReadout?.set(copy.notUploading)
     }
 
-    companion object : CustomElementReference<UploadPage>(UploadPage::class.js) {
-        val NAME: TagName<UploadPage> = TagName("vaadin-demo-upload-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-upload-page>`. */
-internal fun newUploadPage(): UploadPage {
-    UploadPage.define()
-    return UploadPage.NAME()
+    companion object : CustomElementReferenceAdapter<UploadPage>(UploadPage::class.js, "vaadin-demo-upload-page")
 }

@@ -5,12 +5,10 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerElement
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.html.HtmlTagName
 
 /**
@@ -39,17 +37,5 @@ internal class CardContentScroller : CustomElementAdapter(), CardTranslatable {
         cardTexts.apply(lang)
     }
 
-    companion object : CustomElementReference<CardContentScroller>(CardContentScroller::class.js) {
-        val NAME: TagName<CardContentScroller> = TagName("demo-card-content-scroller")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<demo-card-content-scroller>`. */
-internal fun newCardContentScroller(): CardContentScroller {
-    CardContentScroller.define()
-    return CardContentScroller.NAME()
+    companion object : CustomElementReferenceAdapter<CardContentScroller>(CardContentScroller::class.js, "demo-card-content-scroller")
 }

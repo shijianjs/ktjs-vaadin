@@ -1,10 +1,7 @@
 package demo.pages.pickers
 
-
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -21,12 +18,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.newReadout
-import io.github.shijianjs.ktjs.demo.page.anchor as kitAnchor
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.demo.page.Readout
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
@@ -40,63 +37,6 @@ import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLAnchorElement
-
-/** Every string this page shows, in one language. */
-private class TimePickerTexts(
-    val docsLink: String,
-    val sourceLink: String,
-    val apiLink: String,
-    val basicTitle: String,
-    val basicHint: String,
-    val alarm: String,
-    val currentTime: String,
-    val empty: String,
-    val minutesTitle: String,
-    val minutesHint: String,
-    val meetingTime: String,
-    val halfHour: String,
-    val secondsTitle: String,
-    val secondsHint: String,
-    val received: String,
-    val autoTitle: String,
-    val autoHint: String,
-    val open: String,
-    val close: String,
-    val validationTitle: String,
-    val validationHint: String,
-    val appointment: String,
-    val openHours: String,
-    val invalidFormat: String,
-    val required: String,
-    val tooEarly: String,
-    val tooLate: String,
-    val validate: String,
-    val errorPrefix: String,
-    val none: String,
-    val customTitle: String,
-    val customHint: String,
-    val customHours: String,
-    val unavailable: String,
-    val featuresTitle: String,
-    val featuresHint: String,
-    val label: String,
-    val helper: String,
-    val placeholder: String,
-    val tooltip: String,
-    val statesTitle: String,
-    val statesHint: String,
-    val readonly: String,
-    val disabled: String,
-    val stylesTitle: String,
-    val stylesHint: String,
-    val parserTitle: String,
-    val parserHint: String,
-    val defaultParser: String,
-    val looseAlarm: String,
-    val looseHelper: String,
-    val committed: String,
-    val parseTimeCaption: String,
-)
 
 private val timePickerEnglish: TimePickerTexts = TimePickerTexts(
     docsLink = "Vaadin documentation",
@@ -240,7 +180,7 @@ val timePickerEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/time-picker",
                 sourcePath = "pages/pickers/TimePickerPage.kt",
             ),
-        kitPage = { newTimePickerPage() },
+        kitPage = { TimePickerPage.NAME() },
     )
 
 // ---------------------------------------------------------------------------------------------
@@ -260,12 +200,11 @@ val timePickerEntry: CatalogEntry =
 internal class TimePickerPage : DemoPage() {
     private val meta: PageMeta = timePickerEntry.meta
 
-
     private val texts = Binder(timePickerTexts)
 
     private val basicPicker = createTimePicker { value = "07:00" }.apply { dataset["test"] = "time-picker-basic" }
 
-    private val basicReadout = newReadout("")
+    private val basicReadout = Readout.NAME { show("") }
 
     private val minutesPicker = createTimePicker {
         value = "12:30"
@@ -283,7 +222,7 @@ internal class TimePickerPage : DemoPage() {
         autoOpenDisabled = true
     }
 
-    private val openedReadout = newReadout("opened = false")
+    private val openedReadout = Readout.NAME { show("opened = false") }
 
     private val openButton = createButton().addTheme("tertiary")
 
@@ -297,7 +236,7 @@ internal class TimePickerPage : DemoPage() {
         step = 1800.0
     }
 
-    private val validatedError = newReadout("")
+    private val validatedError = Readout.NAME { show("") }
 
     private val validateButton = createButton()
 
@@ -307,7 +246,7 @@ internal class TimePickerPage : DemoPage() {
         step = 1800.0
     }
 
-    private val customError = newReadout("")
+    private val customError = Readout.NAME { show("") }
 
     private val customValidateButton = createButton()
 
@@ -338,7 +277,7 @@ internal class TimePickerPage : DemoPage() {
             }
     }
 
-    private val looseReadout = newReadout("")
+    private val looseReadout = Readout.NAME { show("") }
 
     private val links = mutableListOf<HTMLAnchorElement>()
 
@@ -353,7 +292,6 @@ internal class TimePickerPage : DemoPage() {
     private var validationReason: ValidationReason = ValidationReason.NONE
 
     private enum class ValidationReason { NONE, FORMAT, REQUIRED, EARLY, LATE }
-
 
     init {
         registerVaadinIcons()
@@ -382,7 +320,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildBasic() {
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         texts.bind(basicPicker, { it.alarm })
@@ -394,7 +332,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildMinutes() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.minutesTitle })
         texts.bind(section.hint, { it.minutesHint })
         texts.bind(minutesPicker, { it.meetingTime })
@@ -404,7 +342,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildSeconds() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.secondsTitle })
         texts.bind(section.hint, { it.secondsHint })
         texts.bind(secondsPicker, { it.received })
@@ -413,7 +351,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildAutoOpen() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.autoTitle })
         texts.bind(section.hint, { it.autoHint })
         texts.bind(autoPicker, { it.alarm })
@@ -430,7 +368,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildValidation() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.validationTitle })
         texts.bind(section.hint, { it.validationHint })
         texts.bind(validatedPicker, { it.appointment })
@@ -457,7 +395,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildCustomValidation() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.customTitle })
         texts.bind(section.hint, { it.customHint })
         texts.bind(customPicker, { it.appointment })
@@ -478,7 +416,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildFeatures() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.featuresTitle })
         texts.bind(section.hint, { it.featuresHint })
         texts.bind(featuredPicker, { it.label })
@@ -493,7 +431,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildStates() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.statesTitle })
         texts.bind(section.hint, { it.statesHint })
         texts.bind(readonlyPicker, { it.readonly })
@@ -503,7 +441,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildStyles() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
         texts.bind(styledPicker, { it.label })
@@ -513,7 +451,7 @@ internal class TimePickerPage : DemoPage() {
     }
 
     private fun buildParser() {
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.parserTitle })
         texts.bind(section.hint, { it.parserHint })
         texts.bind(plainPicker, { it.alarm })
@@ -569,19 +507,7 @@ internal class TimePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReference<TimePickerPage>(TimePickerPage::class.js) {
-        val NAME: TagName<TimePickerPage> = TagName("vaadin-demo-time-picker-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-time-picker-page>`. */
-internal fun newTimePickerPage(): TimePickerPage {
-    TimePickerPage.define()
-    return TimePickerPage.NAME()
+    companion object : CustomElementReferenceAdapter<TimePickerPage>(TimePickerPage::class.js, "vaadin-demo-time-picker-page")
 }
 
 /**
@@ -603,5 +529,3 @@ private fun parseLooseTime(text: String): TimePickerTime? {
     if (hours !in 0..23 || minutes !in 0..59) return null
     return parseISOTime("${pad2(hours)}:${pad2(minutes)}")
 }
-
-

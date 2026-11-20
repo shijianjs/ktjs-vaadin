@@ -5,17 +5,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -50,37 +46,8 @@ val switchEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/switch",
                 sourcePath = "pages/selection/SwitchPage.kt",
             ),
-        kitPage = { newSwitchPage() },
+        kitPage = { SwitchPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class SwitchTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val notifications: String,
-    val on: String,
-    val off: String,
-    val statePrefix: String,
-    val featuresHeading: String,
-    val featuresHint: String,
-    val autosave: String,
-    val autosaveHelper: String,
-    val lastSaved: String,
-    val validationHeading: String,
-    val validationHint: String,
-    val twoFactor: String,
-    val twoFactorError: String,
-    val notValidated: String,
-    val validate: String,
-    val validationPrefix: String,
-    val passed: String,
-    val failed: String,
-    val statesHeading: String,
-    val statesHint: String,
-    val auditLog: String,
-    val auditLogHelper: String,
-    val dailyDigest: String,
-)
 
 private val english: SwitchTexts = SwitchTexts(
     basicHeading = "Basic usage",
@@ -173,7 +140,7 @@ internal class SwitchPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         notifications.checked = true
@@ -182,7 +149,7 @@ internal class SwitchPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(notifications, readout.root)))
         body.append(basic.root)
 
-        val features = sectionBlock()
+        val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
         autosaveTooltip.setAttribute("slot", "tooltip")
@@ -190,7 +157,7 @@ internal class SwitchPage : DemoPage() {
         features.body.append(exampleBox(null, autosave))
         body.append(features.root)
 
-        val validation = sectionBlock()
+        val validation = SectionBlock.NAME { show() }
         texts.bind(validation.heading) { it.validationHeading }
         texts.bind(validation.hint) { it.validationHint }
         twoFactor.required = true
@@ -202,7 +169,7 @@ internal class SwitchPage : DemoPage() {
         validation.body.append(exampleBox(null, kitCol(twoFactor, kitRow(validateButton, result.root))))
         body.append(validation.root)
 
-        val states = sectionBlock()
+        val states = SectionBlock.NAME { show() }
         texts.bind(states.heading) { it.statesHeading }
         texts.bind(states.hint) { it.statesHint }
         auditLog.readonly = true
@@ -246,17 +213,5 @@ internal class SwitchPage : DemoPage() {
         renderResult()
     }
 
-    companion object : CustomElementReference<SwitchPage>(SwitchPage::class.js) {
-        val NAME: TagName<SwitchPage> = TagName("vaadin-demo-switch-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-switch-page>`. */
-internal fun newSwitchPage(): SwitchPage {
-    SwitchPage.define()
-    return SwitchPage.NAME()
+    companion object : CustomElementReferenceAdapter<SwitchPage>(SwitchPage::class.js, "vaadin-demo-switch-page")
 }

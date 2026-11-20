@@ -1,21 +1,17 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -57,44 +53,8 @@ val customFieldEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/custom-field",
                 sourcePath = "pages/fields/CustomFieldPage.kt",
             ),
-        kitPage = { newCustomFieldPage() },
+        kitPage = { CustomFieldPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class CustomFieldTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val periodLabel: String,
-    val periodHelper: String,
-    val startDate: String,
-    val endDate: String,
-    val empty: String,
-    val valuePrefix: String,
-    val valueEmpty: String,
-    val startBeforeEnd: String,
-    val spanTooLong: String,
-    val validate: String,
-    val formatHeading: String,
-    val formatHint: String,
-    val firstName: String,
-    val lastName: String,
-    val fullName: String,
-    val fullNameHelper: String,
-    val nativeHeading: String,
-    val nativeHint: String,
-    val payment: String,
-    val cardholder: String,
-    val cardNumber: String,
-    val securityCode: String,
-    val paymentEmpty: String,
-    val paymentPrefix: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val price: String,
-    val priceHelper: String,
-    val amount: String,
-    val currency: String,
-)
 
 private val english: CustomFieldTexts =
     CustomFieldTexts(
@@ -212,7 +172,7 @@ internal class CustomFieldPage : DemoPage() {
         frame.mount(this)
 
         // --- Basic: enrollment period ---------------------------------------------------------------
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         period.required = true
@@ -240,7 +200,7 @@ internal class CustomFieldPage : DemoPage() {
         body.append(basic.root)
 
         // --- Formatting the combined value ----------------------------------------------------------
-        val formatting = sectionBlock()
+        val formatting = SectionBlock.NAME { show() }
         texts.bind(formatting.heading) { it.formatHeading }
         texts.bind(formatting.hint) { it.formatHint }
         val firstName = createTextField { placeholder = "Ada" }
@@ -258,7 +218,7 @@ internal class CustomFieldPage : DemoPage() {
         body.append(formatting.root)
 
         // --- Native input fields --------------------------------------------------------------------
-        val native = sectionBlock()
+        val native = SectionBlock.NAME { show() }
         texts.bind(native.heading) { it.nativeHeading }
         texts.bind(native.hint) { it.nativeHint }
         texts.bind(payment, { it.payment }) { payment.label = it }
@@ -275,7 +235,7 @@ internal class CustomFieldPage : DemoPage() {
         body.append(native.root)
 
         // --- Styles ---------------------------------------------------------------------------------
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val price = createCustomField().addTheme("small", "helper-above-field")
@@ -357,19 +317,7 @@ internal class CustomFieldPage : DemoPage() {
         paymentReadout.set(copy.paymentPrefix, (payment.value ?: "").replace("\t", " · ").ifEmpty { copy.empty })
     }
 
-    companion object : CustomElementReference<CustomFieldPage>(CustomFieldPage::class.js) {
-        val NAME: TagName<CustomFieldPage> = TagName("vaadin-demo-custom-field-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-custom-field-page>`. */
-internal fun newCustomFieldPage(): CustomFieldPage {
-    CustomFieldPage.define()
-    return CustomFieldPage.NAME()
+    companion object : CustomElementReferenceAdapter<CustomFieldPage>(CustomFieldPage::class.js, "vaadin-demo-custom-field-page")
 }
 
 private const val DAY_MILLIS: Double = 86_400_000.0

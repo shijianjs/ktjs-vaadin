@@ -6,14 +6,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.demo.page.heading
+import io.github.shijianjs.ktjs.demo.page.Blocks.heading
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -25,15 +22,12 @@ import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.CardElement
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
-import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLHeadingElement
 import web.html.HTMLImageElement
-import web.html.HTMLElement
 import web.html.HtmlTagName
 
 val scrollerEntry: CatalogEntry =
@@ -51,24 +45,8 @@ val scrollerEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/scroller",
                 sourcePath = "pages/layout/ScrollerPage.kt",
             ),
-        kitPage = { newScrollerPage() },
+        kitPage = { ScrollerPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class ScrollerTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val eventContent: String,
-    val cardTitle: String,
-    val addToCalendar: String,
-    val bothHeading: String,
-    val bothHint: String,
-    val illustrationAlt: String,
-    val mobileHeading: String,
-    val mobileHint: String,
-    val createNew: String,
-    val actions: List<String>,
-)
 
 private val english: ScrollerTexts = ScrollerTexts(
     basicHeading = "Basic usage",
@@ -200,7 +178,7 @@ internal class ScrollerPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val scroller = createScroller().addTheme("overflow-indicators")
@@ -213,7 +191,7 @@ internal class ScrollerPage : DemoPage() {
         basic.body.append(exampleBox(null, eventCard))
         body.append(basic.root)
 
-        val both = sectionBlock()
+        val both = SectionBlock.NAME { show() }
         texts.bind(both.heading) { it.bothHeading }
         texts.bind(both.hint) { it.bothHint }
         val bothScroller = createScroller()
@@ -228,7 +206,7 @@ internal class ScrollerPage : DemoPage() {
         both.body.append(exampleBox(null, bothScroller))
         body.append(both.root)
 
-        val mobile = sectionBlock()
+        val mobile = SectionBlock.NAME { show() }
         texts.bind(mobile.heading) { it.mobileHeading }
         texts.bind(mobile.hint) { it.mobileHint }
         val phone = HtmlTagName.div().apply {
@@ -272,56 +250,18 @@ internal class ScrollerPage : DemoPage() {
         actions.forEachIndexed { index, action -> action.updateLabel(copy.actions[index]) }
     }
 
-    companion object : CustomElementReference<ScrollerPage>(ScrollerPage::class.js) {
-        val NAME: TagName<ScrollerPage> = TagName("vaadin-demo-scroller-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-scroller-page>`. */
-internal fun newScrollerPage(): ScrollerPage {
-    ScrollerPage.define()
-    return ScrollerPage.NAME()
+    companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page")
 }
 
 /**
  * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
  * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
  */
-internal class ScrollerAction : CustomElementAdapter() {
-    private val button = createButton { textContent = "" }
-
-    init {
-        button.style.setProperty("height", "6.25rem")
-        attachShadowRoot().append(button)
-    }
-
-    /** Sets the label and the prefix icon. */
-    fun show(label: String, icon: String) {
-        updateLabel(label)
-        button.append(createIcon { this.icon = icon }.apply { slot = "prefix" })
-    }
-
-    /** Rewrites the label; the icon stays. */
-    fun updateLabel(label: String) {
-        button.textContent = label
-    }
-
-    companion object : CustomElementReference<ScrollerAction>(ScrollerAction::class.js) {
-        val NAME: TagName<ScrollerAction> = TagName("vaadin-demo-scroller-action")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
 
 /** Creates a defined `<vaadin-demo-scroller-action>`. */
 internal fun newScrollerAction(label: String, icon: String): ScrollerAction {
-    ScrollerAction.define()
+    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+    ScrollerAction.NAME
     return ScrollerAction.NAME().also {
         it.show(label, icon)
     }

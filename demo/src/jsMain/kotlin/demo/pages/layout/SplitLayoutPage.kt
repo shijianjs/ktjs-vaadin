@@ -6,16 +6,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
@@ -28,7 +24,6 @@ import io.github.shijianjs.ktjs.vaadin.splitlayout.SplitLayoutOrientations
 import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import web.dom.clickEvent
 import web.events.addHandler
-import web.html.HTMLElement
 
 val splitLayoutEntry: CatalogEntry =
     CatalogEntry(
@@ -46,25 +41,8 @@ val splitLayoutEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/split-layout",
                 sourcePath = "pages/layout/SplitLayoutPage.kt",
             ),
-        kitPage = { newSplitLayoutPage() },
+        kitPage = { SplitLayoutPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class SplitLayoutTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val positionHeading: String,
-    val positionHint: String,
-    val minMaxHeading: String,
-    val minMaxHint: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val themesHeading: String,
-    val themesHint: String,
-    val toggleHeading: String,
-    val toggleHint: String,
-    val toggleAria: String,
-)
 
 private val english: SplitLayoutTexts = SplitLayoutTexts(
     basicHeading = "Basic usage",
@@ -116,68 +94,68 @@ internal class SplitLayoutPage : DemoPage() {
     init {
         frame.mount(this)
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         val horizontal = createSplitLayout()
         horizontal.style.setProperty("max-height", "17rem")
-        horizontal.append(newSplitMaster(), newSplitDetail())
+        horizontal.append(SplitMaster.NAME(), SplitDetail.NAME())
         basic.body.append(exampleBox(null, horizontal))
         body.append(basic.root)
 
-        val position = sectionBlock()
+        val position = SectionBlock.NAME { show() }
         texts.bind(position.heading) { it.positionHeading }
         texts.bind(position.hint) { it.positionHint }
         val positioned = createSplitLayout()
         positioned.style.setProperty("max-height", "17rem")
         positioned.append(
-            newSplitMaster().apply { style.setProperty("width", "70%") },
-            newSplitDetail().apply { style.setProperty("width", "30%") },
+            SplitMaster.NAME().apply { style.setProperty("width", "70%") },
+            SplitDetail.NAME().apply { style.setProperty("width", "30%") },
         )
         position.body.append(exampleBox(null, positioned))
         body.append(position.root)
 
-        val minMax = sectionBlock()
+        val minMax = SectionBlock.NAME { show() }
         texts.bind(minMax.heading) { it.minMaxHeading }
         texts.bind(minMax.hint) { it.minMaxHint }
         val bounded = createSplitLayout()
         bounded.style.setProperty("max-height", "17rem")
         bounded.append(
-            newSplitMaster().apply {
+            SplitMaster.NAME().apply {
                 style.setProperty("min-width", "12rem")
                 style.setProperty("max-width", "24rem")
             },
-            newSplitDetail(),
+            SplitDetail.NAME(),
         )
         minMax.body.append(exampleBox(null, bounded))
         body.append(minMax.root)
 
-        val orientation = sectionBlock()
+        val orientation = SectionBlock.NAME { show() }
         texts.bind(orientation.heading) { it.orientationHeading }
         texts.bind(orientation.hint) { it.orientationHint }
         val vertical = createSplitLayout { this.orientation = SplitLayoutOrientations.vertical }
         vertical.style.setProperty("max-height", "22rem")
-        vertical.append(newSplitMaster(), newSplitDetail())
+        vertical.append(SplitMaster.NAME(), SplitDetail.NAME())
         orientation.body.append(exampleBox(null, vertical))
         body.append(orientation.root)
 
-        val themes = sectionBlock()
+        val themes = SectionBlock.NAME { show() }
         texts.bind(themes.heading) { it.themesHeading }
         texts.bind(themes.hint) { it.themesHint }
         val minimal = createSplitLayout().apply {
             addTheme("minimal")
             style.setProperty("max-height", "17rem")
-            append(newSplitMaster(), newSplitDetail())
+            append(SplitMaster.NAME(), SplitDetail.NAME())
         }
         val small = createSplitLayout().apply {
             addTheme("small")
             style.setProperty("max-height", "17rem")
-            append(newSplitMaster(), newSplitDetail())
+            append(SplitMaster.NAME(), SplitDetail.NAME())
         }
         themes.body.append(exampleBox("minimal", minimal), exampleBox("small", small))
         body.append(themes.root)
 
-        val toggle = sectionBlock()
+        val toggle = SectionBlock.NAME { show() }
         texts.bind(toggle.heading) { it.toggleHeading }
         texts.bind(toggle.hint) { it.toggleHint }
         val layout = createSplitLayout()
@@ -188,7 +166,7 @@ internal class SplitLayoutPage : DemoPage() {
             style.setProperty("overflow", "hidden")
             style.setProperty("width", "40%")
         }
-        val detail = newSplitDetail()
+        val detail = SplitDetail.NAME()
         collapseButton.dataset["test"] = "split-collapse-button"
         collapseButton.addTheme("icon", "tertiary")
         collapseButton.style.setProperty("float", "right")
@@ -206,7 +184,7 @@ internal class SplitLayoutPage : DemoPage() {
             applyCollapsed()
         }
         applyCollapsed()
-        sidebar.append(collapseButton, newSplitMaster().apply { style.setProperty("clear", "right") })
+        sidebar.append(collapseButton, SplitMaster.NAME().apply { style.setProperty("clear", "right") })
         layout.append(sidebar, detail)
         toggle.body.append(exampleBox(null, layout))
         body.append(toggle.root)
@@ -224,126 +202,15 @@ internal class SplitLayoutPage : DemoPage() {
         collapseButton.setAttribute("aria-label", texts.current.toggleAria)
     }
 
-    companion object : CustomElementReference<SplitLayoutPage>(SplitLayoutPage::class.js) {
-        val NAME: TagName<SplitLayoutPage> = TagName("vaadin-demo-split-layout-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-split-layout-page>`. */
-internal fun newSplitLayoutPage(): SplitLayoutPage {
-    SplitLayoutPage.define()
-    return SplitLayoutPage.NAME()
+    companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page")
 }
 
 /**
  * `<vaadin-demo-split-master>`: the fake master list of the split layout examples — sixteen rows of
  * six grey cells, which is the shape the docs example uses.
  */
-internal class SplitMaster : CustomElementAdapter() {
-    init {
-        attachShadowRoot().append(cells())
-    }
-
-    override fun connectedCallback() {
-        style.setProperty("display", "block")
-        style.setProperty("padding", "var(--lumo-space-s)")
-    }
-
-    /** Six grey cells per row, sixteen rows. */
-    private fun cells(): HTMLElement =
-        HtmlTagName.div {
-            repeat(16) {
-                val row =
-                    HtmlTagName.div {
-                        style.setProperty("display", "grid")
-                        style.setProperty("grid-template-columns", "repeat(6, 1fr)")
-                        style.setProperty("gap", "4px")
-                        style.setProperty("margin-bottom", "4px")
-                    }
-                repeat(6) {
-                    row.append(
-                        HtmlTagName.div {
-                            style.setProperty("height", "12px")
-                            style.setProperty("border-radius", "2px")
-                            style.setProperty("background", "var(--lumo-contrast-10pct)")
-                        },
-                    )
-                }
-                append(row)
-            }
-        }
-
-    companion object : CustomElementReference<SplitMaster>(SplitMaster::class.js) {
-        val NAME: TagName<SplitMaster> = TagName("vaadin-demo-split-master")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-split-master>`. */
-internal fun newSplitMaster(): SplitMaster {
-    SplitMaster.define()
-    return SplitMaster.NAME()
-}
 
 /**
  * `<vaadin-demo-split-detail>`: the fake detail form of the split layout examples — ten labelled
  * inputs, grey blocks only, enough shape to read as a form.
  */
-internal class SplitDetail : CustomElementAdapter() {
-    init {
-        attachShadowRoot().append(fields())
-    }
-
-    override fun connectedCallback() {
-        style.setProperty("display", "block")
-        style.setProperty("padding", "var(--lumo-space-s)")
-    }
-
-    /** Label above input, both grey blocks: enough shape to read as a form. */
-    private fun fields(): HTMLElement =
-        HtmlTagName.div {
-            repeat(10) {
-                val field =
-                    HtmlTagName.div {
-                        style.setProperty("margin-bottom", "var(--lumo-space-s)")
-                    }
-                val label =
-                    HtmlTagName.div {
-                        style.setProperty("width", "40%")
-                        style.setProperty("height", "8px")
-                        style.setProperty("margin-bottom", "4px")
-                        style.setProperty("border-radius", "2px")
-                        style.setProperty("background", "var(--lumo-contrast-20pct)")
-                    }
-                val input =
-                    HtmlTagName.div {
-                        style.setProperty("height", "24px")
-                        style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-                        style.setProperty("border-radius", "var(--lumo-border-radius-s)")
-                    }
-                field.append(label, input)
-                append(field)
-            }
-        }
-
-    companion object : CustomElementReference<SplitDetail>(SplitDetail::class.js) {
-        val NAME: TagName<SplitDetail> = TagName("vaadin-demo-split-detail")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-split-detail>`. */
-internal fun newSplitDetail(): SplitDetail {
-    SplitDetail.define()
-    return SplitDetail.NAME()
-}

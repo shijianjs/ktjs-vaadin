@@ -1,0 +1,42 @@
+package demo.pages.selection
+
+import io.github.shijianjs.ktjs.dom.element.invoke
+
+/** Every string this page shows, in one language. */
+internal class SliderTexts(
+    val basicHeading: String,
+    val basicHint: String,
+    val volume: String,
+    val valuePrefix: String,
+    val committedPrefix: String,
+    val helperHeading: String,
+    val helperHint: String,
+    val label: String,
+    val helperText: String,
+    val minMaxHeading: String,
+    val minMaxHint: String,
+    val temperature: String,
+    val visibleHeading: String,
+    val visibleHint: String,
+    val brightness: String,
+    val stepHeading: String,
+    val stepHint: String,
+    val rangeHeading: String,
+    val rangeHint: String,
+    val priceRange: String,
+    val minPrice: String,
+    val maxPrice: String,
+    val rangePrefix: String,
+    val rangeValidationHeading: String,
+    val rangeValidationHint: String,
+    val priceRangeLabel: String,
+    val priceError: String,
+    val modesHeading: String,
+    val modesHint: String,
+    val rating: String,
+    val livePrefix: String,
+    val committedValuePrefix: String,
+    val statesHeading: String,
+    val readonly: String,
+    val disabled: String,
+)

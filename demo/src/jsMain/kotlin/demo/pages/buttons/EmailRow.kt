@@ -2,15 +2,13 @@ package demo.pages.buttons
 
 import io.github.shijianjs.ktjs.demo.page.PAGE_SHEET
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.demo.page.row
+import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
-import web.components.CustomElementReference
-import web.dom.TagName
 import web.dom.clickEvent
 import web.events.addHandler
 
@@ -55,17 +53,5 @@ class EmailRow : CustomElementAdapter() {
         remove.ariaLabel = if (subject.isEmpty()) removeLabel else "$removeLabel $subject"
     }
 
-    companion object : CustomElementReference<EmailRow>(EmailRow::class.js) {
-        val NAME: TagName<EmailRow> = TagName("vaadin-demo-email-row")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-email-row>`. */
-fun newEmailRow(): EmailRow {
-    EmailRow.define()
-    return EmailRow.NAME()
+    companion object : CustomElementReferenceAdapter<EmailRow>(EmailRow::class.js, "vaadin-demo-email-row")
 }

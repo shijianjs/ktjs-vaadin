@@ -1,21 +1,17 @@
 package demo.pages.selection
 
-import io.github.shijianjs.ktjs.demo.page.row as kitRow
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
-
+import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.DOCS_BASE
@@ -52,68 +48,8 @@ val checkboxEntry: CatalogEntry =
                 docsUrl = "$DOCS_BASE/checkbox",
                 sourcePath = "pages/selection/CheckboxPage.kt",
             ),
-        kitPage = { newCheckboxPage() },
+        kitPage = { CheckboxPage.NAME() },
     )
-
-/** Every string this page shows, in one language. */
-private class CheckboxTexts(
-    val basicHeading: String,
-    val basicHint: String,
-    val acceptTerms: String,
-    val toggleFromCode: String,
-    val checkedPrefix: String,
-    val changeLine: (Boolean) -> String,
-    val codeLine: (Boolean) -> String,
-    val labelingHeading: String,
-    val labelingHint: String,
-    val agree: String,
-    val releases: String,
-    val oneEmail: String,
-    val requiredHeading: String,
-    val requiredHint: String,
-    val grantView: String,
-    val fieldRequired: String,
-    val notValidated: String,
-    val validate: String,
-    val validationPrefix: String,
-    val passed: String,
-    val failed: String,
-    val indeterminateHeading: String,
-    val indeterminateHint: String,
-    val notifyUsers: String,
-    val usersToNotify: String,
-    val orientationHeading: String,
-    val orientationHint: String,
-    val permissions: String,
-    val read: String,
-    val edit: String,
-    val delete: String,
-    val workingDays: String,
-    val monday: String,
-    val tuesday: String,
-    val wednesday: String,
-    val thursday: String,
-    val friday: String,
-    val saturday: String,
-    val sunday: String,
-    val manufacturer: String,
-    val status: String,
-    val inProgress: String,
-    val done: String,
-    val cancelled: String,
-    val presetHeading: String,
-    val presetHint: String,
-    val exportData: String,
-    val orderId: String,
-    val productName: String,
-    val customer: String,
-    val statusColumn: String,
-    val emptyValue: String,
-    val stylesHeading: String,
-    val stylesHint: String,
-    val label: String,
-    val helperText: String,
-)
 
 private val english: CheckboxTexts =
     CheckboxTexts(
@@ -270,7 +206,7 @@ internal class CheckboxPage : DemoPage() {
         fun check(label: (CheckboxTexts) -> String): io.github.shijianjs.ktjs.vaadin.checkbox.CheckboxElement =
             createCheckbox().also { node -> texts.bind(node, label) { node.label = it } }
 
-        val basic = sectionBlock()
+        val basic = SectionBlock.NAME { show() }
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
         texts.bind(terms, { it.acceptTerms }) { terms.label = it }
@@ -294,7 +230,7 @@ internal class CheckboxPage : DemoPage() {
         basic.body.append(exampleBox(null, kitCol(terms, kitRow(toggleFromCode, stateReadout.root), log.root)))
         body.append(basic.root)
 
-        val labeling = sectionBlock()
+        val labeling = SectionBlock.NAME { show() }
         texts.bind(labeling.heading) { it.labelingHeading }
         texts.bind(labeling.hint) { it.labelingHint }
         val agree = check { it.agree }
@@ -303,7 +239,7 @@ internal class CheckboxPage : DemoPage() {
         labeling.body.append(exampleBox(null, kitCol(agree, releases)))
         body.append(labeling.root)
 
-        val required = sectionBlock()
+        val required = SectionBlock.NAME { show() }
         texts.bind(required.heading) { it.requiredHeading }
         texts.bind(required.hint) { it.requiredHint }
         val grant = check { it.grantView }
@@ -318,7 +254,7 @@ internal class CheckboxPage : DemoPage() {
         required.body.append(exampleBox(null, kitCol(grant, kitRow(submit, requiredResult.root))))
         body.append(required.root)
 
-        val indeterminate = sectionBlock()
+        val indeterminate = SectionBlock.NAME { show() }
         texts.bind(indeterminate.heading) { it.indeterminateHeading }
         texts.bind(indeterminate.hint) { it.indeterminateHint }
         val users = people(3)
@@ -348,7 +284,7 @@ internal class CheckboxPage : DemoPage() {
         indeterminate.body.append(exampleBox(null, kitCol(selectAll, userGroup)))
         body.append(indeterminate.root)
 
-        val orientation = sectionBlock()
+        val orientation = SectionBlock.NAME { show() }
         texts.bind(orientation.heading) { it.orientationHeading }
         texts.bind(orientation.hint) { it.orientationHint }
         val permissions = createCheckboxGroup().addTheme("horizontal")
@@ -398,7 +334,7 @@ internal class CheckboxPage : DemoPage() {
         )
         body.append(orientation.root)
 
-        val preset = sectionBlock()
+        val preset = SectionBlock.NAME { show() }
         texts.bind(preset.heading) { it.presetHeading }
         texts.bind(preset.hint) { it.presetHint }
         texts.bind(exportGroup, { it.exportData }) { exportGroup.label = it }
@@ -413,7 +349,7 @@ internal class CheckboxPage : DemoPage() {
         preset.body.append(exampleBox(null, kitCol(exportGroup, exportReadout.root)))
         body.append(preset.root)
 
-        val styles = sectionBlock()
+        val styles = SectionBlock.NAME { show() }
         texts.bind(styles.heading) { it.stylesHeading }
         texts.bind(styles.hint) { it.stylesHint }
         val styled = createCheckboxGroup().addTheme("helper-above-field", "vertical")
@@ -469,17 +405,5 @@ internal class CheckboxPage : DemoPage() {
         exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { texts.current.emptyValue })
     }
 
-    companion object : CustomElementReference<CheckboxPage>(CheckboxPage::class.js) {
-        val NAME: TagName<CheckboxPage> = TagName("vaadin-demo-checkbox-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
-}
-
-/** Creates a defined `<vaadin-demo-checkbox-page>`. */
-internal fun newCheckboxPage(): CheckboxPage {
-    CheckboxPage.define()
-    return CheckboxPage.NAME()
+    companion object : CustomElementReferenceAdapter<CheckboxPage>(CheckboxPage::class.js, "vaadin-demo-checkbox-page")
 }

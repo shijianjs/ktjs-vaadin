@@ -1,12 +1,9 @@
 package demo.pages.fields
 
-import io.github.shijianjs.ktjs.demo.page.col as kitCol
-import io.github.shijianjs.ktjs.demo.page.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
-
 import io.github.shijianjs.ktjs.demo.i18n.Binder
-import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
@@ -24,6 +21,7 @@ import web.events.EventType
 import web.html.HTMLElement
 import web.html.HTMLInputElement
 import web.validation.ValidityState
+import io.github.shijianjs.ktjs.dom.element.invoke
 
 private const val VALUE_CHANGE_ON_CHANGE = "on-change"
 
@@ -108,11 +106,6 @@ private val valueChangeTexts: Translations<ValueChangeTexts> = texts(
  * The shared section plus the one thing a language switch has to do to it: rewrite the two state
  * lines and the mode items from the new copy, keeping the values the reader has typed so far.
  */
-internal class ValueChangeSection(val root: SectionBlock, private val render: (Lang) -> Unit) {
-    fun show(lang: Lang) {
-        render(lang)
-    }
-}
 
 /**
  * Simulates Flow's `ValueChangeMode`, which is a server-side API without a web-component
@@ -201,7 +194,7 @@ internal fun valueChangeModesSection(
     }
     field.listen(change) { showSynced() }
 
-    val section = sectionBlock()
+    val section = SectionBlock.NAME { show() }
     binder.bind(section.heading) { it.heading }
     binder.bind(section.hint) { it.hint }
     section.body.append(exampleBox(null, kitCol(modes, field, typed.root, synced.root)))
