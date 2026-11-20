@@ -59,165 +59,6 @@ val messageListEntry: CatalogEntry =
         kitPage = { MessageListPage.NAME() },
     )
 
-// ---------------------------------------------------------------------------------------------
-// Message List
-//
-// docs: messages/message-list-component.ts, message-list-markdown.ts, message-list-attachments.ts,
-//       styling.adoc (message-list-bubble.ts, message-list-one-to-one.ts,
-//       message-list-class-name.ts) and message-list-ai-chat.ts.
-// The typing indicator is Flow-only and is described instead of rendered.
-// ---------------------------------------------------------------------------------------------
-
-/** The class that marks the message sent by the reader. */
-private val CURRENT_USER: ClassName = ClassName("current-user")
-
-private val english: MessageTexts =
-    MessageTexts(
-        basicHeading = "Basic usage",
-        basicHint = "Each item provides text / userName / time / userImg / userColorIndex; the avatar " +
-            "falls back to the user's initials.",
-        quote = "Nature does not hurry, yet everything gets accomplished.",
-        yesterday = "yesterday",
-        quoteTwo = "Using your talent, hobby or profession in a way that makes you contribute with " +
-            "something good to this world is truly the way to go.",
-        justNow = "right now",
-        markdownHeading = "Markdown",
-        markdownHint = "With markdown on, the message text is rendered as Markdown; the content is " +
-            "sanitized automatically and HTML tags are allowed too.",
-        markdownHello = "**Hello team!** Did everyone review the *design document* for the new project?",
-        markdownReport = """
-            ## Project Update
-            I've completed the initial research phase and documented my findings.
-
-            * UI mockups ✅
-            * Market analysis ✅
-            * [See detailed report](https://vaadin.com)
-
-            Let me know your thoughts!
-        """.trimIndent(),
-        attachmentsHeading = "Attachments",
-        attachmentsHint = "An attachment has name / url / type; image/* is shown as a thumbnail and " +
-            "everything else as a file icon. Clicking one fires attachment-click with the whole attachment.",
-        attachmentIntro = "Here are the documents for the project.",
-        attachmentThanks = "Thanks! Here's a photo from the offsite.",
-        fiftyMinutesAgo = "50 minutes ago",
-        clickHint = "Click an attachment to see its name here.",
-        clickedPrefix = "Clicked: ",
-        bubbleHeading = "Chat bubbles",
-        bubbleHint = "The bubble theme on the list renders messages as bubbles; the self theme on an " +
-            "item marks it as the current user's, aligned to the end without avatar and name.",
-        bubbleAsk = "Linsey, could you check if the details with the order are okay?",
-        bubbleReply = "All good. Ship it.",
-        bubbleThanks = "Great, the customer will be glad to hear that.",
-        fortyMinutesAgo = "40 minutes ago",
-        oneToOneHeading = "One-to-one conversations",
-        oneToOneHint = "bubble + one-to-one hides every avatar and name; long assistant replies use " +
-            "full-width to drop the bubble and width limit, together with markdown for rich text.",
-        whichOrders = "Which orders are still waiting for shipment?",
-        fiveMinutesAgo = "5 minutes ago",
-        orderReport = """
-            These orders are waiting for shipment:
-
-            - **#1042**, paid yesterday
-            - **#1043**, paid today
-            - **#1045**, waiting for stock
-
-            The first two can ship today. Order #1045 ships when the missing items arrive.
-        """.trimIndent(),
-        fourMinutesAgo = "4 minutes ago",
-        assistant = "Assistant",
-        classNameHeading = "Styling individual messages",
-        classNameHint = "Give an item a className and style vaadin-message with plain CSS; messages live " +
-            "in the light DOM of the list, so page styles apply directly.",
-        aiHeading = "Usage for AI chats",
-        aiHint = "The docs combine Message List and Message Input into an AI chat interface and append " +
-            "the assistant reply token by token. There is no backend here, so a local timer streams the " +
-            "words and the items array is replaced the same way; announcements go to an aria-live region.",
-        greeting = "Hi! Shall I help you organize your to-do list?",
-        me = "User",
-        processing = "AI is processing the prompt",
-        newMessage = "New message available",
-        plan = "Here is a plan: first sort today's **to-dos** by priority, then block out an " +
-            "uninterrupted stretch of time.",
-        joiner = " ",
-        typingHeading = "Typing indicator",
-        typingHint = "The typing indicator (setTypingUsers / setTypingIndicatorType) is currently " +
-            "Flow-only and the web component has no matching API, so it is not shown here. With Message " +
-            "List alone, appending a \"typing…\" message at the end achieves a similar effect.",
-    )
-
-private val chinese: MessageTexts =
-    MessageTexts(
-        basicHeading = "基本用法",
-        basicHint = "items 里每条消息提供 text / userName / time / userImg / userColorIndex；" +
-            "头像缺省时用姓名缩写。",
-        quote = "大自然从不匆忙，却万事皆成。",
-        yesterday = "昨天",
-        quoteTwo = "用你的天赋、爱好或职业做点对世界有益的事，就是最值得走的那条路。",
-        justNow = "刚刚",
-        markdownHeading = "Markdown",
-        markdownHint = "markdown 打开后消息文本按 Markdown 渲染；组件会自动净化内容，HTML 标签也允许写。",
-        markdownHello = "**大家好！** 有人看过新项目的*设计文档*了吗？",
-        markdownReport = """
-            ## 项目进展
-            我已经完成初步调研，并把结论整理成文档。
-
-            * UI 稿 ✅
-            * 市场分析 ✅
-            * [查看详细报告](https://vaadin.com)
-
-            欢迎提出想法！
-        """.trimIndent(),
-        attachmentsHeading = "附件",
-        attachmentsHint = "附件有 name / url / type；image/* 显示缩略图，其余显示文件图标。点击附件触发 " +
-            "attachment-click，事件里带整个附件对象。",
-        attachmentIntro = "这是项目的相关文档。",
-        attachmentThanks = "谢谢！这是团建时的照片。",
-        fiftyMinutesAgo = "50 分钟前",
-        clickHint = "点击附件查看文件名。",
-        clickedPrefix = "已点击：",
-        bubbleHeading = "聊天气泡",
-        bubbleHint = "列表主题 bubble 把消息渲染成气泡；单条消息的 self 主题表示当前用户，" +
-            "靠右对齐并去掉头像和姓名。",
-        bubbleAsk = "Linsey，你能确认一下订单细节吗？",
-        bubbleReply = "都没问题，可以发货。",
-        bubbleThanks = "太好了，客户听到会很高兴。",
-        fortyMinutesAgo = "40 分钟前",
-        oneToOneHeading = "一对一对话",
-        oneToOneHint = "bubble + one-to-one 隐藏所有头像和姓名；助手这类长回复用 full-width 去掉气泡和" +
-            "宽度限制，配合 markdown 展示富文本。",
-        whichOrders = "哪些订单还在等待发货？",
-        fiveMinutesAgo = "5 分钟前",
-        orderReport = """
-            这些订单还在等待发货：
-
-            - **#1042**，昨天已付款
-            - **#1043**，今天已付款
-            - **#1045**，等待补货
-
-            前两单今天可以发出；#1045 要等缺货到货后再发。
-        """.trimIndent(),
-        fourMinutesAgo = "4 分钟前",
-        assistant = "助手",
-        classNameHeading = "单条消息样式",
-        classNameHint = "给单条消息加 className，再用普通 CSS 选中 vaadin-message 即可改样式；" +
-            "消息挂在列表的 light DOM 里，页面样式能直接命中。",
-        aiHeading = "AI 对话",
-        aiHint = "文档示例把 Message List 与 Message Input 组合成 AI 聊天界面，并按 token 追加助手回复。" +
-            "这里没有后端，用本地定时器逐词「流式」输出，同样通过替换 items 触发重绘；" +
-            "屏幕阅读器公告放在 aria-live 区域。",
-        greeting = "你好！需要我帮你整理待办事项吗？",
-        me = "我",
-        processing = "AI 正在处理",
-        newMessage = "有新消息",
-        plan = "我来帮你安排：先把今天的 **待办** 按优先级排好，再留出一段不被打扰的时间。",
-        joiner = "",
-        typingHeading = "打字指示器",
-        typingHint = "打字指示器（setTypingUsers / setTypingIndicatorType）目前只在 Flow 中提供，" +
-            "Web Component 没有对应 API，因此这里不演示。用 Message List 实现时，可以在列表末尾追加一条" +
-            "「正在输入…」消息达到类似效果。",
-    )
-
 internal class MessageListPage : DemoPage() {
     private val texts = Binder(messageTexts)
 
@@ -495,6 +336,162 @@ internal class MessageListPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page") {
+        // ---------------------------------------------------------------------------------------------
+        // Message List
+        //
+        // docs: messages/message-list-component.ts, message-list-markdown.ts, message-list-attachments.ts,
+        //       styling.adoc (message-list-bubble.ts, message-list-one-to-one.ts,
+        //       message-list-class-name.ts) and message-list-ai-chat.ts.
+        // The typing indicator is Flow-only and is described instead of rendered.
+        // ---------------------------------------------------------------------------------------------
+
+        /** The class that marks the message sent by the reader. */
+        private val CURRENT_USER: ClassName = ClassName("current-user")
+        private val english: MessageTexts =
+            MessageTexts(
+                basicHeading = "Basic usage",
+                basicHint = "Each item provides text / userName / time / userImg / userColorIndex; the avatar " +
+                    "falls back to the user's initials.",
+                quote = "Nature does not hurry, yet everything gets accomplished.",
+                yesterday = "yesterday",
+                quoteTwo = "Using your talent, hobby or profession in a way that makes you contribute with " +
+                    "something good to this world is truly the way to go.",
+                justNow = "right now",
+                markdownHeading = "Markdown",
+                markdownHint = "With markdown on, the message text is rendered as Markdown; the content is " +
+                    "sanitized automatically and HTML tags are allowed too.",
+                markdownHello = "**Hello team!** Did everyone review the *design document* for the new project?",
+                markdownReport = """
+                    ## Project Update
+                    I've completed the initial research phase and documented my findings.
+
+                    * UI mockups ✅
+                    * Market analysis ✅
+                    * [See detailed report](https://vaadin.com)
+
+                    Let me know your thoughts!
+                """.trimIndent(),
+                attachmentsHeading = "Attachments",
+                attachmentsHint = "An attachment has name / url / type; image/* is shown as a thumbnail and " +
+                    "everything else as a file icon. Clicking one fires attachment-click with the whole attachment.",
+                attachmentIntro = "Here are the documents for the project.",
+                attachmentThanks = "Thanks! Here's a photo from the offsite.",
+                fiftyMinutesAgo = "50 minutes ago",
+                clickHint = "Click an attachment to see its name here.",
+                clickedPrefix = "Clicked: ",
+                bubbleHeading = "Chat bubbles",
+                bubbleHint = "The bubble theme on the list renders messages as bubbles; the self theme on an " +
+                    "item marks it as the current user's, aligned to the end without avatar and name.",
+                bubbleAsk = "Linsey, could you check if the details with the order are okay?",
+                bubbleReply = "All good. Ship it.",
+                bubbleThanks = "Great, the customer will be glad to hear that.",
+                fortyMinutesAgo = "40 minutes ago",
+                oneToOneHeading = "One-to-one conversations",
+                oneToOneHint = "bubble + one-to-one hides every avatar and name; long assistant replies use " +
+                    "full-width to drop the bubble and width limit, together with markdown for rich text.",
+                whichOrders = "Which orders are still waiting for shipment?",
+                fiveMinutesAgo = "5 minutes ago",
+                orderReport = """
+                    These orders are waiting for shipment:
+
+                    - **#1042**, paid yesterday
+                    - **#1043**, paid today
+                    - **#1045**, waiting for stock
+
+                    The first two can ship today. Order #1045 ships when the missing items arrive.
+                """.trimIndent(),
+                fourMinutesAgo = "4 minutes ago",
+                assistant = "Assistant",
+                classNameHeading = "Styling individual messages",
+                classNameHint = "Give an item a className and style vaadin-message with plain CSS; messages live " +
+                    "in the light DOM of the list, so page styles apply directly.",
+                aiHeading = "Usage for AI chats",
+                aiHint = "The docs combine Message List and Message Input into an AI chat interface and append " +
+                    "the assistant reply token by token. There is no backend here, so a local timer streams the " +
+                    "words and the items array is replaced the same way; announcements go to an aria-live region.",
+                greeting = "Hi! Shall I help you organize your to-do list?",
+                me = "User",
+                processing = "AI is processing the prompt",
+                newMessage = "New message available",
+                plan = "Here is a plan: first sort today's **to-dos** by priority, then block out an " +
+                    "uninterrupted stretch of time.",
+                joiner = " ",
+                typingHeading = "Typing indicator",
+                typingHint = "The typing indicator (setTypingUsers / setTypingIndicatorType) is currently " +
+                    "Flow-only and the web component has no matching API, so it is not shown here. With Message " +
+                    "List alone, appending a \"typing…\" message at the end achieves a similar effect.",
+            )
+        private val chinese: MessageTexts =
+            MessageTexts(
+                basicHeading = "基本用法",
+                basicHint = "items 里每条消息提供 text / userName / time / userImg / userColorIndex；" +
+                    "头像缺省时用姓名缩写。",
+                quote = "大自然从不匆忙，却万事皆成。",
+                yesterday = "昨天",
+                quoteTwo = "用你的天赋、爱好或职业做点对世界有益的事，就是最值得走的那条路。",
+                justNow = "刚刚",
+                markdownHeading = "Markdown",
+                markdownHint = "markdown 打开后消息文本按 Markdown 渲染；组件会自动净化内容，HTML 标签也允许写。",
+                markdownHello = "**大家好！** 有人看过新项目的*设计文档*了吗？",
+                markdownReport = """
+                    ## 项目进展
+                    我已经完成初步调研，并把结论整理成文档。
+
+                    * UI 稿 ✅
+                    * 市场分析 ✅
+                    * [查看详细报告](https://vaadin.com)
+
+                    欢迎提出想法！
+                """.trimIndent(),
+                attachmentsHeading = "附件",
+                attachmentsHint = "附件有 name / url / type；image/* 显示缩略图，其余显示文件图标。点击附件触发 " +
+                    "attachment-click，事件里带整个附件对象。",
+                attachmentIntro = "这是项目的相关文档。",
+                attachmentThanks = "谢谢！这是团建时的照片。",
+                fiftyMinutesAgo = "50 分钟前",
+                clickHint = "点击附件查看文件名。",
+                clickedPrefix = "已点击：",
+                bubbleHeading = "聊天气泡",
+                bubbleHint = "列表主题 bubble 把消息渲染成气泡；单条消息的 self 主题表示当前用户，" +
+                    "靠右对齐并去掉头像和姓名。",
+                bubbleAsk = "Linsey，你能确认一下订单细节吗？",
+                bubbleReply = "都没问题，可以发货。",
+                bubbleThanks = "太好了，客户听到会很高兴。",
+                fortyMinutesAgo = "40 分钟前",
+                oneToOneHeading = "一对一对话",
+                oneToOneHint = "bubble + one-to-one 隐藏所有头像和姓名；助手这类长回复用 full-width 去掉气泡和" +
+                    "宽度限制，配合 markdown 展示富文本。",
+                whichOrders = "哪些订单还在等待发货？",
+                fiveMinutesAgo = "5 分钟前",
+                orderReport = """
+                    这些订单还在等待发货：
+
+                    - **#1042**，昨天已付款
+                    - **#1043**，今天已付款
+                    - **#1045**，等待补货
+
+                    前两单今天可以发出；#1045 要等缺货到货后再发。
+                """.trimIndent(),
+                fourMinutesAgo = "4 分钟前",
+                assistant = "助手",
+                classNameHeading = "单条消息样式",
+                classNameHint = "给单条消息加 className，再用普通 CSS 选中 vaadin-message 即可改样式；" +
+                    "消息挂在列表的 light DOM 里，页面样式能直接命中。",
+                aiHeading = "AI 对话",
+                aiHint = "文档示例把 Message List 与 Message Input 组合成 AI 聊天界面，并按 token 追加助手回复。" +
+                    "这里没有后端，用本地定时器逐词「流式」输出，同样通过替换 items 触发重绘；" +
+                    "屏幕阅读器公告放在 aria-live 区域。",
+                greeting = "你好！需要我帮你整理待办事项吗？",
+                me = "我",
+                processing = "AI 正在处理",
+                newMessage = "有新消息",
+                plan = "我来帮你安排：先把今天的 **待办** 按优先级排好，再留出一段不被打扰的时间。",
+                joiner = "",
+                typingHeading = "打字指示器",
+                typingHint = "打字指示器（setTypingUsers / setTypingIndicatorType）目前只在 Flow 中提供，" +
+                    "Web Component 没有对应 API，因此这里不演示。用 Message List 实现时，可以在列表末尾追加一条" +
+                    "「正在输入…」消息达到类似效果。",
+            )
         /**
          * Marks the message the page sends as its own: the docs example puts the author's name in bold for
          * the signed-in user. `className` lands on the light-DOM message element, and the name is a part

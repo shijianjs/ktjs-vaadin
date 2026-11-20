@@ -84,37 +84,6 @@ internal fun containerInput(value: String = "") =
         style.setProperty("font", "inherit")
     }
 
-// ---------------------------------------------------------------------------------------------
-// The same page on kit blocks
-// ---------------------------------------------------------------------------------------------
-
-private val inputContainerEnglish: InputContainerTexts = InputContainerTexts(
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    basicTitle = "Basic usage",
-    basicHint = "The container only handles layout and state; the input element is supplied by the caller. " +
-        "The prefix/suffix slots hold icons or buttons.",
-    statesTitle = "States",
-    statesHint = "The readonly / invalid / disabled properties map directly to visual states.",
-    readOnly = "Read-only",
-    invalid = "Invalid",
-    disabled = "Disabled",
-)
-
-private val inputContainerChinese: InputContainerTexts = InputContainerTexts(
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    basicTitle = "基本用法",
-    basicHint = "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
-    statesTitle = "状态",
-    statesHint = "readonly / invalid / disabled 三个属性直接对应视觉状态。",
-    readOnly = "只读",
-    invalid = "无效",
-    disabled = "禁用",
-)
-
 /**
  * The page on kit blocks: nodes are built once and a language switch only rewrites their text.
  *
@@ -182,6 +151,35 @@ internal class InputContainerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page") {
+        // ---------------------------------------------------------------------------------------------
+        // The same page on kit blocks
+        // ---------------------------------------------------------------------------------------------
+
+        private val inputContainerEnglish: InputContainerTexts = InputContainerTexts(
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            basicTitle = "Basic usage",
+            basicHint = "The container only handles layout and state; the input element is supplied by the caller. " +
+                "The prefix/suffix slots hold icons or buttons.",
+            statesTitle = "States",
+            statesHint = "The readonly / invalid / disabled properties map directly to visual states.",
+            readOnly = "Read-only",
+            invalid = "Invalid",
+            disabled = "Disabled",
+        )
+        private val inputContainerChinese: InputContainerTexts = InputContainerTexts(
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            basicTitle = "基本用法",
+            basicHint = "容器只负责布局与状态，输入元素由使用方提供；prefix / suffix 插槽放图标或按钮。",
+            statesTitle = "状态",
+            statesHint = "readonly / invalid / disabled 三个属性直接对应视觉状态。",
+            readOnly = "只读",
+            invalid = "无效",
+            disabled = "禁用",
+        )
         private val inputContainerTexts: Translations<InputContainerTexts> = texts(
             Langs.EN to inputContainerEnglish,
             Langs.ZH_HANS to inputContainerChinese,

@@ -53,38 +53,6 @@ val virtualListEntry: CatalogEntry =
         kitPage = { VirtualListPage.NAME() },
     )
 
-private val english: VirtualListTexts = VirtualListTexts(
-    basicHeading = "Basic usage",
-    basicHint = "The renderer is called only for visible rows and container nodes are reused while scrolling. " +
-        "Each row is a person card, and an expanded contact block stays open across scrolling.",
-    mathematician = "Mathematician",
-    computerScientist = "Computer scientist",
-    cryptanalyst = "Cryptanalyst",
-    aerospaceEngineer = "Aerospace engineer",
-    contactInfo = "Contact information",
-    jumpHeading = "Scrolling to an index",
-    jumpHint = "scrollToIndex jumps straight to the given row.",
-    goToFirst = "Go to row 1",
-    goTo300 = "Go to row 300",
-    row = { index -> "Row $index" },
-)
-
-private val chinese: VirtualListTexts = VirtualListTexts(
-    basicHeading = "基本用法",
-    basicHint = "renderer 只对可见行调用，滚动时复用容器节点；每一行是一张人员卡片，展开联系方式后" +
-        "滚动离开再回来仍保持展开。",
-    mathematician = "数学家",
-    computerScientist = "计算机科学家",
-    cryptanalyst = "密码学家",
-    aerospaceEngineer = "航空航天工程师",
-    contactInfo = "联系方式",
-    jumpHeading = "定位",
-    jumpHint = "scrollToIndex 直接跳到指定行。",
-    goToFirst = "跳到第 1 行",
-    goTo300 = "跳到第 300 行",
-    row = { index -> "行 $index" },
-)
-
 internal class VirtualListPage : DemoPage() {
     private val texts = Binder(virtualListTexts)
 
@@ -248,6 +216,36 @@ internal class VirtualListPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page") {
+        private val english: VirtualListTexts = VirtualListTexts(
+            basicHeading = "Basic usage",
+            basicHint = "The renderer is called only for visible rows and container nodes are reused while scrolling. " +
+                "Each row is a person card, and an expanded contact block stays open across scrolling.",
+            mathematician = "Mathematician",
+            computerScientist = "Computer scientist",
+            cryptanalyst = "Cryptanalyst",
+            aerospaceEngineer = "Aerospace engineer",
+            contactInfo = "Contact information",
+            jumpHeading = "Scrolling to an index",
+            jumpHint = "scrollToIndex jumps straight to the given row.",
+            goToFirst = "Go to row 1",
+            goTo300 = "Go to row 300",
+            row = { index -> "Row $index" },
+        )
+        private val chinese: VirtualListTexts = VirtualListTexts(
+            basicHeading = "基本用法",
+            basicHint = "renderer 只对可见行调用，滚动时复用容器节点；每一行是一张人员卡片，展开联系方式后" +
+                "滚动离开再回来仍保持展开。",
+            mathematician = "数学家",
+            computerScientist = "计算机科学家",
+            cryptanalyst = "密码学家",
+            aerospaceEngineer = "航空航天工程师",
+            contactInfo = "联系方式",
+            jumpHeading = "定位",
+            jumpHint = "scrollToIndex 直接跳到指定行。",
+            goToFirst = "跳到第 1 行",
+            goTo300 = "跳到第 300 行",
+            row = { index -> "行 $index" },
+        )
         private val virtualListTexts: Translations<VirtualListTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

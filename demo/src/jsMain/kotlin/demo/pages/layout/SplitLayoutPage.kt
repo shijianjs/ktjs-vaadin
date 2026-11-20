@@ -44,40 +44,6 @@ val splitLayoutEntry: CatalogEntry =
         kitPage = { SplitLayoutPage.NAME() },
     )
 
-private val english: SplitLayoutTexts = SplitLayoutTexts(
-    basicHeading = "Basic usage",
-    basicHint = "A draggable divider sits between the two children; they share the space evenly unless a width " +
-        "is set.",
-    positionHeading = "Splitter position",
-    positionHint = "Set a width or flex on the children to control where the splitter starts.",
-    minMaxHeading = "Minimum and maximum size",
-    minMaxHint = "min-width / max-width limit how far the splitter can be dragged.",
-    orientationHeading = "Orientation",
-    orientationHint = "With orientation set to vertical the divider is horizontal and the two areas stack.",
-    themesHeading = "Theme variants",
-    themesHint = "minimal hides the divider background and small narrows the divider.",
-    toggleHeading = "Collapsing a sidebar",
-    toggleHint = "Put a button into the sidebar and change the widths of the sidebar and the detail area when " +
-        "it is clicked, simulating an expanding and collapsing sidebar.",
-    toggleAria = "Expand/collapse sidebar",
-)
-
-private val chinese: SplitLayoutTexts = SplitLayoutTexts(
-    basicHeading = "基本用法",
-    basicHint = "两个子元素之间有一条可拖动的分隔条；不指定宽度时两者平分。",
-    positionHeading = "分隔条位置",
-    positionHint = "给两个子元素设置宽度或 flex，就能决定初始的分隔位置。",
-    minMaxHeading = "最小与最大尺寸",
-    minMaxHint = "min-width / max-width 限制拖动能到达的范围。",
-    orientationHeading = "方向",
-    orientationHint = "orientation 设为 vertical 后分隔条水平放置，两侧变成上下两个区域。",
-    themesHeading = "主题",
-    themesHint = "minimal 隐藏分隔条的底色，small 缩窄分隔条。",
-    toggleHeading = "折叠侧栏",
-    toggleHint = "把按钮放进侧栏，点击时只改侧栏与详情区的宽度，模拟侧栏的展开与折叠。",
-    toggleAria = "展开或折叠侧栏",
-)
-
 internal class SplitLayoutPage : DemoPage() {
     private val texts = Binder(splitLayoutTexts)
 
@@ -198,6 +164,38 @@ internal class SplitLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page") {
+        private val english: SplitLayoutTexts = SplitLayoutTexts(
+            basicHeading = "Basic usage",
+            basicHint = "A draggable divider sits between the two children; they share the space evenly unless a width " +
+                "is set.",
+            positionHeading = "Splitter position",
+            positionHint = "Set a width or flex on the children to control where the splitter starts.",
+            minMaxHeading = "Minimum and maximum size",
+            minMaxHint = "min-width / max-width limit how far the splitter can be dragged.",
+            orientationHeading = "Orientation",
+            orientationHint = "With orientation set to vertical the divider is horizontal and the two areas stack.",
+            themesHeading = "Theme variants",
+            themesHint = "minimal hides the divider background and small narrows the divider.",
+            toggleHeading = "Collapsing a sidebar",
+            toggleHint = "Put a button into the sidebar and change the widths of the sidebar and the detail area when " +
+                "it is clicked, simulating an expanding and collapsing sidebar.",
+            toggleAria = "Expand/collapse sidebar",
+        )
+        private val chinese: SplitLayoutTexts = SplitLayoutTexts(
+            basicHeading = "基本用法",
+            basicHint = "两个子元素之间有一条可拖动的分隔条；不指定宽度时两者平分。",
+            positionHeading = "分隔条位置",
+            positionHint = "给两个子元素设置宽度或 flex，就能决定初始的分隔位置。",
+            minMaxHeading = "最小与最大尺寸",
+            minMaxHint = "min-width / max-width 限制拖动能到达的范围。",
+            orientationHeading = "方向",
+            orientationHint = "orientation 设为 vertical 后分隔条水平放置，两侧变成上下两个区域。",
+            themesHeading = "主题",
+            themesHint = "minimal 隐藏分隔条的底色，small 缩窄分隔条。",
+            toggleHeading = "折叠侧栏",
+            toggleHint = "把按钮放进侧栏，点击时只改侧栏与详情区的宽度，模拟侧栏的展开与折叠。",
+            toggleAria = "展开或折叠侧栏",
+        )
         private val splitLayoutTexts: Translations<SplitLayoutTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

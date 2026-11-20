@@ -32,9 +32,6 @@ import web.cssom.ClassName
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
-/** The single-card width the docs examples use; the sheet keys on this same object. */
-private val CARD_DEMO: ClassName = ClassName("card-demo")
-
 val cardEntry: CatalogEntry =
     CatalogEntry(
         id = "card",
@@ -251,6 +248,8 @@ internal class CardPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page") {
+        /** The single-card width the docs examples use; the sheet keys on this same object. */
+        private val CARD_DEMO: ClassName = ClassName("card-demo")
         /**
          * The page's own layout: a single card keeps the width the documentation examples use instead of
          * filling the box. The multi-card examples use the kit's grid block and need no rule of their own.

@@ -50,46 +50,6 @@ val tabsheetEntry: CatalogEntry =
         kitPage = { TabSheetPage.NAME() },
     )
 
-private val english: TabSheetTexts = TabSheetTexts(
-    basicHeading = "Basic usage",
-    basicHint = "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel points " +
-        "at a tab id through its tab attribute; the component handles the switch. When the selected tab has no " +
-        "matching panel the component enters a loading state.",
-    lazyHeading = "Lazy initialization of tab contents",
-    lazyHint = "Create a panel only when its tab is visited: prepare the tab ids up front and append the matching " +
-        "panel the first time the tab is selected. The upstream example also shows a loading indicator; this demo " +
-        "focuses on the on-demand creation.",
-    prefixHeading = "Prefix and suffix",
-    prefixHint = "A Tab Sheet exposes prefix / suffix slots for custom content at both ends of the tab bar.",
-    themeHeading = "Theme",
-    themeHint = "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
-    tabLabels = listOf("Dashboard", "Payment", "Shipping"),
-    panelContents = listOf(
-        "This is the Dashboard tab content",
-        "This is the Payment tab content",
-        "This is the Shipping tab content",
-    ),
-    closeAll = "Close all",
-    addTab = "Add tab",
-)
-
-private val chinese: TabSheetTexts = TabSheetTexts(
-    basicHeading = "基本用法",
-    basicHint = "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
-        "对应 tab 的 id，切换由组件完成。选中的 tab 找不到面板时组件进入 loading 状态。",
-    lazyHeading = "内容懒初始化",
-    lazyHint = "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
-        "上游示例还演示了加载指示器，这里只演示按需创建。",
-    prefixHeading = "前缀与后缀",
-    prefixHint = "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
-    themeHeading = "主题",
-    themeHint = "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
-    tabLabels = listOf("仪表盘", "支付", "配送"),
-    panelContents = listOf("这是仪表盘面板的内容。", "这是支付面板的内容。", "这是配送面板的内容。"),
-    closeAll = "全部关闭",
-    addTab = "新增标签",
-)
-
 internal class TabSheetPage : DemoPage() {
     private val texts = Binder(tabSheetTexts)
 
@@ -181,6 +141,44 @@ internal class TabSheetPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TabSheetPage>(TabSheetPage::class.js, "vaadin-demo-tab-sheet-page") {
+        private val english: TabSheetTexts = TabSheetTexts(
+            basicHeading = "Basic usage",
+            basicHint = "A Tab Sheet binds tabs to content panels: vaadin-tabs goes into slot=\"tabs\" and each panel points " +
+                "at a tab id through its tab attribute; the component handles the switch. When the selected tab has no " +
+                "matching panel the component enters a loading state.",
+            lazyHeading = "Lazy initialization of tab contents",
+            lazyHint = "Create a panel only when its tab is visited: prepare the tab ids up front and append the matching " +
+                "panel the first time the tab is selected. The upstream example also shows a loading indicator; this demo " +
+                "focuses on the on-demand creation.",
+            prefixHeading = "Prefix and suffix",
+            prefixHint = "A Tab Sheet exposes prefix / suffix slots for custom content at both ends of the tab bar.",
+            themeHeading = "Theme",
+            themeHint = "bordered is the Tab Sheet theme variant that draws a border around the tab bar and content.",
+            tabLabels = listOf("Dashboard", "Payment", "Shipping"),
+            panelContents = listOf(
+                "This is the Dashboard tab content",
+                "This is the Payment tab content",
+                "This is the Shipping tab content",
+            ),
+            closeAll = "Close all",
+            addTab = "Add tab",
+        )
+        private val chinese: TabSheetTexts = TabSheetTexts(
+            basicHeading = "基本用法",
+            basicHint = "Tab Sheet 把标签与内容面板绑在一起：vaadin-tabs 放进 slot=\"tabs\"，每个面板用 tab 属性指向" +
+                "对应 tab 的 id，切换由组件完成。选中的 tab 找不到面板时组件进入 loading 状态。",
+            lazyHeading = "内容懒初始化",
+            lazyHint = "只为访问过的 tab 创建面板：先准备好 tab 的 id，第一次选中时才把对应面板加进 Tab Sheet。" +
+                "上游示例还演示了加载指示器，这里只演示按需创建。",
+            prefixHeading = "前缀与后缀",
+            prefixHint = "Tab Sheet 提供 prefix / suffix 插槽，把按钮等自定义内容放在标签栏两端。",
+            themeHeading = "主题",
+            themeHint = "bordered 是 Tab Sheet 的主题变体，会在标签栏与内容区外画一圈边框。",
+            tabLabels = listOf("仪表盘", "支付", "配送"),
+            panelContents = listOf("这是仪表盘面板的内容。", "这是支付面板的内容。", "这是配送面板的内容。"),
+            closeAll = "全部关闭",
+            addTab = "新增标签",
+        )
         private val tabSheetTexts: Translations<TabSheetTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

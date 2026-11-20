@@ -55,58 +55,6 @@ val integerFieldEntry: CatalogEntry =
         kitPage = { IntegerFieldPage.NAME() },
     )
 
-private val english: IntegerFieldTexts = IntegerFieldTexts(
-    basicHeading = "Basic usage",
-    basicHint = "Only integers are parsed; input with a decimal point fires unparsable-change and leaves value " +
-        "unchanged.",
-    valuePrefix = "Value: ",
-    empty = "(empty)",
-    itemCount = "Item count",
-    eventLog = "Event log",
-    unparsable = "unparsable-change (not an integer)",
-    variantsHeading = "Value examples",
-    variantsHint = "value is a string here too; negative and multi-digit integers are read and written as plain " +
-        "decimal text.",
-    rangeHeading = "Range validation",
-    rangeHint = "min / max constrain both the step buttons and validate().",
-    age = "Age",
-    ageError = "Age must be between 18 and 120",
-    notValidated = "Not validated yet",
-    validate = "Validate",
-    resultPrefix = "Result: ",
-    valid = "Valid",
-    failed = "Failed",
-    stylesHeading = "Styles",
-    stylesHint = "Shares the same theme variants as Number Field.",
-    quantity = "Quantity",
-    helper = "Helper text",
-)
-
-private val chinese: IntegerFieldTexts = IntegerFieldTexts(
-    basicHeading = "基本用法",
-    basicHint = "只解析整数；带小数点的输入会触发 unparsable-change 并且不更新 value。",
-    valuePrefix = "当前值：",
-    empty = "（空）",
-    itemCount = "件数",
-    eventLog = "事件流",
-    unparsable = "unparsable-change（不是整数）",
-    variantsHeading = "取值示例",
-    variantsHint = "Integer Field 的 value 同样是字符串，负整数与多位数都直接以十进制文本读写。",
-    rangeHeading = "范围校验",
-    rangeHint = "min / max 同时约束步进按钮和 validate()。",
-    age = "年龄",
-    ageError = "年龄需要在 18 到 120 之间",
-    notValidated = "尚未校验",
-    validate = "校验",
-    resultPrefix = "校验结果：",
-    valid = "通过",
-    failed = "失败",
-    stylesHeading = "样式变体",
-    stylesHint = "与 Number Field 共用同一套主题变体。",
-    quantity = "数量",
-    helper = "说明文字",
-)
-
 internal class IntegerFieldPage : DemoPage() {
     private val texts = Binder(integerFieldTexts)
 
@@ -250,6 +198,56 @@ internal class IntegerFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page") {
+        private val english: IntegerFieldTexts = IntegerFieldTexts(
+            basicHeading = "Basic usage",
+            basicHint = "Only integers are parsed; input with a decimal point fires unparsable-change and leaves value " +
+                "unchanged.",
+            valuePrefix = "Value: ",
+            empty = "(empty)",
+            itemCount = "Item count",
+            eventLog = "Event log",
+            unparsable = "unparsable-change (not an integer)",
+            variantsHeading = "Value examples",
+            variantsHint = "value is a string here too; negative and multi-digit integers are read and written as plain " +
+                "decimal text.",
+            rangeHeading = "Range validation",
+            rangeHint = "min / max constrain both the step buttons and validate().",
+            age = "Age",
+            ageError = "Age must be between 18 and 120",
+            notValidated = "Not validated yet",
+            validate = "Validate",
+            resultPrefix = "Result: ",
+            valid = "Valid",
+            failed = "Failed",
+            stylesHeading = "Styles",
+            stylesHint = "Shares the same theme variants as Number Field.",
+            quantity = "Quantity",
+            helper = "Helper text",
+        )
+        private val chinese: IntegerFieldTexts = IntegerFieldTexts(
+            basicHeading = "基本用法",
+            basicHint = "只解析整数；带小数点的输入会触发 unparsable-change 并且不更新 value。",
+            valuePrefix = "当前值：",
+            empty = "（空）",
+            itemCount = "件数",
+            eventLog = "事件流",
+            unparsable = "unparsable-change（不是整数）",
+            variantsHeading = "取值示例",
+            variantsHint = "Integer Field 的 value 同样是字符串，负整数与多位数都直接以十进制文本读写。",
+            rangeHeading = "范围校验",
+            rangeHint = "min / max 同时约束步进按钮和 validate()。",
+            age = "年龄",
+            ageError = "年龄需要在 18 到 120 之间",
+            notValidated = "尚未校验",
+            validate = "校验",
+            resultPrefix = "校验结果：",
+            valid = "通过",
+            failed = "失败",
+            stylesHeading = "样式变体",
+            stylesHint = "与 Number Field 共用同一套主题变体。",
+            quantity = "数量",
+            helper = "说明文字",
+        )
         private val integerFieldTexts: Translations<IntegerFieldTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

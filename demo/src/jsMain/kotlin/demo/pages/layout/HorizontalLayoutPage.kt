@@ -40,84 +40,6 @@ val horizontalLayoutEntry: CatalogEntry =
         kitPage = { HorizontalLayoutPage.NAME() },
     )
 
-private val english: HorizontalLayoutTexts =
-    HorizontalLayoutTexts(
-        basicHeading = "Basic usage",
-        basicHint = "spacing and padding are the most common theme variants and can be combined.",
-        verticalHeading = "Vertical alignment",
-        verticalHint = "align-items positions the children vertically: stretch (default), start, center, " +
-            "end or baseline.",
-        individualHeading = "Aligning individual items",
-        individualHint = "align-self on a child overrides the container's align-items for that item only.",
-        horizontalHeading = "Horizontal alignment",
-        horizontalHint = "Children can be grouped into start / middle / end with slots, or distributed as " +
-            "a whole with justify-content. Do not use both at the same time.",
-        spacingHeading = "Spacing",
-        spacingHint = "spacing adds a uniform gap between the children.",
-        paddingHeading = "Padding",
-        paddingHint = "padding adds space inside the container.",
-        marginHeading = "Margin",
-        marginHint = "margin adds space around the container.",
-        wrappingHeading = "Wrapping",
-        wrappingHint = "By default children shrink or overflow when space runs out; wrap lets them flow " +
-            "onto a new line.",
-        wrappingSlotsHeading = "Wrapping aligned items",
-        wrappingSlotsHint = "When combined with horizontal alignment, group the children that should wrap " +
-            "together into sub-layouts and give those the slot.",
-        expandingHeading = "Expanding items",
-        expandingHint = "flex-grow makes a child take the excess space; several children share it " +
-            "proportionally.",
-        item = { "Item $it" },
-        start = "Start",
-        middle = "Middle",
-        end = "End",
-        withoutSpacing = "Without spacing",
-        withSpacing = "With spacing",
-        withoutPadding = "Without padding",
-        withPadding = "With padding",
-        withoutMargin = "Without margin",
-        withMargin = "With margin",
-        withoutWrap = "Without wrap",
-        withWrap = "With wrap",
-    )
-
-private val chinese: HorizontalLayoutTexts =
-    HorizontalLayoutTexts(
-        basicHeading = "基本用法",
-        basicHint = "spacing 和 padding 是最常用的两个主题，可以叠加使用。",
-        verticalHeading = "纵向对齐",
-        verticalHint = "用 align-items 控制子项在纵向上的位置：stretch（默认）、start、center、end、baseline。",
-        individualHeading = "单项纵向对齐",
-        individualHint = "子项的 align-self 覆盖容器的 align-items，只影响它自己。",
-        horizontalHeading = "水平对齐",
-        horizontalHint = "子项可以用 slot 分成 start / middle / end 三组，也可以用 justify-content 统一分布。" +
-            "两种方式不要同时使用。",
-        spacingHeading = "间距",
-        spacingHint = "spacing 在子项之间加入统一间隔。",
-        paddingHeading = "内边距",
-        paddingHint = "padding 在容器内部四周留出空间。",
-        marginHeading = "外边距",
-        marginHint = "margin 在容器外部留出空间，与相邻元素拉开距离。",
-        wrappingHeading = "换行",
-        wrappingHint = "默认情况下空间不足时子项会收缩或溢出；wrap 让它们换到下一行。",
-        wrappingSlotsHeading = "分组后换行",
-        wrappingSlotsHint = "与水平对齐组合时，把应该一起换行的子项放进子布局，再给子布局加 slot。",
-        expandingHeading = "扩展子项",
-        expandingHint = "给子项设置 flex-grow 让它占据多余空间；多个子项按比例分配。",
-        item = { "项目 $it" },
-        start = "开始",
-        middle = "中间",
-        end = "末尾",
-        withoutSpacing = "没有 spacing",
-        withSpacing = "有 spacing",
-        withoutPadding = "没有 padding",
-        withPadding = "有 padding",
-        withoutMargin = "没有 margin",
-        withMargin = "有 margin",
-        withoutWrap = "没有 wrap",
-        withWrap = "有 wrap",
-    )
-
 internal class HorizontalLayoutPage : DemoPage() {
     private val texts = Binder(horizontalLayoutTexts)
 
@@ -392,6 +314,82 @@ internal class HorizontalLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page") {
+        private val english: HorizontalLayoutTexts =
+            HorizontalLayoutTexts(
+                basicHeading = "Basic usage",
+                basicHint = "spacing and padding are the most common theme variants and can be combined.",
+                verticalHeading = "Vertical alignment",
+                verticalHint = "align-items positions the children vertically: stretch (default), start, center, " +
+                    "end or baseline.",
+                individualHeading = "Aligning individual items",
+                individualHint = "align-self on a child overrides the container's align-items for that item only.",
+                horizontalHeading = "Horizontal alignment",
+                horizontalHint = "Children can be grouped into start / middle / end with slots, or distributed as " +
+                    "a whole with justify-content. Do not use both at the same time.",
+                spacingHeading = "Spacing",
+                spacingHint = "spacing adds a uniform gap between the children.",
+                paddingHeading = "Padding",
+                paddingHint = "padding adds space inside the container.",
+                marginHeading = "Margin",
+                marginHint = "margin adds space around the container.",
+                wrappingHeading = "Wrapping",
+                wrappingHint = "By default children shrink or overflow when space runs out; wrap lets them flow " +
+                    "onto a new line.",
+                wrappingSlotsHeading = "Wrapping aligned items",
+                wrappingSlotsHint = "When combined with horizontal alignment, group the children that should wrap " +
+                    "together into sub-layouts and give those the slot.",
+                expandingHeading = "Expanding items",
+                expandingHint = "flex-grow makes a child take the excess space; several children share it " +
+                    "proportionally.",
+                item = { "Item $it" },
+                start = "Start",
+                middle = "Middle",
+                end = "End",
+                withoutSpacing = "Without spacing",
+                withSpacing = "With spacing",
+                withoutPadding = "Without padding",
+                withPadding = "With padding",
+                withoutMargin = "Without margin",
+                withMargin = "With margin",
+                withoutWrap = "Without wrap",
+                withWrap = "With wrap",
+            )
+        private val chinese: HorizontalLayoutTexts =
+            HorizontalLayoutTexts(
+                basicHeading = "基本用法",
+                basicHint = "spacing 和 padding 是最常用的两个主题，可以叠加使用。",
+                verticalHeading = "纵向对齐",
+                verticalHint = "用 align-items 控制子项在纵向上的位置：stretch（默认）、start、center、end、baseline。",
+                individualHeading = "单项纵向对齐",
+                individualHint = "子项的 align-self 覆盖容器的 align-items，只影响它自己。",
+                horizontalHeading = "水平对齐",
+                horizontalHint = "子项可以用 slot 分成 start / middle / end 三组，也可以用 justify-content 统一分布。" +
+                    "两种方式不要同时使用。",
+                spacingHeading = "间距",
+                spacingHint = "spacing 在子项之间加入统一间隔。",
+                paddingHeading = "内边距",
+                paddingHint = "padding 在容器内部四周留出空间。",
+                marginHeading = "外边距",
+                marginHint = "margin 在容器外部留出空间，与相邻元素拉开距离。",
+                wrappingHeading = "换行",
+                wrappingHint = "默认情况下空间不足时子项会收缩或溢出；wrap 让它们换到下一行。",
+                wrappingSlotsHeading = "分组后换行",
+                wrappingSlotsHint = "与水平对齐组合时，把应该一起换行的子项放进子布局，再给子布局加 slot。",
+                expandingHeading = "扩展子项",
+                expandingHint = "给子项设置 flex-grow 让它占据多余空间；多个子项按比例分配。",
+                item = { "项目 $it" },
+                start = "开始",
+                middle = "中间",
+                end = "末尾",
+                withoutSpacing = "没有 spacing",
+                withSpacing = "有 spacing",
+                withoutPadding = "没有 padding",
+                withPadding = "有 padding",
+                withoutMargin = "没有 margin",
+                withMargin = "有 margin",
+                withoutWrap = "没有 wrap",
+                withWrap = "有 wrap",
+            )
         private val horizontalLayoutTexts: Translations<HorizontalLayoutTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

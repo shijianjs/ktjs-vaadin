@@ -60,103 +60,6 @@ val selectEntry: CatalogEntry =
         kitPage = { SelectPage.NAME() },
     )
 
-private val english: SelectTexts =
-    SelectTexts(
-        basicHeading = "Basic usage",
-        basicHint = "items takes an array of { label, value }; the dropdown renders in an overlay and " +
-            "value is a string.",
-        city = "City",
-        chooseOne = "Choose one",
-        none = "(none)",
-        featuresHeading = "Basic features",
-        featuresHint = "label, helper-text, placeholder and a prefix icon make up the complete field; " +
-            "the tooltip is attached through its slot.",
-        sortBy = "Sort by",
-        helper = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        dividersHeading = "Dividers and disabled items",
-        dividersHint = "Use { component: \"hr\" } in items for a divider; individual items can be marked " +
-            "disabled.",
-        size = "Size",
-        overlayHeading = "Overlay position and width",
-        overlayHint = "no-vertical-overlap keeps the overlay from covering the field itself; " +
-            "--vaadin-select-overlay-width widens the dropdown independently.",
-        employee = "Employee",
-        placeholderHeading = "Placeholder and clearing",
-        placeholderHint = "placeholder only shows while nothing is selected; setting value to an empty " +
-            "string returns the field to it.",
-        team = "Team",
-        nothingSelected = "Nothing selected yet",
-        currentPrefix = "Current value: ",
-        empty = "(empty)",
-        clear = "Clear",
-        emptySelectionHeading = "Empty selection item",
-        emptySelectionHint = "Adding an item that represents \"no selection\" with a custom caption " +
-            "requires the Flow setEmptySelectionCaption API; the web component has no equivalent property, " +
-            "so it is not shown here.",
-        customLabelHeading = "Custom item label",
-        customLabelHint = "Build the dropdown content in the default slot; the label attribute of each " +
-            "item is what the field shows once selected.",
-        assignee = "Assignee",
-        presentationHeading = "Custom item presentation",
-        presentationHint = "Items can hold an avatar and secondary information; the selected value still " +
-            "comes from label.",
-        chooseDoctor = "Choose doctor",
-        statesHeading = "Read-only and disabled",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        stylesHeading = "Style variants",
-        stylesHint = "align-right aligns the text to the end, small compresses the height and " +
-            "helper-above-field puts the helper text below the label.",
-        label = "Label",
-        helperText = "Helper text",
-    )
-
-private val chinese: SelectTexts =
-    SelectTexts(
-        basicHeading = "基本用法",
-        basicHint = "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
-        city = "所在城市",
-        chooseOne = "请选择",
-        none = "（未选择）",
-        featuresHeading = "基本特性",
-        featuresHint = "label、helper-text、placeholder 与 prefix 图标组合成完整字段；tooltip 通过 slot 挂载。",
-        sortBy = "排序方式",
-        helper = "辅助信息",
-        placeholder = "占位提示",
-        tooltipText = "提示文本",
-        dividersHeading = "分隔线与禁用条目",
-        dividersHint = "items 里用 { component: \"hr\" } 插入分隔线；单个条目可以用 disabled 标为不可选。",
-        size = "尺码",
-        overlayHeading = "浮层位置与宽度",
-        overlayHint = "no-vertical-overlap 禁止浮层覆盖输入框本身；--vaadin-select-overlay-width 单独设置下拉宽度。",
-        employee = "员工",
-        placeholderHeading = "占位符与清空",
-        placeholderHint = "placeholder 只在没有选中值时显示；把 value 置空即可回到占位状态。",
-        team = "团队",
-        nothingSelected = "尚未选择",
-        currentPrefix = "当前选择：",
-        empty = "（空）",
-        clear = "清空",
-        emptySelectionHeading = "空选择项",
-        emptySelectionHint = "在下拉列表里放一个表示「不选择」的条目、并自定义它的文案，需要 Flow 侧的 " +
-            "setEmptySelectionCaption API，Web Component 没有对应属性，这里不演示。",
-        customLabelHeading = "自定义条目标签",
-        customLabelHint = "用默认插槽自行组装下拉内容；条目上的 label 属性决定选中后显示在输入框里的文本。",
-        assignee = "负责人",
-        presentationHeading = "自定义条目呈现",
-        presentationHint = "条目内部可以放头像与次要信息；选中值仍由 label 决定。",
-        chooseDoctor = "选择医生",
-        statesHeading = "只读与禁用",
-        readonly = "只读",
-        disabled = "禁用",
-        stylesHeading = "样式变体",
-        stylesHint = "align-right 让文本右对齐，small 压缩高度，helper-above-field 把辅助信息放到标签下。",
-        label = "标签",
-        helperText = "辅助信息",
-    )
-
 internal class SelectPage : DemoPage() {
     private val texts = Binder(selectTexts)
 
@@ -382,6 +285,101 @@ internal class SelectPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page") {
+        private val english: SelectTexts =
+            SelectTexts(
+                basicHeading = "Basic usage",
+                basicHint = "items takes an array of { label, value }; the dropdown renders in an overlay and " +
+                    "value is a string.",
+                city = "City",
+                chooseOne = "Choose one",
+                none = "(none)",
+                featuresHeading = "Basic features",
+                featuresHint = "label, helper-text, placeholder and a prefix icon make up the complete field; " +
+                    "the tooltip is attached through its slot.",
+                sortBy = "Sort by",
+                helper = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                dividersHeading = "Dividers and disabled items",
+                dividersHint = "Use { component: \"hr\" } in items for a divider; individual items can be marked " +
+                    "disabled.",
+                size = "Size",
+                overlayHeading = "Overlay position and width",
+                overlayHint = "no-vertical-overlap keeps the overlay from covering the field itself; " +
+                    "--vaadin-select-overlay-width widens the dropdown independently.",
+                employee = "Employee",
+                placeholderHeading = "Placeholder and clearing",
+                placeholderHint = "placeholder only shows while nothing is selected; setting value to an empty " +
+                    "string returns the field to it.",
+                team = "Team",
+                nothingSelected = "Nothing selected yet",
+                currentPrefix = "Current value: ",
+                empty = "(empty)",
+                clear = "Clear",
+                emptySelectionHeading = "Empty selection item",
+                emptySelectionHint = "Adding an item that represents \"no selection\" with a custom caption " +
+                    "requires the Flow setEmptySelectionCaption API; the web component has no equivalent property, " +
+                    "so it is not shown here.",
+                customLabelHeading = "Custom item label",
+                customLabelHint = "Build the dropdown content in the default slot; the label attribute of each " +
+                    "item is what the field shows once selected.",
+                assignee = "Assignee",
+                presentationHeading = "Custom item presentation",
+                presentationHint = "Items can hold an avatar and secondary information; the selected value still " +
+                    "comes from label.",
+                chooseDoctor = "Choose doctor",
+                statesHeading = "Read-only and disabled",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                stylesHeading = "Style variants",
+                stylesHint = "align-right aligns the text to the end, small compresses the height and " +
+                    "helper-above-field puts the helper text below the label.",
+                label = "Label",
+                helperText = "Helper text",
+            )
+        private val chinese: SelectTexts =
+            SelectTexts(
+                basicHeading = "基本用法",
+                basicHint = "items 接受 { label, value } 数组；下拉在浮层中渲染，value 是字符串。",
+                city = "所在城市",
+                chooseOne = "请选择",
+                none = "（未选择）",
+                featuresHeading = "基本特性",
+                featuresHint = "label、helper-text、placeholder 与 prefix 图标组合成完整字段；tooltip 通过 slot 挂载。",
+                sortBy = "排序方式",
+                helper = "辅助信息",
+                placeholder = "占位提示",
+                tooltipText = "提示文本",
+                dividersHeading = "分隔线与禁用条目",
+                dividersHint = "items 里用 { component: \"hr\" } 插入分隔线；单个条目可以用 disabled 标为不可选。",
+                size = "尺码",
+                overlayHeading = "浮层位置与宽度",
+                overlayHint = "no-vertical-overlap 禁止浮层覆盖输入框本身；--vaadin-select-overlay-width 单独设置下拉宽度。",
+                employee = "员工",
+                placeholderHeading = "占位符与清空",
+                placeholderHint = "placeholder 只在没有选中值时显示；把 value 置空即可回到占位状态。",
+                team = "团队",
+                nothingSelected = "尚未选择",
+                currentPrefix = "当前选择：",
+                empty = "（空）",
+                clear = "清空",
+                emptySelectionHeading = "空选择项",
+                emptySelectionHint = "在下拉列表里放一个表示「不选择」的条目、并自定义它的文案，需要 Flow 侧的 " +
+                    "setEmptySelectionCaption API，Web Component 没有对应属性，这里不演示。",
+                customLabelHeading = "自定义条目标签",
+                customLabelHint = "用默认插槽自行组装下拉内容；条目上的 label 属性决定选中后显示在输入框里的文本。",
+                assignee = "负责人",
+                presentationHeading = "自定义条目呈现",
+                presentationHint = "条目内部可以放头像与次要信息；选中值仍由 label 决定。",
+                chooseDoctor = "选择医生",
+                statesHeading = "只读与禁用",
+                readonly = "只读",
+                disabled = "禁用",
+                stylesHeading = "样式变体",
+                stylesHint = "align-right 让文本右对齐，small 压缩高度，helper-above-field 把辅助信息放到标签下。",
+                label = "标签",
+                helperText = "辅助信息",
+            )
         private const val SIZES_JSON =
             """
             [

@@ -36,67 +36,6 @@ val verticalLayoutEntry: CatalogEntry =
         kitPage = { VerticalLayoutPage.NAME() },
     )
 
-private val english: VerticalLayoutTexts =
-    VerticalLayoutTexts(
-        basicHeading = "Basic usage",
-        basicHint = "Same theme variants as Horizontal Layout, laid out vertically; spacing becomes the " +
-            "row gap.",
-        verticalHeading = "Vertical alignment",
-        verticalHint = "When the layout is taller than its content, justify-content distributes the " +
-            "children vertically.",
-        horizontalHeading = "Horizontal alignment",
-        horizontalHint = "align-items positions the children horizontally, for example to center them.",
-        individualHeading = "Aligning individual items",
-        individualHint = "align-self on a child overrides the container's align-items for that item only.",
-        spacingHeading = "Spacing",
-        spacingHint = "spacing adds a uniform gap between the children.",
-        paddingHeading = "Padding",
-        paddingHint = "padding adds space inside the container.",
-        marginHeading = "Margin",
-        marginHint = "margin adds space around the container.",
-        wrappingHeading = "Wrapping",
-        wrappingHint = "By default children shrink or overflow when space runs out; wrap lets them flow " +
-            "into a new column.",
-        item = { "Item $it" },
-        withoutSpacing = "Without spacing",
-        withSpacing = "With spacing",
-        withoutPadding = "Without padding",
-        withPadding = "With padding",
-        withoutMargin = "Without margin",
-        withMargin = "With margin",
-        withoutWrap = "Without wrap",
-        withWrap = "With wrap",
-    )
-
-private val chinese: VerticalLayoutTexts =
-    VerticalLayoutTexts(
-        basicHeading = "基本用法",
-        basicHint = "与 Horizontal Layout 相同的主题，方向改为纵向；spacing 变成行间距。",
-        verticalHeading = "纵向对齐",
-        verticalHint = "布局比内容高时，justify-content 控制子项在纵向上的分布。",
-        horizontalHeading = "水平对齐",
-        horizontalHint = "align-items 控制子项在横向上的位置，例如整体居中。",
-        individualHeading = "单项对齐",
-        individualHint = "子项的 align-self 可以覆盖容器的 align-items，只影响它自己。",
-        spacingHeading = "间距",
-        spacingHint = "spacing 在子项之间加入统一间隔。",
-        paddingHeading = "内边距",
-        paddingHint = "padding 在容器内部四周留出空间。",
-        marginHeading = "外边距",
-        marginHint = "margin 在容器外部留出空间，与相邻元素拉开距离。",
-        wrappingHeading = "换行",
-        wrappingHint = "默认空间不足时子项会收缩或溢出；wrap 让它们换到下一列。",
-        item = { "项目 $it" },
-        withoutSpacing = "没有 spacing",
-        withSpacing = "有 spacing",
-        withoutPadding = "没有 padding",
-        withPadding = "有 padding",
-        withoutMargin = "没有 margin",
-        withMargin = "有 margin",
-        withoutWrap = "没有 wrap",
-        withWrap = "有 wrap",
-    )
-
 internal class VerticalLayoutPage : DemoPage() {
     private val texts = Binder(verticalLayoutTexts)
 
@@ -308,6 +247,65 @@ internal class VerticalLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page") {
+        private val english: VerticalLayoutTexts =
+            VerticalLayoutTexts(
+                basicHeading = "Basic usage",
+                basicHint = "Same theme variants as Horizontal Layout, laid out vertically; spacing becomes the " +
+                    "row gap.",
+                verticalHeading = "Vertical alignment",
+                verticalHint = "When the layout is taller than its content, justify-content distributes the " +
+                    "children vertically.",
+                horizontalHeading = "Horizontal alignment",
+                horizontalHint = "align-items positions the children horizontally, for example to center them.",
+                individualHeading = "Aligning individual items",
+                individualHint = "align-self on a child overrides the container's align-items for that item only.",
+                spacingHeading = "Spacing",
+                spacingHint = "spacing adds a uniform gap between the children.",
+                paddingHeading = "Padding",
+                paddingHint = "padding adds space inside the container.",
+                marginHeading = "Margin",
+                marginHint = "margin adds space around the container.",
+                wrappingHeading = "Wrapping",
+                wrappingHint = "By default children shrink or overflow when space runs out; wrap lets them flow " +
+                    "into a new column.",
+                item = { "Item $it" },
+                withoutSpacing = "Without spacing",
+                withSpacing = "With spacing",
+                withoutPadding = "Without padding",
+                withPadding = "With padding",
+                withoutMargin = "Without margin",
+                withMargin = "With margin",
+                withoutWrap = "Without wrap",
+                withWrap = "With wrap",
+            )
+        private val chinese: VerticalLayoutTexts =
+            VerticalLayoutTexts(
+                basicHeading = "基本用法",
+                basicHint = "与 Horizontal Layout 相同的主题，方向改为纵向；spacing 变成行间距。",
+                verticalHeading = "纵向对齐",
+                verticalHint = "布局比内容高时，justify-content 控制子项在纵向上的分布。",
+                horizontalHeading = "水平对齐",
+                horizontalHint = "align-items 控制子项在横向上的位置，例如整体居中。",
+                individualHeading = "单项对齐",
+                individualHint = "子项的 align-self 可以覆盖容器的 align-items，只影响它自己。",
+                spacingHeading = "间距",
+                spacingHint = "spacing 在子项之间加入统一间隔。",
+                paddingHeading = "内边距",
+                paddingHint = "padding 在容器内部四周留出空间。",
+                marginHeading = "外边距",
+                marginHint = "margin 在容器外部留出空间，与相邻元素拉开距离。",
+                wrappingHeading = "换行",
+                wrappingHint = "默认空间不足时子项会收缩或溢出；wrap 让它们换到下一列。",
+                item = { "项目 $it" },
+                withoutSpacing = "没有 spacing",
+                withSpacing = "有 spacing",
+                withoutPadding = "没有 padding",
+                withPadding = "有 padding",
+                withoutMargin = "没有 margin",
+                withMargin = "有 margin",
+                withoutWrap = "没有 wrap",
+                withWrap = "有 wrap",
+            )
         private val verticalLayoutTexts: Translations<VerticalLayoutTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

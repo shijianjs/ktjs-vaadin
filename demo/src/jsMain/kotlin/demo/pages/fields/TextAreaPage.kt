@@ -51,128 +51,6 @@ val textAreaEntry: CatalogEntry =
         kitPage = { TextAreaPage.NAME() },
     )
 
-private val english: TextAreaTexts =
-    TextAreaTexts(
-        basicHeading = "Basic usage",
-        basicHint = "A text area starts at two rows and grows with its content; maxlength caps the " +
-            "number of characters and the helper text shows the current length against that cap.",
-        comment = "Comment",
-        characters = { length, cap -> "Characters: $length / $cap" },
-        heightHeading = "Automatic height adjustment",
-        heightHint = "Without a fixed height the text area grows with its content and defaults to a " +
-            "two-row minimum; min-height / max-height or minRows / maxRows bound how far it may grow.",
-        description = "Description",
-        descriptionBounded = "Description (100 - 150 px)",
-        threeToFiveRows = "3 to 5 rows",
-        threeLines = "First line\nSecond line\nThird line",
-        singleRow = "Multi-line input at a single row",
-        growCaption = "Growing automatically",
-        boundedCaption = "Bounded height",
-        rowsCaption = "Bounded row count",
-        featuresHeading = "Basic features",
-        featuresHint = "Besides the multi-line input, Text Area shares the label, helper text, " +
-            "placeholder, tooltip and prefix / suffix slots with Text Field.",
-        label = "Label",
-        helperText = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        validationHeading = "Validation",
-        validationHint = "required, minlength / maxlength, pattern and allowedCharPattern combine. A " +
-            "textarea has no native pattern support, so the component checks it with a regular expression; " +
-            "the example applies the same rule when mapping the validated event to an error message.",
-        sentence = "Sentence",
-        sentenceHelper = "Must be one complete sentence ending in a period, between 5 and 50 " +
-            "characters long",
-        notValidated = "Not validated yet",
-        required = "Field is required",
-        tooShort = { "Minimum length is $it characters" },
-        tooLong = { "Maximum length is $it characters" },
-        pattern = "Must be one complete sentence ending in a period",
-        checkPrefix = "checked · ",
-        passed = "valid",
-        failed = "invalid",
-        constraintsCaption = "Constraints and error messages",
-        requiredNote = "Required note",
-        requiredError = "This field is required",
-        validate = "Validate",
-        validateCaption = "Manual validation (validate())",
-        resultPrefix = "Result: ",
-        valid = "Valid",
-        invalid = "Failed",
-        statesHeading = "Read-only and disabled",
-        statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
-            "interaction entirely.",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        value = "Value",
-        counterHeading = "Character counter",
-        counterHint = "Longer free-form inputs are often capped with maxlength, and the helper text " +
-            "shows the current length against that cap.",
-        stylesHeading = "Style variants",
-        stylesHint = "The same align-right, small and helper-above-field variants apply; a text area " +
-            "usually fills the width of its container.",
-        typeHere = "Type here",
-    )
-
-private val chinese: TextAreaTexts =
-    TextAreaTexts(
-        basicHeading = "基本用法",
-        basicHint = "多行输入默认两行高，并随内容自动增长；maxlength 限制字符数，辅助文本实时显示已输入" +
-            "的长度与上限。",
-        comment = "评论",
-        characters = { length, cap -> "字数：$length / $cap" },
-        heightHeading = "高度自动调整",
-        heightHint = "没有固定高度时，Text Area 随内容增长，默认最小高度是两行；也可以用 min-height / " +
-            "max-height 或 minRows / maxRows 约束增长范围。",
-        description = "描述",
-        descriptionBounded = "描述（100 - 150 px）",
-        threeToFiveRows = "3 到 5 行",
-        threeLines = "第一行\n第二行\n第三行",
-        singleRow = "单行高度的多行输入",
-        growCaption = "自动增长",
-        boundedCaption = "限制高度",
-        rowsCaption = "限制行数",
-        featuresHeading = "基本特性",
-        featuresHint = "除多行输入外，Text Area 与 Text Field 共享标签、辅助文本、占位符、提示与前后缀插槽。",
-        label = "标签",
-        helperText = "辅助文本",
-        placeholder = "占位符",
-        tooltipText = "提示文本",
-        validationHeading = "校验",
-        validationHint = "required、minlength / maxlength、pattern 与 allowedCharPattern 组合使用。" +
-            "textarea 不支持原生 pattern，组件的 checkValidity() 用正则自行检查，示例在 validated 事件里" +
-            "按同样的规则给出错误文案。",
-        sentence = "句子",
-        sentenceHelper = "必须是以句号结尾的完整句子，长度 5 到 50 个字符",
-        notValidated = "尚未校验",
-        required = "这一项必填",
-        tooShort = { "最短 $it 个字符" },
-        tooLong = { "最长 $it 个字符" },
-        pattern = "必须是以句号结尾的完整句子",
-        checkPrefix = "校验：",
-        passed = "通过",
-        failed = "未通过",
-        constraintsCaption = "约束与错误文案",
-        requiredNote = "必填说明",
-        requiredError = "这一项不能为空",
-        validate = "校验",
-        validateCaption = "手动校验（validate）",
-        resultPrefix = "校验结果：",
-        valid = "通过",
-        invalid = "失败",
-        statesHeading = "只读与禁用",
-        statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
-        readonly = "只读",
-        disabled = "禁用",
-        value = "值",
-        counterHeading = "字数统计",
-        counterHint = "较长的自由文本常用 maxlength 限制上限，并借助辅助文本显示当前长度与上限。",
-        stylesHeading = "样式变体",
-        stylesHint = "theme 属性同样接受 align-right、small 与 helper-above-field；多行输入通常占满" +
-            "容器宽度。",
-        typeHere = "输入内容",
-    )
-
 internal class TextAreaPage : DemoPage() {
     private val texts = Binder(textAreaTexts)
 
@@ -402,6 +280,126 @@ internal class TextAreaPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page") {
+        private val english: TextAreaTexts =
+            TextAreaTexts(
+                basicHeading = "Basic usage",
+                basicHint = "A text area starts at two rows and grows with its content; maxlength caps the " +
+                    "number of characters and the helper text shows the current length against that cap.",
+                comment = "Comment",
+                characters = { length, cap -> "Characters: $length / $cap" },
+                heightHeading = "Automatic height adjustment",
+                heightHint = "Without a fixed height the text area grows with its content and defaults to a " +
+                    "two-row minimum; min-height / max-height or minRows / maxRows bound how far it may grow.",
+                description = "Description",
+                descriptionBounded = "Description (100 - 150 px)",
+                threeToFiveRows = "3 to 5 rows",
+                threeLines = "First line\nSecond line\nThird line",
+                singleRow = "Multi-line input at a single row",
+                growCaption = "Growing automatically",
+                boundedCaption = "Bounded height",
+                rowsCaption = "Bounded row count",
+                featuresHeading = "Basic features",
+                featuresHint = "Besides the multi-line input, Text Area shares the label, helper text, " +
+                    "placeholder, tooltip and prefix / suffix slots with Text Field.",
+                label = "Label",
+                helperText = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                validationHeading = "Validation",
+                validationHint = "required, minlength / maxlength, pattern and allowedCharPattern combine. A " +
+                    "textarea has no native pattern support, so the component checks it with a regular expression; " +
+                    "the example applies the same rule when mapping the validated event to an error message.",
+                sentence = "Sentence",
+                sentenceHelper = "Must be one complete sentence ending in a period, between 5 and 50 " +
+                    "characters long",
+                notValidated = "Not validated yet",
+                required = "Field is required",
+                tooShort = { "Minimum length is $it characters" },
+                tooLong = { "Maximum length is $it characters" },
+                pattern = "Must be one complete sentence ending in a period",
+                checkPrefix = "checked · ",
+                passed = "valid",
+                failed = "invalid",
+                constraintsCaption = "Constraints and error messages",
+                requiredNote = "Required note",
+                requiredError = "This field is required",
+                validate = "Validate",
+                validateCaption = "Manual validation (validate())",
+                resultPrefix = "Result: ",
+                valid = "Valid",
+                invalid = "Failed",
+                statesHeading = "Read-only and disabled",
+                statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
+                    "interaction entirely.",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                value = "Value",
+                counterHeading = "Character counter",
+                counterHint = "Longer free-form inputs are often capped with maxlength, and the helper text " +
+                    "shows the current length against that cap.",
+                stylesHeading = "Style variants",
+                stylesHint = "The same align-right, small and helper-above-field variants apply; a text area " +
+                    "usually fills the width of its container.",
+                typeHere = "Type here",
+            )
+        private val chinese: TextAreaTexts =
+            TextAreaTexts(
+                basicHeading = "基本用法",
+                basicHint = "多行输入默认两行高，并随内容自动增长；maxlength 限制字符数，辅助文本实时显示已输入" +
+                    "的长度与上限。",
+                comment = "评论",
+                characters = { length, cap -> "字数：$length / $cap" },
+                heightHeading = "高度自动调整",
+                heightHint = "没有固定高度时，Text Area 随内容增长，默认最小高度是两行；也可以用 min-height / " +
+                    "max-height 或 minRows / maxRows 约束增长范围。",
+                description = "描述",
+                descriptionBounded = "描述（100 - 150 px）",
+                threeToFiveRows = "3 到 5 行",
+                threeLines = "第一行\n第二行\n第三行",
+                singleRow = "单行高度的多行输入",
+                growCaption = "自动增长",
+                boundedCaption = "限制高度",
+                rowsCaption = "限制行数",
+                featuresHeading = "基本特性",
+                featuresHint = "除多行输入外，Text Area 与 Text Field 共享标签、辅助文本、占位符、提示与前后缀插槽。",
+                label = "标签",
+                helperText = "辅助文本",
+                placeholder = "占位符",
+                tooltipText = "提示文本",
+                validationHeading = "校验",
+                validationHint = "required、minlength / maxlength、pattern 与 allowedCharPattern 组合使用。" +
+                    "textarea 不支持原生 pattern，组件的 checkValidity() 用正则自行检查，示例在 validated 事件里" +
+                    "按同样的规则给出错误文案。",
+                sentence = "句子",
+                sentenceHelper = "必须是以句号结尾的完整句子，长度 5 到 50 个字符",
+                notValidated = "尚未校验",
+                required = "这一项必填",
+                tooShort = { "最短 $it 个字符" },
+                tooLong = { "最长 $it 个字符" },
+                pattern = "必须是以句号结尾的完整句子",
+                checkPrefix = "校验：",
+                passed = "通过",
+                failed = "未通过",
+                constraintsCaption = "约束与错误文案",
+                requiredNote = "必填说明",
+                requiredError = "这一项不能为空",
+                validate = "校验",
+                validateCaption = "手动校验（validate）",
+                resultPrefix = "校验结果：",
+                valid = "通过",
+                invalid = "失败",
+                statesHeading = "只读与禁用",
+                statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
+                readonly = "只读",
+                disabled = "禁用",
+                value = "值",
+                counterHeading = "字数统计",
+                counterHint = "较长的自由文本常用 maxlength 限制上限，并借助辅助文本显示当前长度与上限。",
+                stylesHeading = "样式变体",
+                stylesHint = "theme 属性同样接受 align-right、small 与 helper-above-field；多行输入通常占满" +
+                    "容器宽度。",
+                typeHere = "输入内容",
+            )
         /** Sentence pattern of `text-area-validation.ts`: one sentence, capitalised, ending with a period. */
         private const val SENTENCE_PATTERN = "^[A-Z]([A-Za-z0-9,-\\s])*\\.$"
         /** The `templates.json` lorem ipsum used by the text-area height and character-counter examples. */

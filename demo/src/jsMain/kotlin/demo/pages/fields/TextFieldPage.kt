@@ -55,153 +55,6 @@ val textFieldEntry: CatalogEntry =
         kitPage = { TextFieldPage.NAME() },
     )
 
-private val english: TextFieldTexts =
-    TextFieldTexts(
-        basicHeading = "Basic usage",
-        basicHint = "A text field supports a label, prefix / suffix slots and a built-in clear button; " +
-            "input fires after every keystroke and change on commit (Enter or blur).",
-        streetAddress = "Street address",
-        addressCaption = "Street address: prefix icon and clear button",
-        valuePrefix = "Value: ",
-        empty = "(empty)",
-        readoutCaption = "Read-out",
-        logCaption = "Event log",
-        name = "Name",
-        namePlaceholder = "e.g. Ada Lovelace",
-        nameHelper = "Shown below the input",
-        changeLine = { "change · $it" },
-        valueChangedLine = { "value-changed · $it" },
-        featuresHeading = "Basic features",
-        featuresHint = "The label names the field, the helper text adds guidance and the placeholder " +
-            "shows an example; the tooltip slot explains the field, and the prefix / suffix slots hold " +
-            "icons or units.",
-        label = "Label",
-        helperText = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        validationHeading = "Validation",
-        validationHint = "required, minlength / maxlength, pattern and allowedCharPattern constrain the " +
-            "input together. The example reads the native validity in the validated event and maps each " +
-            "failure to its own error message.",
-        phone = "Phone number",
-        phoneHelper = "Format: +(123)456-7890",
-        notValidated = "Not validated yet",
-        required = "Field is required",
-        tooShort = { "Minimum length is $it characters" },
-        tooLong = { "Maximum length is $it characters" },
-        phonePattern = "Invalid phone number format",
-        checkPrefix = "validated · valid = ",
-        passed = "true",
-        failed = "false",
-        constraintsCaption = "Constraints and error messages",
-        code = "Invitation code",
-        codeHelper = "3-6 lowercase letters",
-        codeError = "Enter 3-6 lowercase letters",
-        validate = "Validate",
-        valid = "Valid",
-        invalidWith = { "Failed (invalid=$it)" },
-        reset = "Reset",
-        resetPrefix = "Reset, value: ",
-        manualCaption = "Manual validation (validate())",
-        resultPrefix = "Result: ",
-        statesHeading = "Read-only and disabled",
-        statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
-            "interaction entirely.",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        value = "Value",
-        autoselectHeading = "Autoselect",
-        autoselectHint = "With autoselect enabled, focusing the field with either the pointer or the " +
-            "keyboard selects the whole value so it can be replaced; with it off, a click places the caret " +
-            "where you clicked.",
-        autoselect = "autoselect",
-        inputModeHeading = "Input mode",
-        inputModeHint = "inputmode hints the browser which virtual keyboard to show on mobile devices; " +
-            "desktop browsers show no visible difference.",
-        url = "URL",
-        email = "Email",
-        search = "Search",
-        stylesHeading = "Style variants",
-        stylesHint = "The theme property takes space-separated variants: align-right right-aligns the " +
-            "text (useful for numbers in vertical groups), small renders a compact field and " +
-            "helper-above-field moves the helper text above the field.",
-        stylesCaption = "align-right + small + helper-above-field",
-        alignmentCaption = "Text alignment",
-        typeHere = "Type here",
-        typeHerePlaceholder = "Type to watch the sync result",
-    )
-
-private val chinese: TextFieldTexts =
-    TextFieldTexts(
-        basicHeading = "基本用法",
-        basicHint = "文本输入支持标签、前缀 / 后缀插槽和内置清空按钮；input 在每次按键后触发，change 在" +
-            "提交（回车或失焦）后触发。",
-        streetAddress = "街道地址",
-        addressCaption = "街道地址：前缀图标与清空按钮",
-        valuePrefix = "当前值：",
-        empty = "（空）",
-        readoutCaption = "读值",
-        logCaption = "事件流",
-        name = "姓名",
-        namePlaceholder = "例如 Ada Lovelace",
-        nameHelper = "显示在输入框下方",
-        changeLine = { "change · $it" },
-        valueChangedLine = { "value-changed · $it" },
-        featuresHeading = "基本特性",
-        featuresHint = "标签说明字段用途，辅助文本补充说明，占位符给出输入示例；tooltip 插槽在悬停与" +
-            "键盘聚焦时显示提示，前后缀插槽放置图标或单位。",
-        label = "标签",
-        helperText = "辅助文本",
-        placeholder = "占位符",
-        tooltipText = "提示文本",
-        validationHeading = "校验",
-        validationHint = "required、minlength / maxlength、pattern 与 allowedCharPattern 一起约束输入。" +
-            "示例在 validated 事件里读取原生 validity，为每种失败给出对应的错误文案。",
-        phone = "电话号码",
-        phoneHelper = "格式：+(123)456-7890",
-        notValidated = "尚未校验",
-        required = "这一项必填",
-        tooShort = { "最短 $it 个字符" },
-        tooLong = { "最长 $it 个字符" },
-        phonePattern = "电话号码格式不正确",
-        checkPrefix = "校验：",
-        passed = "通过",
-        failed = "未通过",
-        constraintsCaption = "约束与错误文案",
-        code = "邀请码",
-        codeHelper = "3-6 位小写字母",
-        codeError = "请输入 3-6 位小写字母",
-        validate = "校验",
-        valid = "通过",
-        invalidWith = { "失败（invalid=$it）" },
-        reset = "重置",
-        resetPrefix = "已重置，值：",
-        manualCaption = "手动校验（validate）",
-        resultPrefix = "校验结果：",
-        statesHeading = "只读与禁用",
-        statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
-        readonly = "只读",
-        disabled = "禁用",
-        value = "值",
-        autoselectHeading = "自动全选",
-        autoselectHint = "autoselect 打开时，用鼠标或键盘聚焦都会选中全部内容，便于直接替换；关闭时" +
-            "鼠标点击会把光标放在点击处。",
-        autoselect = "autoselect",
-        inputModeHeading = "输入模式",
-        inputModeHint = "inputmode 是给移动端浏览器的提示，决定聚焦时弹出哪种虚拟键盘；桌面浏览器没有" +
-            "可见效果。",
-        url = "网址",
-        email = "邮箱",
-        search = "搜索",
-        stylesHeading = "样式变体",
-        stylesHint = "theme 属性接受空格分隔的变体：align-right 右对齐文本（适合纵向排列的数值），" +
-            "small 更紧凑，helper-above-field 把辅助文本放在字段上方。",
-        stylesCaption = "align-right + small + helper-above-field",
-        alignmentCaption = "文本对齐",
-        typeHere = "输入内容",
-        typeHerePlaceholder = "边输入边观察同步结果",
-    )
-
 internal class TextFieldPage : DemoPage() {
     private val texts = Binder(textFieldTexts)
 
@@ -472,6 +325,151 @@ internal class TextFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TextFieldPage>(TextFieldPage::class.js, "vaadin-demo-text-field-page") {
+        private val english: TextFieldTexts =
+            TextFieldTexts(
+                basicHeading = "Basic usage",
+                basicHint = "A text field supports a label, prefix / suffix slots and a built-in clear button; " +
+                    "input fires after every keystroke and change on commit (Enter or blur).",
+                streetAddress = "Street address",
+                addressCaption = "Street address: prefix icon and clear button",
+                valuePrefix = "Value: ",
+                empty = "(empty)",
+                readoutCaption = "Read-out",
+                logCaption = "Event log",
+                name = "Name",
+                namePlaceholder = "e.g. Ada Lovelace",
+                nameHelper = "Shown below the input",
+                changeLine = { "change · $it" },
+                valueChangedLine = { "value-changed · $it" },
+                featuresHeading = "Basic features",
+                featuresHint = "The label names the field, the helper text adds guidance and the placeholder " +
+                    "shows an example; the tooltip slot explains the field, and the prefix / suffix slots hold " +
+                    "icons or units.",
+                label = "Label",
+                helperText = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                validationHeading = "Validation",
+                validationHint = "required, minlength / maxlength, pattern and allowedCharPattern constrain the " +
+                    "input together. The example reads the native validity in the validated event and maps each " +
+                    "failure to its own error message.",
+                phone = "Phone number",
+                phoneHelper = "Format: +(123)456-7890",
+                notValidated = "Not validated yet",
+                required = "Field is required",
+                tooShort = { "Minimum length is $it characters" },
+                tooLong = { "Maximum length is $it characters" },
+                phonePattern = "Invalid phone number format",
+                checkPrefix = "validated · valid = ",
+                passed = "true",
+                failed = "false",
+                constraintsCaption = "Constraints and error messages",
+                code = "Invitation code",
+                codeHelper = "3-6 lowercase letters",
+                codeError = "Enter 3-6 lowercase letters",
+                validate = "Validate",
+                valid = "Valid",
+                invalidWith = { "Failed (invalid=$it)" },
+                reset = "Reset",
+                resetPrefix = "Reset, value: ",
+                manualCaption = "Manual validation (validate())",
+                resultPrefix = "Result: ",
+                statesHeading = "Read-only and disabled",
+                statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
+                    "interaction entirely.",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                value = "Value",
+                autoselectHeading = "Autoselect",
+                autoselectHint = "With autoselect enabled, focusing the field with either the pointer or the " +
+                    "keyboard selects the whole value so it can be replaced; with it off, a click places the caret " +
+                    "where you clicked.",
+                autoselect = "autoselect",
+                inputModeHeading = "Input mode",
+                inputModeHint = "inputmode hints the browser which virtual keyboard to show on mobile devices; " +
+                    "desktop browsers show no visible difference.",
+                url = "URL",
+                email = "Email",
+                search = "Search",
+                stylesHeading = "Style variants",
+                stylesHint = "The theme property takes space-separated variants: align-right right-aligns the " +
+                    "text (useful for numbers in vertical groups), small renders a compact field and " +
+                    "helper-above-field moves the helper text above the field.",
+                stylesCaption = "align-right + small + helper-above-field",
+                alignmentCaption = "Text alignment",
+                typeHere = "Type here",
+                typeHerePlaceholder = "Type to watch the sync result",
+            )
+        private val chinese: TextFieldTexts =
+            TextFieldTexts(
+                basicHeading = "基本用法",
+                basicHint = "文本输入支持标签、前缀 / 后缀插槽和内置清空按钮；input 在每次按键后触发，change 在" +
+                    "提交（回车或失焦）后触发。",
+                streetAddress = "街道地址",
+                addressCaption = "街道地址：前缀图标与清空按钮",
+                valuePrefix = "当前值：",
+                empty = "（空）",
+                readoutCaption = "读值",
+                logCaption = "事件流",
+                name = "姓名",
+                namePlaceholder = "例如 Ada Lovelace",
+                nameHelper = "显示在输入框下方",
+                changeLine = { "change · $it" },
+                valueChangedLine = { "value-changed · $it" },
+                featuresHeading = "基本特性",
+                featuresHint = "标签说明字段用途，辅助文本补充说明，占位符给出输入示例；tooltip 插槽在悬停与" +
+                    "键盘聚焦时显示提示，前后缀插槽放置图标或单位。",
+                label = "标签",
+                helperText = "辅助文本",
+                placeholder = "占位符",
+                tooltipText = "提示文本",
+                validationHeading = "校验",
+                validationHint = "required、minlength / maxlength、pattern 与 allowedCharPattern 一起约束输入。" +
+                    "示例在 validated 事件里读取原生 validity，为每种失败给出对应的错误文案。",
+                phone = "电话号码",
+                phoneHelper = "格式：+(123)456-7890",
+                notValidated = "尚未校验",
+                required = "这一项必填",
+                tooShort = { "最短 $it 个字符" },
+                tooLong = { "最长 $it 个字符" },
+                phonePattern = "电话号码格式不正确",
+                checkPrefix = "校验：",
+                passed = "通过",
+                failed = "未通过",
+                constraintsCaption = "约束与错误文案",
+                code = "邀请码",
+                codeHelper = "3-6 位小写字母",
+                codeError = "请输入 3-6 位小写字母",
+                validate = "校验",
+                valid = "通过",
+                invalidWith = { "失败（invalid=$it）" },
+                reset = "重置",
+                resetPrefix = "已重置，值：",
+                manualCaption = "手动校验（validate）",
+                resultPrefix = "校验结果：",
+                statesHeading = "只读与禁用",
+                statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
+                readonly = "只读",
+                disabled = "禁用",
+                value = "值",
+                autoselectHeading = "自动全选",
+                autoselectHint = "autoselect 打开时，用鼠标或键盘聚焦都会选中全部内容，便于直接替换；关闭时" +
+                    "鼠标点击会把光标放在点击处。",
+                autoselect = "autoselect",
+                inputModeHeading = "输入模式",
+                inputModeHint = "inputmode 是给移动端浏览器的提示，决定聚焦时弹出哪种虚拟键盘；桌面浏览器没有" +
+                    "可见效果。",
+                url = "网址",
+                email = "邮箱",
+                search = "搜索",
+                stylesHeading = "样式变体",
+                stylesHint = "theme 属性接受空格分隔的变体：align-right 右对齐文本（适合纵向排列的数值），" +
+                    "small 更紧凑，helper-above-field 把辅助文本放在字段上方。",
+                stylesCaption = "align-right + small + helper-above-field",
+                alignmentCaption = "文本对齐",
+                typeHere = "输入内容",
+                typeHerePlaceholder = "边输入边观察同步结果",
+            )
         /** Phone pattern of `text-field-validation.ts` (documents grouped digits with optional separators). */
         private const val PHONE_PATTERN = "^[+]?\\(?[0-9]{3}\\)?-?[0-9]{3}-?[0-9]{4,6}$"
         private val textFieldTexts: Translations<TextFieldTexts> = texts(

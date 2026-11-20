@@ -45,42 +45,6 @@ val messageInputEntry: CatalogEntry =
         kitPage = { MessageInputPage.NAME() },
     )
 
-private val english: MessageInputTexts = MessageInputTexts(
-    basicHeading = "Basic usage",
-    basicHint = "Enter or the send button fires submit; value is not cleared automatically and the caller " +
-        "decides. The docs show the received value in a Notification.",
-    notSentYet = "Not sent yet",
-    sentPrefix = "Sent: ",
-    receivedPrefix = "Message received: ",
-    combinedHeading = "With a message list",
-    combinedHint = "items is a plain array and replacing it updates the list in place; this appends what the " +
-        "input submits, which is the basic chat interface of the docs' Message List + Message Input example.",
-    saySomething = "Say something.",
-    rightNow = "seconds ago",
-    milla = "Milla Sting",
-    disabledHeading = "Disabled",
-    disabledHint = "disabled locks both the text area and the send button.",
-    noEvents = "No events yet",
-)
-
-private val chinese: MessageInputTexts = MessageInputTexts(
-    basicHeading = "基本用法",
-    basicHint = "回车或点击发送触发 submit；value 不会自动清空，由调用方决定。文档示例把收到的内容用 " +
-        "Notification 弹出来。",
-    notSentYet = "尚未发送",
-    sentPrefix = "已发送：",
-    receivedPrefix = "收到消息：",
-    combinedHeading = "与消息列表组合",
-    combinedHint = "items 是普通数组，替换后列表局部更新；这里把输入框提交的内容追加进列表，" +
-        "就是文档里 Message List + Message Input 的基本聊天界面。",
-    saySomething = "说点什么吧。",
-    rightNow = "刚刚",
-    milla = "米拉",
-    disabledHeading = "禁用",
-    disabledHint = "disabled 同时锁住文本域和发送按钮。",
-    noEvents = "尚未触发事件",
-)
-
 // ---------------------------------------------------------------------------------------------
 // Message Input
 //
@@ -191,6 +155,40 @@ internal class MessageInputPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page") {
+        private val english: MessageInputTexts = MessageInputTexts(
+            basicHeading = "Basic usage",
+            basicHint = "Enter or the send button fires submit; value is not cleared automatically and the caller " +
+                "decides. The docs show the received value in a Notification.",
+            notSentYet = "Not sent yet",
+            sentPrefix = "Sent: ",
+            receivedPrefix = "Message received: ",
+            combinedHeading = "With a message list",
+            combinedHint = "items is a plain array and replacing it updates the list in place; this appends what the " +
+                "input submits, which is the basic chat interface of the docs' Message List + Message Input example.",
+            saySomething = "Say something.",
+            rightNow = "seconds ago",
+            milla = "Milla Sting",
+            disabledHeading = "Disabled",
+            disabledHint = "disabled locks both the text area and the send button.",
+            noEvents = "No events yet",
+        )
+        private val chinese: MessageInputTexts = MessageInputTexts(
+            basicHeading = "基本用法",
+            basicHint = "回车或点击发送触发 submit；value 不会自动清空，由调用方决定。文档示例把收到的内容用 " +
+                "Notification 弹出来。",
+            notSentYet = "尚未发送",
+            sentPrefix = "已发送：",
+            receivedPrefix = "收到消息：",
+            combinedHeading = "与消息列表组合",
+            combinedHint = "items 是普通数组，替换后列表局部更新；这里把输入框提交的内容追加进列表，" +
+                "就是文档里 Message List + Message Input 的基本聊天界面。",
+            saySomething = "说点什么吧。",
+            rightNow = "刚刚",
+            milla = "米拉",
+            disabledHeading = "禁用",
+            disabledHint = "disabled 同时锁住文本域和发送按钮。",
+            noEvents = "尚未触发事件",
+        )
         private val messageInputTexts: Translations<MessageInputTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

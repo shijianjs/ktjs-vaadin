@@ -16,28 +16,6 @@ import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
 import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
 import web.html.HtmlTagName
 
-private val english: AppSideNavTexts =
-    AppSideNavTexts(
-        dashboard = "Dashboard",
-        orders = "Orders",
-        customers = "Customers",
-        products = "Products",
-        documents = "Documents",
-        tasks = "Tasks",
-        analytics = "Analytics",
-    )
-
-private val chinese: AppSideNavTexts =
-    AppSideNavTexts(
-        dashboard = "仪表盘",
-        orders = "订单",
-        customers = "客户",
-        products = "产品",
-        documents = "文档",
-        tasks = "任务",
-        analytics = "分析",
-    )
-
 /**
  * `<demo-app-side-nav>`: the seven top-level destinations the app layout examples share.
  *
@@ -81,6 +59,26 @@ internal class AppSideNav : CustomElementAdapter() {
     }
 
     companion object : CustomElementReferenceAdapter<AppSideNav>(AppSideNav::class.js, "demo-app-side-nav") {
+        private val english: AppSideNavTexts =
+            AppSideNavTexts(
+                dashboard = "Dashboard",
+                orders = "Orders",
+                customers = "Customers",
+                products = "Products",
+                documents = "Documents",
+                tasks = "Tasks",
+                analytics = "Analytics",
+            )
+        private val chinese: AppSideNavTexts =
+            AppSideNavTexts(
+                dashboard = "仪表盘",
+                orders = "订单",
+                customers = "客户",
+                products = "产品",
+                documents = "文档",
+                tasks = "任务",
+                analytics = "分析",
+            )
         private val appSideNavTexts: Translations<AppSideNavTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

@@ -67,200 +67,6 @@ val datePickerEntry: CatalogEntry =
         kitPage = { DatePickerPage.NAME() },
     )
 
-// ---------------------------------------------------------------------------------------------
-// Date picker
-// ---------------------------------------------------------------------------------------------
-
-private val english: DatePickerTexts =
-    DatePickerTexts(
-        basicHeading = "Basic usage",
-        basicHint = "value is a YYYY-MM-DD string; the clear button empties it and an unparsable date fires " +
-            "unparsable-change.",
-        startDate = "Start date",
-        basicHelper = "Type a date or pick one from the calendar",
-        empty = "(empty)",
-        eventStream = "Event stream",
-        validationHeading = "Validation",
-        validationHint = "min / max and isDateDisabled decide which dates can be picked; the validated event " +
-            "sets errorMessage from the value. Weekends and the next two days (office closed) are blocked.",
-        appointmentDate = "Appointment date",
-        businessDayHelper = "Must be a business day within 60 days from today",
-        errorPrefix = "Error message: ",
-        none = "(none)",
-        badFormat = "Invalid date format",
-        required = "Field is required",
-        tooEarly = "Too early, choose another date",
-        tooLate = "Too late, choose another date",
-        closed = "The office is closed, choose another date",
-        validate = "Validate",
-        customHeading = "Custom validation",
-        customHint = "The docs example uses a Binder validator to allow weekdays only; this page performs the " +
-            "same check on validate() and writes the result back to errorMessage.",
-        meetingDate = "Meeting date",
-        weekdaysOnly = "Mondays – Fridays only",
-        selectWeekday = "Select a weekday",
-        metadataHeading = "Configuring individual dates",
-        metadataHint = "dateMetadataProvider answers whole month ranges at once: disabled blocks a date and " +
-            "part adds a custom part name (here limited for almost-full days, styled with ::part(limited) from " +
-            "the component theme). The data is simulated locally, there is no backend call.",
-        almostFullHelper = "Highlighted dates are almost full",
-        providerReady = "Provider ready (answers whole months)",
-        chosenDate = "Chosen date: ",
-        weekNumbersHeading = "Week numbers",
-        weekNumbersHint = "showWeekNumbers shows ISO week numbers; it only works when i18n.firstDayOfWeek is " +
-            "1 (Monday).",
-        vacationStart = "Vacation start date",
-        initialHeading = "Initial position",
-        initialHint = "initialPosition decides which day the calendar opens on when there is no value; here " +
-            "it points at the last day of the current year.",
-        q4Deadline = "Q4 deadline",
-        autoOpenHeading = "Auto open",
-        autoOpenHint = "autoOpenDisabled stops the calendar from opening on focus; the dropdown can still be " +
-            "opened and closed from outside.",
-        open = "Open",
-        close = "Close",
-        localizationHeading = "Internationalization",
-        localizationHint = "i18n overrides the month names, weekdays and the today / cancel buttons; only the " +
-            "changed fields are given, the rest is merged with the defaults.",
-        germanCaption = "German (Deutsch)",
-        basicsHeading = "Basic features",
-        basicsHint = "helperText and placeholder guide the input, clearButtonVisible adds the clear button; " +
-            "the prefix slot holds an icon and the tooltip slot a hover description.",
-        label = "Label",
-        helperText = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        statesHeading = "Read-only and disabled",
-        statesHint = "readonly allows focus and copying but no edits; disabled turns off all interaction.",
-        readOnly = "Read-only",
-        disabled = "Disabled",
-        rangeHeading = "Date range",
-        rangeHint = "The two pickers constrain each other: the return date cannot precede the departure date " +
-            "and the departure date cannot follow the return date.",
-        departure = "Departure date",
-        returnDate = "Return date",
-        rangeReadout = { departure, ret -> "Departure: $departure · Return: $ret" },
-        individualHeading = "Individual input fields",
-        individualHint = "The docs example replaces the calendar with three combo boxes: the year and month " +
-            "decide how many days exist and the day options are rebuilt accordingly.",
-        year = "Year",
-        month = "Month",
-        day = "Day",
-        selectedDate = "Selected date: ",
-        formatHeading = "Show the date format",
-        formatHint = "Put the expected format in the placeholder and the helper text so the user does not " +
-            "have to guess how to type.",
-        formatHelper = "Format: DD/MM/YYYY",
-        stylesHeading = "Style variants",
-        stylesHint = "align-right aligns the text to the trailing edge, small shrinks the field and " +
-            "helper-above-field moves the helper text above the input.",
-        customFunctionsHeading = "Custom format functions",
-        customFunctionsHint = "i18n.formatDate / i18n.parseDate own the text-to-date conversion; this page " +
-            "re-implements ISO 8601 in Kotlin, equivalent to the date-fns version in the docs.",
-        selectDate = "Select a date:",
-        isoHelper = "Date picker configured to use ISO 8601 format",
-        inputText = "Input text: ",
-        customFormatsHeading = "Multiple input formats",
-        customFormatsHint = "The Flow example (date-picker-custom-format) configures one display format and " +
-            "several parse formats; the web component has a single parseDate, so this function tries " +
-            "yyyy-MM-dd, MM/dd/yyyy and dd.MM.yyyy in turn while the display stays yyyy-MM-dd.",
-        flexibleHelper = "Type 2026-10-25, 10/25/2026 or 25.10.2026",
-        localeHeading = "Locale",
-        localeHint = "The Flow example (date-picker-locale) switches to the Finnish locale; the web component " +
-            "has no Locale property, so this page reproduces the effect with Finnish month and weekday names " +
-            "plus the d.M.yyyy format.",
-        finnishHelper = "Date picker configured to use Finnish date format",
-    )
-
-private val chinese: DatePickerTexts =
-    DatePickerTexts(
-        basicHeading = "基本用法",
-        basicHint = "value 是 YYYY-MM-DD 字符串；清空按钮把值置为空，输入非法日期触发 unparsable-change。",
-        startDate = "开始日期",
-        basicHelper = "可以直接输入，也可以从日历选择",
-        empty = "（空）",
-        eventStream = "事件流",
-        validationHeading = "校验",
-        validationHint = "min / max 与 isDateDisabled 共同决定可选日期；validated 事件里按值设置 errorMessage，" +
-            "周末和最近两天（停业）都不可选。",
-        appointmentDate = "预约日期",
-        businessDayHelper = "必须是今天起 60 天内的工作日",
-        errorPrefix = "错误信息：",
-        none = "（无）",
-        badFormat = "日期格式不正确",
-        required = "此项为必填项",
-        tooEarly = "日期过早，请另选一天",
-        tooLate = "日期过晚，请另选一天",
-        closed = "办公室不开放，请另选一天",
-        validate = "校验",
-        customHeading = "自定义校验",
-        customHint = "文档示例用 Binder 的验证器限制工作日；这里在同一次 validate() 里做同样的判断，结果写回 errorMessage。",
-        meetingDate = "会议日期",
-        weekdaysOnly = "仅限周一至周五",
-        selectWeekday = "请选择工作日",
-        metadataHeading = "单个日期的配置",
-        metadataHint = "dateMetadataProvider 按整个月的范围批量返回元数据：disabled 关闭日期，part 给日期加上自定义 " +
-            "part 名（示例里满额日期是 limited，需要用 ::part(limited) 在组件内部主题里着色）。数据在本地模拟，没有后端请求。",
-        almostFullHelper = "高亮的日期接近满额",
-        providerReady = "provider 已就绪（按月批量返回）",
-        chosenDate = "所选日期：",
-        weekNumbersHeading = "周数",
-        weekNumbersHint = "showWeekNumbers 显示 ISO 周数，i18n.firstDayOfWeek 必须是 1（周一）才会生效。",
-        vacationStart = "休假开始日期",
-        initialHeading = "初始月份",
-        initialHint = "initialPosition 决定没有值时日历打开到哪一天：这里定位到本年的最后一天。",
-        q4Deadline = "第四季度截止日期",
-        autoOpenHeading = "自动展开",
-        autoOpenHint = "autoOpenDisabled 关闭「聚焦即弹出日历」，下拉仍可以用按钮从外部打开和关闭。",
-        open = "打开",
-        close = "关闭",
-        localizationHeading = "本地化",
-        localizationHint = "i18n 覆盖月份、星期、今天 / 取消按钮等文案；只给出需要改的字段，其余与默认值合并。",
-        germanCaption = "德语（Deutsch）",
-        basicsHeading = "基本特性",
-        basicsHint = "helperText 与 placeholder 提供输入提示，clearButtonVisible 加清空按钮；prefix 插槽放图标，" +
-            "tooltip 插槽提供悬停说明。",
-        label = "标签",
-        helperText = "辅助文本",
-        placeholder = "占位符",
-        tooltipText = "提示文本",
-        statesHeading = "只读与禁用",
-        statesHint = "readonly 可以聚焦和复制但不能修改；disabled 关闭全部交互。",
-        readOnly = "只读",
-        disabled = "禁用",
-        rangeHeading = "日期区间",
-        rangeHint = "两个选择器互相约束：返回日期不早于出发日期，出发日期不晚于返回日期。",
-        departure = "出发日期",
-        returnDate = "返回日期",
-        rangeReadout = { departure, ret -> "出发：$departure · 返回：$ret" },
-        individualHeading = "分开的年月日字段",
-        individualHint = "文档示例用三个 combo-box 取代日历：年、月决定天数，日选项随之重建。浏览器没有日期选择能力时" +
-            "这是一种可访问的替代方案。",
-        year = "年",
-        month = "月",
-        day = "日",
-        selectedDate = "已选日期：",
-        formatHeading = "显示日期格式",
-        formatHint = "把期望的格式写进 placeholder 与 helperText，用户不必猜输入方式。",
-        formatHelper = "格式：DD/MM/YYYY",
-        stylesHeading = "样式变体",
-        stylesHint = "align-right 右对齐文本，small 缩小尺寸，helper-above-field 把辅助文本放到字段上方。",
-        customFunctionsHeading = "自定义格式化函数",
-        customFunctionsHint = "i18n.formatDate / i18n.parseDate 接管文本与日期的互转；这里用 Kotlin 重新实现了 ISO 8601，" +
-            "与文档中的 date-fns 版本等价。",
-        selectDate = "选择日期：",
-        isoHelper = "日期选择器使用 ISO 8601 格式",
-        inputText = "输入框文本：",
-        customFormatsHeading = "多种输入格式",
-        customFormatsHint = "Flow 示例（date-picker-custom-format）配置一个显示格式和多个解析格式；Web Component 只有一个" +
-            " parseDate，所以这里在同一个函数里依次尝试 yyyy-MM-dd、MM/dd/yyyy 和 dd.MM.yyyy，显示始终是 yyyy-MM-dd。",
-        flexibleHelper = "可输入 2026-10-25、10/25/2026 或 25.10.2026",
-        localeHeading = "区域设置",
-        localeHint = "Flow 示例（date-picker-locale）切换到芬兰语区域；浏览器端没有 Locale 属性，这里用 i18n 的" +
-            "芬兰语月份、星期与 d.M.yyyy 格式复现同样的效果。",
-        finnishHelper = "日期选择器使用芬兰语格式",
-    )
-
 internal class DatePickerPage : DemoPage() {
     private val texts = Binder(datePickerTexts)
 
@@ -785,6 +591,198 @@ internal class DatePickerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page") {
+        // ---------------------------------------------------------------------------------------------
+        // Date picker
+        // ---------------------------------------------------------------------------------------------
+
+        private val english: DatePickerTexts =
+            DatePickerTexts(
+                basicHeading = "Basic usage",
+                basicHint = "value is a YYYY-MM-DD string; the clear button empties it and an unparsable date fires " +
+                    "unparsable-change.",
+                startDate = "Start date",
+                basicHelper = "Type a date or pick one from the calendar",
+                empty = "(empty)",
+                eventStream = "Event stream",
+                validationHeading = "Validation",
+                validationHint = "min / max and isDateDisabled decide which dates can be picked; the validated event " +
+                    "sets errorMessage from the value. Weekends and the next two days (office closed) are blocked.",
+                appointmentDate = "Appointment date",
+                businessDayHelper = "Must be a business day within 60 days from today",
+                errorPrefix = "Error message: ",
+                none = "(none)",
+                badFormat = "Invalid date format",
+                required = "Field is required",
+                tooEarly = "Too early, choose another date",
+                tooLate = "Too late, choose another date",
+                closed = "The office is closed, choose another date",
+                validate = "Validate",
+                customHeading = "Custom validation",
+                customHint = "The docs example uses a Binder validator to allow weekdays only; this page performs the " +
+                    "same check on validate() and writes the result back to errorMessage.",
+                meetingDate = "Meeting date",
+                weekdaysOnly = "Mondays – Fridays only",
+                selectWeekday = "Select a weekday",
+                metadataHeading = "Configuring individual dates",
+                metadataHint = "dateMetadataProvider answers whole month ranges at once: disabled blocks a date and " +
+                    "part adds a custom part name (here limited for almost-full days, styled with ::part(limited) from " +
+                    "the component theme). The data is simulated locally, there is no backend call.",
+                almostFullHelper = "Highlighted dates are almost full",
+                providerReady = "Provider ready (answers whole months)",
+                chosenDate = "Chosen date: ",
+                weekNumbersHeading = "Week numbers",
+                weekNumbersHint = "showWeekNumbers shows ISO week numbers; it only works when i18n.firstDayOfWeek is " +
+                    "1 (Monday).",
+                vacationStart = "Vacation start date",
+                initialHeading = "Initial position",
+                initialHint = "initialPosition decides which day the calendar opens on when there is no value; here " +
+                    "it points at the last day of the current year.",
+                q4Deadline = "Q4 deadline",
+                autoOpenHeading = "Auto open",
+                autoOpenHint = "autoOpenDisabled stops the calendar from opening on focus; the dropdown can still be " +
+                    "opened and closed from outside.",
+                open = "Open",
+                close = "Close",
+                localizationHeading = "Internationalization",
+                localizationHint = "i18n overrides the month names, weekdays and the today / cancel buttons; only the " +
+                    "changed fields are given, the rest is merged with the defaults.",
+                germanCaption = "German (Deutsch)",
+                basicsHeading = "Basic features",
+                basicsHint = "helperText and placeholder guide the input, clearButtonVisible adds the clear button; " +
+                    "the prefix slot holds an icon and the tooltip slot a hover description.",
+                label = "Label",
+                helperText = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                statesHeading = "Read-only and disabled",
+                statesHint = "readonly allows focus and copying but no edits; disabled turns off all interaction.",
+                readOnly = "Read-only",
+                disabled = "Disabled",
+                rangeHeading = "Date range",
+                rangeHint = "The two pickers constrain each other: the return date cannot precede the departure date " +
+                    "and the departure date cannot follow the return date.",
+                departure = "Departure date",
+                returnDate = "Return date",
+                rangeReadout = { departure, ret -> "Departure: $departure · Return: $ret" },
+                individualHeading = "Individual input fields",
+                individualHint = "The docs example replaces the calendar with three combo boxes: the year and month " +
+                    "decide how many days exist and the day options are rebuilt accordingly.",
+                year = "Year",
+                month = "Month",
+                day = "Day",
+                selectedDate = "Selected date: ",
+                formatHeading = "Show the date format",
+                formatHint = "Put the expected format in the placeholder and the helper text so the user does not " +
+                    "have to guess how to type.",
+                formatHelper = "Format: DD/MM/YYYY",
+                stylesHeading = "Style variants",
+                stylesHint = "align-right aligns the text to the trailing edge, small shrinks the field and " +
+                    "helper-above-field moves the helper text above the input.",
+                customFunctionsHeading = "Custom format functions",
+                customFunctionsHint = "i18n.formatDate / i18n.parseDate own the text-to-date conversion; this page " +
+                    "re-implements ISO 8601 in Kotlin, equivalent to the date-fns version in the docs.",
+                selectDate = "Select a date:",
+                isoHelper = "Date picker configured to use ISO 8601 format",
+                inputText = "Input text: ",
+                customFormatsHeading = "Multiple input formats",
+                customFormatsHint = "The Flow example (date-picker-custom-format) configures one display format and " +
+                    "several parse formats; the web component has a single parseDate, so this function tries " +
+                    "yyyy-MM-dd, MM/dd/yyyy and dd.MM.yyyy in turn while the display stays yyyy-MM-dd.",
+                flexibleHelper = "Type 2026-10-25, 10/25/2026 or 25.10.2026",
+                localeHeading = "Locale",
+                localeHint = "The Flow example (date-picker-locale) switches to the Finnish locale; the web component " +
+                    "has no Locale property, so this page reproduces the effect with Finnish month and weekday names " +
+                    "plus the d.M.yyyy format.",
+                finnishHelper = "Date picker configured to use Finnish date format",
+            )
+        private val chinese: DatePickerTexts =
+            DatePickerTexts(
+                basicHeading = "基本用法",
+                basicHint = "value 是 YYYY-MM-DD 字符串；清空按钮把值置为空，输入非法日期触发 unparsable-change。",
+                startDate = "开始日期",
+                basicHelper = "可以直接输入，也可以从日历选择",
+                empty = "（空）",
+                eventStream = "事件流",
+                validationHeading = "校验",
+                validationHint = "min / max 与 isDateDisabled 共同决定可选日期；validated 事件里按值设置 errorMessage，" +
+                    "周末和最近两天（停业）都不可选。",
+                appointmentDate = "预约日期",
+                businessDayHelper = "必须是今天起 60 天内的工作日",
+                errorPrefix = "错误信息：",
+                none = "（无）",
+                badFormat = "日期格式不正确",
+                required = "此项为必填项",
+                tooEarly = "日期过早，请另选一天",
+                tooLate = "日期过晚，请另选一天",
+                closed = "办公室不开放，请另选一天",
+                validate = "校验",
+                customHeading = "自定义校验",
+                customHint = "文档示例用 Binder 的验证器限制工作日；这里在同一次 validate() 里做同样的判断，结果写回 errorMessage。",
+                meetingDate = "会议日期",
+                weekdaysOnly = "仅限周一至周五",
+                selectWeekday = "请选择工作日",
+                metadataHeading = "单个日期的配置",
+                metadataHint = "dateMetadataProvider 按整个月的范围批量返回元数据：disabled 关闭日期，part 给日期加上自定义 " +
+                    "part 名（示例里满额日期是 limited，需要用 ::part(limited) 在组件内部主题里着色）。数据在本地模拟，没有后端请求。",
+                almostFullHelper = "高亮的日期接近满额",
+                providerReady = "provider 已就绪（按月批量返回）",
+                chosenDate = "所选日期：",
+                weekNumbersHeading = "周数",
+                weekNumbersHint = "showWeekNumbers 显示 ISO 周数，i18n.firstDayOfWeek 必须是 1（周一）才会生效。",
+                vacationStart = "休假开始日期",
+                initialHeading = "初始月份",
+                initialHint = "initialPosition 决定没有值时日历打开到哪一天：这里定位到本年的最后一天。",
+                q4Deadline = "第四季度截止日期",
+                autoOpenHeading = "自动展开",
+                autoOpenHint = "autoOpenDisabled 关闭「聚焦即弹出日历」，下拉仍可以用按钮从外部打开和关闭。",
+                open = "打开",
+                close = "关闭",
+                localizationHeading = "本地化",
+                localizationHint = "i18n 覆盖月份、星期、今天 / 取消按钮等文案；只给出需要改的字段，其余与默认值合并。",
+                germanCaption = "德语（Deutsch）",
+                basicsHeading = "基本特性",
+                basicsHint = "helperText 与 placeholder 提供输入提示，clearButtonVisible 加清空按钮；prefix 插槽放图标，" +
+                    "tooltip 插槽提供悬停说明。",
+                label = "标签",
+                helperText = "辅助文本",
+                placeholder = "占位符",
+                tooltipText = "提示文本",
+                statesHeading = "只读与禁用",
+                statesHint = "readonly 可以聚焦和复制但不能修改；disabled 关闭全部交互。",
+                readOnly = "只读",
+                disabled = "禁用",
+                rangeHeading = "日期区间",
+                rangeHint = "两个选择器互相约束：返回日期不早于出发日期，出发日期不晚于返回日期。",
+                departure = "出发日期",
+                returnDate = "返回日期",
+                rangeReadout = { departure, ret -> "出发：$departure · 返回：$ret" },
+                individualHeading = "分开的年月日字段",
+                individualHint = "文档示例用三个 combo-box 取代日历：年、月决定天数，日选项随之重建。浏览器没有日期选择能力时" +
+                    "这是一种可访问的替代方案。",
+                year = "年",
+                month = "月",
+                day = "日",
+                selectedDate = "已选日期：",
+                formatHeading = "显示日期格式",
+                formatHint = "把期望的格式写进 placeholder 与 helperText，用户不必猜输入方式。",
+                formatHelper = "格式：DD/MM/YYYY",
+                stylesHeading = "样式变体",
+                stylesHint = "align-right 右对齐文本，small 缩小尺寸，helper-above-field 把辅助文本放到字段上方。",
+                customFunctionsHeading = "自定义格式化函数",
+                customFunctionsHint = "i18n.formatDate / i18n.parseDate 接管文本与日期的互转；这里用 Kotlin 重新实现了 ISO 8601，" +
+                    "与文档中的 date-fns 版本等价。",
+                selectDate = "选择日期：",
+                isoHelper = "日期选择器使用 ISO 8601 格式",
+                inputText = "输入框文本：",
+                customFormatsHeading = "多种输入格式",
+                customFormatsHint = "Flow 示例（date-picker-custom-format）配置一个显示格式和多个解析格式；Web Component 只有一个" +
+                    " parseDate，所以这里在同一个函数里依次尝试 yyyy-MM-dd、MM/dd/yyyy 和 dd.MM.yyyy，显示始终是 yyyy-MM-dd。",
+                flexibleHelper = "可输入 2026-10-25、10/25/2026 或 25.10.2026",
+                localeHeading = "区域设置",
+                localeHint = "Flow 示例（date-picker-locale）切换到芬兰语区域；浏览器端没有 Locale 属性，这里用 i18n 的" +
+                    "芬兰语月份、星期与 d.M.yyyy 格式复现同样的效果。",
+                finnishHelper = "日期选择器使用芬兰语格式",
+            )
         private val datePickerTexts: Translations<DatePickerTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

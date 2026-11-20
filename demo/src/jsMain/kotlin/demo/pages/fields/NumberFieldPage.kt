@@ -58,146 +58,6 @@ val numberFieldEntry: CatalogEntry =
         kitPage = { NumberFieldPage.NAME() },
     )
 
-private val english: NumberFieldTexts =
-    NumberFieldTexts(
-        basicHeading = "Basic usage",
-        basicHint = "value is always a string; the prefix / suffix slots hold fixed content such as " +
-            "currency signs, and unparsable input fires unparsable-change instead of updating value.",
-        balance = "Balance",
-        valuePrefix = "Value: ",
-        empty = "(empty)",
-        stepHeading = "Step buttons",
-        stepHint = "step-buttons-visible adds decrement / increment buttons; min and max also bound them.",
-        adults = "Adults",
-        children = "Children",
-        childrenAge = "Age 2-12",
-        infants = "Infants",
-        guestsPrefix = "Guests: ",
-        validationHeading = "Validation",
-        validationHint = "The validated event carries no detail; the upstream example reads the native " +
-            "constraint state of inputElement.validity to tell \"bad format / missing / below minimum / " +
-            "above maximum\" apart and rewrites errorMessage accordingly.",
-        quantity = "Quantity",
-        quantityHelper = "Max 10 items",
-        notValidated = "Not validated yet",
-        badFormat = "Invalid number format",
-        required = "Field is required",
-        atLeast = { "Quantity must be at least $it" },
-        atMost = { "Maximum $it items available" },
-        validatedPrefix = "validated · valid = ",
-        stepUnitHeading = "Fractional step",
-        stepUnitHint = "step drives both the step buttons and the native validity: a value that is not " +
-            "a multiple of step sets validity.stepMismatch.",
-        duration = "Duration (hours)",
-        stepMultiple = { "Duration must be a multiple of $it" },
-        variantsHeading = "Number type variants",
-        variantsHint = "Integer Field only parses integers, for counts and ages; the BigDecimal example " +
-            "exists only in the Java API (Flow's NumberField extends BigDecimalField). The web component " +
-            "has no counterpart, so decimals use Number Field directly.",
-        featuresHeading = "Basic features",
-        featuresHint = "label / helper-text / placeholder combine with the clear button, the tooltip slot " +
-            "and the prefix / suffix slots.",
-        amount = "Amount",
-        helperText = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        statesHeading = "Read-only and disabled",
-        statesHint = "readonly keeps the field focusable and copyable, disabled removes all interaction.",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        rangeHeading = "Custom range validation",
-        rangeHint = "min / max only constrain stepping and input hints, they do not make validate() fail. " +
-            "When the range is a business rule, check value yourself and set invalid — the same thing " +
-            "Binder does on the server.",
-        unitPrice = "Unit price (0 - 100)",
-        unitPriceError = "The unit price must be between 0 and 100",
-        validate = "Validate",
-        resultPrefix = "Result: ",
-        valid = "Valid",
-        failed = "Failed",
-        modesHeading = "Value change modes",
-        modesHint = "on change / eager / lazy / timeout are server-side ValueChangeMode concepts. In the " +
-            "browser they reduce to listening to change versus input; lazy and timeout debouncing / " +
-            "polling is implemented by server-side timers.",
-        onChange = "on change (default)",
-        eager = "eager",
-        changePrefix = "change: ",
-        inputPrefix = "input: ",
-        notFired = "not fired yet",
-        stylesHeading = "Styles",
-        stylesHint = "align-right right-aligns the digits, small tightens the field and " +
-            "helper-above-field moves the helper text above it.",
-        label = "Label",
-    )
-
-private val chinese: NumberFieldTexts =
-    NumberFieldTexts(
-        basicHeading = "基本用法",
-        basicHint = "value 始终是字符串；前缀 / 后缀插槽放货币符号这类固定内容，数字解析失败时触发 " +
-            "unparsable-change 而不是更新 value。",
-        balance = "余额",
-        valuePrefix = "当前值：",
-        empty = "（空）",
-        stepHeading = "步进按钮",
-        stepHint = "step-buttons-visible 在字段两侧加上减 / 加按钮，min 与 max 同时限制按钮的可用状态。",
-        adults = "成人",
-        children = "儿童",
-        childrenAge = "2-12 岁",
-        infants = "婴儿",
-        guestsPrefix = "客人：",
-        validationHeading = "校验",
-        validationHint = "validated 事件没有 detail；上游示例读取 inputElement.validity 的原生约束" +
-            "状态来区分「格式错误 / 必填缺失 / 低于下限 / 高于上限」，再据此改写 errorMessage。",
-        quantity = "数量",
-        quantityHelper = "最多 10 件",
-        notValidated = "尚未校验",
-        badFormat = "数字格式不正确",
-        required = "这一项必填",
-        atLeast = { "至少 $it 件" },
-        atMost = { "最多 $it 件" },
-        validatedPrefix = "validated · valid = ",
-        stepUnitHeading = "步进小数",
-        stepUnitHint = "step 同时决定步进按钮的增量与原生 validity：不是 step 的整数倍时 " +
-            "validity.stepMismatch 为真。",
-        duration = "时长（小时）",
-        stepMultiple = { "时长必须是 $it 的整数倍" },
-        variantsHeading = "数字类型变体",
-        variantsHint = "Integer Field 只解析整数，用于件数、年龄这类数量；BigDecimal 用例只存在于 Java " +
-            "API（Flow 的 NumberField 继承 BigDecimalField），Web Component 侧没有对应元素，小数直接用 " +
-            "Number Field。",
-        featuresHeading = "基本特性",
-        featuresHint = "label / helper-text / placeholder 与清除按钮、工具提示插槽、前缀后缀插槽可以同时使用。",
-        amount = "金额",
-        helperText = "说明文字",
-        placeholder = "占位文字",
-        tooltipText = "提示文本",
-        statesHeading = "只读与禁用",
-        statesHint = "readonly 仍可聚焦与复制，disabled 让字段完全不可交互。",
-        readonly = "只读",
-        disabled = "禁用",
-        rangeHeading = "自定义范围校验",
-        rangeHint = "min / max 只约束步进与输入提示，不会让 validate() 自动失败；需要把范围当业务规则时，" +
-            "按 value 自己判断并设置 invalid（服务端 Binder 也是这么做的）。",
-        unitPrice = "单价（0 - 100）",
-        unitPriceError = "单价需要在 0 到 100 之间",
-        validate = "校验",
-        resultPrefix = "校验结果：",
-        valid = "通过",
-        failed = "失败",
-        modesHeading = "值变更模式",
-        modesHint = "on change / eager / lazy / timeout 是服务端 ValueChangeMode 的概念，浏览器端对应" +
-            "「监听 change 事件」与「监听 input 事件」两种时机；lazy 与 timeout 的防抖 / 轮询由服务端计时器实现。",
-        onChange = "on change（默认）",
-        eager = "eager",
-        changePrefix = "change：",
-        inputPrefix = "input：",
-        notFired = "尚未触发",
-        stylesHeading = "样式变体",
-        stylesHint = "align-right 让数字右对齐（数位对齐），small 收紧尺寸，helper-above-field 把说明" +
-            "文字移到字段上方。",
-        label = "标签",
-    )
-
 internal class NumberFieldPage : DemoPage() {
     private val texts = Binder(numberFieldTexts)
 
@@ -538,6 +398,144 @@ internal class NumberFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<NumberFieldPage>(NumberFieldPage::class.js, "vaadin-demo-number-field-page") {
+        private val english: NumberFieldTexts =
+            NumberFieldTexts(
+                basicHeading = "Basic usage",
+                basicHint = "value is always a string; the prefix / suffix slots hold fixed content such as " +
+                    "currency signs, and unparsable input fires unparsable-change instead of updating value.",
+                balance = "Balance",
+                valuePrefix = "Value: ",
+                empty = "(empty)",
+                stepHeading = "Step buttons",
+                stepHint = "step-buttons-visible adds decrement / increment buttons; min and max also bound them.",
+                adults = "Adults",
+                children = "Children",
+                childrenAge = "Age 2-12",
+                infants = "Infants",
+                guestsPrefix = "Guests: ",
+                validationHeading = "Validation",
+                validationHint = "The validated event carries no detail; the upstream example reads the native " +
+                    "constraint state of inputElement.validity to tell \"bad format / missing / below minimum / " +
+                    "above maximum\" apart and rewrites errorMessage accordingly.",
+                quantity = "Quantity",
+                quantityHelper = "Max 10 items",
+                notValidated = "Not validated yet",
+                badFormat = "Invalid number format",
+                required = "Field is required",
+                atLeast = { "Quantity must be at least $it" },
+                atMost = { "Maximum $it items available" },
+                validatedPrefix = "validated · valid = ",
+                stepUnitHeading = "Fractional step",
+                stepUnitHint = "step drives both the step buttons and the native validity: a value that is not " +
+                    "a multiple of step sets validity.stepMismatch.",
+                duration = "Duration (hours)",
+                stepMultiple = { "Duration must be a multiple of $it" },
+                variantsHeading = "Number type variants",
+                variantsHint = "Integer Field only parses integers, for counts and ages; the BigDecimal example " +
+                    "exists only in the Java API (Flow's NumberField extends BigDecimalField). The web component " +
+                    "has no counterpart, so decimals use Number Field directly.",
+                featuresHeading = "Basic features",
+                featuresHint = "label / helper-text / placeholder combine with the clear button, the tooltip slot " +
+                    "and the prefix / suffix slots.",
+                amount = "Amount",
+                helperText = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                statesHeading = "Read-only and disabled",
+                statesHint = "readonly keeps the field focusable and copyable, disabled removes all interaction.",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                rangeHeading = "Custom range validation",
+                rangeHint = "min / max only constrain stepping and input hints, they do not make validate() fail. " +
+                    "When the range is a business rule, check value yourself and set invalid — the same thing " +
+                    "Binder does on the server.",
+                unitPrice = "Unit price (0 - 100)",
+                unitPriceError = "The unit price must be between 0 and 100",
+                validate = "Validate",
+                resultPrefix = "Result: ",
+                valid = "Valid",
+                failed = "Failed",
+                modesHeading = "Value change modes",
+                modesHint = "on change / eager / lazy / timeout are server-side ValueChangeMode concepts. In the " +
+                    "browser they reduce to listening to change versus input; lazy and timeout debouncing / " +
+                    "polling is implemented by server-side timers.",
+                onChange = "on change (default)",
+                eager = "eager",
+                changePrefix = "change: ",
+                inputPrefix = "input: ",
+                notFired = "not fired yet",
+                stylesHeading = "Styles",
+                stylesHint = "align-right right-aligns the digits, small tightens the field and " +
+                    "helper-above-field moves the helper text above it.",
+                label = "Label",
+            )
+        private val chinese: NumberFieldTexts =
+            NumberFieldTexts(
+                basicHeading = "基本用法",
+                basicHint = "value 始终是字符串；前缀 / 后缀插槽放货币符号这类固定内容，数字解析失败时触发 " +
+                    "unparsable-change 而不是更新 value。",
+                balance = "余额",
+                valuePrefix = "当前值：",
+                empty = "（空）",
+                stepHeading = "步进按钮",
+                stepHint = "step-buttons-visible 在字段两侧加上减 / 加按钮，min 与 max 同时限制按钮的可用状态。",
+                adults = "成人",
+                children = "儿童",
+                childrenAge = "2-12 岁",
+                infants = "婴儿",
+                guestsPrefix = "客人：",
+                validationHeading = "校验",
+                validationHint = "validated 事件没有 detail；上游示例读取 inputElement.validity 的原生约束" +
+                    "状态来区分「格式错误 / 必填缺失 / 低于下限 / 高于上限」，再据此改写 errorMessage。",
+                quantity = "数量",
+                quantityHelper = "最多 10 件",
+                notValidated = "尚未校验",
+                badFormat = "数字格式不正确",
+                required = "这一项必填",
+                atLeast = { "至少 $it 件" },
+                atMost = { "最多 $it 件" },
+                validatedPrefix = "validated · valid = ",
+                stepUnitHeading = "步进小数",
+                stepUnitHint = "step 同时决定步进按钮的增量与原生 validity：不是 step 的整数倍时 " +
+                    "validity.stepMismatch 为真。",
+                duration = "时长（小时）",
+                stepMultiple = { "时长必须是 $it 的整数倍" },
+                variantsHeading = "数字类型变体",
+                variantsHint = "Integer Field 只解析整数，用于件数、年龄这类数量；BigDecimal 用例只存在于 Java " +
+                    "API（Flow 的 NumberField 继承 BigDecimalField），Web Component 侧没有对应元素，小数直接用 " +
+                    "Number Field。",
+                featuresHeading = "基本特性",
+                featuresHint = "label / helper-text / placeholder 与清除按钮、工具提示插槽、前缀后缀插槽可以同时使用。",
+                amount = "金额",
+                helperText = "说明文字",
+                placeholder = "占位文字",
+                tooltipText = "提示文本",
+                statesHeading = "只读与禁用",
+                statesHint = "readonly 仍可聚焦与复制，disabled 让字段完全不可交互。",
+                readonly = "只读",
+                disabled = "禁用",
+                rangeHeading = "自定义范围校验",
+                rangeHint = "min / max 只约束步进与输入提示，不会让 validate() 自动失败；需要把范围当业务规则时，" +
+                    "按 value 自己判断并设置 invalid（服务端 Binder 也是这么做的）。",
+                unitPrice = "单价（0 - 100）",
+                unitPriceError = "单价需要在 0 到 100 之间",
+                validate = "校验",
+                resultPrefix = "校验结果：",
+                valid = "通过",
+                failed = "失败",
+                modesHeading = "值变更模式",
+                modesHint = "on change / eager / lazy / timeout 是服务端 ValueChangeMode 的概念，浏览器端对应" +
+                    "「监听 change 事件」与「监听 input 事件」两种时机；lazy 与 timeout 的防抖 / 轮询由服务端计时器实现。",
+                onChange = "on change（默认）",
+                eager = "eager",
+                changePrefix = "change：",
+                inputPrefix = "input：",
+                notFired = "尚未触发",
+                stylesHeading = "样式变体",
+                stylesHint = "align-right 让数字右对齐（数位对齐），small 收紧尺寸，helper-above-field 把说明" +
+                    "文字移到字段上方。",
+                label = "标签",
+            )
         private val numberFieldTexts: Translations<NumberFieldTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

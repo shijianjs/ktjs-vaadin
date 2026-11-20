@@ -51,71 +51,6 @@ val iconsEntry: CatalogEntry =
         kitPage = { IconSetsPage.NAME() },
     )
 
-private val english: IconSetsTexts = IconSetsTexts(
-    vaadinHeading = "Vaadin icons",
-    vaadinHint = "registerVaadinIcons() registers @vaadin/icons, more than six hundred icons used with the " +
-        "vaadin: prefix.",
-    notifications = "Notifications",
-    lumoHeading = "Lumo icons",
-    lumoHint = "Lumo icons are the theme's own 24×24 graphics (16×16 active area plus 4 pixels of whitespace), " +
-        "registered by registerLumoIcons().",
-    mixingHeading = "Mixing two icon sets",
-    mixingHint = "Icon sets are isolated by name, so lumo: and vaadin: can be mixed on one page; the same icon " +
-        "name (both have bell) comes from different sets.",
-    a11yHeading = "Accessibility",
-    a11yHint = "The icon itself is hidden from assistive technology, so the component around it must carry the " +
-        "accessible name; when an icon conveys information on its own, add role=\"img\" and aria-label.",
-    closeDialog = "Close dialog",
-    favorite = "Favorite",
-    favoriteCaption = "The second icon has role=\"img\" and an aria-label",
-    favoriteNote = "Check both accessible names in the accessibility pane of the devtools.",
-    standaloneHeading = "Standalone SVG images",
-    standaloneHint = "src accepts any URL and the graphic is inlined as SVG, so CSS can tint it; the demo uses " +
-        "the same SVG file copied from the official documentation.",
-    spritesHeading = "SVG sprites",
-    spritesHint = "A sprite is an SVG file holding several <symbol> elements: src points at the file and symbol " +
-        "names the id to use. The demo uses the same sprite file as the official example.",
-    paddingHeading = "Padding",
-    paddingHint = "With a 3rem box and a smaller --vaadin-icon-visual-size the graphic gains whitespace around " +
-        "it; scaling the box itself is covered by the Size section of the Icon page.",
-    generatorHeading = "Icon set generator",
-    generatorHint = "The generator on the docs page turns an uploaded folder of SVGs into a <vaadin-iconset> " +
-        "definition (.js) plus a Java enum. The demo takes no files and instead builds the same structure at " +
-        "runtime: every icon is a <g> with an id prefixed by \"set-name:\", and size declares the square canvas.",
-    generatorCaption = "The generated file is equivalent to the structure below",
-)
-
-private val chinese: IconSetsTexts = IconSetsTexts(
-    vaadinHeading = "Vaadin 图标集",
-    vaadinHint = "registerVaadinIcons() 注册 @vaadin/icons，共六百多个图标，用 vaadin: 前缀引用。",
-    notifications = "通知",
-    lumoHeading = "Lumo 图标集",
-    lumoHint = "Lumo 图标是主题自带的 24×24 图形（16×16 有效区域加 4 像素留白），用 registerLumoIcons() 注册。",
-    mixingHeading = "同时使用两个图标集",
-    mixingHint = "图标集按名字隔离，lumo: 与 vaadin: 可以在同一页混用，同名图标（这里都有 bell）来自不同集合。",
-    a11yHeading = "无障碍",
-    a11yHint = "图标本身对辅助技术完全隐藏，所以承载它的组件要提供可访问名称；图标单独传达信息时，" +
-        "再加 role=\"img\" 与 aria-label。",
-    closeDialog = "关闭对话框",
-    favorite = "收藏",
-    favoriteCaption = "第二个图标带 role=\"img\" 与 aria-label=\"收藏\"",
-    favoriteNote = "用开发者工具的无障碍面板查看两者的名称。",
-    standaloneHeading = "独立 SVG 文件",
-    standaloneHint = "src 可以是任何 URL，图标会被内联成 SVG，因此可以用 CSS 着色；demo 使用从官方文档复制来的" +
-        "同一份 SVG 文件。",
-    spritesHeading = "SVG sprite",
-    spritesHint = "sprite 是包含多个 <symbol> 的 SVG 文件：src 指向文件，symbol 指定要用的 id。" +
-        "demo 使用与官方示例相同的 sprite 文件。",
-    paddingHeading = "内边距",
-    paddingHint = "外框固定为 3rem，同时把 --vaadin-icon-visual-size 调小，就能给图形四周留出空白；" +
-        "外框本身的缩放见 Icon 页面的「尺寸」一节。",
-    generatorHeading = "图标集生成器",
-    generatorHint = "官方页面上的生成器把上传的 SVG 文件夹转成 <vaadin-iconset> 定义（.js）和 Java 枚举。" +
-        "演示站不接收文件，改为在运行时用同样的结构建立图标集：每个图标是一个带 id 的 <g>，id 以「集合名:」" +
-        "开头，size 声明正方形画布尺寸。",
-    generatorCaption = "生成的文件等价于下面的结构",
-)
-
 // ---------------------------------------------------------------------------------------------
 // Icon sets (registration, sprites, accessibility, padding, generator)
 // ---------------------------------------------------------------------------------------------
@@ -309,6 +244,69 @@ internal class IconSetsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IconSetsPage>(IconSetsPage::class.js, "vaadin-demo-icon-sets-page") {
+        private val english: IconSetsTexts = IconSetsTexts(
+            vaadinHeading = "Vaadin icons",
+            vaadinHint = "registerVaadinIcons() registers @vaadin/icons, more than six hundred icons used with the " +
+                "vaadin: prefix.",
+            notifications = "Notifications",
+            lumoHeading = "Lumo icons",
+            lumoHint = "Lumo icons are the theme's own 24×24 graphics (16×16 active area plus 4 pixels of whitespace), " +
+                "registered by registerLumoIcons().",
+            mixingHeading = "Mixing two icon sets",
+            mixingHint = "Icon sets are isolated by name, so lumo: and vaadin: can be mixed on one page; the same icon " +
+                "name (both have bell) comes from different sets.",
+            a11yHeading = "Accessibility",
+            a11yHint = "The icon itself is hidden from assistive technology, so the component around it must carry the " +
+                "accessible name; when an icon conveys information on its own, add role=\"img\" and aria-label.",
+            closeDialog = "Close dialog",
+            favorite = "Favorite",
+            favoriteCaption = "The second icon has role=\"img\" and an aria-label",
+            favoriteNote = "Check both accessible names in the accessibility pane of the devtools.",
+            standaloneHeading = "Standalone SVG images",
+            standaloneHint = "src accepts any URL and the graphic is inlined as SVG, so CSS can tint it; the demo uses " +
+                "the same SVG file copied from the official documentation.",
+            spritesHeading = "SVG sprites",
+            spritesHint = "A sprite is an SVG file holding several <symbol> elements: src points at the file and symbol " +
+                "names the id to use. The demo uses the same sprite file as the official example.",
+            paddingHeading = "Padding",
+            paddingHint = "With a 3rem box and a smaller --vaadin-icon-visual-size the graphic gains whitespace around " +
+                "it; scaling the box itself is covered by the Size section of the Icon page.",
+            generatorHeading = "Icon set generator",
+            generatorHint = "The generator on the docs page turns an uploaded folder of SVGs into a <vaadin-iconset> " +
+                "definition (.js) plus a Java enum. The demo takes no files and instead builds the same structure at " +
+                "runtime: every icon is a <g> with an id prefixed by \"set-name:\", and size declares the square canvas.",
+            generatorCaption = "The generated file is equivalent to the structure below",
+        )
+        private val chinese: IconSetsTexts = IconSetsTexts(
+            vaadinHeading = "Vaadin 图标集",
+            vaadinHint = "registerVaadinIcons() 注册 @vaadin/icons，共六百多个图标，用 vaadin: 前缀引用。",
+            notifications = "通知",
+            lumoHeading = "Lumo 图标集",
+            lumoHint = "Lumo 图标是主题自带的 24×24 图形（16×16 有效区域加 4 像素留白），用 registerLumoIcons() 注册。",
+            mixingHeading = "同时使用两个图标集",
+            mixingHint = "图标集按名字隔离，lumo: 与 vaadin: 可以在同一页混用，同名图标（这里都有 bell）来自不同集合。",
+            a11yHeading = "无障碍",
+            a11yHint = "图标本身对辅助技术完全隐藏，所以承载它的组件要提供可访问名称；图标单独传达信息时，" +
+                "再加 role=\"img\" 与 aria-label。",
+            closeDialog = "关闭对话框",
+            favorite = "收藏",
+            favoriteCaption = "第二个图标带 role=\"img\" 与 aria-label=\"收藏\"",
+            favoriteNote = "用开发者工具的无障碍面板查看两者的名称。",
+            standaloneHeading = "独立 SVG 文件",
+            standaloneHint = "src 可以是任何 URL，图标会被内联成 SVG，因此可以用 CSS 着色；demo 使用从官方文档复制来的" +
+                "同一份 SVG 文件。",
+            spritesHeading = "SVG sprite",
+            spritesHint = "sprite 是包含多个 <symbol> 的 SVG 文件：src 指向文件，symbol 指定要用的 id。" +
+                "demo 使用与官方示例相同的 sprite 文件。",
+            paddingHeading = "内边距",
+            paddingHint = "外框固定为 3rem，同时把 --vaadin-icon-visual-size 调小，就能给图形四周留出空白；" +
+                "外框本身的缩放见 Icon 页面的「尺寸」一节。",
+            generatorHeading = "图标集生成器",
+            generatorHint = "官方页面上的生成器把上传的 SVG 文件夹转成 <vaadin-iconset> 定义（.js）和 Java 枚举。" +
+                "演示站不接收文件，改为在运行时用同样的结构建立图标集：每个图标是一个带 id 的 <g>，id 以「集合名:」" +
+                "开头，size 声明正方形画布尺寸。",
+            generatorCaption = "生成的文件等价于下面的结构",
+        )
         private val iconSetsTexts: Translations<IconSetsTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

@@ -61,83 +61,6 @@ val loginEntry: CatalogEntry =
         kitPage = { LoginPage.NAME() },
     )
 
-private val english: LoginTexts =
-    LoginTexts(
-        formHeading = "Login form",
-        formHint = "Submitting validates the fields first and then fires login (this page has no backend).",
-        showError = "Show error state",
-        disableForm = "Disable form",
-        disableHeading = "Disabling during submit",
-        disableHint = "disabled locks the submit button; a real application can disable it on login and " +
-            "re-enable it after the request returns.",
-        ready = "Status: ready",
-        submitting = "Status: submitting…",
-        i18nHeading = "Localization",
-        i18nHint = "i18n replaces the texts inside the form; the object is merged into the default " +
-            "bundle, so only the changed fields are required.",
-        overlayHeading = "Login overlay",
-        overlayHint = "LoginOverlay puts the same form into a full-screen overlay, which suits an app " +
-            "entry point.",
-        overlayDescription = "Use any username and password to try it",
-        openOverlay = "Open login overlay",
-        partsHeading = "Overlay slots",
-        partsHint = "custom-form-area adds fields to the form area and footer appends content below the " +
-            "buttons.",
-        oneTimeCode = "One-time code",
-        privacyNote = "Never tell your password to anyone",
-        openCode = "Open code overlay",
-        openFooter = "Open footer overlay",
-        headerHeading = "Overlay header and localization",
-        headerHint = "title / description override the header; i18n.header and additionalInformation join in.",
-        brandedDescription = "Built with ♥ by Vaadin",
-        openBranded = "Open branded overlay",
-        openLocalized = "Open localized overlay",
-        statesHeading = "Error state and extra information",
-        statesHint = "error shows the failure banner; additionalInformation adds a note below the form.",
-        contact = "Contact admin@company.com if you're experiencing issues logging into your account",
-        openError = "Open error overlay",
-        openExtra = "Open extra information overlay",
-        richHeading = "Rich background",
-        richHint = "The login form sits on any background; a dark surface pairs with theme=\"dark\" to " +
-            "keep contrast.",
-    )
-
-private val chinese: LoginTexts =
-    LoginTexts(
-        formHeading = "登录表单",
-        formHint = "点击提交后字段会先校验，然后触发 login 事件（本页不连后端）。",
-        showError = "显示错误状态",
-        disableForm = "禁用表单",
-        disableHeading = "禁用与重新启用",
-        disableHint = "disabled 会锁住提交按钮；真实应用可以在 login 事件里禁用，等请求返回后再放开。",
-        ready = "状态：可提交",
-        submitting = "状态：提交中…",
-        i18nHeading = "国际化",
-        i18nHint = "i18n 覆盖表单里的全部文案；只提供需要的字段时会与默认值合并。",
-        overlayHeading = "登录浮层",
-        overlayHint = "LoginOverlay 把同一个表单放进全屏浮层，适合应用入口。",
-        overlayDescription = "使用任意用户名和密码体验交互",
-        openOverlay = "打开登录浮层",
-        partsHeading = "浮层插槽",
-        partsHint = "custom-form-area 把额外字段放进表单区域，footer 在按钮下方追加内容。",
-        oneTimeCode = "一次性验证码",
-        privacyNote = "永远不要把密码告诉任何人",
-        openCode = "打开验证码浮层",
-        openFooter = "打开底部插槽浮层",
-        headerHeading = "浮层标题与本地化",
-        headerHint = "title / description 覆盖头部文案；i18n.header 与 additionalInformation 一并生效。",
-        brandedDescription = "用 ♥ 构建",
-        openBranded = "打开品牌浮层",
-        openLocalized = "打开本地化浮层",
-        statesHeading = "错误状态与附加信息",
-        statesHint = "error 直接打开失败横幅；additionalInformation 在表单下方追加说明。",
-        contact = "登录遇到问题时请联系 admin@company.com",
-        openError = "打开错误状态浮层",
-        openExtra = "打开附加信息浮层",
-        richHeading = "富内容背景",
-        richHint = "登录表单可以放在任意背景上；深色背景配合 theme=\"dark\" 保持对比度。",
-    )
-
 internal class LoginPage : DemoPage() {
     private val texts = Binder(loginTexts)
 
@@ -361,6 +284,81 @@ internal class LoginPage : DemoPage() {
         }
 
     companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page") {
+        private val english: LoginTexts =
+            LoginTexts(
+                formHeading = "Login form",
+                formHint = "Submitting validates the fields first and then fires login (this page has no backend).",
+                showError = "Show error state",
+                disableForm = "Disable form",
+                disableHeading = "Disabling during submit",
+                disableHint = "disabled locks the submit button; a real application can disable it on login and " +
+                    "re-enable it after the request returns.",
+                ready = "Status: ready",
+                submitting = "Status: submitting…",
+                i18nHeading = "Localization",
+                i18nHint = "i18n replaces the texts inside the form; the object is merged into the default " +
+                    "bundle, so only the changed fields are required.",
+                overlayHeading = "Login overlay",
+                overlayHint = "LoginOverlay puts the same form into a full-screen overlay, which suits an app " +
+                    "entry point.",
+                overlayDescription = "Use any username and password to try it",
+                openOverlay = "Open login overlay",
+                partsHeading = "Overlay slots",
+                partsHint = "custom-form-area adds fields to the form area and footer appends content below the " +
+                    "buttons.",
+                oneTimeCode = "One-time code",
+                privacyNote = "Never tell your password to anyone",
+                openCode = "Open code overlay",
+                openFooter = "Open footer overlay",
+                headerHeading = "Overlay header and localization",
+                headerHint = "title / description override the header; i18n.header and additionalInformation join in.",
+                brandedDescription = "Built with ♥ by Vaadin",
+                openBranded = "Open branded overlay",
+                openLocalized = "Open localized overlay",
+                statesHeading = "Error state and extra information",
+                statesHint = "error shows the failure banner; additionalInformation adds a note below the form.",
+                contact = "Contact admin@company.com if you're experiencing issues logging into your account",
+                openError = "Open error overlay",
+                openExtra = "Open extra information overlay",
+                richHeading = "Rich background",
+                richHint = "The login form sits on any background; a dark surface pairs with theme=\"dark\" to " +
+                    "keep contrast.",
+            )
+        private val chinese: LoginTexts =
+            LoginTexts(
+                formHeading = "登录表单",
+                formHint = "点击提交后字段会先校验，然后触发 login 事件（本页不连后端）。",
+                showError = "显示错误状态",
+                disableForm = "禁用表单",
+                disableHeading = "禁用与重新启用",
+                disableHint = "disabled 会锁住提交按钮；真实应用可以在 login 事件里禁用，等请求返回后再放开。",
+                ready = "状态：可提交",
+                submitting = "状态：提交中…",
+                i18nHeading = "国际化",
+                i18nHint = "i18n 覆盖表单里的全部文案；只提供需要的字段时会与默认值合并。",
+                overlayHeading = "登录浮层",
+                overlayHint = "LoginOverlay 把同一个表单放进全屏浮层，适合应用入口。",
+                overlayDescription = "使用任意用户名和密码体验交互",
+                openOverlay = "打开登录浮层",
+                partsHeading = "浮层插槽",
+                partsHint = "custom-form-area 把额外字段放进表单区域，footer 在按钮下方追加内容。",
+                oneTimeCode = "一次性验证码",
+                privacyNote = "永远不要把密码告诉任何人",
+                openCode = "打开验证码浮层",
+                openFooter = "打开底部插槽浮层",
+                headerHeading = "浮层标题与本地化",
+                headerHint = "title / description 覆盖头部文案；i18n.header 与 additionalInformation 一并生效。",
+                brandedDescription = "用 ♥ 构建",
+                openBranded = "打开品牌浮层",
+                openLocalized = "打开本地化浮层",
+                statesHeading = "错误状态与附加信息",
+                statesHint = "error 直接打开失败横幅；additionalInformation 在表单下方追加说明。",
+                contact = "登录遇到问题时请联系 admin@company.com",
+                openError = "打开错误状态浮层",
+                openExtra = "打开附加信息浮层",
+                richHeading = "富内容背景",
+                richHint = "登录表单可以放在任意背景上；深色背景配合 theme=\"dark\" 保持对比度。",
+            )
         private val loginTexts: Translations<LoginTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

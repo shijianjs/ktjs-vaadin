@@ -67,83 +67,6 @@ val masterDetailLayoutEntry: CatalogEntry =
         kitPage = { MasterDetailLayoutPage.NAME() },
     )
 
-private val english: MasterDetailLayoutTexts =
-    MasterDetailLayoutTexts(
-        basicHeading = "Basic usage",
-        basicHint = "The master goes into the default slot and the detail into slot=\"detail\". " +
-            "Selecting a person updates the form on the right, and the detail turns into an overlay " +
-            "when space runs out.",
-        firstName = "First name",
-        lastName = "Last name",
-        email = "Email address",
-        phone = "Phone number",
-        sizesHeading = "Sizes and expansion",
-        sizesHint = "masterSize defaults to 30rem, while an unset detailSize is measured from the " +
-            "detail content and cached. expandMaster / expandDetail let an area take the remaining width.",
-        master12 = "master · 12rem",
-        detail16 = "detail · 16rem",
-        orientationHeading = "Orientation",
-        orientationHint = "orientation decides whether master and detail sit side by side or stacked; " +
-            "the vertical variant needs enough available height.",
-        master = "master",
-        detail = "detail",
-        toggleOrientation = "Toggle orientation",
-        overlayHeading = "Overlay",
-        overlayHint = "forceOverlay always shows the detail as an overlay, overlaySize sets its size " +
-            "separately and overlayContainment decides whether it covers the layout or the whole page.",
-        overlayCaption = "The overlay covers the layout; page containment covers the viewport.",
-        placeholderHeading = "Detail placeholder",
-        placeholderHint = "While nothing is selected, the slot=\"detail-placeholder\" content fills the " +
-            "detail area and makes way once a detail is provided.",
-        adaDetails = "The details of Ada Lovelace",
-        showDetail = "Show detail",
-        hideDetail = "Hide detail",
-        member = { index -> "Member ${index + 1}" },
-        selectMember = "Select a member to see the details",
-        nestingHeading = "Nesting",
-        nestingHint = "The detail area can host another master-detail layout; the outer one decides " +
-            "when the inner one falls back to an overlay.",
-        innerMaster = "Inner master",
-        innerDetail = "Inner detail",
-        outerMaster = "Outer master",
-    )
-
-private val chinese: MasterDetailLayoutTexts =
-    MasterDetailLayoutTexts(
-        basicHeading = "基本用法",
-        basicHint = "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情自动变成浮层。",
-        firstName = "名",
-        lastName = "姓",
-        email = "邮箱地址",
-        phone = "电话号码",
-        sizesHeading = "尺寸与扩展",
-        sizesHint = "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / " +
-            "expandDetail 让对应区域吃掉剩余宽度。",
-        master12 = "master · 12rem",
-        detail16 = "detail · 16rem",
-        orientationHeading = "方向",
-        orientationHint = "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
-        master = "master",
-        detail = "detail",
-        toggleOrientation = "切换方向",
-        overlayHeading = "浮层",
-        overlayHint = "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment " +
-            "决定浮层覆盖布局还是整个页面。",
-        overlayCaption = "浮层只覆盖布局本身；切到 page 后会遮住整个页面。",
-        placeholderHeading = "详情占位",
-        placeholderHint = "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
-        adaDetails = "Ada Lovelace 的详细资料",
-        showDetail = "显示详情",
-        hideDetail = "隐藏详情",
-        member = { index -> "成员 ${index + 1}" },
-        selectMember = "选择左侧成员查看详情",
-        nestingHeading = "嵌套",
-        nestingHint = "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
-        innerMaster = "二级主区",
-        innerDetail = "二级详情",
-        outerMaster = "一级主区",
-    )
-
 internal class MasterDetailLayoutPage : DemoPage() {
     private val texts = Binder(masterDetailLayoutTexts)
 
@@ -436,6 +359,81 @@ internal class MasterDetailLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js, "vaadin-demo-master-detail-layout-page") {
+        private val english: MasterDetailLayoutTexts =
+            MasterDetailLayoutTexts(
+                basicHeading = "Basic usage",
+                basicHint = "The master goes into the default slot and the detail into slot=\"detail\". " +
+                    "Selecting a person updates the form on the right, and the detail turns into an overlay " +
+                    "when space runs out.",
+                firstName = "First name",
+                lastName = "Last name",
+                email = "Email address",
+                phone = "Phone number",
+                sizesHeading = "Sizes and expansion",
+                sizesHint = "masterSize defaults to 30rem, while an unset detailSize is measured from the " +
+                    "detail content and cached. expandMaster / expandDetail let an area take the remaining width.",
+                master12 = "master · 12rem",
+                detail16 = "detail · 16rem",
+                orientationHeading = "Orientation",
+                orientationHint = "orientation decides whether master and detail sit side by side or stacked; " +
+                    "the vertical variant needs enough available height.",
+                master = "master",
+                detail = "detail",
+                toggleOrientation = "Toggle orientation",
+                overlayHeading = "Overlay",
+                overlayHint = "forceOverlay always shows the detail as an overlay, overlaySize sets its size " +
+                    "separately and overlayContainment decides whether it covers the layout or the whole page.",
+                overlayCaption = "The overlay covers the layout; page containment covers the viewport.",
+                placeholderHeading = "Detail placeholder",
+                placeholderHint = "While nothing is selected, the slot=\"detail-placeholder\" content fills the " +
+                    "detail area and makes way once a detail is provided.",
+                adaDetails = "The details of Ada Lovelace",
+                showDetail = "Show detail",
+                hideDetail = "Hide detail",
+                member = { index -> "Member ${index + 1}" },
+                selectMember = "Select a member to see the details",
+                nestingHeading = "Nesting",
+                nestingHint = "The detail area can host another master-detail layout; the outer one decides " +
+                    "when the inner one falls back to an overlay.",
+                innerMaster = "Inner master",
+                innerDetail = "Inner detail",
+                outerMaster = "Outer master",
+            )
+        private val chinese: MasterDetailLayoutTexts =
+            MasterDetailLayoutTexts(
+                basicHeading = "基本用法",
+                basicHint = "主区放在默认插槽，详情放进 slot=\"detail\"。点击左侧人物会更新右侧表单；空间不足时详情自动变成浮层。",
+                firstName = "名",
+                lastName = "姓",
+                email = "邮箱地址",
+                phone = "电话号码",
+                sizesHeading = "尺寸与扩展",
+                sizesHint = "masterSize 默认 30rem；detailSize 未设置时按详情内容测量并缓存。expandMaster / " +
+                    "expandDetail 让对应区域吃掉剩余宽度。",
+                master12 = "master · 12rem",
+                detail16 = "detail · 16rem",
+                orientationHeading = "方向",
+                orientationHint = "orientation 决定主区与详情是左右还是上下排列；纵向排列时需要足够的可用高度。",
+                master = "master",
+                detail = "detail",
+                toggleOrientation = "切换方向",
+                overlayHeading = "浮层",
+                overlayHint = "forceOverlay 强制详情以浮层显示，overlaySize 单独设置浮层尺寸，overlayContainment " +
+                    "决定浮层覆盖布局还是整个页面。",
+                overlayCaption = "浮层只覆盖布局本身；切到 page 后会遮住整个页面。",
+                placeholderHeading = "详情占位",
+                placeholderHint = "没有选中项时，slot=\"detail-placeholder\" 的内容显示在详情区；详情出现后占位自动让位。",
+                adaDetails = "Ada Lovelace 的详细资料",
+                showDetail = "显示详情",
+                hideDetail = "隐藏详情",
+                member = { index -> "成员 ${index + 1}" },
+                selectMember = "选择左侧成员查看详情",
+                nestingHeading = "嵌套",
+                nestingHint = "详情区里可以再放一个主从布局，外层决定了内层何时退化成浮层。",
+                innerMaster = "二级主区",
+                innerDetail = "二级详情",
+                outerMaster = "一级主区",
+            )
         private val MASTER_LIST: ClassName = ClassName("master-list")
         private val MASTER_LIST_ITEM: ClassName = ClassName("master-list__item")
         private val MASTER_LIST_NAME: ClassName = ClassName("master-list__name")

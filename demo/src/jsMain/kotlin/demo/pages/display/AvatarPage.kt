@@ -37,43 +37,6 @@ val avatarEntry: CatalogEntry =
         kitPage = { AvatarPage.NAME() },
     )
 
-private val english: AvatarTexts = AvatarTexts(
-    basicHeading = "Basic usage",
-    basicHint = "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +
-        "the tooltip text. The official example loads a person with getPeople(); the demo uses fixed local " +
-        "people with the same portraits as the docs.",
-    namingHeading = "Name and abbreviation",
-    namingHint = "With only name the abbreviation is derived from it; abbr overrides it explicitly. " +
-        "withTooltip shows name on hover or focus (i18n.anonymous when there is no name).",
-    namingCaption = "Derived initials / explicit abbreviation",
-    imageHeading = "Image",
-    imageHint = "img accepts any image source; the official example shows a person photo and a company logo, " +
-        "and the demo uses the same pictures copied from the official documentation.",
-    sizesHeading = "Sizes",
-    sizesHint = "The theme offers xlarge / large / small / xsmall; without a theme the default size is used.",
-    coloursHeading = "Colour index",
-    coloursHint = "colorIndex selects one of the seven Lumo user colours; the avatar group examples use the " +
-        "same property.",
-    user = { index -> "User $index" },
-)
-
-private val chinese: AvatarTexts = AvatarTexts(
-    basicHeading = "基本用法",
-    basicHint = "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
-        "getPeople() 取人像，演示站使用固定的本地人物，照片与文档示例相同。",
-    namingHeading = "姓名与缩写",
-    namingHint = "只给 name 时缩写由姓名推导；abbr 显式覆盖。withTooltip 打开后，悬停或聚焦会显示 name " +
-        "（没有名字时用 i18n.anonymous）。",
-    namingCaption = "姓名推导缩写 / 显式缩写",
-    imageHeading = "图片",
-    imageHint = "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
-    sizesHeading = "尺寸",
-    sizesHint = "theme 提供 xlarge / large / small / xsmall 四个尺寸，未设置时使用默认尺寸。",
-    coloursHeading = "颜色索引",
-    coloursHint = "colorIndex 选择 Lumo 的用户色板，共 7 个颜色；avatar-group 的例子用同样的属性。",
-    user = { index -> "用户 $index" },
-)
-
 internal class AvatarPage : DemoPage() {
     private val texts = Binder(avatarTexts)
 
@@ -197,6 +160,41 @@ internal class AvatarPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page") {
+        private val english: AvatarTexts = AvatarTexts(
+            basicHeading = "Basic usage",
+            basicHint = "Shows the image when img is set, otherwise the abbreviation; name is the accessible name and " +
+                "the tooltip text. The official example loads a person with getPeople(); the demo uses fixed local " +
+                "people with the same portraits as the docs.",
+            namingHeading = "Name and abbreviation",
+            namingHint = "With only name the abbreviation is derived from it; abbr overrides it explicitly. " +
+                "withTooltip shows name on hover or focus (i18n.anonymous when there is no name).",
+            namingCaption = "Derived initials / explicit abbreviation",
+            imageHeading = "Image",
+            imageHint = "img accepts any image source; the official example shows a person photo and a company logo, " +
+                "and the demo uses the same pictures copied from the official documentation.",
+            sizesHeading = "Sizes",
+            sizesHint = "The theme offers xlarge / large / small / xsmall; without a theme the default size is used.",
+            coloursHeading = "Colour index",
+            coloursHint = "colorIndex selects one of the seven Lumo user colours; the avatar group examples use the " +
+                "same property.",
+            user = { index -> "User $index" },
+        )
+        private val chinese: AvatarTexts = AvatarTexts(
+            basicHeading = "基本用法",
+            basicHint = "有 img 时显示图片，否则显示缩写；name 用作无障碍名称与提示文本。官方示例从后端的 " +
+                "getPeople() 取人像，演示站使用固定的本地人物，照片与文档示例相同。",
+            namingHeading = "姓名与缩写",
+            namingHint = "只给 name 时缩写由姓名推导；abbr 显式覆盖。withTooltip 打开后，悬停或聚焦会显示 name " +
+                "（没有名字时用 i18n.anonymous）。",
+            namingCaption = "姓名推导缩写 / 显式缩写",
+            imageHeading = "图片",
+            imageHint = "img 可以是任意图片地址；官方示例展示人物照片与公司标志，demo 直接使用从官方文档复制来的同一组图片。",
+            sizesHeading = "尺寸",
+            sizesHint = "theme 提供 xlarge / large / small / xsmall 四个尺寸，未设置时使用默认尺寸。",
+            coloursHeading = "颜色索引",
+            coloursHint = "colorIndex 选择 Lumo 的用户色板，共 7 个颜色；avatar-group 的例子用同样的属性。",
+            user = { index -> "用户 $index" },
+        )
         private val avatarTexts: Translations<AvatarTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

@@ -52,120 +52,6 @@ val tabsEntry: CatalogEntry =
         kitPage = { TabsPage.NAME() },
     )
 
-private val english: TabsTexts =
-    TabsTexts(
-        basicHeading = "Basic usage",
-        basicHint = "Tabs group content into sections the user can switch between in place, without " +
-            "loading another page. selected holds the active index and selected-changed fires on every " +
-            "switch.",
-        details = "Details",
-        payment = "Payment",
-        shipping = "Shipping",
-        selectedChanged = { "selected-changed · $it" },
-        statesHeading = "States",
-        statesHint = "A tab is selected, unselected or disabled. Disabled tabs cannot be focused and " +
-            "keyboard navigation skips them; disabling instead of hiding keeps the layout stable and still " +
-            "tells users that the item exists.",
-        selected = "Selected",
-        unselected = "Unselected",
-        disabled = "Disabled",
-        orientationHeading = "Orientation and overflow",
-        orientationHint = "Horizontal tabs suit a small number of items; on overflow they scroll and show " +
-            "scroll buttons on both ends by default, while hide-scroll-buttons removes them (not recommended " +
-            "on non-touch devices). Vertical tabs have no scroll buttons and are easier to scan when there " +
-            "are many items, but Tab Sheets do not support them.",
-        analytics = "Analytics",
-        customers = "Customers",
-        dashboards = "Dashboards",
-        documents = "Documents",
-        orders = "Orders",
-        products = "Products",
-        tasks = "Tasks",
-        horizontalCaption = "Horizontal: scroll buttons appear on overflow",
-        hiddenCaptions = "Scroll buttons hidden (hide-scroll-buttons)",
-        verticalCaption = "Vertical: no scroll buttons",
-        iconsHeading = "Icons and other content",
-        iconsHint = "A tab can hold icons, badges and almost any other element. Horizontal tabs work best " +
-            "with the icon above the label (icon-on-top, Lumo only), vertical tabs with the icon beside it; " +
-            "icon-only labels need a tooltip or an aria-label.",
-        profile = "Profile",
-        settings = "Settings",
-        notifications = "Notifications",
-        iconsHorizontalCaption = "Horizontal tabs: icon above the label",
-        iconsVerticalCaption = "Vertical tabs: icon beside the label",
-        badgesCaption = "Other elements: badges",
-        open = "Open",
-        completed = "Completed",
-        cancelled = "Cancelled",
-        themesHeading = "Theme variants",
-        themesHint = "centered arranges the tabs in the middle, equal-width-tabs gives every tab the same " +
-            "width, minimal drops the tab bar background and small reduces the size.",
-        focusHeading = "Focus and keyboard",
-        focusHint = "Keyboard focus draws the focus ring (focus-ring). Arrow keys move the focus between " +
-            "tabs and Enter or Space selects the focused tab; disabled tabs are skipped.",
-        switchingHeading = "Content switching without Tab Sheet",
-        switchingHint = "When the tabs must be structurally separated from their content, switch the " +
-            "content on selected-changed yourself; when they can stay together, a Tab Sheet owns that logic.",
-        dashboard = "Dashboard",
-        dashboardContent = "This is the Dashboard content.",
-        contentFor = { "This is the $it content." },
-    )
-
-private val chinese: TabsTexts =
-    TabsTexts(
-        basicHeading = "基本用法",
-        basicHint = "标签页把内容分组到几个可切换的小节里，适合在同一块界面里就地切换、而不必加载新页面。" +
-            "selected 是当前下标，切换时触发 selected-changed。",
-        details = "明细",
-        payment = "支付",
-        shipping = "配送",
-        selectedChanged = { "selected-changed · $it" },
-        statesHeading = "状态",
-        statesHint = "tab 可以是选中、未选中或禁用。禁用的 tab 无法聚焦，键盘导航会跳过它；用禁用代替隐藏" +
-            "既能避免布局跳动，也让用户知道该项存在。",
-        selected = "已选中",
-        unselected = "未选中",
-        disabled = "已禁用",
-        orientationHeading = "方向与溢出",
-        orientationHint = "横向标签适合少量条目，溢出时可以横向滚动，默认在两端显示滚动按钮；" +
-            "hide-scroll-buttons 去掉这些按钮（非触屏设备上不建议）。纵向标签没有滚动按钮，条目多时更容易" +
-            "扫视，但 Tab Sheet 不支持纵向。",
-        analytics = "分析",
-        customers = "客户",
-        dashboards = "仪表盘",
-        documents = "文档",
-        orders = "订单",
-        products = "产品",
-        tasks = "任务",
-        horizontalCaption = "横向：溢出时显示滚动按钮",
-        hiddenCaptions = "隐藏滚动按钮（hide-scroll-buttons）",
-        verticalCaption = "纵向：没有滚动按钮",
-        iconsHeading = "图标与其他内容",
-        iconsHint = "tab 里可以放图标、徽标等几乎任意元素。横向标签通常把图标放在文字上方（icon-on-top，" +
-            "仅 Lumo），纵向标签则图标与文字并排；只有图标时要用 Tooltip 或 aria-label 补上文字说明。",
-        profile = "个人资料",
-        settings = "设置",
-        notifications = "通知",
-        iconsHorizontalCaption = "横向标签：图标在文字上方",
-        iconsVerticalCaption = "纵向标签：图标与文字并排",
-        badgesCaption = "其他元素：徽标",
-        open = "待处理",
-        completed = "已完成",
-        cancelled = "已取消",
-        themesHeading = "主题变体",
-        themesHint = "centered 让标签居中排列，equal-width-tabs 让各标签等宽，minimal 去掉标签栏背景，" +
-            "small 缩小尺寸。",
-        focusHeading = "焦点与键盘",
-        focusHint = "键盘聚焦时 tab 显示焦点环（focus-ring）。聚焦后左右方向键在 tab 之间移动焦点，" +
-            "Enter 或空格选中当前聚焦的 tab；禁用的 tab 会被跳过。",
-        switchingHeading = "不使用 Tab Sheet 切换内容",
-        switchingHint = "结构上必须把标签与内容分开时，用 selected-changed 自己切换内容；能放在一起时" +
-            "优先用 Tab Sheet，切换逻辑由组件负责。",
-        dashboard = "仪表盘",
-        dashboardContent = "这是仪表盘的内容。",
-        contentFor = { "这是「$it」的内容。" },
-    )
-
 internal class TabsPage : DemoPage() {
     private val texts = Binder(tabsTexts)
 
@@ -388,6 +274,118 @@ internal class TabsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page") {
+        private val english: TabsTexts =
+            TabsTexts(
+                basicHeading = "Basic usage",
+                basicHint = "Tabs group content into sections the user can switch between in place, without " +
+                    "loading another page. selected holds the active index and selected-changed fires on every " +
+                    "switch.",
+                details = "Details",
+                payment = "Payment",
+                shipping = "Shipping",
+                selectedChanged = { "selected-changed · $it" },
+                statesHeading = "States",
+                statesHint = "A tab is selected, unselected or disabled. Disabled tabs cannot be focused and " +
+                    "keyboard navigation skips them; disabling instead of hiding keeps the layout stable and still " +
+                    "tells users that the item exists.",
+                selected = "Selected",
+                unselected = "Unselected",
+                disabled = "Disabled",
+                orientationHeading = "Orientation and overflow",
+                orientationHint = "Horizontal tabs suit a small number of items; on overflow they scroll and show " +
+                    "scroll buttons on both ends by default, while hide-scroll-buttons removes them (not recommended " +
+                    "on non-touch devices). Vertical tabs have no scroll buttons and are easier to scan when there " +
+                    "are many items, but Tab Sheets do not support them.",
+                analytics = "Analytics",
+                customers = "Customers",
+                dashboards = "Dashboards",
+                documents = "Documents",
+                orders = "Orders",
+                products = "Products",
+                tasks = "Tasks",
+                horizontalCaption = "Horizontal: scroll buttons appear on overflow",
+                hiddenCaptions = "Scroll buttons hidden (hide-scroll-buttons)",
+                verticalCaption = "Vertical: no scroll buttons",
+                iconsHeading = "Icons and other content",
+                iconsHint = "A tab can hold icons, badges and almost any other element. Horizontal tabs work best " +
+                    "with the icon above the label (icon-on-top, Lumo only), vertical tabs with the icon beside it; " +
+                    "icon-only labels need a tooltip or an aria-label.",
+                profile = "Profile",
+                settings = "Settings",
+                notifications = "Notifications",
+                iconsHorizontalCaption = "Horizontal tabs: icon above the label",
+                iconsVerticalCaption = "Vertical tabs: icon beside the label",
+                badgesCaption = "Other elements: badges",
+                open = "Open",
+                completed = "Completed",
+                cancelled = "Cancelled",
+                themesHeading = "Theme variants",
+                themesHint = "centered arranges the tabs in the middle, equal-width-tabs gives every tab the same " +
+                    "width, minimal drops the tab bar background and small reduces the size.",
+                focusHeading = "Focus and keyboard",
+                focusHint = "Keyboard focus draws the focus ring (focus-ring). Arrow keys move the focus between " +
+                    "tabs and Enter or Space selects the focused tab; disabled tabs are skipped.",
+                switchingHeading = "Content switching without Tab Sheet",
+                switchingHint = "When the tabs must be structurally separated from their content, switch the " +
+                    "content on selected-changed yourself; when they can stay together, a Tab Sheet owns that logic.",
+                dashboard = "Dashboard",
+                dashboardContent = "This is the Dashboard content.",
+                contentFor = { "This is the $it content." },
+            )
+        private val chinese: TabsTexts =
+            TabsTexts(
+                basicHeading = "基本用法",
+                basicHint = "标签页把内容分组到几个可切换的小节里，适合在同一块界面里就地切换、而不必加载新页面。" +
+                    "selected 是当前下标，切换时触发 selected-changed。",
+                details = "明细",
+                payment = "支付",
+                shipping = "配送",
+                selectedChanged = { "selected-changed · $it" },
+                statesHeading = "状态",
+                statesHint = "tab 可以是选中、未选中或禁用。禁用的 tab 无法聚焦，键盘导航会跳过它；用禁用代替隐藏" +
+                    "既能避免布局跳动，也让用户知道该项存在。",
+                selected = "已选中",
+                unselected = "未选中",
+                disabled = "已禁用",
+                orientationHeading = "方向与溢出",
+                orientationHint = "横向标签适合少量条目，溢出时可以横向滚动，默认在两端显示滚动按钮；" +
+                    "hide-scroll-buttons 去掉这些按钮（非触屏设备上不建议）。纵向标签没有滚动按钮，条目多时更容易" +
+                    "扫视，但 Tab Sheet 不支持纵向。",
+                analytics = "分析",
+                customers = "客户",
+                dashboards = "仪表盘",
+                documents = "文档",
+                orders = "订单",
+                products = "产品",
+                tasks = "任务",
+                horizontalCaption = "横向：溢出时显示滚动按钮",
+                hiddenCaptions = "隐藏滚动按钮（hide-scroll-buttons）",
+                verticalCaption = "纵向：没有滚动按钮",
+                iconsHeading = "图标与其他内容",
+                iconsHint = "tab 里可以放图标、徽标等几乎任意元素。横向标签通常把图标放在文字上方（icon-on-top，" +
+                    "仅 Lumo），纵向标签则图标与文字并排；只有图标时要用 Tooltip 或 aria-label 补上文字说明。",
+                profile = "个人资料",
+                settings = "设置",
+                notifications = "通知",
+                iconsHorizontalCaption = "横向标签：图标在文字上方",
+                iconsVerticalCaption = "纵向标签：图标与文字并排",
+                badgesCaption = "其他元素：徽标",
+                open = "待处理",
+                completed = "已完成",
+                cancelled = "已取消",
+                themesHeading = "主题变体",
+                themesHint = "centered 让标签居中排列，equal-width-tabs 让各标签等宽，minimal 去掉标签栏背景，" +
+                    "small 缩小尺寸。",
+                focusHeading = "焦点与键盘",
+                focusHint = "键盘聚焦时 tab 显示焦点环（focus-ring）。聚焦后左右方向键在 tab 之间移动焦点，" +
+                    "Enter 或空格选中当前聚焦的 tab；禁用的 tab 会被跳过。",
+                switchingHeading = "不使用 Tab Sheet 切换内容",
+                switchingHint = "结构上必须把标签与内容分开时，用 selected-changed 自己切换内容；能放在一起时" +
+                    "优先用 Tab Sheet，切换逻辑由组件负责。",
+                dashboard = "仪表盘",
+                dashboardContent = "这是仪表盘的内容。",
+                contentFor = { "这是「$it」的内容。" },
+            )
         private val TABS_CONTENT_TEXT: ClassName = ClassName("tabs-content__text")
         private val tabsTexts: Translations<TabsTexts> = texts(
             Langs.EN to english,

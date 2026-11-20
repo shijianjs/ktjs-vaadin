@@ -63,60 +63,6 @@ val fieldHighlighterEntry: CatalogEntry =
         kitPage = { FieldHighlighterPage.NAME() },
     )
 
-// ---------------------------------------------------------------------------------------------
-// The same page on kit blocks
-// ---------------------------------------------------------------------------------------------
-
-private val fieldHighlighterEnglish: FieldHighlighterTexts = FieldHighlighterTexts(
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    collabTitle = "Collaboration indicators",
-    collabHint = "FieldHighlighter.addUser marks the field as edited by another user; focusing the field also " +
-        "shows a user tag.",
-    fieldLabel = "Shared title",
-    fieldValue = "Quarterly report draft",
-    fieldHelper = "The buttons below simulate other users joining and leaving",
-    idle = "No other users right now",
-    editingPrefix = "Editing: ",
-    namesAlice = "Alice",
-    namesBoth = "Alice, Bob",
-    addAlice = "Alice starts editing",
-    addBob = "Bob starts editing",
-    removeAll = "Everyone leaves",
-    aiTitle = "AI marker",
-    aiHint = "ai-field-marker is a direct child of the field: working shows progress and confidence shows " +
-        "the confidence level.",
-    aiFieldLabel = "AI-filled field",
-    aiFieldValue = "Automatic summary…",
-    finishGeneration = "Finish AI generation",
-    restartGeneration = "Restart generation",
-)
-
-private val fieldHighlighterChinese: FieldHighlighterTexts = FieldHighlighterTexts(
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    collabTitle = "协作用户指示",
-    collabHint = "FieldHighlighter.addUser 让字段显示其他用户正在编辑；焦点进入字段时还会出现用户标签。",
-    fieldLabel = "共享标题",
-    fieldValue = "季度报告草稿",
-    fieldHelper = "下面的按钮模拟其他用户开始 / 结束编辑",
-    idle = "当前没有其他用户",
-    editingPrefix = "正在编辑：",
-    namesAlice = "Alice",
-    namesBoth = "Alice、Bob",
-    addAlice = "Alice 开始编辑",
-    addBob = "Bob 开始编辑",
-    removeAll = "全部离开",
-    aiTitle = "AI 标记",
-    aiHint = "ai-field-marker 是字段的直接子节点：working 时显示进度，confidence 显示置信度。",
-    aiFieldLabel = "AI 填充的字段",
-    aiFieldValue = "自动摘要……",
-    finishGeneration = "结束 AI 生成",
-    restartGeneration = "重新开始生成",
-)
-
 /**
  * The page on kit blocks.
  *
@@ -254,6 +200,58 @@ internal class FieldHighlighterPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<FieldHighlighterPage>(FieldHighlighterPage::class.js, "vaadin-demo-field-highlighter-page") {
+        // ---------------------------------------------------------------------------------------------
+        // The same page on kit blocks
+        // ---------------------------------------------------------------------------------------------
+
+        private val fieldHighlighterEnglish: FieldHighlighterTexts = FieldHighlighterTexts(
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            collabTitle = "Collaboration indicators",
+            collabHint = "FieldHighlighter.addUser marks the field as edited by another user; focusing the field also " +
+                "shows a user tag.",
+            fieldLabel = "Shared title",
+            fieldValue = "Quarterly report draft",
+            fieldHelper = "The buttons below simulate other users joining and leaving",
+            idle = "No other users right now",
+            editingPrefix = "Editing: ",
+            namesAlice = "Alice",
+            namesBoth = "Alice, Bob",
+            addAlice = "Alice starts editing",
+            addBob = "Bob starts editing",
+            removeAll = "Everyone leaves",
+            aiTitle = "AI marker",
+            aiHint = "ai-field-marker is a direct child of the field: working shows progress and confidence shows " +
+                "the confidence level.",
+            aiFieldLabel = "AI-filled field",
+            aiFieldValue = "Automatic summary…",
+            finishGeneration = "Finish AI generation",
+            restartGeneration = "Restart generation",
+        )
+        private val fieldHighlighterChinese: FieldHighlighterTexts = FieldHighlighterTexts(
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            collabTitle = "协作用户指示",
+            collabHint = "FieldHighlighter.addUser 让字段显示其他用户正在编辑；焦点进入字段时还会出现用户标签。",
+            fieldLabel = "共享标题",
+            fieldValue = "季度报告草稿",
+            fieldHelper = "下面的按钮模拟其他用户开始 / 结束编辑",
+            idle = "当前没有其他用户",
+            editingPrefix = "正在编辑：",
+            namesAlice = "Alice",
+            namesBoth = "Alice、Bob",
+            addAlice = "Alice 开始编辑",
+            addBob = "Bob 开始编辑",
+            removeAll = "全部离开",
+            aiTitle = "AI 标记",
+            aiHint = "ai-field-marker 是字段的直接子节点：working 时显示进度，confidence 显示置信度。",
+            aiFieldLabel = "AI 填充的字段",
+            aiFieldValue = "自动摘要……",
+            finishGeneration = "结束 AI 生成",
+            restartGeneration = "重新开始生成",
+        )
         private val fieldHighlighterTexts: Translations<FieldHighlighterTexts> = texts(
             Langs.EN to fieldHighlighterEnglish,
             Langs.ZH_HANS to fieldHighlighterChinese,

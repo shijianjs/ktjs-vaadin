@@ -45,50 +45,6 @@ val iconEntry: CatalogEntry =
         kitPage = { IconPage.NAME() },
     )
 
-private val english: IconTexts = IconTexts(
-    basicHeading = "Basic usage",
-    basicHint = "The icon property takes icon-set:name. registerLumoIcons() and registerVaadinIcons() make sure " +
-        "the two built-in sets are registered, otherwise the icons only show up in development mode.",
-    nextIcon = "Next icon",
-    sizingHeading = "Size",
-    sizingHint = "--vaadin-icon-size sets the outer size of the icon (1lh by default) and " +
-        "--vaadin-icon-visual-size adjusts the painted area inside it; the size property only affects " +
-        "the viewBox of svg literals, see the SVG literals section below.",
-    colourHeading = "Colour",
-    colourHint = "Icons use currentColor: setting the text colour or --vaadin-icon-color changes the fill and " +
-        "stroke, for SVG and font icons alike. The second icon of the official example uses a " +
-        "FontAwesome class, replaced by a Lumo font icon here.",
-    fontsHeading = "Font icons",
-    fontsHint = "fontFamily selects the icon font and char takes a hexadecimal code point (Lumo: ea0f checkmark, " +
-        "ea04 angle down, ea26 photo), or a single character; ligature needs a font that provides " +
-        "ligatures (Material Icons, for example) and iconClass needs the stylesheet shipped with the " +
-        "font. The demo ships no third-party font, so only the Lumo code points are rendered.",
-    literalsHeading = "SVG literals",
-    literalsHint = "Kotlin/JS cannot author Lit's svg tagged template: unsafeSvgLiteral() builds one from a string, " +
-        "and Iconset.getIconSvg() returns the graphic of a registered icon set. Both are assigned to " +
-        "the svg property, while size sets the viewBox.",
-)
-
-private val chinese: IconTexts = IconTexts(
-    basicHeading = "基本用法",
-    basicHint = "icon 属性接受 图标集:名称。registerLumoIcons() 与 registerVaadinIcons() 保证两个内置集合" +
-        "已经注册，否则图标只在开发模式下可见。",
-    nextIcon = "下一个图标",
-    sizingHeading = "尺寸",
-    sizingHint = "--vaadin-icon-size 设置图标的外框尺寸（默认跟随行高 1lh），--vaadin-icon-visual-size 在此基础上" +
-        "调整绘制区域；size 属性只影响 svg 字面量的 viewBox，见下面的 SVG 字面量一节。",
-    colourHeading = "颜色",
-    colourHint = "图标使用 currentColor：设置文字颜色或 --vaadin-icon-color 就能改填充与描边，SVG 图标和字体" +
-        "图标都一样。官方示例的第二个图标用 FontAwesome 类名，这里换成 Lumo 字体图标。",
-    fontsHeading = "字体图标",
-    fontsHint = "fontFamily 选择图标字体，char 接受十六进制码点（Lumo 字体：ea0f 对勾、ea04 下箭头、ea26 图片），" +
-        "也可以直接给单个字符；ligature 需要字体本身支持连字（例如 Material Icons），iconClass 需要" +
-        "字体自带的样式表。演示站没有引入第三方字体，因此只展示 Lumo 字体按码点渲染的效果。",
-    literalsHeading = "SVG 字面量",
-    literalsHint = "Kotlin/JS 写不出 Lit 的 svg 模板字面量：用 unsafeSvgLiteral() 从字符串构造一个，或通过 " +
-        "Iconset.getIconSvg() 取出已注册图标集里的图形，两者都赋给 svg 属性，size 决定 viewBox。",
-)
-
 // ---------------------------------------------------------------------------------------------
 // Icon (single icon: name, size, colour, fonts, svg literal)
 // ---------------------------------------------------------------------------------------------
@@ -210,6 +166,48 @@ internal class IconPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page") {
+        private val english: IconTexts = IconTexts(
+            basicHeading = "Basic usage",
+            basicHint = "The icon property takes icon-set:name. registerLumoIcons() and registerVaadinIcons() make sure " +
+                "the two built-in sets are registered, otherwise the icons only show up in development mode.",
+            nextIcon = "Next icon",
+            sizingHeading = "Size",
+            sizingHint = "--vaadin-icon-size sets the outer size of the icon (1lh by default) and " +
+                "--vaadin-icon-visual-size adjusts the painted area inside it; the size property only affects " +
+                "the viewBox of svg literals, see the SVG literals section below.",
+            colourHeading = "Colour",
+            colourHint = "Icons use currentColor: setting the text colour or --vaadin-icon-color changes the fill and " +
+                "stroke, for SVG and font icons alike. The second icon of the official example uses a " +
+                "FontAwesome class, replaced by a Lumo font icon here.",
+            fontsHeading = "Font icons",
+            fontsHint = "fontFamily selects the icon font and char takes a hexadecimal code point (Lumo: ea0f checkmark, " +
+                "ea04 angle down, ea26 photo), or a single character; ligature needs a font that provides " +
+                "ligatures (Material Icons, for example) and iconClass needs the stylesheet shipped with the " +
+                "font. The demo ships no third-party font, so only the Lumo code points are rendered.",
+            literalsHeading = "SVG literals",
+            literalsHint = "Kotlin/JS cannot author Lit's svg tagged template: unsafeSvgLiteral() builds one from a string, " +
+                "and Iconset.getIconSvg() returns the graphic of a registered icon set. Both are assigned to " +
+                "the svg property, while size sets the viewBox.",
+        )
+        private val chinese: IconTexts = IconTexts(
+            basicHeading = "基本用法",
+            basicHint = "icon 属性接受 图标集:名称。registerLumoIcons() 与 registerVaadinIcons() 保证两个内置集合" +
+                "已经注册，否则图标只在开发模式下可见。",
+            nextIcon = "下一个图标",
+            sizingHeading = "尺寸",
+            sizingHint = "--vaadin-icon-size 设置图标的外框尺寸（默认跟随行高 1lh），--vaadin-icon-visual-size 在此基础上" +
+                "调整绘制区域；size 属性只影响 svg 字面量的 viewBox，见下面的 SVG 字面量一节。",
+            colourHeading = "颜色",
+            colourHint = "图标使用 currentColor：设置文字颜色或 --vaadin-icon-color 就能改填充与描边，SVG 图标和字体" +
+                "图标都一样。官方示例的第二个图标用 FontAwesome 类名，这里换成 Lumo 字体图标。",
+            fontsHeading = "字体图标",
+            fontsHint = "fontFamily 选择图标字体，char 接受十六进制码点（Lumo 字体：ea0f 对勾、ea04 下箭头、ea26 图片），" +
+                "也可以直接给单个字符；ligature 需要字体本身支持连字（例如 Material Icons），iconClass 需要" +
+                "字体自带的样式表。演示站没有引入第三方字体，因此只展示 Lumo 字体按码点渲染的效果。",
+            literalsHeading = "SVG 字面量",
+            literalsHint = "Kotlin/JS 写不出 Lit 的 svg 模板字面量：用 unsafeSvgLiteral() 从字符串构造一个，或通过 " +
+                "Iconset.getIconSvg() 取出已注册图标集里的图形，两者都赋给 svg 属性，size 决定 viewBox。",
+        )
         /** A single star, passed to [unsafeSvgLiteral] by the SVG literal example. */
         private const val STAR_SVG_FRAGMENT =
             "<path d='M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z' " +

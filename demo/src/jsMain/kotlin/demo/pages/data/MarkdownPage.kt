@@ -43,116 +43,6 @@ val markdownEntry: CatalogEntry =
         kitPage = { MarkdownPage.NAME() },
     )
 
-// ---------------------------------------------------------------------------------------------
-// Markdown
-//
-// docs: markdown/markdown-basic.ts and markdown/markdown-line-breaks.ts.
-// ---------------------------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------------------------
-// The same page on kit blocks
-// ---------------------------------------------------------------------------------------------
-
-private val markdownEnglish: MarkdownTexts = MarkdownTexts(
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    basicTitle = "Basic usage",
-    basicHint = "content holds Markdown source, which the component renders as sanitized HTML: headings, " +
-        "bold, italic, inline code, strikethrough, ordered and unordered lists, quotes and links all work " +
-        "out of the box.",
-    richContent = """
-        ## Rich Text Formatting
-
-        You can create **bold text**, *italicized text*, and `inline code` with simple Markdown syntax.
-        You can also ~~strike through~~ text when needed.
-
-        ## Lists
-
-        ### Ordered List:
-        1. First item
-        2. Second item
-        3. Third item with **bold text**
-
-        ### Unordered List:
-        - Fruits
-            - Apples 🍎
-            - Bananas 🍌
-            - Oranges 🍊
-        - Vegetables
-            - Carrots
-            - Broccoli
-
-        ## Links & Quotes
-
-        > Markdown is a lightweight markup language that you can use to add formatting elements to plaintext documents.
-
-        [Visit Vaadin website](https://vaadin.com) | [Learn more about Markdown](https://www.markdownguide.org/)
-    """.trimIndent(),
-    lineTitle = "Line breaks",
-    lineHint = "By default the original Markdown spec applies: a single line break inside a paragraph " +
-        "collapses into a space and a blank line starts a new paragraph. With lineBreaks on, single (soft) " +
-        "breaks render as real line breaks like chat messages, while blank lines still start a new paragraph.",
-    letterContent = """
-        Hi Maria,
-        Your order shipped this morning.
-        It should arrive by Thursday.
-
-        Best regards,
-        Tom
-    """.trimIndent(),
-    lineCaption = "Left: lineBreaks on. Right: default.",
-)
-
-private val markdownChinese: MarkdownTexts = MarkdownTexts(
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    basicTitle = "基本用法",
-    basicHint = "content 是 Markdown 源码，组件把它渲染成 HTML 并做净化：标题、粗体、斜体、行内代码、" +
-        "删除线、有序 / 无序列表、引用与链接都能直接用。",
-    richContent = """
-        ## 富文本格式
-
-        用简单的 Markdown 语法就能写出 **粗体**、*斜体* 和 ` + "`行内代码`" + `。
-        需要时还可以 ~~删除线~~。
-
-        ## 列表
-
-        ### 有序列表：
-        1. 第一项
-        2. 第二项
-        3. 带 **粗体** 的第三项
-
-        ### 无序列表：
-        - 水果
-            - 苹果 🍎
-            - 香蕉 🍌
-            - 橙子 🍊
-        - 蔬菜
-            - 胡萝卜
-            - 西兰花
-
-        ## 链接与引用
-
-        > Markdown 是一种轻量标记语言，可以为纯文本添加格式。
-
-        [访问 Vaadin 官网](https://vaadin.com) | [了解 Markdown](https://www.markdownguide.org/)
-    """.trimIndent(),
-    lineTitle = "换行",
-    lineHint = "默认遵循原始 Markdown 规范：段落里的单个换行会合并成空格，换段需要空行。" +
-        "打开 lineBreaks 后单个换行（软换行）也会渲染成真正的换行，像聊天消息那样；空行仍然换段。",
-    letterContent = """
-        你好，Maria：
-        订单今早已发出。
-        预计周四送达。
-
-        此致
-        Tom
-    """.trimIndent(),
-    lineCaption = "左：lineBreaks 打开　右：默认",
-)
-
 /**
  * The page on kit blocks.
  *
@@ -218,6 +108,114 @@ internal class MarkdownPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page") {
+        // ---------------------------------------------------------------------------------------------
+        // Markdown
+        //
+        // docs: markdown/markdown-basic.ts and markdown/markdown-line-breaks.ts.
+        // ---------------------------------------------------------------------------------------------
+
+        // ---------------------------------------------------------------------------------------------
+        // The same page on kit blocks
+        // ---------------------------------------------------------------------------------------------
+
+        private val markdownEnglish: MarkdownTexts = MarkdownTexts(
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            basicTitle = "Basic usage",
+            basicHint = "content holds Markdown source, which the component renders as sanitized HTML: headings, " +
+                "bold, italic, inline code, strikethrough, ordered and unordered lists, quotes and links all work " +
+                "out of the box.",
+            richContent = """
+                ## Rich Text Formatting
+
+                You can create **bold text**, *italicized text*, and `inline code` with simple Markdown syntax.
+                You can also ~~strike through~~ text when needed.
+
+                ## Lists
+
+                ### Ordered List:
+                1. First item
+                2. Second item
+                3. Third item with **bold text**
+
+                ### Unordered List:
+                - Fruits
+                    - Apples 🍎
+                    - Bananas 🍌
+                    - Oranges 🍊
+                - Vegetables
+                    - Carrots
+                    - Broccoli
+
+                ## Links & Quotes
+
+                > Markdown is a lightweight markup language that you can use to add formatting elements to plaintext documents.
+
+                [Visit Vaadin website](https://vaadin.com) | [Learn more about Markdown](https://www.markdownguide.org/)
+            """.trimIndent(),
+            lineTitle = "Line breaks",
+            lineHint = "By default the original Markdown spec applies: a single line break inside a paragraph " +
+                "collapses into a space and a blank line starts a new paragraph. With lineBreaks on, single (soft) " +
+                "breaks render as real line breaks like chat messages, while blank lines still start a new paragraph.",
+            letterContent = """
+                Hi Maria,
+                Your order shipped this morning.
+                It should arrive by Thursday.
+
+                Best regards,
+                Tom
+            """.trimIndent(),
+            lineCaption = "Left: lineBreaks on. Right: default.",
+        )
+        private val markdownChinese: MarkdownTexts = MarkdownTexts(
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            basicTitle = "基本用法",
+            basicHint = "content 是 Markdown 源码，组件把它渲染成 HTML 并做净化：标题、粗体、斜体、行内代码、" +
+                "删除线、有序 / 无序列表、引用与链接都能直接用。",
+            richContent = """
+                ## 富文本格式
+
+                用简单的 Markdown 语法就能写出 **粗体**、*斜体* 和 ` + "`行内代码`" + `。
+                需要时还可以 ~~删除线~~。
+
+                ## 列表
+
+                ### 有序列表：
+                1. 第一项
+                2. 第二项
+                3. 带 **粗体** 的第三项
+
+                ### 无序列表：
+                - 水果
+                    - 苹果 🍎
+                    - 香蕉 🍌
+                    - 橙子 🍊
+                - 蔬菜
+                    - 胡萝卜
+                    - 西兰花
+
+                ## 链接与引用
+
+                > Markdown 是一种轻量标记语言，可以为纯文本添加格式。
+
+                [访问 Vaadin 官网](https://vaadin.com) | [了解 Markdown](https://www.markdownguide.org/)
+            """.trimIndent(),
+            lineTitle = "换行",
+            lineHint = "默认遵循原始 Markdown 规范：段落里的单个换行会合并成空格，换段需要空行。" +
+                "打开 lineBreaks 后单个换行（软换行）也会渲染成真正的换行，像聊天消息那样；空行仍然换段。",
+            letterContent = """
+                你好，Maria：
+                订单今早已发出。
+                预计周四送达。
+
+                此致
+                Tom
+            """.trimIndent(),
+            lineCaption = "左：lineBreaks 打开　右：默认",
+        )
         private val markdownTexts: Translations<MarkdownTexts> = texts(
             Langs.EN to markdownEnglish,
             Langs.ZH_HANS to markdownChinese,

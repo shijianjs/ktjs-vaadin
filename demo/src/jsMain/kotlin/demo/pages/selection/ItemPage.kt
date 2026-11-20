@@ -27,37 +27,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLAnchorElement
 
-private val itemEnglish: ItemTexts = ItemTexts(
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    basicTitle = "Standalone use",
-    basicHint = "vaadin-item is usually created inside List Box / Select / Context Menu; this page shows " +
-        "its properties on its own.",
-    itemLabel = "Item with a label",
-    itemSlot = "Default slot text",
-    itemDisabled = "Disabled",
-    selectedTitle = "Selected state",
-    selectedHint = "selected is purely visual; the item does not maintain selection logic itself.",
-    selectedItem = "Selected item",
-    toggle = "Toggle selected",
-)
-
-private val itemChinese: ItemTexts = ItemTexts(
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    basicTitle = "独立使用",
-    basicHint = "vaadin-item 通常由 List Box / Select / Context Menu 内部创建；这里单独展示它的属性。",
-    itemLabel = "带 label 的条目",
-    itemSlot = "默认插槽文本",
-    itemDisabled = "已禁用",
-    selectedTitle = "选中状态",
-    selectedHint = "selected 只是视觉状态，条目本身不维护选中逻辑。",
-    selectedItem = "被选中的条目",
-    toggle = "切换 selected",
-)
-
 val itemEntry: CatalogEntry =
     CatalogEntry(
         id = "item",
@@ -160,6 +129,35 @@ internal class ItemPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ItemPage>(ItemPage::class.js, "vaadin-demo-item-page") {
+        private val itemEnglish: ItemTexts = ItemTexts(
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            basicTitle = "Standalone use",
+            basicHint = "vaadin-item is usually created inside List Box / Select / Context Menu; this page shows " +
+                "its properties on its own.",
+            itemLabel = "Item with a label",
+            itemSlot = "Default slot text",
+            itemDisabled = "Disabled",
+            selectedTitle = "Selected state",
+            selectedHint = "selected is purely visual; the item does not maintain selection logic itself.",
+            selectedItem = "Selected item",
+            toggle = "Toggle selected",
+        )
+        private val itemChinese: ItemTexts = ItemTexts(
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            basicTitle = "独立使用",
+            basicHint = "vaadin-item 通常由 List Box / Select / Context Menu 内部创建；这里单独展示它的属性。",
+            itemLabel = "带 label 的条目",
+            itemSlot = "默认插槽文本",
+            itemDisabled = "已禁用",
+            selectedTitle = "选中状态",
+            selectedHint = "selected 只是视觉状态，条目本身不维护选中逻辑。",
+            selectedItem = "被选中的条目",
+            toggle = "切换 selected",
+        )
         private val itemTexts: Translations<ItemTexts> = texts(
             Langs.EN to itemEnglish,
             Langs.ZH_HANS to itemChinese,

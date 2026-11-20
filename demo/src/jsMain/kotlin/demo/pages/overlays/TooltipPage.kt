@@ -56,81 +56,6 @@ val tooltipEntry: CatalogEntry =
         kitPage = { TooltipPage.NAME() },
     )
 
-private val english: TooltipTexts =
-    TooltipTexts(
-        slottedHeading = "Inside a slot",
-        slottedHint = "Add the tooltip as a child with slot=\"tooltip\"; the component shows it on " +
-            "hover / focus.",
-        hoverMe = "Hover me",
-        buttonHint = "Hint on the button",
-        fieldLabel = "Field hint",
-        fieldPlaceholder = "Shown on focus",
-        fieldHint = "Field-level hint text",
-        search = "Search",
-        exactPhrase = "Wrap in “quotes” for exact phrase",
-        linkedHeading = "Linked with for",
-        linkedHint = "Outside a component, point for at the id of the target element; position picks " +
-            "the side.",
-        blockText = "This block has a hint",
-        linkedHintText = "Hint linked to any element",
-        headingText = "Heading with tooltip",
-        headingHintText = "This is a tooltip",
-        manualHeading = "Manual mode",
-        manualHint = "manual turns off the automatic behaviour and leaves it to opened; the suffix " +
-            "icon button toggles it.",
-        markdownHeading = "Delays and Markdown",
-        markdownHint = "hoverDelay / focusDelay / hideDelay are in milliseconds; markdown parses the " +
-            "hint as Markdown.",
-        markdownButton = "Markdown hint",
-        markdownText = "**Bold** and *italic*, plus `code`",
-        slowButton = "One second delay",
-        slowText = "Shown after one second",
-        generatedHeading = "Generated text",
-        generatedHint = "generator receives context and returns the text; one tooltip can serve several " +
-            "elements.",
-        chart = "Chart",
-        table = "Table",
-        map = "Map",
-        generatedHintFor = { index -> "Hint for element ${index + 1}" },
-        positionsHeading = "Position",
-        positionsHint = "position picks the side the overlay opens on; four common values are shown here.",
-    )
-
-private val chinese: TooltipTexts =
-    TooltipTexts(
-        slottedHeading = "放进插槽",
-        slottedHint = "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
-        hoverMe = "悬停我",
-        buttonHint = "这是按钮上的提示",
-        fieldLabel = "字段的提示",
-        fieldPlaceholder = "聚焦后显示",
-        fieldHint = "字段级的提示文本",
-        search = "搜索",
-        exactPhrase = "用「引号」包裹可以精确匹配短语",
-        linkedHeading = "用 for 关联",
-        linkedHint = "不在组件内部时，用 for 指向目标元素的 id；position 决定浮层落在哪一侧。",
-        blockText = "这个区块带有一个提示",
-        linkedHintText = "关联到任意元素的提示",
-        headingText = "带提示的标题",
-        headingHintText = "这是标题上的提示",
-        manualHeading = "手动打开",
-        manualHint = "manual 关闭自动显示，由 opened 控制；这里用后缀图标按钮切换。",
-        markdownHeading = "延迟与 Markdown",
-        markdownHint = "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
-        markdownButton = "Markdown 提示",
-        markdownText = "**粗体** 与 *斜体*，以及 `代码`",
-        slowButton = "延迟 1 秒",
-        slowText = "悬停一秒后出现",
-        generatedHeading = "动态文本",
-        generatedHint = "generator 接收 context，返回要显示的文本；同一个 tooltip 可以服务多个元素。",
-        chart = "图表",
-        table = "表格",
-        map = "地图",
-        generatedHintFor = { index -> "第 ${index + 1} 个元素的说明" },
-        positionsHeading = "位置",
-        positionsHint = "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
-    )
-
 internal class TooltipPage : DemoPage() {
     private val texts = Binder(tooltipTexts)
 
@@ -287,6 +212,79 @@ internal class TooltipPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page") {
+        private val english: TooltipTexts =
+            TooltipTexts(
+                slottedHeading = "Inside a slot",
+                slottedHint = "Add the tooltip as a child with slot=\"tooltip\"; the component shows it on " +
+                    "hover / focus.",
+                hoverMe = "Hover me",
+                buttonHint = "Hint on the button",
+                fieldLabel = "Field hint",
+                fieldPlaceholder = "Shown on focus",
+                fieldHint = "Field-level hint text",
+                search = "Search",
+                exactPhrase = "Wrap in “quotes” for exact phrase",
+                linkedHeading = "Linked with for",
+                linkedHint = "Outside a component, point for at the id of the target element; position picks " +
+                    "the side.",
+                blockText = "This block has a hint",
+                linkedHintText = "Hint linked to any element",
+                headingText = "Heading with tooltip",
+                headingHintText = "This is a tooltip",
+                manualHeading = "Manual mode",
+                manualHint = "manual turns off the automatic behaviour and leaves it to opened; the suffix " +
+                    "icon button toggles it.",
+                markdownHeading = "Delays and Markdown",
+                markdownHint = "hoverDelay / focusDelay / hideDelay are in milliseconds; markdown parses the " +
+                    "hint as Markdown.",
+                markdownButton = "Markdown hint",
+                markdownText = "**Bold** and *italic*, plus `code`",
+                slowButton = "One second delay",
+                slowText = "Shown after one second",
+                generatedHeading = "Generated text",
+                generatedHint = "generator receives context and returns the text; one tooltip can serve several " +
+                    "elements.",
+                chart = "Chart",
+                table = "Table",
+                map = "Map",
+                generatedHintFor = { index -> "Hint for element ${index + 1}" },
+                positionsHeading = "Position",
+                positionsHint = "position picks the side the overlay opens on; four common values are shown here.",
+            )
+        private val chinese: TooltipTexts =
+            TooltipTexts(
+                slottedHeading = "放进插槽",
+                slottedHint = "把 tooltip 作为子元素并设置 slot=\"tooltip\"，组件会在悬停 / 聚焦时显示它。",
+                hoverMe = "悬停我",
+                buttonHint = "这是按钮上的提示",
+                fieldLabel = "字段的提示",
+                fieldPlaceholder = "聚焦后显示",
+                fieldHint = "字段级的提示文本",
+                search = "搜索",
+                exactPhrase = "用「引号」包裹可以精确匹配短语",
+                linkedHeading = "用 for 关联",
+                linkedHint = "不在组件内部时，用 for 指向目标元素的 id；position 决定浮层落在哪一侧。",
+                blockText = "这个区块带有一个提示",
+                linkedHintText = "关联到任意元素的提示",
+                headingText = "带提示的标题",
+                headingHintText = "这是标题上的提示",
+                manualHeading = "手动打开",
+                manualHint = "manual 关闭自动显示，由 opened 控制；这里用后缀图标按钮切换。",
+                markdownHeading = "延迟与 Markdown",
+                markdownHint = "hoverDelay / focusDelay / hideDelay 以毫秒为单位；markdown 让提示文本按 Markdown 解析。",
+                markdownButton = "Markdown 提示",
+                markdownText = "**粗体** 与 *斜体*，以及 `代码`",
+                slowButton = "延迟 1 秒",
+                slowText = "悬停一秒后出现",
+                generatedHeading = "动态文本",
+                generatedHint = "generator 接收 context，返回要显示的文本；同一个 tooltip 可以服务多个元素。",
+                chart = "图表",
+                table = "表格",
+                map = "地图",
+                generatedHintFor = { index -> "第 ${index + 1} 个元素的说明" },
+                positionsHeading = "位置",
+                positionsHint = "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
+            )
         private val EXAMPLE: ClassName = ClassName("example")
         private val tooltipTexts: Translations<TooltipTexts> = texts(
             Langs.EN to english,

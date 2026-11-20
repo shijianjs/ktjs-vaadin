@@ -52,62 +52,6 @@ val formLayoutEntry: CatalogEntry =
         kitPage = { FormLayoutPage.NAME() },
     )
 
-private val english: FormLayoutTexts =
-    FormLayoutTexts(
-        autoHeading = "Auto-responsive mode",
-        autoHint = "autoResponsive creates columns from the available width, each as wide as " +
-            "columnWidth (12em by default). Every field starts a new row unless fields are grouped " +
-            "with form-row.",
-        firstName = "First name",
-        lastName = "Last name",
-        emailAddress = "Email address",
-        password = "Password",
-        confirmPassword = "Confirm password",
-        labelsHeading = "Label position",
-        labelsHint = "labelsAside makes form-item prefer placing its label beside the field and fall " +
-            "back above it when there is not enough room.",
-        columnsHeading = "Column width and count",
-        columnsHint = "columnWidth sets the width of a column, expandColumns lets columns share the " +
-            "remaining width and expandFields stretches the fields, including those inside form-item.",
-        colspanHeading = "Column span",
-        colspanHint = "data-colspan on a field makes it span several columns; it only applies inside " +
-            "form-row with autoResponsive enabled.",
-        street = "Street address",
-        postal = "Postal code",
-        city = "City/Town",
-        country = "Country",
-        stepsHeading = "Responsive steps",
-        stepsHint = "Without autoResponsive, responsiveSteps describes the breakpoints and column " +
-            "counts; the first step usually starts at 0.",
-        asideCaption = "form-item puts the label aside by default",
-    )
-
-private val chinese: FormLayoutTexts =
-    FormLayoutTexts(
-        autoHeading = "自动响应式模式",
-        autoHint = "autoResponsive 按可用宽度自动创建列，列宽由 columnWidth 指定（默认 12em）。每个字段默认独占一行，" +
-            "用 form-row 可以把字段并到同一行。",
-        firstName = "名",
-        lastName = "姓",
-        emailAddress = "邮箱地址",
-        password = "密码",
-        confirmPassword = "确认密码",
-        labelsHeading = "标签位置",
-        labelsHint = "labelsAside 让 form-item 优先把标签放在字段左侧；宽度不够时自动改回字段上方。",
-        columnsHeading = "列宽与列数",
-        columnsHint = "columnWidth 决定一列多宽，expandColumns 让列平分剩余宽度，expandFields 让字段撑满所在列" +
-            "（包括 form-item 里的字段）。",
-        colspanHeading = "跨列",
-        colspanHint = "字段上的 data-colspan 让它占据多列；只能用在 form-row 里，并且需要 autoResponsive。",
-        street = "街道地址",
-        postal = "邮政编码",
-        city = "城市/镇",
-        country = "国家",
-        stepsHeading = "响应式断点",
-        stepsHint = "不用 autoResponsive 时用 responsiveSteps 描述断点与列数；首项通常从 0 开始。",
-        asideCaption = "form-item 默认把标签放在左侧",
-    )
-
 internal class FormLayoutPage : DemoPage() {
     private val texts = Binder(formLayoutTexts)
 
@@ -265,6 +209,60 @@ internal class FormLayoutPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page") {
+        private val english: FormLayoutTexts =
+            FormLayoutTexts(
+                autoHeading = "Auto-responsive mode",
+                autoHint = "autoResponsive creates columns from the available width, each as wide as " +
+                    "columnWidth (12em by default). Every field starts a new row unless fields are grouped " +
+                    "with form-row.",
+                firstName = "First name",
+                lastName = "Last name",
+                emailAddress = "Email address",
+                password = "Password",
+                confirmPassword = "Confirm password",
+                labelsHeading = "Label position",
+                labelsHint = "labelsAside makes form-item prefer placing its label beside the field and fall " +
+                    "back above it when there is not enough room.",
+                columnsHeading = "Column width and count",
+                columnsHint = "columnWidth sets the width of a column, expandColumns lets columns share the " +
+                    "remaining width and expandFields stretches the fields, including those inside form-item.",
+                colspanHeading = "Column span",
+                colspanHint = "data-colspan on a field makes it span several columns; it only applies inside " +
+                    "form-row with autoResponsive enabled.",
+                street = "Street address",
+                postal = "Postal code",
+                city = "City/Town",
+                country = "Country",
+                stepsHeading = "Responsive steps",
+                stepsHint = "Without autoResponsive, responsiveSteps describes the breakpoints and column " +
+                    "counts; the first step usually starts at 0.",
+                asideCaption = "form-item puts the label aside by default",
+            )
+        private val chinese: FormLayoutTexts =
+            FormLayoutTexts(
+                autoHeading = "自动响应式模式",
+                autoHint = "autoResponsive 按可用宽度自动创建列，列宽由 columnWidth 指定（默认 12em）。每个字段默认独占一行，" +
+                    "用 form-row 可以把字段并到同一行。",
+                firstName = "名",
+                lastName = "姓",
+                emailAddress = "邮箱地址",
+                password = "密码",
+                confirmPassword = "确认密码",
+                labelsHeading = "标签位置",
+                labelsHint = "labelsAside 让 form-item 优先把标签放在字段左侧；宽度不够时自动改回字段上方。",
+                columnsHeading = "列宽与列数",
+                columnsHint = "columnWidth 决定一列多宽，expandColumns 让列平分剩余宽度，expandFields 让字段撑满所在列" +
+                    "（包括 form-item 里的字段）。",
+                colspanHeading = "跨列",
+                colspanHint = "字段上的 data-colspan 让它占据多列；只能用在 form-row 里，并且需要 autoResponsive。",
+                street = "街道地址",
+                postal = "邮政编码",
+                city = "城市/镇",
+                country = "国家",
+                stepsHeading = "响应式断点",
+                stepsHint = "不用 autoResponsive 时用 responsiveSteps 描述断点与列数；首项通常从 0 开始。",
+                asideCaption = "form-item 默认把标签放在左侧",
+            )
         private val formLayoutTexts: Translations<FormLayoutTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

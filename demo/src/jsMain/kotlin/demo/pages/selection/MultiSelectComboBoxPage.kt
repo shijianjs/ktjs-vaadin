@@ -51,66 +51,6 @@ val multiSelectComboBoxEntry: CatalogEntry =
         kitPage = { MultiSelectComboBoxPage.NAME() },
     )
 
-private val english: MultiSelectComboBoxTexts =
-    MultiSelectComboBoxTexts(
-        basicHeading = "Basic usage",
-        basicHint = "item-id-path compares object identity; selectedItems holds the selected objects.",
-        countries = "Countries",
-        selectedCount = { count -> "$count selected" },
-        selectedPrefix = { count -> "$count selected: " },
-        presetHeading = "Preselected items",
-        presetHint = "selectedItems can be assigned directly; the number of chips follows it.",
-        changeHeading = "Selection change",
-        changeHint = "The detail of selected-items-changed carries the current selection, which can " +
-            "drive another field.",
-        selectedCountries = "Selected Countries",
-        readonlyHeading = "Read-only",
-        readonlyHint = "readonly keeps the chips visible but blocks adding and removing.",
-        expandHeading = "Auto expand",
-        expandHint = "auto-expand-horizontally / auto-expand-vertically let the field grow with the " +
-            "chips instead of scrolling.",
-        onTopHeading = "Selected items on top",
-        onTopHint = "selected-items-on-top moves the selected entries to the top of the dropdown, " +
-            "which helps in long lists.",
-        collapseHeading = "Collapse chips",
-        collapseHint = "collapseChips folds the overflowing chips into a counter and can be toggled live.",
-        collapseChips = "Collapse chips",
-        classNamesHeading = "Item class names",
-        classNamesHint = "itemClassNameGenerator applies to both the chips and the dropdown items.",
-        fruit = "Fruit",
-        i18nHeading = "Internationalization",
-        i18nHint = "i18n overrides the cleared / selected / deselected / counter messages; the example " +
-            "keeps the German strings of the official documentation.",
-    )
-
-private val chinese: MultiSelectComboBoxTexts =
-    MultiSelectComboBoxTexts(
-        basicHeading = "基本用法",
-        basicHint = "item-id-path 用来比较对象身份；selectedItems 是选中对象的数组。",
-        countries = "国家",
-        selectedCount = { count -> "已选 $count 项" },
-        selectedPrefix = { count -> "已选 $count 项：" },
-        presetHeading = "预设选中项",
-        presetHint = "selectedItems 可以直接赋值，chip 数量随选中项变化。",
-        changeHeading = "选择变更",
-        changeHint = "selected-items-changed 的 detail 带当前选中数组，可以同步到其他字段。",
-        selectedCountries = "已选国家",
-        readonlyHeading = "只读",
-        readonlyHint = "readonly 保留 chip 展示，但用户不能添加或移除。",
-        expandHeading = "自动展开",
-        expandHint = "auto-expand-horizontally / auto-expand-vertically 让字段随 chip 数量变大，而不是滚动。",
-        onTopHeading = "选中项置顶",
-        onTopHint = "selected-items-on-top 把已选项排到下拉列表最前面，长列表里更容易核对。",
-        collapseHeading = "折叠 chip",
-        collapseHint = "collapseChips 把溢出的 chip 折叠成计数，可以由页面上的开关实时切换。",
-        collapseChips = "折叠 chip",
-        classNamesHeading = "选项类名",
-        classNamesHint = "itemClassNameGenerator 同时作用在 chip 与下拉条目上。",
-        fruit = "水果",
-        i18nHeading = "国际化",
-        i18nHint = "i18n 覆盖清除、选中、取消与计数的提示文案；示例沿用官方文档的德语字符串。",
-    )
-
 internal class MultiSelectComboBoxPage : DemoPage() {
     private val texts = Binder(multiSelectComboBoxTexts)
 
@@ -305,6 +245,64 @@ internal class MultiSelectComboBoxPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page") {
+        private val english: MultiSelectComboBoxTexts =
+            MultiSelectComboBoxTexts(
+                basicHeading = "Basic usage",
+                basicHint = "item-id-path compares object identity; selectedItems holds the selected objects.",
+                countries = "Countries",
+                selectedCount = { count -> "$count selected" },
+                selectedPrefix = { count -> "$count selected: " },
+                presetHeading = "Preselected items",
+                presetHint = "selectedItems can be assigned directly; the number of chips follows it.",
+                changeHeading = "Selection change",
+                changeHint = "The detail of selected-items-changed carries the current selection, which can " +
+                    "drive another field.",
+                selectedCountries = "Selected Countries",
+                readonlyHeading = "Read-only",
+                readonlyHint = "readonly keeps the chips visible but blocks adding and removing.",
+                expandHeading = "Auto expand",
+                expandHint = "auto-expand-horizontally / auto-expand-vertically let the field grow with the " +
+                    "chips instead of scrolling.",
+                onTopHeading = "Selected items on top",
+                onTopHint = "selected-items-on-top moves the selected entries to the top of the dropdown, " +
+                    "which helps in long lists.",
+                collapseHeading = "Collapse chips",
+                collapseHint = "collapseChips folds the overflowing chips into a counter and can be toggled live.",
+                collapseChips = "Collapse chips",
+                classNamesHeading = "Item class names",
+                classNamesHint = "itemClassNameGenerator applies to both the chips and the dropdown items.",
+                fruit = "Fruit",
+                i18nHeading = "Internationalization",
+                i18nHint = "i18n overrides the cleared / selected / deselected / counter messages; the example " +
+                    "keeps the German strings of the official documentation.",
+            )
+        private val chinese: MultiSelectComboBoxTexts =
+            MultiSelectComboBoxTexts(
+                basicHeading = "基本用法",
+                basicHint = "item-id-path 用来比较对象身份；selectedItems 是选中对象的数组。",
+                countries = "国家",
+                selectedCount = { count -> "已选 $count 项" },
+                selectedPrefix = { count -> "已选 $count 项：" },
+                presetHeading = "预设选中项",
+                presetHint = "selectedItems 可以直接赋值，chip 数量随选中项变化。",
+                changeHeading = "选择变更",
+                changeHint = "selected-items-changed 的 detail 带当前选中数组，可以同步到其他字段。",
+                selectedCountries = "已选国家",
+                readonlyHeading = "只读",
+                readonlyHint = "readonly 保留 chip 展示，但用户不能添加或移除。",
+                expandHeading = "自动展开",
+                expandHint = "auto-expand-horizontally / auto-expand-vertically 让字段随 chip 数量变大，而不是滚动。",
+                onTopHeading = "选中项置顶",
+                onTopHint = "selected-items-on-top 把已选项排到下拉列表最前面，长列表里更容易核对。",
+                collapseHeading = "折叠 chip",
+                collapseHint = "collapseChips 把溢出的 chip 折叠成计数，可以由页面上的开关实时切换。",
+                collapseChips = "折叠 chip",
+                classNamesHeading = "选项类名",
+                classNamesHint = "itemClassNameGenerator 同时作用在 chip 与下拉条目上。",
+                fruit = "水果",
+                i18nHeading = "国际化",
+                i18nHint = "i18n 覆盖清除、选中、取消与计数的提示文案；示例沿用官方文档的德语字符串。",
+            )
         private val multiSelectComboBoxTexts: Translations<MultiSelectComboBoxTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

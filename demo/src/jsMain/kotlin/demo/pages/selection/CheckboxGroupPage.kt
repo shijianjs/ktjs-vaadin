@@ -55,74 +55,6 @@ val checkboxGroupEntry: CatalogEntry =
         kitPage = { CheckboxGroupPage.NAME() },
     )
 
-private val english: CheckboxGroupTexts =
-    CheckboxGroupTexts(
-        basicHeading = "Basic usage",
-        basicHint = "The value of a checkbox-group is an array; the items are told apart by their value " +
-            "property.",
-        groupLabel = "Languages used",
-        groupHelper = "Multiple answers are allowed",
-        presetHeading = "Preset values and validation",
-        presetHint = "value can be preset; required makes validate() fail on an empty selection.",
-        skillsLabel = "Skills (required)",
-        skillsError = "Select at least one",
-        validate = "Validate",
-        validationPrefix = "Validation: ",
-        passed = "passed",
-        failed = "failed",
-        selectedPrefix = "Selected: ",
-        featuresHeading = "Label, helper text and tooltip",
-        featuresHint = "label and helper-text live on the group; a tooltip is attached to the field " +
-            "through slot=\"tooltip\".",
-        label = "Label",
-        helper = "Helper text",
-        tooltipText = "Tooltip text",
-        item1 = "Item 1",
-        item2 = "Item 2",
-        item3 = "Item 3",
-        optionA = "Option A",
-        optionB = "Option B",
-        statesHeading = "Read-only and disabled",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        engineering = "Engineering",
-        humanResources = "Human Resources",
-        marketing = "Marketing",
-    )
-
-private val chinese: CheckboxGroupTexts =
-    CheckboxGroupTexts(
-        basicHeading = "基本用法",
-        basicHint = "checkbox-group 的 value 是数组，子项通过 value 属性区分。",
-        groupLabel = "使用的语言",
-        groupHelper = "可以多选",
-        presetHeading = "预设值与校验",
-        presetHint = "value 可以预先赋值；required 在空选择时让 validate() 失败。",
-        skillsLabel = "技能（必填）",
-        skillsError = "至少选择一项",
-        validate = "校验",
-        validationPrefix = "校验：",
-        passed = "通过",
-        failed = "失败",
-        selectedPrefix = "已选：",
-        featuresHeading = "标签、辅助信息与提示",
-        featuresHint = "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
-        label = "标签",
-        helper = "辅助信息",
-        tooltipText = "提示文本",
-        item1 = "选项 1",
-        item2 = "选项 2",
-        item3 = "选项 3",
-        optionA = "选项 A",
-        optionB = "选项 B",
-        statesHeading = "只读与禁用",
-        readonly = "只读",
-        disabled = "禁用",
-        engineering = "工程",
-        humanResources = "人力资源",
-        marketing = "市场",
-    )
-
 internal class CheckboxGroupPage : DemoPage() {
     private val texts = Binder(checkboxGroupTexts)
 
@@ -268,6 +200,72 @@ internal class CheckboxGroupPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CheckboxGroupPage>(CheckboxGroupPage::class.js, "vaadin-demo-checkbox-group-page") {
+        private val english: CheckboxGroupTexts =
+            CheckboxGroupTexts(
+                basicHeading = "Basic usage",
+                basicHint = "The value of a checkbox-group is an array; the items are told apart by their value " +
+                    "property.",
+                groupLabel = "Languages used",
+                groupHelper = "Multiple answers are allowed",
+                presetHeading = "Preset values and validation",
+                presetHint = "value can be preset; required makes validate() fail on an empty selection.",
+                skillsLabel = "Skills (required)",
+                skillsError = "Select at least one",
+                validate = "Validate",
+                validationPrefix = "Validation: ",
+                passed = "passed",
+                failed = "failed",
+                selectedPrefix = "Selected: ",
+                featuresHeading = "Label, helper text and tooltip",
+                featuresHint = "label and helper-text live on the group; a tooltip is attached to the field " +
+                    "through slot=\"tooltip\".",
+                label = "Label",
+                helper = "Helper text",
+                tooltipText = "Tooltip text",
+                item1 = "Item 1",
+                item2 = "Item 2",
+                item3 = "Item 3",
+                optionA = "Option A",
+                optionB = "Option B",
+                statesHeading = "Read-only and disabled",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                engineering = "Engineering",
+                humanResources = "Human Resources",
+                marketing = "Marketing",
+            )
+        private val chinese: CheckboxGroupTexts =
+            CheckboxGroupTexts(
+                basicHeading = "基本用法",
+                basicHint = "checkbox-group 的 value 是数组，子项通过 value 属性区分。",
+                groupLabel = "使用的语言",
+                groupHelper = "可以多选",
+                presetHeading = "预设值与校验",
+                presetHint = "value 可以预先赋值；required 在空选择时让 validate() 失败。",
+                skillsLabel = "技能（必填）",
+                skillsError = "至少选择一项",
+                validate = "校验",
+                validationPrefix = "校验：",
+                passed = "通过",
+                failed = "失败",
+                selectedPrefix = "已选：",
+                featuresHeading = "标签、辅助信息与提示",
+                featuresHint = "label 与 helper-text 直接写在组上；tooltip 通过 slot=\"tooltip\" 挂到字段上。",
+                label = "标签",
+                helper = "辅助信息",
+                tooltipText = "提示文本",
+                item1 = "选项 1",
+                item2 = "选项 2",
+                item3 = "选项 3",
+                optionA = "选项 A",
+                optionB = "选项 B",
+                statesHeading = "只读与禁用",
+                readonly = "只读",
+                disabled = "禁用",
+                engineering = "工程",
+                humanResources = "人力资源",
+                marketing = "市场",
+            )
         private val checkboxGroupTexts: Translations<CheckboxGroupTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

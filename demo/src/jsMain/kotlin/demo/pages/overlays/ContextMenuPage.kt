@@ -74,17 +74,6 @@ val contextMenuEntry: CatalogEntry =
         kitPage = { ContextMenuPage.NAME() },
     )
 
-// endregion
-
-// region Context menu
-
-/**
- * `className` from the menu items API lands on the light-DOM item element, so the rule is a plain
- * attribute class selector inside the page's shadow tree.
- */
-/** The class this page puts on the "delete" item through the menu data. */
-private val CUSTOM: ClassName = ClassName("custom")
-
 /** One menu entry: a label, optionally disabled, with a submenu, a class or a tooltip. */
 private fun entry(
     text: String,
@@ -106,134 +95,6 @@ private fun entry(
 /** A divider entry. */
 private fun divider(): ContextMenuItemData =
     unsafeJso { component = HTMLElementOrString("hr") }
-
-private val english: ContextMenuTexts =
-    ContextMenuTexts(
-        rightClickHeading = "Open on right-click",
-        rightClickHint = "openOn defaults to contextmenu; listenOn points at the element that receives " +
-            "the event.",
-        surface = "Right-click in this area",
-        view = "View",
-        copy = "Copy",
-        paste = "Paste",
-        more = "More",
-        exportCsv = "Export as CSV",
-        exportJson = "Export as JSON",
-        selectedLine = "item-selected",
-        openedLine = { "opened-changed · $it" },
-        gridRowsHeading = "Menu on grid rows",
-        gridRowsHint = "Put a grid inside a context-menu; right-clicking any row opens the menu for that " +
-            "area.",
-        edit = "Edit",
-        delete = "Delete",
-        checkableHeading = "Checkable items",
-        checkableHint = "checked marks the current item; the selection is read back after item-selected " +
-            "updates it.",
-        assigneePrefix = "Assignee: ",
-        classNamesHeading = "Custom class name",
-        classNamesHint = "className lands on the item element, which page styles can use for destructive " +
-            "actions.",
-        share = "Share",
-        duplicate = "Duplicate",
-        actions = "Actions",
-        customDataHeading = "Custom item data",
-        customDataHint = "An item can carry any extra fields; detail.value of item-selected is the " +
-            "clicked item object.",
-        nothingCopied = "Nothing copied yet",
-        copiedPrefix = "Copied: ",
-        copyAsPlain = "Copy as plain text",
-        copyAsHtml = "Copy as HTML",
-        copyAsMarkdown = "Copy as Markdown",
-        copyTextHint = "Right-click this text to copy it in a format.",
-        dividersHeading = "Dividers and hierarchy",
-        dividersHint = "An item whose component is \"hr\" renders a divider; children open a submenu.",
-        preview = "Preview",
-        export = "Export",
-        copyLink = "Copy link",
-        email = "Email",
-        leftClickHeading = "Open on click",
-        leftClickHint = "With openOn set to click the menu opens on a left click, which suits an actions " +
-            "button.",
-        customItemsHeading = "Custom item rendering",
-        customItemsHint = "component takes an element, so icons and avatars can be used directly.",
-        open = "Open",
-        assign = "Assign",
-        tooltipsHeading = "Item tooltips",
-        tooltipsHint = "The tooltip / tooltipPosition fields of the items work together with the tooltip " +
-            "slot of the context menu.",
-        tooltipEdit = "Edit selected person",
-        tooltipCopyLink = "Copy a shareable link to the clipboard",
-        tooltipEmail = "Send the contact details by email",
-        bestPracticeHeading = "Actions inside a grid",
-        bestPracticeHint = "An inline actions button uses a Menu Bar; the same items array drives both " +
-            "the context menu and the inline button.",
-        fileHeader = "File",
-        sizeHeader = "Size",
-        firstNameHeader = "First name",
-        lastNameHeader = "Last name",
-        emailHeader = "Email",
-        professionHeader = "Profession",
-    )
-
-private val chinese: ContextMenuTexts =
-    ContextMenuTexts(
-        rightClickHeading = "右键打开",
-        rightClickHint = "openOn 默认是 contextmenu；listenOn 指向接收事件的元素。",
-        surface = "在这个区域点击右键",
-        view = "查看",
-        copy = "复制",
-        paste = "粘贴",
-        more = "更多",
-        exportCsv = "导出为 CSV",
-        exportJson = "导出为 JSON",
-        selectedLine = "item-selected",
-        openedLine = { "opened-changed · $it" },
-        gridRowsHeading = "表格行菜单",
-        gridRowsHint = "把 grid 放进 context-menu，右键任意一行都能对这个区域设置菜单。",
-        edit = "编辑",
-        delete = "删除",
-        checkableHeading = "勾选条目",
-        checkableHint = "items 里的 checked 表示当前选中项；item-selected 里更新后在界面上回读。",
-        assigneePrefix = "负责人：",
-        classNamesHeading = "自定义类名",
-        classNamesHint = "className 加到条目元素上，配合页面样式表达危险操作。",
-        share = "分享",
-        duplicate = "复制副本",
-        actions = "操作",
-        customDataHeading = "自定义条目数据",
-        customDataHint = "条目可以带任意字段；item-selected 的 detail.value 就是被点击的条目对象。",
-        nothingCopied = "尚未复制",
-        copiedPrefix = "已复制：",
-        copyAsPlain = "复制为纯文本",
-        copyAsHtml = "复制为 HTML",
-        copyAsMarkdown = "复制为 Markdown",
-        copyTextHint = "右键这段文字复制它的格式。",
-        dividersHeading = "分隔线与层级",
-        dividersHint = "component 设成 \"hr\" 的条目渲染成分隔线；children 生成子菜单。",
-        preview = "预览",
-        export = "导出",
-        copyLink = "复制链接",
-        email = "邮件",
-        leftClickHeading = "左键打开",
-        leftClickHint = "openOn 设为 click 时用左键展开，适合做「操作」按钮。",
-        customItemsHeading = "自定义条目呈现",
-        customItemsHint = "component 接受元素，可以直接放图标和头像。",
-        open = "打开",
-        assign = "指派",
-        tooltipsHeading = "条目提示",
-        tooltipsHint = "条目数据里的 tooltip / tooltipPosition 配合 context-menu 里的 tooltip 插槽生效。",
-        tooltipEdit = "编辑选中的人",
-        tooltipCopyLink = "把可分享的链接复制到剪贴板",
-        tooltipEmail = "用邮件发送联系人信息",
-        bestPracticeHeading = "表格中的操作",
-        bestPracticeHint = "行内操作按钮用 Menu Bar 表达，同一个 items 数组既服务右键菜单也服务行内按钮。",
-        fileHeader = "文件",
-        sizeHeader = "大小",
-        firstNameHeader = "名",
-        lastNameHeader = "姓",
-        emailHeader = "邮箱",
-        professionHeader = "职务",
-    )
 
 internal class ContextMenuPage : DemoPage() {
     private val texts = Binder(contextMenuTexts)
@@ -556,6 +417,142 @@ internal class ContextMenuPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page") {
+        // endregion
+
+        // region Context menu
+
+        /**
+         * `className` from the menu items API lands on the light-DOM item element, so the rule is a plain
+         * attribute class selector inside the page's shadow tree.
+         */
+        /** The class this page puts on the "delete" item through the menu data. */
+        private val CUSTOM: ClassName = ClassName("custom")
+        private val english: ContextMenuTexts =
+            ContextMenuTexts(
+                rightClickHeading = "Open on right-click",
+                rightClickHint = "openOn defaults to contextmenu; listenOn points at the element that receives " +
+                    "the event.",
+                surface = "Right-click in this area",
+                view = "View",
+                copy = "Copy",
+                paste = "Paste",
+                more = "More",
+                exportCsv = "Export as CSV",
+                exportJson = "Export as JSON",
+                selectedLine = "item-selected",
+                openedLine = { "opened-changed · $it" },
+                gridRowsHeading = "Menu on grid rows",
+                gridRowsHint = "Put a grid inside a context-menu; right-clicking any row opens the menu for that " +
+                    "area.",
+                edit = "Edit",
+                delete = "Delete",
+                checkableHeading = "Checkable items",
+                checkableHint = "checked marks the current item; the selection is read back after item-selected " +
+                    "updates it.",
+                assigneePrefix = "Assignee: ",
+                classNamesHeading = "Custom class name",
+                classNamesHint = "className lands on the item element, which page styles can use for destructive " +
+                    "actions.",
+                share = "Share",
+                duplicate = "Duplicate",
+                actions = "Actions",
+                customDataHeading = "Custom item data",
+                customDataHint = "An item can carry any extra fields; detail.value of item-selected is the " +
+                    "clicked item object.",
+                nothingCopied = "Nothing copied yet",
+                copiedPrefix = "Copied: ",
+                copyAsPlain = "Copy as plain text",
+                copyAsHtml = "Copy as HTML",
+                copyAsMarkdown = "Copy as Markdown",
+                copyTextHint = "Right-click this text to copy it in a format.",
+                dividersHeading = "Dividers and hierarchy",
+                dividersHint = "An item whose component is \"hr\" renders a divider; children open a submenu.",
+                preview = "Preview",
+                export = "Export",
+                copyLink = "Copy link",
+                email = "Email",
+                leftClickHeading = "Open on click",
+                leftClickHint = "With openOn set to click the menu opens on a left click, which suits an actions " +
+                    "button.",
+                customItemsHeading = "Custom item rendering",
+                customItemsHint = "component takes an element, so icons and avatars can be used directly.",
+                open = "Open",
+                assign = "Assign",
+                tooltipsHeading = "Item tooltips",
+                tooltipsHint = "The tooltip / tooltipPosition fields of the items work together with the tooltip " +
+                    "slot of the context menu.",
+                tooltipEdit = "Edit selected person",
+                tooltipCopyLink = "Copy a shareable link to the clipboard",
+                tooltipEmail = "Send the contact details by email",
+                bestPracticeHeading = "Actions inside a grid",
+                bestPracticeHint = "An inline actions button uses a Menu Bar; the same items array drives both " +
+                    "the context menu and the inline button.",
+                fileHeader = "File",
+                sizeHeader = "Size",
+                firstNameHeader = "First name",
+                lastNameHeader = "Last name",
+                emailHeader = "Email",
+                professionHeader = "Profession",
+            )
+        private val chinese: ContextMenuTexts =
+            ContextMenuTexts(
+                rightClickHeading = "右键打开",
+                rightClickHint = "openOn 默认是 contextmenu；listenOn 指向接收事件的元素。",
+                surface = "在这个区域点击右键",
+                view = "查看",
+                copy = "复制",
+                paste = "粘贴",
+                more = "更多",
+                exportCsv = "导出为 CSV",
+                exportJson = "导出为 JSON",
+                selectedLine = "item-selected",
+                openedLine = { "opened-changed · $it" },
+                gridRowsHeading = "表格行菜单",
+                gridRowsHint = "把 grid 放进 context-menu，右键任意一行都能对这个区域设置菜单。",
+                edit = "编辑",
+                delete = "删除",
+                checkableHeading = "勾选条目",
+                checkableHint = "items 里的 checked 表示当前选中项；item-selected 里更新后在界面上回读。",
+                assigneePrefix = "负责人：",
+                classNamesHeading = "自定义类名",
+                classNamesHint = "className 加到条目元素上，配合页面样式表达危险操作。",
+                share = "分享",
+                duplicate = "复制副本",
+                actions = "操作",
+                customDataHeading = "自定义条目数据",
+                customDataHint = "条目可以带任意字段；item-selected 的 detail.value 就是被点击的条目对象。",
+                nothingCopied = "尚未复制",
+                copiedPrefix = "已复制：",
+                copyAsPlain = "复制为纯文本",
+                copyAsHtml = "复制为 HTML",
+                copyAsMarkdown = "复制为 Markdown",
+                copyTextHint = "右键这段文字复制它的格式。",
+                dividersHeading = "分隔线与层级",
+                dividersHint = "component 设成 \"hr\" 的条目渲染成分隔线；children 生成子菜单。",
+                preview = "预览",
+                export = "导出",
+                copyLink = "复制链接",
+                email = "邮件",
+                leftClickHeading = "左键打开",
+                leftClickHint = "openOn 设为 click 时用左键展开，适合做「操作」按钮。",
+                customItemsHeading = "自定义条目呈现",
+                customItemsHint = "component 接受元素，可以直接放图标和头像。",
+                open = "打开",
+                assign = "指派",
+                tooltipsHeading = "条目提示",
+                tooltipsHint = "条目数据里的 tooltip / tooltipPosition 配合 context-menu 里的 tooltip 插槽生效。",
+                tooltipEdit = "编辑选中的人",
+                tooltipCopyLink = "把可分享的链接复制到剪贴板",
+                tooltipEmail = "用邮件发送联系人信息",
+                bestPracticeHeading = "表格中的操作",
+                bestPracticeHint = "行内操作按钮用 Menu Bar 表达，同一个 items 数组既服务右键菜单也服务行内按钮。",
+                fileHeader = "文件",
+                sizeHeader = "大小",
+                firstNameHeader = "名",
+                lastNameHeader = "姓",
+                emailHeader = "邮箱",
+                professionHeader = "职务",
+            )
         private fun copyMenuItem(text: String, value: String): CopyMenuItem =
             unsafeJso<CopyMenuItem> {
                 this.text = text

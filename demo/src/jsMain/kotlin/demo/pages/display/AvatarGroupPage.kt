@@ -48,49 +48,6 @@ val avatarGroupEntry: CatalogEntry =
         kitPage = { AvatarGroupPage.NAME() },
     )
 
-private val english: AvatarGroupTexts = AvatarGroupTexts(
-    basicHeading = "Basic usage",
-    basicHint = "Each object in items describes one avatar; the official example maps three people from the " +
-        "backend, fixed data is used here.",
-    limitHeading = "Maximum number of items",
-    limitHint = "maxItemsVisible folds the overflowing avatars into an expandable +N avatar; 0 and 1 behave like 2, " +
-        "there are always at least two avatars visible.",
-    coloursHeading = "Background colour",
-    coloursHint = "Setting colorIndex on every item gives each avatar a different user colour.",
-    i18nHeading = "Internationalisation",
-    i18nHint = "i18n overrides the anonymous tooltip, the group's accessible label (activeUsers, where {count} is " +
-        "replaced) and the joined / left announcements made when members change. Those texts are only exposed to " +
-        "assistive technology: use the devtools accessibility pane or a screen reader to see them. The official " +
-        "example uses Finnish, this demo follows the UI language.",
-    anonymous = "Anonymous",
-    activeOne = "Currently one active user",
-    activeMany = "Currently {count} active users",
-    joined = "{user} joined",
-    left = "{user} left",
-    addMember = "Add member",
-    removeMember = "Remove member",
-)
-
-private val chinese: AvatarGroupTexts = AvatarGroupTexts(
-    basicHeading = "基本用法",
-    basicHint = "items 里每个对象描述一个头像；官方示例把后端返回的三个人名映射成 items，这里是固定数据。",
-    limitHeading = "最多显示数量",
-    limitHint = "maxItemsVisible 把多出来的头像折叠成一个可展开的 +N 头像；0 与 1 都按 2 处理，至少显示两个头像。",
-    coloursHeading = "背景颜色",
-    coloursHint = "给每个 item 设置 colorIndex，头像使用不同的用户色板颜色。",
-    i18nHeading = "本地化",
-    i18nHint = "i18n 覆盖匿名用户的提示、组的无障碍标签（activeUsers，{count} 会被替换），以及成员增减时" +
-        "读屏播报的 joined / left。这些文本只对辅助技术可见：用开发者工具或读屏软件查看效果。" +
-        "官方示例用芬兰语，这里跟随界面语言。",
-    anonymous = "匿名",
-    activeOne = "当前有 1 位在线用户",
-    activeMany = "当前有 {count} 位在线用户",
-    joined = "{user} 加入了",
-    left = "{user} 离开了",
-    addMember = "添加成员",
-    removeMember = "移除成员",
-)
-
 internal class AvatarGroupPage : DemoPage() {
     private val texts = Binder(avatarGroupTexts)
 
@@ -188,6 +145,47 @@ internal class AvatarGroupPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page") {
+        private val english: AvatarGroupTexts = AvatarGroupTexts(
+            basicHeading = "Basic usage",
+            basicHint = "Each object in items describes one avatar; the official example maps three people from the " +
+                "backend, fixed data is used here.",
+            limitHeading = "Maximum number of items",
+            limitHint = "maxItemsVisible folds the overflowing avatars into an expandable +N avatar; 0 and 1 behave like 2, " +
+                "there are always at least two avatars visible.",
+            coloursHeading = "Background colour",
+            coloursHint = "Setting colorIndex on every item gives each avatar a different user colour.",
+            i18nHeading = "Internationalisation",
+            i18nHint = "i18n overrides the anonymous tooltip, the group's accessible label (activeUsers, where {count} is " +
+                "replaced) and the joined / left announcements made when members change. Those texts are only exposed to " +
+                "assistive technology: use the devtools accessibility pane or a screen reader to see them. The official " +
+                "example uses Finnish, this demo follows the UI language.",
+            anonymous = "Anonymous",
+            activeOne = "Currently one active user",
+            activeMany = "Currently {count} active users",
+            joined = "{user} joined",
+            left = "{user} left",
+            addMember = "Add member",
+            removeMember = "Remove member",
+        )
+        private val chinese: AvatarGroupTexts = AvatarGroupTexts(
+            basicHeading = "基本用法",
+            basicHint = "items 里每个对象描述一个头像；官方示例把后端返回的三个人名映射成 items，这里是固定数据。",
+            limitHeading = "最多显示数量",
+            limitHint = "maxItemsVisible 把多出来的头像折叠成一个可展开的 +N 头像；0 与 1 都按 2 处理，至少显示两个头像。",
+            coloursHeading = "背景颜色",
+            coloursHint = "给每个 item 设置 colorIndex，头像使用不同的用户色板颜色。",
+            i18nHeading = "本地化",
+            i18nHint = "i18n 覆盖匿名用户的提示、组的无障碍标签（activeUsers，{count} 会被替换），以及成员增减时" +
+                "读屏播报的 joined / left。这些文本只对辅助技术可见：用开发者工具或读屏软件查看效果。" +
+                "官方示例用芬兰语，这里跟随界面语言。",
+            anonymous = "匿名",
+            activeOne = "当前有 1 位在线用户",
+            activeMany = "当前有 {count} 位在线用户",
+            joined = "{user} 加入了",
+            left = "{user} 离开了",
+            addMember = "添加成员",
+            removeMember = "移除成员",
+        )
         // ---------------------------------------------------------------------------------------------
         // Avatar
         // ---------------------------------------------------------------------------------------------

@@ -64,133 +64,6 @@ val themingEntry: CatalogEntry =
         kitPage = { ThemingPage.NAME() },
     )
 
-private val themingEnglish: ThemingTexts = ThemingTexts(
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    switchTitle = "Light / dark",
-    switchHint = "Lumo's dark mode is not a second stylesheet: once theme=\"dark\" is set on <html>, " +
-        "color-scheme.css switches color-scheme and every design token follows.",
-    now = "Now: ",
-    nowLight = "Light (no theme attribute)",
-    nowDark = "Dark (theme=\"dark\")",
-    light = "Light",
-    dark = "Dark",
-    toggle = "Toggle",
-    tokensTitle = "Design tokens",
-    tokensHint = "The page itself is laid out with these CSS custom properties only, so a theme switch never " +
-        "runs into a hard-coded colour. The swatches below follow the active theme.",
-    primary = "Primary",
-    success = "Success",
-    error = "Error",
-    divider = "Divider",
-    base = "Base",
-    entryTitle = "Stylesheet entry points",
-    entryHint = "The wrapper exposes the upstream stylesheet paths as constants, so Kotlin code never " +
-        "hard-codes npm paths.",
-    entryNote = "The demo copies dist/lumo.css from @vaadin/vaadin-lumo-styles into the page directory " +
-        "with a Gradle task, then index.html loads it as a plain stylesheet — LumoInjectionMixin reads " +
-        "the @media lumo_* rules from document.styleSheets.",
-    variantsTitle = "Component theme variants",
-    variantsHint = "The theme property takes several space-separated variants, matching server-side Vaadin " +
-        "(on the Kotlin side setAttribute is used, so the value is not reflected).",
-    smallLabel = "small variant",
-    smallPlaceholder = "A more compact field",
-    helperText = "The helper text sits above the field",
-    cardTitle = "Elevated card",
-    cardText = "Theme variants only change the look, never the API.",
-    propertiesTitle = "Component style properties",
-    propertiesHint = "Every component exposes --vaadin-* style properties; overriding them adjusts the look " +
-        "without touching the Shadow DOM, because custom properties inherit into the shadow tree.",
-    styledButton = "Styled through properties",
-    partsTitle = "Shadow parts",
-    partsHint = "Components expose their internals as parts that a host stylesheet selects with ::part(); " +
-        "this example recolours the label part with a rule the page declares itself.",
-    partButton = "A label styled through ::part",
-    utilitiesTitle = "Utility classes",
-    utilitiesHint = "Lumo ships utility classes (padding / background / flex / gap / rounded / shadow ...) that " +
-        "can be applied to plain elements without writing extra CSS; this page loads utility.css.",
-    utilitiesText = "This box is styled with utility classes only.",
-    i18nTitle = "Built-in translations",
-    i18nHint = "Copy that ships with a component (Upload's \"Drop files here\", the Login field names, " +
-        "\"Today\" and so on) comes from each element's i18n property and defaults to English. To localise " +
-        "it, replace the whole i18n object (or use Object.assign to keep the other defaults) instead of " +
-        "editing one property at a time.",
-    i18nText = "The demo keeps each component's default English copy so it matches the screenshots and " +
-        "assertions of the upstream documentation, while the page prose follows the selected language.",
-    internalsTitle = "Packages without a dedicated page",
-    internalsHint = "A few wrapped packages do not produce a visual component of their own; other components " +
-        "use them, so they have no page: a11y-base / component-base / field-base / themable-mixin (mixins " +
-        "and static helpers), lit-renderer (Lit directives, usable only in Lit templates) and the root " +
-        "package's VaadinTagName (tag name constants).",
-    internalsIntro = "These packages are covered indirectly by examples on other pages:",
-    elementMixin = "Base class of every Element",
-    inputControl = "Fields such as TextField / ComboBox / Select",
-    tagNames = "Tag name constants used inside createXxx",
-)
-
-private val themingChinese: ThemingTexts = ThemingTexts(
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    switchTitle = "亮色 / 暗色",
-    switchHint = "Lumo 的暗色不是另一套样式表：在 <html> 上设置 theme=\"dark\" 后，" +
-        "color-scheme.css 会切换 color-scheme，所有设计令牌随之改变。",
-    now = "当前：",
-    nowLight = "亮色（无 theme 属性）",
-    nowDark = "暗色（theme=\"dark\"）",
-    light = "亮色",
-    dark = "暗色",
-    toggle = "切换",
-    tokensTitle = "设计令牌",
-    tokensHint = "页面自身只用这些 CSS 自定义属性排布，因此切换主题时不会出现写死的颜色。" +
-        "下面的色块会随主题变化。",
-    primary = "主色",
-    success = "成功",
-    error = "错误",
-    divider = "分隔线",
-    base = "底色",
-    entryTitle = "样式表入口",
-    entryHint = "wrapper 把上游的样式表路径暴露成常量，避免在 Kotlin 代码里硬编码 npm 路径。",
-    entryNote = "本 Demo 通过 Gradle 任务把 @vaadin/vaadin-lumo-styles 的 dist/lumo.css 复制到页面目录，" +
-        "再由 index.html 以普通样式表引入 —— LumoInjectionMixin 需要从 document.styleSheets " +
-        "读取 @media lumo_* 规则。",
-    variantsTitle = "组件主题变体",
-    variantsHint = "组件的 theme 属性接受空格分隔的多个变体，与服务端 Vaadin 的写法一致" +
-        "（Kotlin 侧用 setAttribute，属性值不反射）。",
-    smallLabel = "small 变体",
-    smallPlaceholder = "更紧凑的输入框",
-    helperText = "说明文字在字段上方",
-    cardTitle = "elevated 卡片",
-    cardText = "主题变体只影响外观，不改变 API。",
-    propertiesTitle = "样式属性",
-    propertiesHint = "每个组件公开一组 --vaadin-* 样式属性，覆盖它们即可调整外观，不必接触 Shadow DOM；" +
-        "属性会从宿主元素继承进影子树。",
-    styledButton = "通过样式属性着色",
-    partsTitle = "阴影部件",
-    partsHint = "组件把内部结构声明为 part，宿主样式表用 ::part() 选中它；这里给按钮的 label 部件换颜色，" +
-        "规则由本页自己声明（一个 `::part()` 选择器），只作用于本示例。",
-    partButton = "用 ::part 着色的标签",
-    utilitiesTitle = "工具类",
-    utilitiesHint = "Lumo 自带一套工具类（padding / background / flex / gap / rounded / shadow ...），" +
-        "给普通元素套用即可，不需要写额外样式表；本页通过 utility.css 加载。",
-    utilitiesText = "这个盒子只用了工具类排布。",
-    i18nTitle = "组件内文案",
-    i18nHint = "组件自带的文案（Upload 的「Drop files here」、Login 表单的字段名、「Today」等）来自各元素的 " +
-        "i18n 属性，默认是英文。要本地化时替换整个 i18n 对象（或用 Object.assign 保留其余默认值），" +
-        "而不是逐个属性改文本。",
-    i18nText = "本 Demo 保持默认的英文文案，以便和上游文档的截图、断言一一对应；" +
-        "页面自身的说明文字则跟随当前语言。",
-    internalsTitle = "没有独立页面的包",
-    internalsHint = "wrapper 里还有几个不产出可视组件的包，它们由其他组件使用，因此不单独建页：" +
-        "a11y-base / component-base / field-base / themable-mixin（mixin 与静态工具）、" +
-        "lit-renderer（Lit 指令，只在 Lit 模板里可用）、以及根包的 VaadinTagName（标签名常量）。",
-    internalsIntro = "这些包的公开 API 通过其他页面的示例间接覆盖：",
-    elementMixin = "所有 Element 的基类",
-    inputControl = "TextField / ComboBox / Select 等字段",
-    tagNames = "createXxx 内部使用的标签名常量",
-)
-
 /**
  * The same page on kit blocks.
  *
@@ -445,6 +318,131 @@ internal class ThemingPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page") {
+        private val themingEnglish: ThemingTexts = ThemingTexts(
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            switchTitle = "Light / dark",
+            switchHint = "Lumo's dark mode is not a second stylesheet: once theme=\"dark\" is set on <html>, " +
+                "color-scheme.css switches color-scheme and every design token follows.",
+            now = "Now: ",
+            nowLight = "Light (no theme attribute)",
+            nowDark = "Dark (theme=\"dark\")",
+            light = "Light",
+            dark = "Dark",
+            toggle = "Toggle",
+            tokensTitle = "Design tokens",
+            tokensHint = "The page itself is laid out with these CSS custom properties only, so a theme switch never " +
+                "runs into a hard-coded colour. The swatches below follow the active theme.",
+            primary = "Primary",
+            success = "Success",
+            error = "Error",
+            divider = "Divider",
+            base = "Base",
+            entryTitle = "Stylesheet entry points",
+            entryHint = "The wrapper exposes the upstream stylesheet paths as constants, so Kotlin code never " +
+                "hard-codes npm paths.",
+            entryNote = "The demo copies dist/lumo.css from @vaadin/vaadin-lumo-styles into the page directory " +
+                "with a Gradle task, then index.html loads it as a plain stylesheet — LumoInjectionMixin reads " +
+                "the @media lumo_* rules from document.styleSheets.",
+            variantsTitle = "Component theme variants",
+            variantsHint = "The theme property takes several space-separated variants, matching server-side Vaadin " +
+                "(on the Kotlin side setAttribute is used, so the value is not reflected).",
+            smallLabel = "small variant",
+            smallPlaceholder = "A more compact field",
+            helperText = "The helper text sits above the field",
+            cardTitle = "Elevated card",
+            cardText = "Theme variants only change the look, never the API.",
+            propertiesTitle = "Component style properties",
+            propertiesHint = "Every component exposes --vaadin-* style properties; overriding them adjusts the look " +
+                "without touching the Shadow DOM, because custom properties inherit into the shadow tree.",
+            styledButton = "Styled through properties",
+            partsTitle = "Shadow parts",
+            partsHint = "Components expose their internals as parts that a host stylesheet selects with ::part(); " +
+                "this example recolours the label part with a rule the page declares itself.",
+            partButton = "A label styled through ::part",
+            utilitiesTitle = "Utility classes",
+            utilitiesHint = "Lumo ships utility classes (padding / background / flex / gap / rounded / shadow ...) that " +
+                "can be applied to plain elements without writing extra CSS; this page loads utility.css.",
+            utilitiesText = "This box is styled with utility classes only.",
+            i18nTitle = "Built-in translations",
+            i18nHint = "Copy that ships with a component (Upload's \"Drop files here\", the Login field names, " +
+                "\"Today\" and so on) comes from each element's i18n property and defaults to English. To localise " +
+                "it, replace the whole i18n object (or use Object.assign to keep the other defaults) instead of " +
+                "editing one property at a time.",
+            i18nText = "The demo keeps each component's default English copy so it matches the screenshots and " +
+                "assertions of the upstream documentation, while the page prose follows the selected language.",
+            internalsTitle = "Packages without a dedicated page",
+            internalsHint = "A few wrapped packages do not produce a visual component of their own; other components " +
+                "use them, so they have no page: a11y-base / component-base / field-base / themable-mixin (mixins " +
+                "and static helpers), lit-renderer (Lit directives, usable only in Lit templates) and the root " +
+                "package's VaadinTagName (tag name constants).",
+            internalsIntro = "These packages are covered indirectly by examples on other pages:",
+            elementMixin = "Base class of every Element",
+            inputControl = "Fields such as TextField / ComboBox / Select",
+            tagNames = "Tag name constants used inside createXxx",
+        )
+        private val themingChinese: ThemingTexts = ThemingTexts(
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            switchTitle = "亮色 / 暗色",
+            switchHint = "Lumo 的暗色不是另一套样式表：在 <html> 上设置 theme=\"dark\" 后，" +
+                "color-scheme.css 会切换 color-scheme，所有设计令牌随之改变。",
+            now = "当前：",
+            nowLight = "亮色（无 theme 属性）",
+            nowDark = "暗色（theme=\"dark\"）",
+            light = "亮色",
+            dark = "暗色",
+            toggle = "切换",
+            tokensTitle = "设计令牌",
+            tokensHint = "页面自身只用这些 CSS 自定义属性排布，因此切换主题时不会出现写死的颜色。" +
+                "下面的色块会随主题变化。",
+            primary = "主色",
+            success = "成功",
+            error = "错误",
+            divider = "分隔线",
+            base = "底色",
+            entryTitle = "样式表入口",
+            entryHint = "wrapper 把上游的样式表路径暴露成常量，避免在 Kotlin 代码里硬编码 npm 路径。",
+            entryNote = "本 Demo 通过 Gradle 任务把 @vaadin/vaadin-lumo-styles 的 dist/lumo.css 复制到页面目录，" +
+                "再由 index.html 以普通样式表引入 —— LumoInjectionMixin 需要从 document.styleSheets " +
+                "读取 @media lumo_* 规则。",
+            variantsTitle = "组件主题变体",
+            variantsHint = "组件的 theme 属性接受空格分隔的多个变体，与服务端 Vaadin 的写法一致" +
+                "（Kotlin 侧用 setAttribute，属性值不反射）。",
+            smallLabel = "small 变体",
+            smallPlaceholder = "更紧凑的输入框",
+            helperText = "说明文字在字段上方",
+            cardTitle = "elevated 卡片",
+            cardText = "主题变体只影响外观，不改变 API。",
+            propertiesTitle = "样式属性",
+            propertiesHint = "每个组件公开一组 --vaadin-* 样式属性，覆盖它们即可调整外观，不必接触 Shadow DOM；" +
+                "属性会从宿主元素继承进影子树。",
+            styledButton = "通过样式属性着色",
+            partsTitle = "阴影部件",
+            partsHint = "组件把内部结构声明为 part，宿主样式表用 ::part() 选中它；这里给按钮的 label 部件换颜色，" +
+                "规则由本页自己声明（一个 `::part()` 选择器），只作用于本示例。",
+            partButton = "用 ::part 着色的标签",
+            utilitiesTitle = "工具类",
+            utilitiesHint = "Lumo 自带一套工具类（padding / background / flex / gap / rounded / shadow ...），" +
+                "给普通元素套用即可，不需要写额外样式表；本页通过 utility.css 加载。",
+            utilitiesText = "这个盒子只用了工具类排布。",
+            i18nTitle = "组件内文案",
+            i18nHint = "组件自带的文案（Upload 的「Drop files here」、Login 表单的字段名、「Today」等）来自各元素的 " +
+                "i18n 属性，默认是英文。要本地化时替换整个 i18n 对象（或用 Object.assign 保留其余默认值），" +
+                "而不是逐个属性改文本。",
+            i18nText = "本 Demo 保持默认的英文文案，以便和上游文档的截图、断言一一对应；" +
+                "页面自身的说明文字则跟随当前语言。",
+            internalsTitle = "没有独立页面的包",
+            internalsHint = "wrapper 里还有几个不产出可视组件的包，它们由其他组件使用，因此不单独建页：" +
+                "a11y-base / component-base / field-base / themable-mixin（mixin 与静态工具）、" +
+                "lit-renderer（Lit 指令，只在 Lit 模板里可用）、以及根包的 VaadinTagName（标签名常量）。",
+            internalsIntro = "这些包的公开 API 通过其他页面的示例间接覆盖：",
+            elementMixin = "所有 Element 的基类",
+            inputControl = "TextField / ComboBox / Select 等字段",
+            tagNames = "createXxx 内部使用的标签名常量",
+        )
         /** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
         private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
 

@@ -51,41 +51,6 @@ val overlayEntry: CatalogEntry =
         kitPage = { OverlayPage.NAME() },
     )
 
-private val english: OverlayTexts = OverlayTexts(
-    basicHeading = "Basic usage",
-    basicHint = "renderer(root, owner, model) supplies the content; withBackdrop shows the backdrop.",
-    bareOverlay = "This is a bare overlay, without the dialog header and footer.",
-    close = "Close",
-    openOverlay = "Open overlay",
-    modelessHeading = "No backdrop / modeless",
-    modelessHint = "modeless keeps the overlay from taking focus; withBackdrop=false removes the backdrop.",
-    modelessBody = "Modeless overlay: the rest of the page stays interactive.",
-    openModeless = "Open modeless overlay",
-    sizedHeading = "Size and scrolling",
-    sizedHint = "setBounds sets the width and height of the overlay; overflowing content scrolls inside the " +
-        "content area.",
-    scrollableContent = "Scrollable content:",
-    line = { index -> "Line $index" },
-    openSized = "Open sized overlay",
-)
-
-private val chinese: OverlayTexts = OverlayTexts(
-    basicHeading = "基本用法",
-    basicHint = "renderer(root, owner, model) 负责内容；withBackdrop 打开遮罩。",
-    bareOverlay = "这是一个裸 overlay，没有 dialog 的头部与底部。",
-    close = "关闭",
-    openOverlay = "打开 overlay",
-    modelessHeading = "无遮罩 / 非模态",
-    modelessHint = "modeless 让浮层不抢焦点；withBackdrop=false 去掉遮罩。",
-    modelessBody = "非模态浮层，页面其他部分仍可交互。",
-    openModeless = "打开非模态 overlay",
-    sizedHeading = "尺寸与滚动",
-    sizedHint = "setBounds 写入浮层的宽度与高度，内容超出时由内容区滚动。",
-    scrollableContent = "可滚动的内容：",
-    line = { index -> "第 $index 行内容" },
-    openSized = "打开固定尺寸 overlay",
-)
-
 internal class OverlayPage : DemoPage() {
     private val texts = Binder(overlayTexts)
 
@@ -186,6 +151,39 @@ internal class OverlayPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page") {
+        private val english: OverlayTexts = OverlayTexts(
+            basicHeading = "Basic usage",
+            basicHint = "renderer(root, owner, model) supplies the content; withBackdrop shows the backdrop.",
+            bareOverlay = "This is a bare overlay, without the dialog header and footer.",
+            close = "Close",
+            openOverlay = "Open overlay",
+            modelessHeading = "No backdrop / modeless",
+            modelessHint = "modeless keeps the overlay from taking focus; withBackdrop=false removes the backdrop.",
+            modelessBody = "Modeless overlay: the rest of the page stays interactive.",
+            openModeless = "Open modeless overlay",
+            sizedHeading = "Size and scrolling",
+            sizedHint = "setBounds sets the width and height of the overlay; overflowing content scrolls inside the " +
+                "content area.",
+            scrollableContent = "Scrollable content:",
+            line = { index -> "Line $index" },
+            openSized = "Open sized overlay",
+        )
+        private val chinese: OverlayTexts = OverlayTexts(
+            basicHeading = "基本用法",
+            basicHint = "renderer(root, owner, model) 负责内容；withBackdrop 打开遮罩。",
+            bareOverlay = "这是一个裸 overlay，没有 dialog 的头部与底部。",
+            close = "关闭",
+            openOverlay = "打开 overlay",
+            modelessHeading = "无遮罩 / 非模态",
+            modelessHint = "modeless 让浮层不抢焦点；withBackdrop=false 去掉遮罩。",
+            modelessBody = "非模态浮层，页面其他部分仍可交互。",
+            openModeless = "打开非模态 overlay",
+            sizedHeading = "尺寸与滚动",
+            sizedHint = "setBounds 写入浮层的宽度与高度，内容超出时由内容区滚动。",
+            scrollableContent = "可滚动的内容：",
+            line = { index -> "第 $index 行内容" },
+            openSized = "打开固定尺寸 overlay",
+        )
         private val overlayTexts: Translations<OverlayTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

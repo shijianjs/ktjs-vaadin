@@ -47,79 +47,6 @@ val emailFieldEntry: CatalogEntry =
         kitPage = { EmailFieldPage.NAME() },
     )
 
-private val english: EmailFieldTexts =
-    EmailFieldTexts(
-        basicHeading = "Basic usage",
-        basicHint = "Email Field inherits every Text Field feature and validates the address against " +
-            "RFC 5322; an invalid value highlights the field and shows the error message.",
-        emailAddress = "Email address",
-        invalidMessage = "Enter a valid email address",
-        helper = "Used for notifications",
-        validInvalidCaption = "Valid and invalid addresses",
-        validityCaption = "Validity while typing",
-        validityLine = { valid, value -> "valid = $valid · value: ${value.ifEmpty { "(empty)" }}" },
-        featuresHeading = "Basic features",
-        featuresHint = "The label, helper text, placeholder, tooltip, clear button and prefix / suffix " +
-            "slots work exactly as in Text Field.",
-        label = "Label",
-        helperText = "Helper text",
-        placeholder = "Placeholder",
-        tooltipText = "Tooltip text",
-        validationHeading = "Validation",
-        validationHint = "Beyond the built-in email check, pattern can restrict the domain further. The " +
-            "example only accepts example.com addresses and distinguishes missing and malformed values " +
-            "in the validated event.",
-        onlyExample = "Only example.com addresses allowed",
-        notChecked = "Not checked yet",
-        requiredMessage = "Field is required",
-        patternMessage = "Enter a valid example.com email address",
-        checkPrefix = "Check: ",
-        passed = "passed",
-        failed = "failed",
-        statesHeading = "Read-only and disabled",
-        statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
-            "interaction entirely.",
-        readonly = "Read-only",
-        disabled = "Disabled",
-        stylesHeading = "Style variants",
-        stylesHint = "The theme variants match Text Field: align-right, small and helper-above-field can " +
-            "be combined.",
-    )
-
-private val chinese: EmailFieldTexts =
-    EmailFieldTexts(
-        basicHeading = "基本用法",
-        basicHint = "Email Field 继承 Text Field 的全部功能，并按 RFC 5322 校验邮箱格式；值无效时字段高亮并显示错误信息。",
-        emailAddress = "邮箱地址",
-        invalidMessage = "请输入合法的邮箱地址",
-        helper = "用于接收通知",
-        validInvalidCaption = "合法与非法邮箱",
-        validityCaption = "实时校验结果",
-        validityLine = { valid, value -> "valid = $valid · 值：${value.ifEmpty { "（空）" }}" },
-        featuresHeading = "基本特性",
-        featuresHint = "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
-        label = "标签",
-        helperText = "辅助文本",
-        placeholder = "占位符",
-        tooltipText = "提示文本",
-        validationHeading = "校验",
-        validationHint = "内置的邮箱格式校验之外，pattern 可以进一步限制域名。示例只接受 example.com 地址，" +
-            "并在 validated 事件里区分“必填”与“格式不符”。",
-        onlyExample = "只接受 example.com 域名",
-        notChecked = "尚未校验",
-        requiredMessage = "这一项必填",
-        patternMessage = "请输入 example.com 域名下的合法邮箱地址",
-        checkPrefix = "校验：",
-        passed = "通过",
-        failed = "未通过",
-        statesHeading = "只读与禁用",
-        statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
-        readonly = "只读",
-        disabled = "禁用",
-        stylesHeading = "样式变体",
-        stylesHint = "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
-    )
-
 internal class EmailFieldPage : DemoPage() {
     private val texts = Binder(emailFieldTexts)
 
@@ -292,6 +219,77 @@ internal class EmailFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<EmailFieldPage>(EmailFieldPage::class.js, "vaadin-demo-email-field-page") {
+        private val english: EmailFieldTexts =
+            EmailFieldTexts(
+                basicHeading = "Basic usage",
+                basicHint = "Email Field inherits every Text Field feature and validates the address against " +
+                    "RFC 5322; an invalid value highlights the field and shows the error message.",
+                emailAddress = "Email address",
+                invalidMessage = "Enter a valid email address",
+                helper = "Used for notifications",
+                validInvalidCaption = "Valid and invalid addresses",
+                validityCaption = "Validity while typing",
+                validityLine = { valid, value -> "valid = $valid · value: ${value.ifEmpty { "(empty)" }}" },
+                featuresHeading = "Basic features",
+                featuresHint = "The label, helper text, placeholder, tooltip, clear button and prefix / suffix " +
+                    "slots work exactly as in Text Field.",
+                label = "Label",
+                helperText = "Helper text",
+                placeholder = "Placeholder",
+                tooltipText = "Tooltip text",
+                validationHeading = "Validation",
+                validationHint = "Beyond the built-in email check, pattern can restrict the domain further. The " +
+                    "example only accepts example.com addresses and distinguishes missing and malformed values " +
+                    "in the validated event.",
+                onlyExample = "Only example.com addresses allowed",
+                notChecked = "Not checked yet",
+                requiredMessage = "Field is required",
+                patternMessage = "Enter a valid example.com email address",
+                checkPrefix = "Check: ",
+                passed = "passed",
+                failed = "failed",
+                statesHeading = "Read-only and disabled",
+                statesHint = "readonly allows focus, selection and copying but no edits; disabled removes " +
+                    "interaction entirely.",
+                readonly = "Read-only",
+                disabled = "Disabled",
+                stylesHeading = "Style variants",
+                stylesHint = "The theme variants match Text Field: align-right, small and helper-above-field can " +
+                    "be combined.",
+            )
+        private val chinese: EmailFieldTexts =
+            EmailFieldTexts(
+                basicHeading = "基本用法",
+                basicHint = "Email Field 继承 Text Field 的全部功能，并按 RFC 5322 校验邮箱格式；值无效时字段高亮并显示错误信息。",
+                emailAddress = "邮箱地址",
+                invalidMessage = "请输入合法的邮箱地址",
+                helper = "用于接收通知",
+                validInvalidCaption = "合法与非法邮箱",
+                validityCaption = "实时校验结果",
+                validityLine = { valid, value -> "valid = $valid · 值：${value.ifEmpty { "（空）" }}" },
+                featuresHeading = "基本特性",
+                featuresHint = "标签、辅助文本、占位符、提示、清空按钮与前后缀插槽与 Text Field 完全一致。",
+                label = "标签",
+                helperText = "辅助文本",
+                placeholder = "占位符",
+                tooltipText = "提示文本",
+                validationHeading = "校验",
+                validationHint = "内置的邮箱格式校验之外，pattern 可以进一步限制域名。示例只接受 example.com 地址，" +
+                    "并在 validated 事件里区分“必填”与“格式不符”。",
+                onlyExample = "只接受 example.com 域名",
+                notChecked = "尚未校验",
+                requiredMessage = "这一项必填",
+                patternMessage = "请输入 example.com 域名下的合法邮箱地址",
+                checkPrefix = "校验：",
+                passed = "通过",
+                failed = "未通过",
+                statesHeading = "只读与禁用",
+                statesHint = "readonly 可以聚焦、选择和复制但不能修改；disabled 完全移除交互。",
+                readonly = "只读",
+                disabled = "禁用",
+                stylesHeading = "样式变体",
+                stylesHint = "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
+            )
         /** Pattern of `email-field-validation.ts`: only addresses in the `example.com` domain. */
         private const val EMAIL_EXAMPLE_PATTERN = "^[a-zA-Z0-9_\\-+]+(?:\\.[a-zA-Z0-9_\\-+]+)*@example\\.com$"
         private val emailFieldTexts: Translations<EmailFieldTexts> = texts(

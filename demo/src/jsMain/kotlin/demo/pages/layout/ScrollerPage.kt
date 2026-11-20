@@ -48,105 +48,6 @@ val scrollerEntry: CatalogEntry =
         kitPage = { ScrollerPage.NAME() },
     )
 
-private val english: ScrollerTexts = ScrollerTexts(
-    basicHeading = "Basic usage",
-    basicHint = "A scrollbar appears when the content exceeds the fixed height; overflow-indicators fades the " +
-        "top and bottom edges.",
-    eventContent =
-        """
-        **Date & Time**
-
-        Saturday, June 20, 2026
-        9:00 AM – 5:00 PM
-
-        **About This Event**
-
-        Join us for a full day of inspiring talks, hands-on workshops and networking. Whether you are a seasoned
-        developer or just starting out, there is something for everyone.
-
-        **Schedule**
-
-        - **9:00 AM** – Registration & Breakfast
-        - **10:00 AM** – Opening Keynote
-        - **11:30 AM** – Breakout Sessions
-        - **1:00 PM** – Lunch & Networking
-        - **2:30 PM** – Afternoon Workshops
-        - **4:30 PM** – Closing Remarks & Raffle
-
-        **What to Bring**
-
-        - Photo ID for check-in
-        - Laptop (optional, for workshops)
-        - Business cards for networking
-
-        **Parking**
-
-        Free parking in Lot B. Street parking is limited.
-
-        **Contact**
-
-        Questions? Email us at events@techconf.example.
-        """,
-    cardTitle = "Summer Tech Conference 2025",
-    addToCalendar = "Add to calendar",
-    bothHeading = "Scrolling in both directions",
-    bothHint = "When the content is both wider and taller than the container, both scrollbars appear.",
-    illustrationAlt = "A reindeer walking on a snowy lake shore at dusk",
-    mobileHeading = "Horizontal scrolling on mobile",
-    mobileHint = "With scrollDirection set to horizontal only horizontal scrolling is allowed, useful for a row " +
-        "of buttons that slides sideways.",
-    createNew = "Create new...",
-    actions = listOf("Audit", "Report", "Dashboard", "Invoice"),
-)
-
-private val chinese: ScrollerTexts = ScrollerTexts(
-    basicHeading = "基本用法",
-    basicHint = "内容超出固定高度时出现滚动条；overflow-indicators 在顶部与底部显示渐隐指示。",
-    eventContent =
-        """
-        **日期与时间**
-
-        2026 年 6 月 20 日（周六）
-        上午 9:00 – 下午 5:00
-
-        **关于这场活动**
-
-        一整天的演讲、动手工作坊与交流环节：无论你是资深开发者还是刚入门，都能找到适合自己的内容。
-
-        **日程**
-
-        - **9:00** – 签到与早餐
-        - **10:00** – 开场主题演讲
-        - **11:30** – 分会场
-        - **13:00** – 午餐与自由交流
-        - **14:30** – 下午工作坊
-        - **16:30** – 闭幕与抽奖
-
-        **需要携带**
-
-        - 签到时出示证件
-        - 笔记本电脑（可选，工作坊用）
-        - 名片，方便交流
-
-        **停车**
-
-        B 停车场免费，路边车位有限。
-
-        **联系我们**
-
-        有问题？发邮件到 events@techconf.example。
-        """,
-    cardTitle = "2025 夏季技术大会",
-    addToCalendar = "加入日历",
-    bothHeading = "双向滚动",
-    bothHint = "内容比容器更宽更高时，两个方向都会出现滚动条。",
-    illustrationAlt = "漫步在黄昏雪湖岸边的驯鹿",
-    mobileHeading = "移动端横向滚动",
-    mobileHint = "scrollDirection 设为 horizontal 后只允许横向滚动，适合把一组按钮放在一行里横向滑动。",
-    createNew = "新建…",
-    actions = listOf("审计", "报表", "仪表盘", "发票"),
-)
-
 internal class ScrollerPage : DemoPage() {
     private val texts = Binder(scrollerTexts)
 
@@ -246,6 +147,103 @@ internal class ScrollerPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page") {
+        private val english: ScrollerTexts = ScrollerTexts(
+            basicHeading = "Basic usage",
+            basicHint = "A scrollbar appears when the content exceeds the fixed height; overflow-indicators fades the " +
+                "top and bottom edges.",
+            eventContent =
+                """
+                **Date & Time**
+
+                Saturday, June 20, 2026
+                9:00 AM – 5:00 PM
+
+                **About This Event**
+
+                Join us for a full day of inspiring talks, hands-on workshops and networking. Whether you are a seasoned
+                developer or just starting out, there is something for everyone.
+
+                **Schedule**
+
+                - **9:00 AM** – Registration & Breakfast
+                - **10:00 AM** – Opening Keynote
+                - **11:30 AM** – Breakout Sessions
+                - **1:00 PM** – Lunch & Networking
+                - **2:30 PM** – Afternoon Workshops
+                - **4:30 PM** – Closing Remarks & Raffle
+
+                **What to Bring**
+
+                - Photo ID for check-in
+                - Laptop (optional, for workshops)
+                - Business cards for networking
+
+                **Parking**
+
+                Free parking in Lot B. Street parking is limited.
+
+                **Contact**
+
+                Questions? Email us at events@techconf.example.
+                """,
+            cardTitle = "Summer Tech Conference 2025",
+            addToCalendar = "Add to calendar",
+            bothHeading = "Scrolling in both directions",
+            bothHint = "When the content is both wider and taller than the container, both scrollbars appear.",
+            illustrationAlt = "A reindeer walking on a snowy lake shore at dusk",
+            mobileHeading = "Horizontal scrolling on mobile",
+            mobileHint = "With scrollDirection set to horizontal only horizontal scrolling is allowed, useful for a row " +
+                "of buttons that slides sideways.",
+            createNew = "Create new...",
+            actions = listOf("Audit", "Report", "Dashboard", "Invoice"),
+        )
+        private val chinese: ScrollerTexts = ScrollerTexts(
+            basicHeading = "基本用法",
+            basicHint = "内容超出固定高度时出现滚动条；overflow-indicators 在顶部与底部显示渐隐指示。",
+            eventContent =
+                """
+                **日期与时间**
+
+                2026 年 6 月 20 日（周六）
+                上午 9:00 – 下午 5:00
+
+                **关于这场活动**
+
+                一整天的演讲、动手工作坊与交流环节：无论你是资深开发者还是刚入门，都能找到适合自己的内容。
+
+                **日程**
+
+                - **9:00** – 签到与早餐
+                - **10:00** – 开场主题演讲
+                - **11:30** – 分会场
+                - **13:00** – 午餐与自由交流
+                - **14:30** – 下午工作坊
+                - **16:30** – 闭幕与抽奖
+
+                **需要携带**
+
+                - 签到时出示证件
+                - 笔记本电脑（可选，工作坊用）
+                - 名片，方便交流
+
+                **停车**
+
+                B 停车场免费，路边车位有限。
+
+                **联系我们**
+
+                有问题？发邮件到 events@techconf.example。
+                """,
+            cardTitle = "2025 夏季技术大会",
+            addToCalendar = "加入日历",
+            bothHeading = "双向滚动",
+            bothHint = "内容比容器更宽更高时，两个方向都会出现滚动条。",
+            illustrationAlt = "漫步在黄昏雪湖岸边的驯鹿",
+            mobileHeading = "移动端横向滚动",
+            mobileHint = "scrollDirection 设为 horizontal 后只允许横向滚动，适合把一组按钮放在一行里横向滑动。",
+            createNew = "新建…",
+            actions = listOf("审计", "报表", "仪表盘", "发票"),
+        )
         private val scrollerTexts: Translations<ScrollerTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

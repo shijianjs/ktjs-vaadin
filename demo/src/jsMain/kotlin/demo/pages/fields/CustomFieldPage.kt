@@ -56,91 +56,6 @@ val customFieldEntry: CatalogEntry =
         kitPage = { CustomFieldPage.NAME() },
     )
 
-private val english: CustomFieldTexts =
-    CustomFieldTexts(
-        basicHeading = "Basic usage",
-        basicHint = "custom-field collects the slotted inputs in order; formatValue joins the array of " +
-            "input values into the field value and parseValue splits it back. The enrollment period " +
-            "below combines two date pickers and reproduces the two validators the documentation adds " +
-            "through Binder: the span cannot exceed 30 days and the start date must be earlier than the " +
-            "end date.",
-        periodLabel = "Enrollment period",
-        periodHelper = "Cannot be longer than 30 days",
-        startDate = "Start date",
-        endDate = "End date",
-        empty = "(empty)",
-        valuePrefix = "Field value: ",
-        valueEmpty = "Field value: (empty)",
-        startBeforeEnd = "Start date must be earlier than end date",
-        spanTooLong = "Dates cannot be more than 30 days apart",
-        validate = "Validate",
-        formatHeading = "Combined value and formatting",
-        formatHint = "formatValue decides how value is assembled and parseValue splits an existing " +
-            "value back into the inputs; both take or return the array of strings, while the field still " +
-            "exposes a single value.",
-        firstName = "First name",
-        lastName = "Last name",
-        fullName = "Full name",
-        fullNameHelper = "Combined from two text inputs",
-        nativeHeading = "Native input fields",
-        nativeHint = "Any native input can be slotted: the field joins their values in order and the " +
-            "browser still enforces pattern / required. The three inputs below need no Vaadin field " +
-            "wrapper.",
-        payment = "Payment information",
-        cardholder = "Cardholder name",
-        cardNumber = "Card number",
-        securityCode = "Security code",
-        paymentEmpty = "Payment information: (empty)",
-        paymentPrefix = "Payment information: ",
-        stylesHeading = "Styles",
-        stylesHint = "small and helper-above-field apply to the whole combined field; the inner fields " +
-            "need small as well so the sizes match.",
-        price = "Price",
-        priceHelper = "Helper text",
-        amount = "Amount",
-        currency = "Currency",
-    )
-
-private val chinese: CustomFieldTexts =
-    CustomFieldTexts(
-        basicHeading = "基本用法",
-        basicHint = "custom-field 按顺序收集插槽里的输入组件，formatValue 把它们的值数组拼成一个字段值，" +
-            "parseValue 再拆回去。下面的报名周期由两个 DatePicker 组成，页面复现文档里 Binder 的两条校验器：" +
-            "跨度不超过 30 天、开始日期早于结束日期。",
-        periodLabel = "报名周期",
-        periodHelper = "跨度不能超过 30 天",
-        startDate = "开始日期",
-        endDate = "结束日期",
-        empty = "（空）",
-        valuePrefix = "字段值：",
-        valueEmpty = "字段值：（空）",
-        startBeforeEnd = "开始日期必须早于结束日期",
-        spanTooLong = "日期跨度不能超过 30 天",
-        validate = "校验",
-        formatHeading = "组合值与格式化",
-        formatHint = "formatValue 决定 value 的拼法，parseValue 负责把已有值拆回各个输入；两者都收 / 发字符串数组，" +
-            "字段本身始终只暴露一个 value。",
-        firstName = "名",
-        lastName = "姓",
-        fullName = "全名",
-        fullNameHelper = "由两个文本输入组合而成",
-        nativeHeading = "原生输入字段",
-        nativeHint = "插槽里可以放任意原生输入：组件用 value 把它们按顺序拼起来，pattern / required 仍由浏览器校验。" +
-            "下面的三个 input 不需要任何 Vaadin 字段包装。",
-        payment = "付款信息",
-        cardholder = "持卡人姓名",
-        cardNumber = "卡号",
-        securityCode = "安全码",
-        paymentEmpty = "付款信息：（空）",
-        paymentPrefix = "付款信息：",
-        stylesHeading = "样式变体",
-        stylesHint = "small 与 helper-above-field 作用在整个组合字段上；内部字段各自也要 small，尺寸才一致。",
-        price = "价格",
-        priceHelper = "说明文字",
-        amount = "金额",
-        currency = "币种",
-    )
-
 internal class CustomFieldPage : DemoPage() {
     private val texts = Binder(customFieldTexts)
 
@@ -313,6 +228,89 @@ internal class CustomFieldPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<CustomFieldPage>(CustomFieldPage::class.js, "vaadin-demo-custom-field-page") {
+        private val english: CustomFieldTexts =
+            CustomFieldTexts(
+                basicHeading = "Basic usage",
+                basicHint = "custom-field collects the slotted inputs in order; formatValue joins the array of " +
+                    "input values into the field value and parseValue splits it back. The enrollment period " +
+                    "below combines two date pickers and reproduces the two validators the documentation adds " +
+                    "through Binder: the span cannot exceed 30 days and the start date must be earlier than the " +
+                    "end date.",
+                periodLabel = "Enrollment period",
+                periodHelper = "Cannot be longer than 30 days",
+                startDate = "Start date",
+                endDate = "End date",
+                empty = "(empty)",
+                valuePrefix = "Field value: ",
+                valueEmpty = "Field value: (empty)",
+                startBeforeEnd = "Start date must be earlier than end date",
+                spanTooLong = "Dates cannot be more than 30 days apart",
+                validate = "Validate",
+                formatHeading = "Combined value and formatting",
+                formatHint = "formatValue decides how value is assembled and parseValue splits an existing " +
+                    "value back into the inputs; both take or return the array of strings, while the field still " +
+                    "exposes a single value.",
+                firstName = "First name",
+                lastName = "Last name",
+                fullName = "Full name",
+                fullNameHelper = "Combined from two text inputs",
+                nativeHeading = "Native input fields",
+                nativeHint = "Any native input can be slotted: the field joins their values in order and the " +
+                    "browser still enforces pattern / required. The three inputs below need no Vaadin field " +
+                    "wrapper.",
+                payment = "Payment information",
+                cardholder = "Cardholder name",
+                cardNumber = "Card number",
+                securityCode = "Security code",
+                paymentEmpty = "Payment information: (empty)",
+                paymentPrefix = "Payment information: ",
+                stylesHeading = "Styles",
+                stylesHint = "small and helper-above-field apply to the whole combined field; the inner fields " +
+                    "need small as well so the sizes match.",
+                price = "Price",
+                priceHelper = "Helper text",
+                amount = "Amount",
+                currency = "Currency",
+            )
+        private val chinese: CustomFieldTexts =
+            CustomFieldTexts(
+                basicHeading = "基本用法",
+                basicHint = "custom-field 按顺序收集插槽里的输入组件，formatValue 把它们的值数组拼成一个字段值，" +
+                    "parseValue 再拆回去。下面的报名周期由两个 DatePicker 组成，页面复现文档里 Binder 的两条校验器：" +
+                    "跨度不超过 30 天、开始日期早于结束日期。",
+                periodLabel = "报名周期",
+                periodHelper = "跨度不能超过 30 天",
+                startDate = "开始日期",
+                endDate = "结束日期",
+                empty = "（空）",
+                valuePrefix = "字段值：",
+                valueEmpty = "字段值：（空）",
+                startBeforeEnd = "开始日期必须早于结束日期",
+                spanTooLong = "日期跨度不能超过 30 天",
+                validate = "校验",
+                formatHeading = "组合值与格式化",
+                formatHint = "formatValue 决定 value 的拼法，parseValue 负责把已有值拆回各个输入；两者都收 / 发字符串数组，" +
+                    "字段本身始终只暴露一个 value。",
+                firstName = "名",
+                lastName = "姓",
+                fullName = "全名",
+                fullNameHelper = "由两个文本输入组合而成",
+                nativeHeading = "原生输入字段",
+                nativeHint = "插槽里可以放任意原生输入：组件用 value 把它们按顺序拼起来，pattern / required 仍由浏览器校验。" +
+                    "下面的三个 input 不需要任何 Vaadin 字段包装。",
+                payment = "付款信息",
+                cardholder = "持卡人姓名",
+                cardNumber = "卡号",
+                securityCode = "安全码",
+                paymentEmpty = "付款信息：（空）",
+                paymentPrefix = "付款信息：",
+                stylesHeading = "样式变体",
+                stylesHint = "small 与 helper-above-field 作用在整个组合字段上；内部字段各自也要 small，尺寸才一致。",
+                price = "价格",
+                priceHelper = "说明文字",
+                amount = "金额",
+                currency = "币种",
+            )
         private val customFieldTexts: Translations<CustomFieldTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

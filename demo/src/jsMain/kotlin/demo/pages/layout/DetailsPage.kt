@@ -74,60 +74,6 @@ internal fun countryComboBox(label: String): ComboBoxElement =
             )
     }
 
-private val english: DetailsTexts = DetailsTexts(
-    basicHeading = "Basic usage",
-    basicHint = "summary is the header text and the children are the expanded content; opened is read/write and " +
-        "starts as false.",
-    contactInformation = "Contact information",
-    contentHeading = "Content",
-    contentHint = "The content area takes any nodes; the example shows three groups of links, all opened.",
-    analytics = "Analytics",
-    analyticsLinks = listOf("Dashboard", "Reports", "Data sources"),
-    customers = "Customers",
-    customerLinks = listOf("Accounts", "Contacts"),
-    finances = "Finances",
-    financeLinks = listOf("Invoices", "Transactions", "Statements"),
-    summaryHeading = "Custom summary",
-    summaryHint = "The summary slot takes a details-summary that can combine text, badges and icons; here an " +
-        "error badge points at the missing fields.",
-    errorsSuffix = " errors",
-    address = "Address",
-    zip = "ZIP code",
-    city = "City",
-    country = "Country",
-    disabledHeading = "Disabling",
-    disabledHint = "disabled keeps the block from expanding and the header ignores pointer and keyboard input.",
-    members = "Members (8)",
-    themesHeading = "Theme variants",
-    themesHint = "filled, reverse and small are theme variants of details and can be combined with an opened block.",
-)
-
-private val chinese: DetailsTexts = DetailsTexts(
-    basicHeading = "基本用法",
-    basicHint = "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
-    contactInformation = "联系方式",
-    contentHeading = "内容",
-    contentHint = "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
-    analytics = "分析",
-    analyticsLinks = listOf("仪表盘", "报表", "数据源"),
-    customers = "客户",
-    customerLinks = listOf("账户", "联系人"),
-    finances = "财务",
-    financeLinks = listOf("发票", "交易", "对账单"),
-    summaryHeading = "自定义 summary",
-    summaryHint = "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
-    errorsSuffix = " 个错误",
-    address = "地址",
-    zip = "邮政编码",
-    city = "城市",
-    country = "国家",
-    disabledHeading = "禁用",
-    disabledHint = "disabled 让区块无法展开，标题也不会响应点击与键盘。",
-    members = "成员（8）",
-    themesHeading = "主题变体",
-    themesHint = "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
-)
-
 internal class DetailsPage : DemoPage() {
     private val texts = Binder(detailsTexts)
 
@@ -279,6 +225,58 @@ internal class DetailsPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page") {
+        private val english: DetailsTexts = DetailsTexts(
+            basicHeading = "Basic usage",
+            basicHint = "summary is the header text and the children are the expanded content; opened is read/write and " +
+                "starts as false.",
+            contactInformation = "Contact information",
+            contentHeading = "Content",
+            contentHint = "The content area takes any nodes; the example shows three groups of links, all opened.",
+            analytics = "Analytics",
+            analyticsLinks = listOf("Dashboard", "Reports", "Data sources"),
+            customers = "Customers",
+            customerLinks = listOf("Accounts", "Contacts"),
+            finances = "Finances",
+            financeLinks = listOf("Invoices", "Transactions", "Statements"),
+            summaryHeading = "Custom summary",
+            summaryHint = "The summary slot takes a details-summary that can combine text, badges and icons; here an " +
+                "error badge points at the missing fields.",
+            errorsSuffix = " errors",
+            address = "Address",
+            zip = "ZIP code",
+            city = "City",
+            country = "Country",
+            disabledHeading = "Disabling",
+            disabledHint = "disabled keeps the block from expanding and the header ignores pointer and keyboard input.",
+            members = "Members (8)",
+            themesHeading = "Theme variants",
+            themesHint = "filled, reverse and small are theme variants of details and can be combined with an opened block.",
+        )
+        private val chinese: DetailsTexts = DetailsTexts(
+            basicHeading = "基本用法",
+            basicHint = "summary 是标题文本，子节点是展开区内容；opened 可读写，默认关闭。",
+            contactInformation = "联系方式",
+            contentHeading = "内容",
+            contentHint = "内容区可以放任意节点，示例里是三组链接列表，全部默认展开。",
+            analytics = "分析",
+            analyticsLinks = listOf("仪表盘", "报表", "数据源"),
+            customers = "客户",
+            customerLinks = listOf("账户", "联系人"),
+            finances = "财务",
+            financeLinks = listOf("发票", "交易", "对账单"),
+            summaryHeading = "自定义 summary",
+            summaryHint = "summary 插槽里放 details-summary，可以组合文本、徽标和图标；这里用错误徽标提示未填字段。",
+            errorsSuffix = " 个错误",
+            address = "地址",
+            zip = "邮政编码",
+            city = "城市",
+            country = "国家",
+            disabledHeading = "禁用",
+            disabledHint = "disabled 让区块无法展开，标题也不会响应点击与键盘。",
+            members = "成员（8）",
+            themesHeading = "主题变体",
+            themesHint = "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
+        )
         private val detailsTexts: Translations<DetailsTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,

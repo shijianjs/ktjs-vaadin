@@ -45,50 +45,6 @@ val progressBarEntry: CatalogEntry =
         kitPage = { ProgressBarPage.NAME() },
     )
 
-private val english: ProgressBarTexts = ProgressBarTexts(
-    basicHeading = "Basic usage",
-    basicHint = "The default range is 0–1 and value is the current progress; the bar below sits at 50%.",
-    determinateHeading = "Determinate",
-    determinateHint = "In determinate mode the bar fills by (value - min) / (max - min); the official example " +
-        "only shows a static 0.5, buttons make it interactive here.",
-    reset = "Reset",
-    indeterminateHeading = "Indeterminate",
-    indeterminateHint = "indeterminate takes precedence over min / max / value: the value is ignored and a looping " +
-        "animation is shown.",
-    rangeHeading = "Bounds and initial value",
-    rangeHint = "min / max do not have to be 0–1; 0–100 with value=\"50\" is the same as 0.5 in the default range, " +
-        "only easier to read in code.",
-    labelHeading = "Provide a label",
-    labelHint = "The bar has no visible label: aria-labelledby associates an external label, and the percentage " +
-        "sits at the trailing edge.",
-    processing = "Processing Financials.xlsx",
-    completionHeading = "Estimate completion time",
-    completionHint = "Use an indeterminate bar when the time is unknown and aria-describedby to explain roughly how " +
-        "long it takes; the hint is visible to everyone as well.",
-    generating = "Generating report...",
-    slowHint = "Process can take upwards of 10 minutes",
-)
-
-private val chinese: ProgressBarTexts = ProgressBarTexts(
-    basicHeading = "基本用法",
-    basicHint = "默认范围是 0–1，value 是当前进度；下面的进度条停在 50%。",
-    determinateHeading = "确定进度",
-    determinateHint = "确定模式下 value 按 (value - min) / (max - min) 的比例填充；官方示例只展示静态的 0.5，" +
-        "这里用按钮把它变成可操作的例子。",
-    reset = "重置",
-    indeterminateHeading = "不确定进度",
-    indeterminateHint = "indeterminate 优先于 min / max / value：打开后忽略数值，显示循环动画。",
-    rangeHeading = "范围与初始值",
-    rangeHint = "min / max 不必是 0–1；0–100 配 value=\"50\" 与默认范围的 0.5 等价，只是数值读起来更直观。",
-    labelHeading = "提供标签",
-    labelHint = "进度条没有可见标签：用 aria-labelledby 把外部的 label 关联起来，百分比放在行尾。",
-    processing = "正在处理 Financials.xlsx",
-    completionHeading = "估计完成时间",
-    completionHint = "时间未知时用不确定进度，并用 aria-describedby 说明大概要多久；文字提示同时让所有人看到。",
-    generating = "正在生成报表…",
-    slowHint = "处理可能需要十分钟以上",
-)
-
 // ---------------------------------------------------------------------------------------------
 // Progress bar
 // ---------------------------------------------------------------------------------------------
@@ -216,6 +172,48 @@ internal class ProgressBarPage : DemoPage() {
     }
 
     companion object : CustomElementReferenceAdapter<ProgressBarPage>(ProgressBarPage::class.js, "vaadin-demo-progress-bar-page") {
+        private val english: ProgressBarTexts = ProgressBarTexts(
+            basicHeading = "Basic usage",
+            basicHint = "The default range is 0–1 and value is the current progress; the bar below sits at 50%.",
+            determinateHeading = "Determinate",
+            determinateHint = "In determinate mode the bar fills by (value - min) / (max - min); the official example " +
+                "only shows a static 0.5, buttons make it interactive here.",
+            reset = "Reset",
+            indeterminateHeading = "Indeterminate",
+            indeterminateHint = "indeterminate takes precedence over min / max / value: the value is ignored and a looping " +
+                "animation is shown.",
+            rangeHeading = "Bounds and initial value",
+            rangeHint = "min / max do not have to be 0–1; 0–100 with value=\"50\" is the same as 0.5 in the default range, " +
+                "only easier to read in code.",
+            labelHeading = "Provide a label",
+            labelHint = "The bar has no visible label: aria-labelledby associates an external label, and the percentage " +
+                "sits at the trailing edge.",
+            processing = "Processing Financials.xlsx",
+            completionHeading = "Estimate completion time",
+            completionHint = "Use an indeterminate bar when the time is unknown and aria-describedby to explain roughly how " +
+                "long it takes; the hint is visible to everyone as well.",
+            generating = "Generating report...",
+            slowHint = "Process can take upwards of 10 minutes",
+        )
+        private val chinese: ProgressBarTexts = ProgressBarTexts(
+            basicHeading = "基本用法",
+            basicHint = "默认范围是 0–1，value 是当前进度；下面的进度条停在 50%。",
+            determinateHeading = "确定进度",
+            determinateHint = "确定模式下 value 按 (value - min) / (max - min) 的比例填充；官方示例只展示静态的 0.5，" +
+                "这里用按钮把它变成可操作的例子。",
+            reset = "重置",
+            indeterminateHeading = "不确定进度",
+            indeterminateHint = "indeterminate 优先于 min / max / value：打开后忽略数值，显示循环动画。",
+            rangeHeading = "范围与初始值",
+            rangeHint = "min / max 不必是 0–1；0–100 配 value=\"50\" 与默认范围的 0.5 等价，只是数值读起来更直观。",
+            labelHeading = "提供标签",
+            labelHint = "进度条没有可见标签：用 aria-labelledby 把外部的 label 关联起来，百分比放在行尾。",
+            processing = "正在处理 Financials.xlsx",
+            completionHeading = "估计完成时间",
+            completionHint = "时间未知时用不确定进度，并用 aria-describedby 说明大概要多久；文字提示同时让所有人看到。",
+            generating = "正在生成报表…",
+            slowHint = "处理可能需要十分钟以上",
+        )
         private val progressBarTexts: Translations<ProgressBarTexts> = texts(
             Langs.EN to english,
             Langs.ZH_HANS to chinese,
