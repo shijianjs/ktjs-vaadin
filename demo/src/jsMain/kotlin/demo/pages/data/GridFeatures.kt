@@ -103,12 +103,6 @@ internal class PersonDetails : CustomElementAdapter(), GridTranslatable {
     }
 }
 
-/** Creates a defined `<vaadin-demo-person-details>`. */
-internal fun newPersonDetails(item: JsAny?): PersonDetails {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    PersonDetails.NAME
-    return PersonDetails.NAME().also { it.show(item) }
-}
 
 internal fun menuItems(vararg labels: String): Array<ContextMenuItemData> =
     labels.map { unsafeJso<ContextMenuItemData> { text = it } }.toTypedArray()

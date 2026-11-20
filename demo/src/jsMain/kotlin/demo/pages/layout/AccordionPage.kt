@@ -107,27 +107,21 @@ internal class AccordionPage : DemoPage() {
         }
 
         val customerForm =
-            newWizardLayout(
-                field { it.firstName },
+            WizardLayout.NAME { add(field { it.firstName },
                 field { it.lastName },
                 emailField("").apply { setAttribute("colspan", "2") }.also { email ->
                     texts.bind(email, { it.emailAddress }) { email.label = it }
                 },
-                field { it.phoneNumber }.apply { setAttribute("colspan", "2") },
-            )
+                field { it.phoneNumber }.apply { setAttribute("colspan", "2") },) }
         val billingForm =
-            newWizardLayout(
-                field { it.address }.apply { setAttribute("colspan", "2") },
+            WizardLayout.NAME { add(field { it.address }.apply { setAttribute("colspan", "2") },
                 field { it.zip },
                 field { it.city },
-                countryComboBox(""),
-            )
+                countryComboBox(""),) }
         val paymentForm =
-            newWizardLayout(
-                field { it.cardNumber }.apply { setAttribute("colspan", "2") },
+            WizardLayout.NAME { add(field { it.cardNumber }.apply { setAttribute("colspan", "2") },
                 field { it.expiry },
-                textField("CVV"),
-            )
+                textField("CVV"),) }
         wizard.append(
             step(customerIcon, { it.customerStep }, { it.continueLabel }, customerForm) {
                 customerIcon.toggleAttribute("hidden", false)

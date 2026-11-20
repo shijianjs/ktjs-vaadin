@@ -50,7 +50,7 @@ internal class VerticalLayoutPage : DemoPage() {
     init {
         frame.mount(this)
 
-        fun box(): HTMLElement = newBox("").also { boxes += it }
+        fun box(): HTMLElement = Box.NAME { show("") }.also { boxes += it }
 
         fun caption(copy: (VerticalLayoutTexts) -> String): HTMLParagraphElement {
             val node = HtmlTagName.p().apply {

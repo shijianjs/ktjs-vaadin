@@ -5,6 +5,12 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
+        /**
+         * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
+         *
+         * The element itself is the chip, so the property lands on its own style instead of on a child.
+         */
+
 internal class SwatchChip : CustomElementAdapter() {
     private var cssVariable: String? = null
 

@@ -175,7 +175,7 @@ internal class ThemingPage : DemoPage() {
         val nodes = swatches.map { (variable, field) ->
             val label = HtmlTagName.p { className = MUTED_SMALL }
             texts.bind(label, field)
-            kitCol(newSwatchChip(variable), label, codeText(variable))
+            kitCol(SwatchChip.NAME { show(variable) }, label, codeText(variable))
         }
         section.body.append(exampleBox(null, kitRow(*nodes.toTypedArray())))
         body.append(section.root)
@@ -190,10 +190,10 @@ internal class ThemingPage : DemoPage() {
             exampleBox(
                 null,
                 kitCol(
-                    newEntryPoint("LumoThemes.CSS", LumoThemes.CSS),
-                    newEntryPoint("LumoThemes.COMPACT_CSS", LumoThemes.COMPACT_CSS),
-                    newEntryPoint("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS),
-                    newEntryPoint("Aura.CSS", Aura.CSS),
+                    EntryPoint.NAME { show("LumoThemes.CSS", LumoThemes.CSS) },
+                    EntryPoint.NAME { show("LumoThemes.COMPACT_CSS", LumoThemes.COMPACT_CSS) },
+                    EntryPoint.NAME { show("LumoThemes.UTILITY_CSS", LumoThemes.UTILITY_CSS) },
+                    EntryPoint.NAME { show("Aura.CSS", Aura.CSS) },
                     entryNote,
                 ),
             ),
@@ -294,10 +294,10 @@ internal class ThemingPage : DemoPage() {
                 null,
                 kitCol(
                     intro,
-                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin", texts, { it.elementMixin }),
-                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.fieldbase.InputControlMixin", texts, { it.inputControl }),
-                    newEntryPoint("io.github.shijianjs.ktjs.vaadin.themablemixin.CssResult", "registerStyles / LumoStyles"),
-                    newDescribedEntryPoint("io.github.shijianjs.ktjs.vaadin.VaadinTagName", texts, { it.tagNames }),
+                    DescribedEntryPoint.NAME { show("io.github.shijianjs.ktjs.vaadin.componentbase.ElementMixin", texts, { it.elementMixin }) },
+                    DescribedEntryPoint.NAME { show("io.github.shijianjs.ktjs.vaadin.fieldbase.InputControlMixin", texts, { it.inputControl }) },
+                    EntryPoint.NAME { show("io.github.shijianjs.ktjs.vaadin.themablemixin.CssResult", "registerStyles / LumoStyles") },
+                    DescribedEntryPoint.NAME { show("io.github.shijianjs.ktjs.vaadin.VaadinTagName", texts, { it.tagNames }) },
                 ),
             ),
         )
@@ -464,12 +464,6 @@ internal class ThemingPage : DemoPage() {
          * The element itself is the chip, so the property lands on its own style instead of on a child.
          */
 
-        /** Creates a defined `<vaadin-demo-swatch-chip>`. */
-        internal fun newSwatchChip(cssVariable: String): SwatchChip {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            SwatchChip.NAME
-            return SwatchChip.NAME().also { it.show(cssVariable) }
-        }
         /**
          * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
          *
@@ -477,27 +471,11 @@ internal class ThemingPage : DemoPage() {
          * and the code block are kit pieces whose look comes from the page's sheet.
          */
 
-        /** Creates a defined `<vaadin-demo-entry-point>`. */
-        internal fun newEntryPoint(name: String, value: String): EntryPoint {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            EntryPoint.NAME
-            return EntryPoint.NAME().also { it.show(name, value) }
-        }
         /**
          * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
          * the page's binder.
          */
 
-        /** Creates a defined `<vaadin-demo-described-entry-point>`. */
-        internal fun newDescribedEntryPoint(
-            name: String,
-            binder: Binder<ThemingTexts>,
-            field: (ThemingTexts) -> String,
-        ): DescribedEntryPoint {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            DescribedEntryPoint.NAME
-            return DescribedEntryPoint.NAME().also { it.show(name, binder, field) }
-        }
         private val themingTexts: Translations<ThemingTexts> = texts(
             Langs.EN to themingEnglish,
             Langs.ZH_HANS to themingChinese,

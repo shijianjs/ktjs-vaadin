@@ -7,6 +7,11 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
+        /**
+         * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
+         * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
+         */
+
 internal class ScrollerAction : CustomElementAdapter() {
     private val button = createButton { textContent = "" }
 

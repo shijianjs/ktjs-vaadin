@@ -58,9 +58,3 @@ internal class CardMediaImage : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<CardMediaImage>(CardMediaImage::class.js, "demo-card-media-image")
 }
 
-/** Creates a defined `<demo-card-media-image>`; [width] pins the thumbnail, absent lets the card size it. */
-internal fun newCardMediaImage(width: Int? = null): CardMediaImage {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    CardMediaImage.NAME
-    return CardMediaImage.NAME().also { it.show(width) }
-}

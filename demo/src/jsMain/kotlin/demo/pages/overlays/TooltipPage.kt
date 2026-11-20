@@ -189,7 +189,7 @@ internal class TooltipPage : DemoPage() {
         texts.bind(positions.hint) { it.positionsHint }
         val positionedButtons = mutableListOf<HTMLElement>()
         listOf("top", "bottom", "start", "end").forEachIndexed { index, position ->
-            val element = newIconButton(position, "lumo:info-circle").apply { addTheme("tertiary") }
+            val element = IconButton.NAME { show(position, "lumo:info-circle") }.apply { addTheme("tertiary") }
             element.id = ElementId("tooltip-position-$index")
             val positioned = createTooltip { text = position }
             positioned.`for` = "tooltip-position-$index"

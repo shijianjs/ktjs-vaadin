@@ -10,6 +10,13 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.dom.clickEvent
 import web.events.addHandler
 
+        /**
+         * `<vaadin-demo-close-icon>`: the cross button the notification examples put into their `end` slot.
+         *
+         * The host is what the notification slots, so `slot="end"` stays on it; the button and its icon sit
+         * in the shadow root and the action is handed in as [show]'s callback.
+         */
+
 internal class CloseIcon : CustomElementAdapter() {
     private val button = createButton { textContent = "" }.addTheme("icon")
     private val icon = createIcon { icon = "lumo:cross" }

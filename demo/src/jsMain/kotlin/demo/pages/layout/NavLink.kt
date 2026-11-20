@@ -7,6 +7,11 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.html.HtmlTagName
 
+/**
+ * `<vaadin-demo-nav-link>`: a demo navigation link that stays on the current hash route. The host is
+ * a wrapper around the anchor, because an element cannot take over the `a` tag itself.
+ */
+
 internal class NavLink : CustomElementAdapter() {
     private val anchor = HtmlTagName.a().apply {
         href = "#/app-layout"

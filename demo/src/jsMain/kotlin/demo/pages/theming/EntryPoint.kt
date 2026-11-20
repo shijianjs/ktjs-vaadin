@@ -10,6 +10,13 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
+        /**
+         * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
+         *
+         * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
+         * and the code block are kit pieces whose look comes from the page's sheet.
+         */
+
 internal class EntryPoint : CustomElementAdapter() {
     private var name: String? = null
     private var value: String? = null

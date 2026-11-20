@@ -269,7 +269,7 @@ internal class ComboBoxPage : DemoPage() {
         doctorCombo.filteredItems = doctorItems
         doctorCombo.renderer = { container, _, model ->
             visibleDoctors.getOrNull(model.index.toInt())?.let { person ->
-                container.replaceChildren(newComboPersonRow(person))
+                container.replaceChildren(ComboPersonRow.NAME { show(person) })
             }
         }
         doctorCombo.style.setProperty("--vaadin-combo-box-overlay-width", "16em")
@@ -512,11 +512,5 @@ internal class ComboBoxPage : DemoPage() {
          * be a node of its own; it is an element, which keeps the assembling inside a component class.
          */
 
-        /** Creates a defined `<vaadin-demo-combo-person>` already showing [person]. */
-        internal fun newComboPersonRow(person: Person): ComboPersonRow {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            ComboPersonRow.NAME
-            return ComboPersonRow.NAME().apply { show(person) }
-        }
     }
 }

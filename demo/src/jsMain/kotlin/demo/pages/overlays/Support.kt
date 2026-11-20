@@ -67,12 +67,6 @@ internal val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
  * on the button, and [addTheme] hands it there.
  */
 
-/** Creates a defined `<vaadin-demo-icon-button>`. */
-internal fun newIconButton(name: String, vararg iconNames: String): IconButton {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    IconButton.NAME
-    return IconButton.NAME().also { it.show(name, *iconNames) }
-}
 
 internal fun HTMLElement.ariaLabel(name: String) {
     setAttribute("aria-label", name)

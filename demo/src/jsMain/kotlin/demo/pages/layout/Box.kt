@@ -38,9 +38,3 @@ internal class Box : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<Box>(Box::class.js, "demo-layout-box")
 }
 
-/** Creates a defined `<demo-layout-box>` showing [text]. */
-internal fun newBox(text: String, height: String? = null): Box {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    Box.NAME
-    return Box.NAME().also { it.show(text, height) }
-}

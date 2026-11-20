@@ -9,6 +9,11 @@ import io.github.shijianjs.ktjs.vaadin.applayout.createDrawerToggle
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 import web.html.HTMLElement
 
+/**
+ * `<vaadin-demo-app-navbar>`: the navbar of the app layout examples — drawer toggle plus the
+ * application title. The host carries the slot, the nodes sit in its shadow root.
+ */
+
 internal class AppNavbar : CustomElementAdapter() {
     private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
 

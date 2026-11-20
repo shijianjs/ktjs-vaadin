@@ -120,7 +120,7 @@ internal class NotificationPage : DemoPage() {
     }
 
     private fun closeButton(bar: HTMLElement, copy: NotificationTexts, onClick: () -> Unit) {
-        bar.append(newCloseIcon(copy.close, onClick).also { it.slot = "end" })
+        bar.append(CloseIcon.NAME { show(copy.close, onClick) }.also { it.slot = "end" })
     }
 
     private fun actionButton(
@@ -605,11 +605,5 @@ internal class NotificationPage : DemoPage() {
          * in the shadow root and the action is handed in as [show]'s callback.
          */
 
-        /** Creates a defined `<vaadin-demo-close-icon>`. */
-        internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            CloseIcon.NAME
-            return CloseIcon.NAME().also { it.show(name, onClick) }
-        }
     }
 }

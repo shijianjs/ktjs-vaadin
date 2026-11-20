@@ -88,8 +88,8 @@ internal class CardPage : DemoPage() {
         texts.bind(titles.hint, { it.titlesHint }) { titles.hint.textContent = it }
         val slotTitles = createCard()
         slotTitles.append(
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val propertyTitle = createCard {
@@ -113,14 +113,14 @@ internal class CardPage : DemoPage() {
                 slot = "header-prefix"
                 texts.bind(this, { it.lapland }) { name = it }
             },
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val suffixCard = createCard()
         suffixCard.append(
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             createBadge().addTheme("success").apply {
                 slot = "header-suffix"
                 texts.bind(this, { it.arctic }) { textContent = it }
@@ -135,7 +135,7 @@ internal class CardPage : DemoPage() {
         texts.bind(media.hint, { it.mediaHint }) { media.hint.textContent = it }
         val imageCard = createCard()
         imageCard.append(
-            newCardMediaImage(100),
+            CardMediaImage.NAME { show(100) },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val iconCard = createCard()
@@ -160,7 +160,7 @@ internal class CardPage : DemoPage() {
         val footerCard = createCard()
         footerCard.style.setProperty("height", "15rem")
         footerCard.append(
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
             createButton().apply {
                 slot = "footer"
@@ -199,17 +199,17 @@ internal class CardPage : DemoPage() {
         combinedCard.addTheme("outlined", "elevated", "horizontal", "cover-media")
         combinedCard.style.setProperty("max-width", "34rem")
         combinedCard.append(
-            newCardMediaImage(),
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardMediaImage.NAME { show(null) },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val stretchCard = createCard()
         stretchCard.addTheme("stretch-media")
         stretchCard.append(
-            newCardMediaImage(),
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardMediaImage.NAME { show(null) },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         val horizontalCard = createCard()
@@ -219,8 +219,8 @@ internal class CardPage : DemoPage() {
                 slot = "media"
                 texts.bind(this, { it.lapland }) { name = it }
             },
-            newCardSlotText("title", "").also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
-            newCardSlotText("subtitle", "").also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
+            CardSlotText.NAME { show("title", "") }.also { node -> texts.bind(node, { it.lapland }) { node.textContent = it } },
+            CardSlotText.NAME { show("subtitle", "") }.also { node -> texts.bind(node, { it.exoticNorth }) { node.textContent = it } },
             HtmlTagName.div().also { node -> texts.bind(node, { it.shortText }) { node.textContent = it } },
         )
         combined.body.append(exampleBox(null, Grid.NAME { show(260); add(combinedCard, stretchCard, horizontalCard) }))

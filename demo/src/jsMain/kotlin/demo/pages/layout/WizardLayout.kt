@@ -49,9 +49,3 @@ internal class WizardLayout : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<WizardLayout>(WizardLayout::class.js, "demo-wizard-layout")
 }
 
-/** Creates a defined `<demo-wizard-layout>` holding [fields]. */
-internal fun newWizardLayout(vararg fields: HTMLElement): WizardLayout {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    WizardLayout.NAME
-    return WizardLayout.NAME().also { it.add(*fields) }
-}

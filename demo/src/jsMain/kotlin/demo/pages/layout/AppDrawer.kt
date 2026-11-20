@@ -7,6 +7,11 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 
+/**
+ * `<vaadin-demo-app-drawer>`: the drawer of the app layout examples, a scroller holding the main
+ * side navigation.
+ */
+
 internal class AppDrawer : CustomElementAdapter() {
     private val sideNav = AppSideNav.NAME()
 

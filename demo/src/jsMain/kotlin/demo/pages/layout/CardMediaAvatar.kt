@@ -34,9 +34,3 @@ internal class CardMediaAvatar : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<CardMediaAvatar>(CardMediaAvatar::class.js, "demo-card-media-avatar")
 }
 
-/** Creates a defined `<demo-card-media-avatar>` showing [abbr]. */
-internal fun newCardMediaAvatar(abbr: String): CardMediaAvatar {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    CardMediaAvatar.NAME
-    return CardMediaAvatar.NAME().also { it.show(abbr) }
-}

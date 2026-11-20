@@ -30,9 +30,3 @@ internal class CardSlotText : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<CardSlotText>(CardSlotText::class.js, "demo-card-slot-text")
 }
 
-/** Creates a defined `<demo-card-slot-text>` for [slotName]. */
-internal fun newCardSlotText(slotName: String, text: String): CardSlotText {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    CardSlotText.NAME
-    return CardSlotText.NAME().also { it.show(slotName, text) }
-}

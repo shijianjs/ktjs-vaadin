@@ -38,7 +38,7 @@ internal class CardPlayground : CustomElementAdapter(), CardTranslatable {
         style.setProperty("max-width", "24rem")
     }
 
-    private val mediaNodes: Array<HTMLElement> = arrayOf(newCardMediaImage(), CardMediaIcon.NAME(), newCardMediaAvatar("L"))
+    private val mediaNodes: Array<HTMLElement> = arrayOf(CardMediaImage.NAME { show(null) }, CardMediaIcon.NAME(), CardMediaAvatar.NAME { show("L") })
 
     private val contentNodes: Array<HTMLElement> =
         arrayOf(CardContentText.NAME(), CardContentScroller.NAME(), CardContentImage.NAME())
@@ -49,9 +49,9 @@ internal class CardPlayground : CustomElementAdapter(), CardTranslatable {
 
     private val header = CardHeader.NAME()
 
-    private val titleNode = newCardSlotText("title", "")
+    private val titleNode = CardSlotText.NAME { show("title", "") }
 
-    private val subtitleNode = newCardSlotText("subtitle", "")
+    private val subtitleNode = CardSlotText.NAME { show("subtitle", "") }
 
     private val suffixBadge = createBadge().addTheme("success").apply { slot = "header-suffix" }
 

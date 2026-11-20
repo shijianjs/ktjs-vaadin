@@ -69,7 +69,7 @@ internal class ScrollerPage : DemoPage() {
     private val actionIcons = listOf("vaadin:clipboard-check", "vaadin:book-dollar", "vaadin:line-chart", "vaadin:invoice")
 
     private val actions: List<ScrollerAction> =
-        scrollerTexts[Langs.EN].actions.mapIndexed { index, label -> newScrollerAction(label, actionIcons[index]) }
+        scrollerTexts[Langs.EN].actions.mapIndexed { index, label -> ScrollerAction.NAME { show(label, actionIcons[index]) } }
 
     init {
         frame.mount(this)
@@ -253,13 +253,5 @@ internal class ScrollerPage : DemoPage() {
          * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
          */
 
-        /** Creates a defined `<vaadin-demo-scroller-action>`. */
-        internal fun newScrollerAction(label: String, icon: String): ScrollerAction {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            ScrollerAction.NAME
-            return ScrollerAction.NAME().also {
-                it.show(label, icon)
-            }
-        }
     }
 }

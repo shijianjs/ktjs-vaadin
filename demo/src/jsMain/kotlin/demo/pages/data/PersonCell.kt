@@ -15,6 +15,12 @@ import web.cssom.Display
 import web.cssom.FlexDirection
 import web.cssom.px
 
+/**
+ * `<vaadin-demo-person-cell>`: avatar + name + email, the two-line cell the docs render through a
+ * renderer. The cell is an element so a renderer hands back one node with its own shadow rather than
+ * a `div` rebuilt per row.
+ */
+
 internal class PersonCell : CustomElementAdapter() {
     private val avatar = createAvatar { }
     private val displayName = HtmlTagName.span().apply { style.setProperty("font-weight", "600") }

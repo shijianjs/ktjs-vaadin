@@ -148,12 +148,6 @@ internal class GridHeader : CustomElementAdapter() {
     companion object : CustomElementReferenceAdapter<GridHeader>(GridHeader::class.js, "vaadin-demo-grid-header")
 }
 
-/** Creates a defined `<vaadin-demo-grid-header>`. */
-internal fun newGridHeader(label: String, icon: String, title: String): GridHeader {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    GridHeader.NAME
-    return GridHeader.NAME().also { it.show(label, icon, title) }
-}
 
 internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorterDirection?): List<Person> {
     if (path == null || direction == null) return list
@@ -175,11 +169,5 @@ internal fun sortPeople(list: List<Person>, path: String?, direction: GridSorter
  * a `div` rebuilt per row.
  */
 
-/** Creates a defined `<vaadin-demo-person-cell>`. */
-internal fun newPersonCell(item: JsAny?): PersonCell {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    PersonCell.NAME
-    return PersonCell.NAME().also { it.show(item) }
-}
 
 // endregion

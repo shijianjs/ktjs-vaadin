@@ -392,11 +392,11 @@ internal class GridPage : DemoPage(), GridTranslatable {
         val headed = grid("16rem")
         headed.fill(people(6))
         val totalMembers = textNode({ it.totalMembers })
-        val subscriberHeader = newGridHeader("", "vaadin:info-circle", "")
+        val subscriberHeader = GridHeader.NAME { show("", "vaadin:info-circle", "") }
         texts.bind(subscriberHeader, { it.columnSubscriber }) { subscriberHeader.label = it }
         texts.bind(subscriberHeader, { it.subscriberTooltip }) { subscriberHeader.tooltip = it }
         val subscriberCount = textNode({ it.subscriberCount })
-        val membershipHeader = newGridHeader("", "vaadin:info-circle", "")
+        val membershipHeader = GridHeader.NAME { show("", "vaadin:info-circle", "") }
         texts.bind(membershipHeader, { it.membershipHeading }) { membershipHeader.label = it }
         texts.bind(membershipHeader, { it.membershipTooltip }) { membershipHeader.tooltip = it }
         val membershipBreakdown = textNode({ it.membershipBreakdown })
@@ -516,7 +516,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         val externalName = createGridColumn {
             width = "230px"
             flexGrow = 0.0
-            renderer = { root, _, model -> root.append(newPersonCell(model.item)) }
+            renderer = { root, _, model -> root.append(PersonCell.NAME { show(model.item) }) }
         }
         header(externalName) { it.columnName }
         val externalEmail = createGridColumn { path = "email" }
@@ -559,7 +559,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         val pagedName = createGridColumn {
             width = "230px"
             flexGrow = 0.0
-            renderer = { root, _, model -> root.append(newPersonCell(model.item)) }
+            renderer = { root, _, model -> root.append(PersonCell.NAME { show(model.item) }) }
         }
         header(pagedName) { it.columnName }
         pagedGrid.append(pagedName, createGridColumn { path = "email" }, createGridColumn { path = "profession" })
@@ -760,7 +760,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         val clickName = createGridColumn { path = "displayName" }
         header(clickName) { it.columnName }
         clickGrid.append(clickName, createGridColumn { path = "profession" })
-        clickGrid.rowDetailsRenderer = { root, _, model -> root.append(newPersonDetails(model.item)) }
+        clickGrid.rowDetailsRenderer = { root, _, model -> root.append(PersonDetails.NAME { show(model.item) }) }
         clickGrid.listen(GridEvents.activeItemChanged) { event ->
             val item = detailValue(event)
             if (item == null) {
@@ -774,7 +774,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         // A frozen column with a toggle button.
         val toggleGrid = grid()
         toggleGrid.fill(people(5))
-        toggleGrid.rowDetailsRenderer = { root, _, model -> root.append(newPersonDetails(model.item)) }
+        toggleGrid.rowDetailsRenderer = { root, _, model -> root.append(PersonDetails.NAME { show(model.item) }) }
         val openedItems = mutableListOf<JsAny>()
         val toggleColumn = createGridColumn {
             width = "80px"

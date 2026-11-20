@@ -49,7 +49,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         frame.mount(this)
 
         fun item(number: Int, height: String? = null): HTMLElement =
-            newBox("").also { node ->
+            Box.NAME { show("") }.also { node ->
                 if (height != null) node.style.setProperty("height", height)
                 texts.bind(node) { it.item(number) }
             }
@@ -124,12 +124,12 @@ internal class HorizontalLayoutPage : DemoPage() {
         val horizontalAlignment = SectionBlock.NAME { show() }
         texts.bind(horizontalAlignment.heading) { it.horizontalHeading }
         texts.bind(horizontalAlignment.hint) { it.horizontalHint }
-        val startBox = newBox("").also { texts.bind(it, { it.start }) { copy -> it.textContent = copy } }
-        val middleBox = newBox("").also { node ->
+        val startBox = Box.NAME { show("") }.also { texts.bind(it, { it.start }) { copy -> it.textContent = copy } }
+        val middleBox = Box.NAME { show("") }.also { node ->
             node.slot = "middle"
             texts.bind(node, { it.middle }) { copy -> node.textContent = copy }
         }
-        val endBox = newBox("").also { node ->
+        val endBox = Box.NAME { show("") }.also { node ->
             node.slot = "end"
             texts.bind(node, { it.end }) { copy -> node.textContent = copy }
         }
@@ -264,7 +264,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 if (slot != null) this.slot = slot
                 addTheme("spacing", "padding")
                 repeat(count) {
-                    val node = newBox("")
+                    val node = Box.NAME { show("") }
                     texts.bind(node, copy) { text -> node.textContent = text }
                     append(node)
                 }

@@ -87,7 +87,7 @@ internal class FormLayoutPage : DemoPage() {
             formRow(mail { it.emailAddress }),
             formRow(secret { it.password }, secret { it.confirmPassword }),
         )
-        autoSection.body.append(exampleBox(null, newFormFrame(basicForm)))
+        autoSection.body.append(exampleBox(null, FormFrame.NAME { show(basicForm) }))
         body.append(autoSection.root)
 
         val labelsSection = SectionBlock.NAME { show() }
@@ -103,7 +103,7 @@ internal class FormLayoutPage : DemoPage() {
             item({ it.lastName }, createTextField()),
             item({ it.emailAddress }, createEmailField()),
         )
-        labelsSection.body.append(exampleBox(null, newFormFrame(asideForm)))
+        labelsSection.body.append(exampleBox(null, FormFrame.NAME { show(asideForm) }))
         body.append(labelsSection.root)
 
         val columnsSection = SectionBlock.NAME { show() }
@@ -131,8 +131,8 @@ internal class FormLayoutPage : DemoPage() {
             formRow(secret { it.password }, secret { it.confirmPassword }),
         )
         columnsSection.body.append(
-            exampleBox("expand-columns", newFormFrame(expandColumnsForm)),
-            exampleBox("expand-columns expand-fields", newFormFrame(expandFieldsForm)),
+            exampleBox("expand-columns", FormFrame.NAME { show(expandColumnsForm) }),
+            exampleBox("expand-columns expand-fields", FormFrame.NAME { show(expandFieldsForm) }),
         )
         body.append(columnsSection.root)
 
@@ -153,7 +153,7 @@ internal class FormLayoutPage : DemoPage() {
             ),
             formRow(field { it.country }.apply { setAttribute("data-colspan", "2") }),
         )
-        colspan.body.append(exampleBox(null, newFormFrame(spanForm)))
+        colspan.body.append(exampleBox(null, FormFrame.NAME { show(spanForm) }))
         body.append(colspan.root)
 
         val stepsSection = SectionBlock.NAME { show() }
@@ -189,10 +189,10 @@ internal class FormLayoutPage : DemoPage() {
             item({ it.lastName }, createTextField()),
             item({ it.emailAddress }, createEmailField()),
         )
-        val asideCard = exampleBox("", newFormFrame(stepsAsideForm))
+        val asideCard = exampleBox("", FormFrame.NAME { show(stepsAsideForm) })
         texts.bind(asideCard.firstElementChild as HTMLParagraphElement) { it.asideCaption }
         stepsSection.body.append(
-            exampleBox("responsiveSteps", newFormFrame(stepsForm)),
+            exampleBox("responsiveSteps", FormFrame.NAME { show(stepsForm) }),
             asideCard,
         )
         body.append(stepsSection.root)
@@ -273,12 +273,6 @@ internal class FormLayoutPage : DemoPage() {
          * follows it.
          */
 
-        /** Creates a defined `<vaadin-demo-form-frame>` around [form]. */
-        internal fun newFormFrame(form: HTMLElement): FormFrame {
-            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-            FormFrame.NAME
-            return FormFrame.NAME().also { it.show(form) }
-        }
         /** A `<vaadin-form-row>` grouping fields into one row of an auto-responsive form layout. */
         private fun formRow(vararg fields: HTMLElement): HTMLElement {
             val row = createFormRow()
