@@ -13,19 +13,6 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.dom.clickEvent
 import web.events.addHandler
 
-private var tickHandle: Int? = null
-
-private fun startTicking(millis: Int, tick: () -> Unit) {
-    stopTicking()
-    tickHandle = js("(fn, ms) => window.setInterval(fn, ms)")(tick, millis) as Int
-}
-
-private fun stopTicking() {
-    val handle = tickHandle ?: return
-    js("(handle) => window.clearInterval(handle)")(handle)
-    tickHandle = null
-}
-
 /**
  * `<vaadin-demo-long-action>`: a primary action that disables itself while a simulated job runs.
  *
@@ -59,5 +46,17 @@ class LongAction : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(row(perform, progress))
     }
 
-    companion object : CustomElementReferenceAdapter<LongAction>(LongAction::class.js, "vaadin-demo-long-action")
+    companion object : CustomElementReferenceAdapter<LongAction>(LongAction::class.js, "vaadin-demo-long-action") {
+
+        private var tickHandle: Int? = null
+        private fun startTicking(millis: Int, tick: () -> Unit) {
+            stopTicking()
+            tickHandle = js("(fn, ms) => window.setInterval(fn, ms)")(tick, millis) as Int
+        }
+        private fun stopTicking() {
+            val handle = tickHandle ?: return
+            js("(handle) => window.clearInterval(handle)")(handle)
+            tickHandle = null
+        }
+    }
 }

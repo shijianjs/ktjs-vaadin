@@ -55,80 +55,10 @@ import web.cssom.px
 import web.dom.Node
 import web.html.HtmlTagName
 
-private val overviewEnglish: OverviewTexts = OverviewTexts(
-    title = "Component overview",
-    summary = "Kotlin/JS wrappers for the free Vaadin Web Components, demonstrating properties, " +
-        "variants and interactions component by component.",
-    docsLink = "Vaadin documentation",
-    sourceLink = "Kotlin source",
-    apiLink = "Kotlin API reference",
-    whatHeading = "What this is",
-    whatBody = "Every wrapped component has its own page; all examples are interactive and run in both " +
-        "the light and dark Lumo themes. The showcase itself is Kotlin/JS too: every node is created " +
-        "through the wrapper factories, properties are assigned with typed Kotlin values, and events " +
-        "are subscribed through the generated EventTypes. No UI framework is involved.",
-    indexHeading = "Component index",
-    indexHint = "Filter by name, then open a card to visit its page.",
-    findLabel = "Find a component",
-    findPlaceholder = "e.g. grid, dialog, text",
-    showing = { visible, total -> "Showing $visible of $total pages" },
-)
-
-private val overviewChinese: OverviewTexts = OverviewTexts(
-    title = "组件总览",
-    summary = "免费版 Vaadin Web Components 的 Kotlin/JS 封装，逐组件演示属性、变体与交互。",
-    docsLink = "Vaadin 官方文档",
-    sourceLink = "查看 Kotlin 源码",
-    apiLink = "Kotlin API 文档",
-    whatHeading = "这是什么",
-    whatBody = "每个已封装的组件都有独立页面，示例全部可交互，并且可以在亮色与暗色 Lumo 主题下运行。" +
-        "页面本身也是 Kotlin/JS：所有节点通过 wrapper 工厂创建，属性用 Kotlin 类型直接赋值，" +
-        "事件通过生成的 EventType 订阅。没有引入任何 UI 框架。",
-    indexHeading = "组件索引",
-    indexHint = "输入名称过滤，点击卡片进入对应页面。",
-    findLabel = "查找组件",
-    findPlaceholder = "例如 grid、dialog、text",
-    showing = { visible, total -> "显示 $visible / $total 个页面" },
-)
-
-private val overviewTexts: Translations<OverviewTexts> = texts(
-    Langs.EN to overviewEnglish,
-    Langs.ZH_HANS to overviewChinese,
-)
-
-/** The class the index cards are found by in tests; it carries no style of its own. */
-private val COMPONENT_CARD: ClassName = ClassName("component-card")
-
-/** The condition the filter toggles, written as a selector instead of as text. */
-private val NOT_HIDDEN: CssSelector = pseudo(pseudoClass("not"), attributeSelector(HtmlAttributes.hidden))
-
 /**
  * What the index needs from the wrapper: an `<a>` around a card must stop painting text the way a
  * link paints it, and must pass the row's height through to the card inside it.
  */
-private val INDEX_SHEET: CSSStyleSheet = cssSheet {
-    // `:not([hidden])`, because a `display` declared here would otherwise beat the `hidden` attribute
-    // the filter sets - the same trap as an inline display. `flex` rather than `block`: the link is
-    // the grid item, so the row stretches it to the tallest card, and a flex box carries that height
-    // into the card instead of leaving it at its own content height.
-    compound(className(COMPONENT_CARD), NOT_HIDDEN).invoke {
-        display = Display.flex
-    }
-
-    // The card takes the whole cell width and the height it was stretched to. A `zh` summary (two
-    // lines) and an `en` one (three lines) in the same row only line up because the tallest card
-    // decides the row.
-    className(COMPONENT_CARD).child(tag(VaadinTagName.card)).invoke {
-        flexGrow = number(1.0)
-    }
-
-    className(COMPONENT_CARD).invoke {
-        color = Color("inherit")
-        // `TextDecorationLine` has a `None` subtype (`None.none` is the `none` keyword), so the
-        // declaration stays typed - no text goes into this sheet.
-        textDecorationLine = None.none
-    }
-}
 
 /**
  * One section of the index: the heading(whose mark and text are separate nodes, so a language switch
@@ -268,5 +198,72 @@ internal class OverviewPage : DemoPage() {
         filter()
     }
 
-        companion object : CustomElementReferenceAdapter<OverviewPage>(OverviewPage::class.js, "vaadin-demo-overview-page")
+        companion object : CustomElementReferenceAdapter<OverviewPage>(OverviewPage::class.js, "vaadin-demo-overview-page") {
+
+        private val overviewEnglish: OverviewTexts = OverviewTexts(
+            title = "Component overview",
+            summary = "Kotlin/JS wrappers for the free Vaadin Web Components, demonstrating properties, " +
+                "variants and interactions component by component.",
+            docsLink = "Vaadin documentation",
+            sourceLink = "Kotlin source",
+            apiLink = "Kotlin API reference",
+            whatHeading = "What this is",
+            whatBody = "Every wrapped component has its own page; all examples are interactive and run in both " +
+                "the light and dark Lumo themes. The showcase itself is Kotlin/JS too: every node is created " +
+                "through the wrapper factories, properties are assigned with typed Kotlin values, and events " +
+                "are subscribed through the generated EventTypes. No UI framework is involved.",
+            indexHeading = "Component index",
+            indexHint = "Filter by name, then open a card to visit its page.",
+            findLabel = "Find a component",
+            findPlaceholder = "e.g. grid, dialog, text",
+            showing = { visible, total -> "Showing $visible of $total pages" },
+        )
+        private val overviewChinese: OverviewTexts = OverviewTexts(
+            title = "组件总览",
+            summary = "免费版 Vaadin Web Components 的 Kotlin/JS 封装，逐组件演示属性、变体与交互。",
+            docsLink = "Vaadin 官方文档",
+            sourceLink = "查看 Kotlin 源码",
+            apiLink = "Kotlin API 文档",
+            whatHeading = "这是什么",
+            whatBody = "每个已封装的组件都有独立页面，示例全部可交互，并且可以在亮色与暗色 Lumo 主题下运行。" +
+                "页面本身也是 Kotlin/JS：所有节点通过 wrapper 工厂创建，属性用 Kotlin 类型直接赋值，" +
+                "事件通过生成的 EventType 订阅。没有引入任何 UI 框架。",
+            indexHeading = "组件索引",
+            indexHint = "输入名称过滤，点击卡片进入对应页面。",
+            findLabel = "查找组件",
+            findPlaceholder = "例如 grid、dialog、text",
+            showing = { visible, total -> "显示 $visible / $total 个页面" },
+        )
+        private val overviewTexts: Translations<OverviewTexts> = texts(
+            Langs.EN to overviewEnglish,
+            Langs.ZH_HANS to overviewChinese,
+        )
+        /** The class the index cards are found by in tests; it carries no style of its own. */
+        private val COMPONENT_CARD: ClassName = ClassName("component-card")
+        /** The condition the filter toggles, written as a selector instead of as text. */
+        private val NOT_HIDDEN: CssSelector = pseudo(pseudoClass("not"), attributeSelector(HtmlAttributes.hidden))
+        private val INDEX_SHEET: CSSStyleSheet = cssSheet {
+            // `:not([hidden])`, because a `display` declared here would otherwise beat the `hidden` attribute
+            // the filter sets - the same trap as an inline display. `flex` rather than `block`: the link is
+            // the grid item, so the row stretches it to the tallest card, and a flex box carries that height
+            // into the card instead of leaving it at its own content height.
+            compound(className(COMPONENT_CARD), NOT_HIDDEN).invoke {
+                display = Display.flex
+            }
+
+            // The card takes the whole cell width and the height it was stretched to. A `zh` summary (two
+            // lines) and an `en` one (three lines) in the same row only line up because the tallest card
+            // decides the row.
+            className(COMPONENT_CARD).child(tag(VaadinTagName.card)).invoke {
+                flexGrow = number(1.0)
+            }
+
+            className(COMPONENT_CARD).invoke {
+                color = Color("inherit")
+                // `TextDecorationLine` has a `None` subtype (`None.none` is the `none` keyword), so the
+                // declaration stays typed - no text goes into this sheet.
+                textDecorationLine = None.none
+            }
+        }
+    }
 }

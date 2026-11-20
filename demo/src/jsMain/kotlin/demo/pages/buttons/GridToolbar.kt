@@ -23,16 +23,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HtmlTagName
 
-private const val GRID_USERS =
-    """
-    [
-      {"firstName": "Ada", "lastName": "Lovelace", "email": "ada@example.com"},
-      {"firstName": "Grace", "lastName": "Hopper", "email": "grace@example.com"},
-      {"firstName": "Margaret", "lastName": "Hamilton", "email": "margaret@example.com"},
-      {"firstName": "Katherine", "lastName": "Johnson", "email": "katherine@example.com"}
-    ]
-    """
-
 /**
  * `<vaadin-demo-grid-toolbar>`: a grid with a selection column, and the toolbar that depends on it.
  *
@@ -149,5 +139,16 @@ class GridToolbar : CustomElementAdapter() {
         readout.set(rowsPrefix + size + rowsSuffix)
     }
 
-    companion object : CustomElementReferenceAdapter<GridToolbar>(GridToolbar::class.js, "vaadin-demo-grid-toolbar")
+    companion object : CustomElementReferenceAdapter<GridToolbar>(GridToolbar::class.js, "vaadin-demo-grid-toolbar") {
+
+        private const val GRID_USERS =
+            """
+            [
+              {"firstName": "Ada", "lastName": "Lovelace", "email": "ada@example.com"},
+              {"firstName": "Grace", "lastName": "Hopper", "email": "grace@example.com"},
+              {"firstName": "Margaret", "lastName": "Hamilton", "email": "margaret@example.com"},
+              {"firstName": "Katherine", "lastName": "Johnson", "email": "katherine@example.com"}
+            ]
+            """
+    }
 }
