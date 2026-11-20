@@ -141,11 +141,6 @@ private val chinese: CustomFieldTexts =
         currency = "币种",
     )
 
-private val customFieldTexts: Translations<CustomFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class CustomFieldPage : DemoPage() {
     private val texts = Binder(customFieldTexts)
 
@@ -317,48 +312,45 @@ internal class CustomFieldPage : DemoPage() {
         paymentReadout.set(copy.paymentPrefix, (payment.value ?: "").replace("\t", " · ").ifEmpty { copy.empty })
     }
 
-    companion object : CustomElementReferenceAdapter<CustomFieldPage>(CustomFieldPage::class.js, "vaadin-demo-custom-field-page")
-}
-
-private const val DAY_MILLIS: Double = 86_400_000.0
-
-/** Epoch milliseconds of an ISO `yyyy-MM-dd` string; `NaN` when the text is not a date. */
-private fun isoDay(text: String): Double =
-    js("(text) => Date.parse(text + 'T00:00:00Z')")(text) as Double
-
-/** Splits a custom-field value into its first two tab-separated parts. */
-private fun tabParts(value: String): Pair<String, String> {
-    val index = value.indexOf('\t')
-    return if (index < 0) value to "" else value.substring(0, index) to value.substring(index + 1)
-}
-
-/** Joins the input value array with tabs, the separator the date range format uses. */
-private fun joinWithTab(values: Array<JsAny?>): String =
-    js("(values) => values.join('\\t')")(values) as String
-
-/** Splits a tab-separated field value back into per-input values. */
-private fun splitByTab(text: String): Array<JsAny?> =
-    (js("(text) => String(text || '').split('\\t')")(text) as Array<JsAny?>)
-
-/** Joins the input value array the way the custom-field demo expects. */
-private fun joinInputs(values: Array<JsAny?>): String =
-    js("(values) => values.filter((value) => value != null && value !== '').join(' ')")(values) as String
-
-/** Splits a full name into the per-input values. */
-private fun splitInputs(text: String): Array<JsAny?> =
-    js("(text) => text.trim().split(/\\s+/)").let { split ->
-        @Suppress("UNCHECKED_CAST")
-        (split(text) as Array<JsAny?>)
+    companion object : CustomElementReferenceAdapter<CustomFieldPage>(CustomFieldPage::class.js, "vaadin-demo-custom-field-page") {
+        private val customFieldTexts: Translations<CustomFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        private const val DAY_MILLIS: Double = 86_400_000.0
+        /** Epoch milliseconds of an ISO `yyyy-MM-dd` string; `NaN` when the text is not a date. */
+        private fun isoDay(text: String): Double =
+            js("(text) => Date.parse(text + 'T00:00:00Z')")(text) as Double
+        /** Splits a custom-field value into its first two tab-separated parts. */
+        private fun tabParts(value: String): Pair<String, String> {
+            val index = value.indexOf('\t')
+            return if (index < 0) value to "" else value.substring(0, index) to value.substring(index + 1)
+        }
+        /** Joins the input value array with tabs, the separator the date range format uses. */
+        private fun joinWithTab(values: Array<JsAny?>): String =
+            js("(values) => values.join('\\t')")(values) as String
+        /** Splits a tab-separated field value back into per-input values. */
+        private fun splitByTab(text: String): Array<JsAny?> =
+            (js("(text) => String(text || '').split('\\t')")(text) as Array<JsAny?>)
+        /** Joins the input value array the way the custom-field demo expects. */
+        private fun joinInputs(values: Array<JsAny?>): String =
+            js("(values) => values.filter((value) => value != null && value !== '').join(' ')")(values) as String
+        /** Splits a full name into the per-input values. */
+        private fun splitInputs(text: String): Array<JsAny?> =
+            js("(text) => text.trim().split(/\\s+/)").let { split ->
+                @Suppress("UNCHECKED_CAST")
+                (split(text) as Array<JsAny?>)
+            }
+        /** Creates a bare `<input>` with the pattern the native-input example relies on. */
+        private fun nativeInput(pattern: String): HTMLInputElement =
+            HtmlTagName.input().apply {
+                setAttribute("type", "text")
+                setAttribute("pattern", pattern)
+                required = true
+                style.setProperty("width", "9rem")
+            }
     }
-
-/** Creates a bare `<input>` with the pattern the native-input example relies on. */
-private fun nativeInput(pattern: String): HTMLInputElement =
-    HtmlTagName.input().apply {
-        setAttribute("type", "text")
-        setAttribute("pattern", pattern)
-        required = true
-        style.setProperty("width", "9rem")
-    }
+}
 
 /** A bare input announces itself twice: the placeholder and the label screen readers hear. */
 private fun HTMLInputElement.nativeText(text: String) {

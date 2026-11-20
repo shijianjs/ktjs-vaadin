@@ -147,11 +147,6 @@ private val chinese: ScrollerTexts = ScrollerTexts(
     actions = listOf("审计", "报表", "仪表盘", "发票"),
 )
 
-private val scrollerTexts: Translations<ScrollerTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class ScrollerPage : DemoPage() {
     private val texts = Binder(scrollerTexts)
 
@@ -250,19 +245,23 @@ internal class ScrollerPage : DemoPage() {
         actions.forEachIndexed { index, action -> action.updateLabel(copy.actions[index]) }
     }
 
-    companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page")
-}
+    companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page") {
+        private val scrollerTexts: Translations<ScrollerTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /**
+         * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
+         * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
+         */
 
-/**
- * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
- * example. The host is the button's wrapper, so the icon's `prefix` slot survives the wrap.
- */
-
-/** Creates a defined `<vaadin-demo-scroller-action>`. */
-internal fun newScrollerAction(label: String, icon: String): ScrollerAction {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    ScrollerAction.NAME
-    return ScrollerAction.NAME().also {
-        it.show(label, icon)
+        /** Creates a defined `<vaadin-demo-scroller-action>`. */
+        internal fun newScrollerAction(label: String, icon: String): ScrollerAction {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            ScrollerAction.NAME
+            return ScrollerAction.NAME().also {
+                it.show(label, icon)
+            }
+        }
     }
 }

@@ -58,26 +58,6 @@ val comboBoxEntry: CatalogEntry =
         kitPage = { ComboBoxPage.NAME() },
     )
 
-// The docs examples load these fixtures from a backend; the ids stay strings so the selected value
-// of a combo box is a readable string, and two names are kept for the "Grace" filtering example.
-private const val OWNERS_JSON =
-    """
-    [
-      {"id": "ada", "name": "Ada Lovelace"},
-      {"id": "grace", "name": "Grace Hopper"},
-      {"id": "margaret", "name": "Margaret Hamilton"},
-      {"id": "katherine", "name": "Katherine Johnson"}
-    ]
-    """
-
-private val countryNames: List<String> =
-    listOf(
-        "Finland", "Germany", "France", "Italy", "Spain", "Portugal", "Netherlands", "Belgium",
-        "Sweden", "Norway", "Denmark", "Iceland", "Ireland", "Austria", "Switzerland", "Poland",
-        "Czechia", "Slovakia", "Hungary", "Romania", "Bulgaria", "Greece", "Croatia", "Slovenia",
-        "Estonia", "Latvia", "Lithuania", "Luxembourg", "Malta", "Cyprus",
-    )
-
 private val english: ComboBoxTexts =
     ComboBoxTexts(
         basicHeading = "Basic usage",
@@ -205,11 +185,6 @@ private val chinese: ComboBoxTexts =
         stylesHint = "align-right、small 与 helper-above-field 同样适用于 combo-box。",
         value = "值",
     )
-
-private val comboBoxTexts: Translations<ComboBoxTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class ComboBoxPage : DemoPage() {
     private val texts = Binder(comboBoxTexts)
@@ -506,23 +481,44 @@ internal class ComboBoxPage : DemoPage() {
         filterReadout.set(if (count == null) texts.current.totalItems(6) else texts.current.matchedItems(count))
     }
 
-    companion object : CustomElementReferenceAdapter<ComboBoxPage>(ComboBoxPage::class.js, "vaadin-demo-combo-box-page")
-}
+    companion object : CustomElementReferenceAdapter<ComboBoxPage>(ComboBoxPage::class.js, "vaadin-demo-combo-box-page") {
+        // The docs examples load these fixtures from a backend; the ids stay strings so the selected value
+        // of a combo box is a readable string, and two names are kept for the "Grace" filtering example.
+        private const val OWNERS_JSON =
+            """
+            [
+              {"id": "ada", "name": "Ada Lovelace"},
+              {"id": "grace", "name": "Grace Hopper"},
+              {"id": "margaret", "name": "Margaret Hamilton"},
+              {"id": "katherine", "name": "Katherine Johnson"}
+            ]
+            """
+        private val countryNames: List<String> =
+            listOf(
+                "Finland", "Germany", "France", "Italy", "Spain", "Portugal", "Netherlands", "Belgium",
+                "Sweden", "Norway", "Denmark", "Iceland", "Ireland", "Austria", "Switzerland", "Poland",
+                "Czechia", "Slovakia", "Hungary", "Romania", "Bulgaria", "Greece", "Croatia", "Slovenia",
+                "Estonia", "Latvia", "Lithuania", "Luxembourg", "Malta", "Cyprus",
+            )
+        private val comboBoxTexts: Translations<ComboBoxTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** Appends a typed string to a JS array without rebuilding the original items. */
+        private fun appendItem(items: Array<JsAny>, value: String): Array<JsAny> =
+            js("(items, value) => [...items, value]")(items, value).unsafeCast<Array<JsAny>>()
+        /**
+         * `<vaadin-demo-combo-person>`: one combo box item — avatar, name and profession.
+         *
+         * The combo box hands its renderer a container and asks it to fill that container, so the item has to
+         * be a node of its own; it is an element, which keeps the assembling inside a component class.
+         */
 
-/** Appends a typed string to a JS array without rebuilding the original items. */
-private fun appendItem(items: Array<JsAny>, value: String): Array<JsAny> =
-    js("(items, value) => [...items, value]")(items, value).unsafeCast<Array<JsAny>>()
-
-/**
- * `<vaadin-demo-combo-person>`: one combo box item — avatar, name and profession.
- *
- * The combo box hands its renderer a container and asks it to fill that container, so the item has to
- * be a node of its own; it is an element, which keeps the assembling inside a component class.
- */
-
-/** Creates a defined `<vaadin-demo-combo-person>` already showing [person]. */
-internal fun newComboPersonRow(person: Person): ComboPersonRow {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    ComboPersonRow.NAME
-    return ComboPersonRow.NAME().apply { show(person) }
+        /** Creates a defined `<vaadin-demo-combo-person>` already showing [person]. */
+        internal fun newComboPersonRow(person: Person): ComboPersonRow {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            ComboPersonRow.NAME
+            return ComboPersonRow.NAME().apply { show(person) }
+        }
+    }
 }

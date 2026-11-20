@@ -1,6 +1,5 @@
 package demo.pages.data
 
-
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -29,9 +28,6 @@ import io.github.shijianjs.ktjs.vaadin.grid.GridColumnElement
 import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
-
-/** A read-only field the details panel fills from the item. */
-private fun readOnlyField(): TextFieldElement = createTextField { readonly = true }
 
 // region Event detail readers
 
@@ -101,7 +97,10 @@ internal class PersonDetails : CustomElementAdapter(), GridTranslatable {
         gridTexts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<PersonDetails>(PersonDetails::class.js, "vaadin-demo-person-details")
+    companion object : CustomElementReferenceAdapter<PersonDetails>(PersonDetails::class.js, "vaadin-demo-person-details") {
+        /** A read-only field the details panel fills from the item. */
+        private fun readOnlyField(): TextFieldElement = createTextField { readonly = true }
+    }
 }
 
 /** Creates a defined `<vaadin-demo-person-details>`. */

@@ -147,11 +147,6 @@ private val chinese: AccordionTexts =
         statements = "对账单",
     )
 
-private val accordionTexts: Translations<AccordionTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class AccordionPage : DemoPage() {
     private val texts = Binder(accordionTexts)
 
@@ -342,7 +337,12 @@ internal class AccordionPage : DemoPage() {
             }
         }
 
-    companion object : CustomElementReferenceAdapter<AccordionPage>(AccordionPage::class.js, "vaadin-demo-accordion-page")
+    companion object : CustomElementReferenceAdapter<AccordionPage>(AccordionPage::class.js, "vaadin-demo-accordion-page") {
+        private val accordionTexts: Translations<AccordionTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }
 
 /**

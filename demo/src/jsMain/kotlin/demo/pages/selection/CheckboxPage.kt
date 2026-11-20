@@ -176,11 +176,6 @@ private val chinese: CheckboxTexts =
         helperText = "辅助信息",
     )
 
-private val checkboxTexts: Translations<CheckboxTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class CheckboxPage : DemoPage() {
     private val texts = Binder(checkboxTexts)
 
@@ -405,5 +400,10 @@ internal class CheckboxPage : DemoPage() {
         exportReadout.set("value = ", joinValues(exportGroup.value).ifEmpty { texts.current.emptyValue })
     }
 
-    companion object : CustomElementReferenceAdapter<CheckboxPage>(CheckboxPage::class.js, "vaadin-demo-checkbox-page")
+    companion object : CustomElementReferenceAdapter<CheckboxPage>(CheckboxPage::class.js, "vaadin-demo-checkbox-page") {
+        private val checkboxTexts: Translations<CheckboxTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

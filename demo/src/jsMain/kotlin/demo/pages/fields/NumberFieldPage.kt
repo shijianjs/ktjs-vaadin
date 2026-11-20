@@ -198,11 +198,6 @@ private val chinese: NumberFieldTexts =
         label = "标签",
     )
 
-private val numberFieldTexts: Translations<NumberFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class NumberFieldPage : DemoPage() {
     private val texts = Binder(numberFieldTexts)
 
@@ -542,5 +537,10 @@ internal class NumberFieldPage : DemoPage() {
         showModes()
     }
 
-    companion object : CustomElementReferenceAdapter<NumberFieldPage>(NumberFieldPage::class.js, "vaadin-demo-number-field-page")
+    companion object : CustomElementReferenceAdapter<NumberFieldPage>(NumberFieldPage::class.js, "vaadin-demo-number-field-page") {
+        private val numberFieldTexts: Translations<NumberFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

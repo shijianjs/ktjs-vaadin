@@ -160,11 +160,6 @@ private val timePickerChinese: TimePickerTexts = TimePickerTexts(
     parseTimeCaption = "i18n.parseTime",
 )
 
-private val timePickerTexts: Translations<TimePickerTexts> = texts(
-    Langs.EN to timePickerEnglish,
-    Langs.ZH_HANS to timePickerChinese,
-)
-
 val timePickerEntry: CatalogEntry =
     CatalogEntry(
         id = "time-picker",
@@ -507,25 +502,29 @@ internal class TimePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<TimePickerPage>(TimePickerPage::class.js, "vaadin-demo-time-picker-page")
-}
-
-/**
- * Time picker parser that accepts `7.30` as well as `07:30`, the custom-parser example. Text with
- * seconds (`7.30.15`, `07:30:15`) is normalized and handed to the standard ISO parser.
- */
-private fun parseLooseTime(text: String): TimePickerTime? {
-    val pieces = text.trim().replace('.', ':').split(":")
-    if (pieces.size == 3) {
-        val hours = pieces[0].toIntOrNull() ?: return null
-        val minutes = pieces[1].toIntOrNull() ?: return null
-        val seconds = pieces[2].toIntOrNull() ?: return null
-        if (hours !in 0..23 || minutes !in 0..59 || seconds !in 0..59) return null
-        return parseISOTime("${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}")
+    companion object : CustomElementReferenceAdapter<TimePickerPage>(TimePickerPage::class.js, "vaadin-demo-time-picker-page") {
+        private val timePickerTexts: Translations<TimePickerTexts> = texts(
+            Langs.EN to timePickerEnglish,
+            Langs.ZH_HANS to timePickerChinese,
+        )
+        /**
+         * Time picker parser that accepts `7.30` as well as `07:30`, the custom-parser example. Text with
+         * seconds (`7.30.15`, `07:30:15`) is normalized and handed to the standard ISO parser.
+         */
+        private fun parseLooseTime(text: String): TimePickerTime? {
+            val pieces = text.trim().replace('.', ':').split(":")
+            if (pieces.size == 3) {
+                val hours = pieces[0].toIntOrNull() ?: return null
+                val minutes = pieces[1].toIntOrNull() ?: return null
+                val seconds = pieces[2].toIntOrNull() ?: return null
+                if (hours !in 0..23 || minutes !in 0..59 || seconds !in 0..59) return null
+                return parseISOTime("${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}")
+            }
+            if (pieces.size != 2) return null
+            val hours = pieces[0].toIntOrNull() ?: return null
+            val minutes = pieces[1].toIntOrNull() ?: return null
+            if (hours !in 0..23 || minutes !in 0..59) return null
+            return parseISOTime("${pad2(hours)}:${pad2(minutes)}")
+        }
     }
-    if (pieces.size != 2) return null
-    val hours = pieces[0].toIntOrNull() ?: return null
-    val minutes = pieces[1].toIntOrNull() ?: return null
-    if (hours !in 0..23 || minutes !in 0..59) return null
-    return parseISOTime("${pad2(hours)}:${pad2(minutes)}")
 }

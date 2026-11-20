@@ -58,11 +58,6 @@ private val itemChinese: ItemTexts = ItemTexts(
     toggle = "切换 selected",
 )
 
-private val itemTexts: Translations<ItemTexts> = texts(
-    Langs.EN to itemEnglish,
-    Langs.ZH_HANS to itemChinese,
-)
-
 val itemEntry: CatalogEntry =
     CatalogEntry(
         id = "item",
@@ -164,5 +159,10 @@ internal class ItemPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<ItemPage>(ItemPage::class.js, "vaadin-demo-item-page")
+    companion object : CustomElementReferenceAdapter<ItemPage>(ItemPage::class.js, "vaadin-demo-item-page") {
+        private val itemTexts: Translations<ItemTexts> = texts(
+            Langs.EN to itemEnglish,
+            Langs.ZH_HANS to itemChinese,
+        )
+    }
 }

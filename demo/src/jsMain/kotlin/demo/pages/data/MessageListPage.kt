@@ -71,19 +71,6 @@ val messageListEntry: CatalogEntry =
 /** The class that marks the message sent by the reader. */
 private val CURRENT_USER: ClassName = ClassName("current-user")
 
-/**
- * Marks the message the page sends as its own: the docs example puts the author's name in bold for
- * the signed-in user. `className` lands on the light-DOM message element, and the name is a part
- * inside its shadow tree, so it joins the host compound as `::part(name)`.
- */
-private val MESSAGE_SHEET: CSSStyleSheet = cssSheet {
-    compound(
-        tag(VaadinTagName.message),
-        className(CURRENT_USER),
-        pseudo(pseudoElement("part"), ident("name")),
-    ).invoke { fontWeight = FontWeight.bold }
-}
-
 private val english: MessageTexts =
     MessageTexts(
         basicHeading = "Basic usage",
@@ -230,11 +217,6 @@ private val chinese: MessageTexts =
             "Web Component 没有对应 API，因此这里不演示。用 Message List 实现时，可以在列表末尾追加一条" +
             "「正在输入…」消息达到类似效果。",
     )
-
-private val messageTexts: Translations<MessageTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class MessageListPage : DemoPage() {
     private val texts = Binder(messageTexts)
@@ -512,5 +494,22 @@ internal class MessageListPage : DemoPage() {
         showChat()
     }
 
-    companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page")
+    companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page") {
+        /**
+         * Marks the message the page sends as its own: the docs example puts the author's name in bold for
+         * the signed-in user. `className` lands on the light-DOM message element, and the name is a part
+         * inside its shadow tree, so it joins the host compound as `::part(name)`.
+         */
+        private val MESSAGE_SHEET: CSSStyleSheet = cssSheet {
+            compound(
+                tag(VaadinTagName.message),
+                className(CURRENT_USER),
+                pseudo(pseudoElement("part"), ident("name")),
+            ).invoke { fontWeight = FontWeight.bold }
+        }
+        private val messageTexts: Translations<MessageTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

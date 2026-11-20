@@ -83,13 +83,14 @@ internal class Person(
         get() = "+1 ${300 + id} 555 0${100 + id}"
 
     private fun pad2(value: Int): String = if (value < 10) "0$value" else "$value"
+
+    // This file's helpers, kept with the class that owns them.
+    private companion object {
+        internal val MEMBERSHIPS = listOf("Regular", "Premium", "VIP")
+        internal val CITIES = listOf("Boston", "Austin", "Denver", "Portland", "Chicago", "Seattle")
+        internal val STATES = listOf("MA", "TX", "CO", "OR", "IL", "WA")
+    }
 }
-
-internal val MEMBERSHIPS = listOf("Regular", "Premium", "VIP")
-
-internal val CITIES = listOf("Boston", "Austin", "Denver", "Portland", "Chicago", "Seattle")
-
-internal val STATES = listOf("MA", "TX", "CO", "OR", "IL", "WA")
 
 internal fun people(count: Int = 6): List<Person> {
     val firstNames = listOf("Ada", "Grace", "Katherine", "Alan", "Barbara", "Edsger", "Margaret", "Dennis")

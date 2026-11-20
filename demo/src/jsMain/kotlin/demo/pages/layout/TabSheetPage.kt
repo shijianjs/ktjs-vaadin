@@ -90,28 +90,6 @@ private val chinese: TabSheetTexts = TabSheetTexts(
     addTab = "新增标签",
 )
 
-private val tabSheetTexts: Translations<TabSheetTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
-/** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
-private fun demoTabSheet(key: String, theme: String? = null): SheetParts {
-    val sheet = createTabSheet()
-    if (theme != null) sheet.addTheme(theme)
-    val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
-    val tabs = ids.map { id -> createTab().apply { this.id = ElementId(id) } }
-    val tabsBar = createTabs { slot = "tabs" }
-    tabs.forEach { tabsBar.append(it) }
-    sheet.append(tabsBar)
-    val panels =
-        ids.map { id ->
-            HtmlTagName.div().apply { setAttribute("tab", id) }
-        }
-    panels.forEach { sheet.append(it) }
-    return SheetParts(sheet, tabs, panels)
-}
-
 internal class TabSheetPage : DemoPage() {
     private val texts = Binder(tabSheetTexts)
 
@@ -202,5 +180,26 @@ internal class TabSheetPage : DemoPage() {
         addTab.setAttribute("aria-label", copy.addTab)
     }
 
-    companion object : CustomElementReferenceAdapter<TabSheetPage>(TabSheetPage::class.js, "vaadin-demo-tab-sheet-page")
+    companion object : CustomElementReferenceAdapter<TabSheetPage>(TabSheetPage::class.js, "vaadin-demo-tab-sheet-page") {
+        private val tabSheetTexts: Translations<TabSheetTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
+        private fun demoTabSheet(key: String, theme: String? = null): SheetParts {
+            val sheet = createTabSheet()
+            if (theme != null) sheet.addTheme(theme)
+            val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
+            val tabs = ids.map { id -> createTab().apply { this.id = ElementId(id) } }
+            val tabsBar = createTabs { slot = "tabs" }
+            tabs.forEach { tabsBar.append(it) }
+            sheet.append(tabsBar)
+            val panels =
+                ids.map { id ->
+                    HtmlTagName.div().apply { setAttribute("tab", id) }
+                }
+            panels.forEach { sheet.append(it) }
+            return SheetParts(sheet, tabs, panels)
+        }
+    }
 }

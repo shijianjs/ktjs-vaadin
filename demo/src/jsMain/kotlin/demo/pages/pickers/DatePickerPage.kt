@@ -261,11 +261,6 @@ private val chinese: DatePickerTexts =
         finnishHelper = "日期选择器使用芬兰语格式",
     )
 
-private val datePickerTexts: Translations<DatePickerTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class DatePickerPage : DemoPage() {
     private val texts = Binder(datePickerTexts)
 
@@ -789,50 +784,46 @@ internal class DatePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page")
+    companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page") {
+        private val datePickerTexts: Translations<DatePickerTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        private fun lastDayOfYear(date: Date): Date = createDate(date.getFullYear().toDouble(), 11.0, 31.0)
+        /** Formats date parts as ISO 8601, the display format of the web component by default. */
+        private fun isoOf(parts: DatePickerDate): String = formatISODate(createDate(parts.year, parts.month, parts.day))
+        /** The display format of the Flow custom-format example is ISO, the parse formats are three. */
+        private fun parseFlexibleDate(text: String): DatePickerDate? =
+            parseDate(text)?.let(::extractDateParts) ?: parseMonthDayYear(text) ?: parseDottedDayMonthYear(text)
+        private fun formatFinnishDate(parts: DatePickerDate): String =
+            "${parts.day.toInt()}.${parts.month.toInt() + 1}.${parts.year.toInt()}"
+        private fun parseFinnishDate(text: String): DatePickerDate? {
+            val pieces = text.trim().split(".")
+            if (pieces.size != 3) return null
+            val day = pieces[0].toIntOrNull() ?: return null
+            val month = pieces[1].toIntOrNull() ?: return null
+            val year = pieces[2].toIntOrNull() ?: return null
+            return numericDate(year, month, day)
+        }
+        /** Builds the `items` array of a combo box from numbers. */
+        private fun numberItems(values: List<Int>): Array<JsAny> = jsArray<JsAny>(values.joinToString(",", "[", "]"))
+        private val FINNISH_MONTHS: Array<String> =
+            arrayOf(
+                "tammikuu",
+                "helmikuu",
+                "maaliskuu",
+                "huhtikuu",
+                "toukokuu",
+                "kesäkuu",
+                "heinäkuu",
+                "elokuu",
+                "syyskuu",
+                "lokakuu",
+                "marraskuu",
+                "joulukuu",
+            )
+        private val FINNISH_WEEKDAYS: Array<String> =
+            arrayOf("sunnuntai", "maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai")
+        private val FINNISH_WEEKDAYS_SHORT: Array<String> = arrayOf("su", "ma", "ti", "ke", "to", "pe", "la")
+    }
 }
-
-private fun lastDayOfYear(date: Date): Date = createDate(date.getFullYear().toDouble(), 11.0, 31.0)
-
-/** Formats date parts as ISO 8601, the display format of the web component by default. */
-private fun isoOf(parts: DatePickerDate): String = formatISODate(createDate(parts.year, parts.month, parts.day))
-
-/** The display format of the Flow custom-format example is ISO, the parse formats are three. */
-private fun parseFlexibleDate(text: String): DatePickerDate? =
-    parseDate(text)?.let(::extractDateParts) ?: parseMonthDayYear(text) ?: parseDottedDayMonthYear(text)
-
-private fun formatFinnishDate(parts: DatePickerDate): String =
-    "${parts.day.toInt()}.${parts.month.toInt() + 1}.${parts.year.toInt()}"
-
-private fun parseFinnishDate(text: String): DatePickerDate? {
-    val pieces = text.trim().split(".")
-    if (pieces.size != 3) return null
-    val day = pieces[0].toIntOrNull() ?: return null
-    val month = pieces[1].toIntOrNull() ?: return null
-    val year = pieces[2].toIntOrNull() ?: return null
-    return numericDate(year, month, day)
-}
-
-/** Builds the `items` array of a combo box from numbers. */
-private fun numberItems(values: List<Int>): Array<JsAny> = jsArray<JsAny>(values.joinToString(",", "[", "]"))
-
-private val FINNISH_MONTHS: Array<String> =
-    arrayOf(
-        "tammikuu",
-        "helmikuu",
-        "maaliskuu",
-        "huhtikuu",
-        "toukokuu",
-        "kesäkuu",
-        "heinäkuu",
-        "elokuu",
-        "syyskuu",
-        "lokakuu",
-        "marraskuu",
-        "joulukuu",
-    )
-
-private val FINNISH_WEEKDAYS: Array<String> =
-    arrayOf("sunnuntai", "maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai")
-
-private val FINNISH_WEEKDAYS_SHORT: Array<String> = arrayOf("su", "ma", "ti", "ke", "to", "pe", "la")

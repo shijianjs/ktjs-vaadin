@@ -45,23 +45,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
-/** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
-private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
-
-/**
- * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
- * component, and nothing in the kit's blocks can express it. Declared here, next to the example that
- * needs it, instead of in a site-wide stylesheet.
- */
-/** The class the example puts on the button so its label part can be reached. */
-private val THEMING_PART: ClassName = ClassName("theming-part")
-
-private val THEMING_SHEET: CSSStyleSheet = cssSheet {
-    ".theming-part::part(label)" {
-        color = Color("var(--lumo-primary-color)")
-    }
-}
-
 val themingEntry: CatalogEntry =
     CatalogEntry(
         id = "theming",
@@ -80,49 +63,6 @@ val themingEntry: CatalogEntry =
             ),
         kitPage = { ThemingPage.NAME() },
     )
-
-/**
- * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
- *
- * The element itself is the chip, so the property lands on its own style instead of on a child.
- */
-
-/** Creates a defined `<vaadin-demo-swatch-chip>`. */
-internal fun newSwatchChip(cssVariable: String): SwatchChip {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    SwatchChip.NAME
-    return SwatchChip.NAME().also { it.show(cssVariable) }
-}
-
-/**
- * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
- *
- * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
- * and the code block are kit pieces whose look comes from the page's sheet.
- */
-
-/** Creates a defined `<vaadin-demo-entry-point>`. */
-internal fun newEntryPoint(name: String, value: String): EntryPoint {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    EntryPoint.NAME
-    return EntryPoint.NAME().also { it.show(name, value) }
-}
-
-/**
- * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
- * the page's binder.
- */
-
-/** Creates a defined `<vaadin-demo-described-entry-point>`. */
-internal fun newDescribedEntryPoint(
-    name: String,
-    binder: Binder<ThemingTexts>,
-    field: (ThemingTexts) -> String,
-): DescribedEntryPoint {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    DescribedEntryPoint.NAME
-    return DescribedEntryPoint.NAME().also { it.show(name, binder, field) }
-}
 
 private val themingEnglish: ThemingTexts = ThemingTexts(
     docsLink = "Vaadin documentation",
@@ -249,11 +189,6 @@ private val themingChinese: ThemingTexts = ThemingTexts(
     elementMixin = "所有 Element 的基类",
     inputControl = "TextField / ComboBox / Select 等字段",
     tagNames = "createXxx 内部使用的标签名常量",
-)
-
-private val themingTexts: Translations<ThemingTexts> = texts(
-    Langs.EN to themingEnglish,
-    Langs.ZH_HANS to themingChinese,
 )
 
 /**
@@ -509,5 +444,64 @@ internal class ThemingPage : DemoPage() {
         readout.set(copy.now + if (Theme.isDark) copy.nowDark else copy.nowLight)
     }
 
-    companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page")
+    companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page") {
+        /** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
+        private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
+        /**
+         * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
+         * component, and nothing in the kit's blocks can express it. Declared here, next to the example that
+         * needs it, instead of in a site-wide stylesheet.
+         */
+        /** The class the example puts on the button so its label part can be reached. */
+        private val THEMING_PART: ClassName = ClassName("theming-part")
+        private val THEMING_SHEET: CSSStyleSheet = cssSheet {
+            ".theming-part::part(label)" {
+                color = Color("var(--lumo-primary-color)")
+            }
+        }
+        /**
+         * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
+         *
+         * The element itself is the chip, so the property lands on its own style instead of on a child.
+         */
+
+        /** Creates a defined `<vaadin-demo-swatch-chip>`. */
+        internal fun newSwatchChip(cssVariable: String): SwatchChip {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            SwatchChip.NAME
+            return SwatchChip.NAME().also { it.show(cssVariable) }
+        }
+        /**
+         * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
+         *
+         * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
+         * and the code block are kit pieces whose look comes from the page's sheet.
+         */
+
+        /** Creates a defined `<vaadin-demo-entry-point>`. */
+        internal fun newEntryPoint(name: String, value: String): EntryPoint {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            EntryPoint.NAME
+            return EntryPoint.NAME().also { it.show(name, value) }
+        }
+        /**
+         * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
+         * the page's binder.
+         */
+
+        /** Creates a defined `<vaadin-demo-described-entry-point>`. */
+        internal fun newDescribedEntryPoint(
+            name: String,
+            binder: Binder<ThemingTexts>,
+            field: (ThemingTexts) -> String,
+        ): DescribedEntryPoint {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            DescribedEntryPoint.NAME
+            return DescribedEntryPoint.NAME().also { it.show(name, binder, field) }
+        }
+        private val themingTexts: Translations<ThemingTexts> = texts(
+            Langs.EN to themingEnglish,
+            Langs.ZH_HANS to themingChinese,
+        )
+    }
 }

@@ -84,15 +84,6 @@ val popoverEntry: CatalogEntry =
         kitPage = { PopoverPage.NAME() },
     )
 
-/** Select items described by a JSON array of `{label, value}` objects. */
-private fun selectItems(json: String): Array<SelectItemData> =
-    jsArray<JsAny>(json).unsafeCast<Array<SelectItemData>>()
-
-private fun selectData(vararg pairs: Pair<String, String>): Array<SelectItemData> =
-    pairs
-        .map { (label, value) -> unsafeJso<SelectItemData> { this.label = label; this.value = value } }
-        .toTypedArray()
-
 // endregion
 
 // region Popover
@@ -249,11 +240,6 @@ private val chinese: PopoverTexts =
         showAll = "全部显示",
         reset = "重置",
     )
-
-private val popoverTexts: Translations<PopoverTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class PopoverPage : DemoPage() {
     private val texts = Binder(popoverTexts)
@@ -669,26 +655,35 @@ internal class PopoverPage : DemoPage() {
         log.replay(false)
     }
 
-    companion object : CustomElementReferenceAdapter<PopoverPage>(PopoverPage::class.js, "vaadin-demo-popover-page")
-}
-
-private fun notificationMessages(count: Int, copy: PopoverTexts): Array<MessageListItem> {
-    val list = people(count)
-    return list.mapIndexed { index, person ->
-        unsafeJso<MessageListItem> {
-            userName = person.displayName
-            userImg = person.pictureUrl
-            time = "${9 + index}:0${index % 6}"
-            text = copy.message(index)
+    companion object : CustomElementReferenceAdapter<PopoverPage>(PopoverPage::class.js, "vaadin-demo-popover-page") {
+        /** Select items described by a JSON array of `{label, value}` objects. */
+        private fun selectItems(json: String): Array<SelectItemData> =
+            jsArray<JsAny>(json).unsafeCast<Array<SelectItemData>>()
+        private fun selectData(vararg pairs: Pair<String, String>): Array<SelectItemData> =
+            pairs
+                .map { (label, value) -> unsafeJso<SelectItemData> { this.label = label; this.value = value } }
+                .toTypedArray()
+        private val popoverTexts: Translations<PopoverTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        private fun notificationMessages(count: Int, copy: PopoverTexts): Array<MessageListItem> {
+            val list = people(count)
+            return list.mapIndexed { index, person ->
+                unsafeJso<MessageListItem> {
+                    userName = person.displayName
+                    userImg = person.pictureUrl
+                    time = "${9 + index}:0${index % 6}"
+                    text = copy.message(index)
+                }
+            }.toTypedArray()
         }
-    }.toTypedArray()
-}
-
-private const val MILLIS_PER_DAY = 86_400_000.0
-
-private fun isoDate(date: Date): String {
-    val year = date.getFullYear()
-    val month = date.getMonth() + 1
-    val day = date.getDate()
-    return "$year-${pad2(month)}-${pad2(day)}"
+        private const val MILLIS_PER_DAY = 86_400_000.0
+        private fun isoDate(date: Date): String {
+            val year = date.getFullYear()
+            val month = date.getMonth() + 1
+            val day = date.getDate()
+            return "$year-${pad2(month)}-${pad2(day)}"
+        }
+    }
 }

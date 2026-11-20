@@ -48,10 +48,6 @@ import web.html.HTMLParagraphElement
 import web.cssom.ClassName
 import demo.ui.MUTED_SMALL
 
-private val MASTER_LIST: ClassName = ClassName("master-list")
-private val MASTER_LIST_ITEM: ClassName = ClassName("master-list__item")
-private val MASTER_LIST_NAME: ClassName = ClassName("master-list__name")
-
 val masterDetailLayoutEntry: CatalogEntry =
     CatalogEntry(
         id = "master-detail-layout",
@@ -147,11 +143,6 @@ private val chinese: MasterDetailLayoutTexts =
         innerDetail = "二级详情",
         outerMaster = "一级主区",
     )
-
-private val masterDetailLayoutTexts: Translations<MasterDetailLayoutTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class MasterDetailLayoutPage : DemoPage() {
     private val texts = Binder(masterDetailLayoutTexts)
@@ -444,5 +435,13 @@ internal class MasterDetailLayoutPage : DemoPage() {
         detailToggle.textContent = detailToggleCopy(texts.current)
     }
 
-    companion object : CustomElementReferenceAdapter<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js, "vaadin-demo-master-detail-layout-page")
+    companion object : CustomElementReferenceAdapter<MasterDetailLayoutPage>(MasterDetailLayoutPage::class.js, "vaadin-demo-master-detail-layout-page") {
+        private val MASTER_LIST: ClassName = ClassName("master-list")
+        private val MASTER_LIST_ITEM: ClassName = ClassName("master-list__item")
+        private val MASTER_LIST_NAME: ClassName = ClassName("master-list__name")
+        private val masterDetailLayoutTexts: Translations<MasterDetailLayoutTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

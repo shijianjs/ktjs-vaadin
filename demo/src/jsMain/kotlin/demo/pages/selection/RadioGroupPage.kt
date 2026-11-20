@@ -69,18 +69,6 @@ val radioGroupEntry: CatalogEntry =
 /** The option box of the custom-label example; the sheet and the three options share it. */
 private val RADIO_OPTION: ClassName = ClassName("radio-option")
 
-/**
- * The card-style options of the "custom label" example: two lines of text per option, the second
- * one muted. The boxes themselves are `kitCol(...)`, so only the muted second line needs a rule.
- */
-private val RADIO_SHEET: CSSStyleSheet = cssSheet {
-    // The boxes themselves are `kitCol(...)` (a vertical layout), so the sheet only says that the
-    // second line of an option is the muted one.
-    ((className(RADIO_OPTION) descendant tag(HtmlTagName.span)) nextSibling tag(HtmlTagName.span)).invoke {
-        color = Palette.muted
-    }
-}
-
 private val english: RadioGroupTexts =
     RadioGroupTexts(
         basicHeading = "Basic usage",
@@ -230,11 +218,6 @@ private val chinese: RadioGroupTexts =
         stylesHeading = "样式变体",
         stylesHint = "helper-above-field 把辅助信息放到标签与选项之间。",
     )
-
-private val radioGroupTexts: Translations<RadioGroupTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class RadioGroupPage : DemoPage() {
     private val texts = Binder(radioGroupTexts)
@@ -477,5 +460,21 @@ internal class RadioGroupPage : DemoPage() {
         showValidation()
     }
 
-    companion object : CustomElementReferenceAdapter<RadioGroupPage>(RadioGroupPage::class.js, "vaadin-demo-radio-group-page")
+    companion object : CustomElementReferenceAdapter<RadioGroupPage>(RadioGroupPage::class.js, "vaadin-demo-radio-group-page") {
+        /**
+         * The card-style options of the "custom label" example: two lines of text per option, the second
+         * one muted. The boxes themselves are `kitCol(...)`, so only the muted second line needs a rule.
+         */
+        private val RADIO_SHEET: CSSStyleSheet = cssSheet {
+            // The boxes themselves are `kitCol(...)` (a vertical layout), so the sheet only says that the
+            // second line of an option is the muted one.
+            ((className(RADIO_OPTION) descendant tag(HtmlTagName.span)) nextSibling tag(HtmlTagName.span)).invoke {
+                color = Palette.muted
+            }
+        }
+        private val radioGroupTexts: Translations<RadioGroupTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

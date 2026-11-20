@@ -78,11 +78,6 @@ private val chinese: SplitLayoutTexts = SplitLayoutTexts(
     toggleAria = "展开或折叠侧栏",
 )
 
-private val splitLayoutTexts: Translations<SplitLayoutTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class SplitLayoutPage : DemoPage() {
     private val texts = Binder(splitLayoutTexts)
 
@@ -202,7 +197,12 @@ internal class SplitLayoutPage : DemoPage() {
         collapseButton.setAttribute("aria-label", texts.current.toggleAria)
     }
 
-    companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page")
+    companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page") {
+        private val splitLayoutTexts: Translations<SplitLayoutTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }
 
 /**

@@ -38,11 +38,6 @@ private val chinese: AppSideNavTexts =
         analytics = "分析",
     )
 
-private val appSideNavTexts: Translations<AppSideNavTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 /**
  * `<demo-app-side-nav>`: the seven top-level destinations the app layout examples share.
  *
@@ -85,5 +80,10 @@ internal class AppSideNav : CustomElementAdapter() {
         texts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<AppSideNav>(AppSideNav::class.js, "demo-app-side-nav")
+    companion object : CustomElementReferenceAdapter<AppSideNav>(AppSideNav::class.js, "demo-app-side-nav") {
+        private val appSideNavTexts: Translations<AppSideNavTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

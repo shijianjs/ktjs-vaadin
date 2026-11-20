@@ -48,33 +48,6 @@ val avatarGroupEntry: CatalogEntry =
         kitPage = { AvatarGroupPage.NAME() },
     )
 
-// ---------------------------------------------------------------------------------------------
-// Avatar
-// ---------------------------------------------------------------------------------------------
-
-/** Shared names of the simulated people; the docs examples load them from the backend. */
-private val SIMULATED_PEOPLE =
-    listOf(
-        "Ada Lovelace",
-        "Grace Hopper",
-        "Margaret Hamilton",
-        "Katherine Johnson",
-        "Barbara Liskov",
-        "Frances Allen",
-    )
-
-// ---------------------------------------------------------------------------------------------
-// Avatar group
-// ---------------------------------------------------------------------------------------------
-
-/** One `items` entry of `<vaadin-avatar-group>`; every field is optional. */
-private fun groupItem(name: String? = null, colorIndex: Double? = null, img: String? = null): AvatarGroupItem =
-    unsafeJso {
-        name?.let { this.name = it }
-        colorIndex?.let { this.colorIndex = it }
-        img?.let { this.img = it }
-    }
-
 private val english: AvatarGroupTexts = AvatarGroupTexts(
     basicHeading = "Basic usage",
     basicHint = "Each object in items describes one avatar; the official example maps three people from the " +
@@ -117,27 +90,6 @@ private val chinese: AvatarGroupTexts = AvatarGroupTexts(
     addMember = "添加成员",
     removeMember = "移除成员",
 )
-
-private val avatarGroupTexts: Translations<AvatarGroupTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
-/** The `i18n` object of the last example; its strings are the group's accessible names. */
-private fun avatarGroupI18n(copy: AvatarGroupTexts): JsAny =
-    jsObject(
-        """
-        {
-          "anonymous": "${copy.anonymous}",
-          "activeUsers": {
-            "one": "${copy.activeOne}",
-            "many": "${copy.activeMany}"
-          },
-          "joined": "${copy.joined}",
-          "left": "${copy.left}"
-        }
-        """.trimIndent(),
-    )
 
 internal class AvatarGroupPage : DemoPage() {
     private val texts = Binder(avatarGroupTexts)
@@ -235,5 +187,50 @@ internal class AvatarGroupPage : DemoPage() {
             if (hasExtraMember) texts.current.removeMember else texts.current.addMember
     }
 
-    companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page")
+    companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page") {
+        // ---------------------------------------------------------------------------------------------
+        // Avatar
+        // ---------------------------------------------------------------------------------------------
+
+        /** Shared names of the simulated people; the docs examples load them from the backend. */
+        private val SIMULATED_PEOPLE =
+            listOf(
+                "Ada Lovelace",
+                "Grace Hopper",
+                "Margaret Hamilton",
+                "Katherine Johnson",
+                "Barbara Liskov",
+                "Frances Allen",
+            )
+        // ---------------------------------------------------------------------------------------------
+        // Avatar group
+        // ---------------------------------------------------------------------------------------------
+
+        /** One `items` entry of `<vaadin-avatar-group>`; every field is optional. */
+        private fun groupItem(name: String? = null, colorIndex: Double? = null, img: String? = null): AvatarGroupItem =
+            unsafeJso {
+                name?.let { this.name = it }
+                colorIndex?.let { this.colorIndex = it }
+                img?.let { this.img = it }
+            }
+        private val avatarGroupTexts: Translations<AvatarGroupTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** The `i18n` object of the last example; its strings are the group's accessible names. */
+        private fun avatarGroupI18n(copy: AvatarGroupTexts): JsAny =
+            jsObject(
+                """
+                {
+                  "anonymous": "${copy.anonymous}",
+                  "activeUsers": {
+                    "one": "${copy.activeOne}",
+                    "many": "${copy.activeMany}"
+                  },
+                  "joined": "${copy.joined}",
+                  "left": "${copy.left}"
+                }
+                """.trimIndent(),
+            )
+    }
 }

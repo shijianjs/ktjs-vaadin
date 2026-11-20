@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 
-
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -36,7 +35,6 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 /** The single-card width the docs examples use; the sheet keys on this same object. */
 private val CARD_DEMO: ClassName = ClassName("card-demo")
 
-
 val cardEntry: CatalogEntry =
     CatalogEntry(
         id = "card",
@@ -56,13 +54,6 @@ val cardEntry: CatalogEntry =
         kitPage = { CardPage.NAME() },
     )
 
-/**
- * The page's own layout: a single card keeps the width the documentation examples use instead of
- * filling the box. The multi-card examples use the kit's grid block and need no rule of their own.
- */
-private val CARD_SHEET: CSSStyleSheet = cssSheet {
-    CARD_DEMO { maxWidth = 20.rem }
-}
 internal class CardPage : DemoPage() {
 
     private val texts: Binder<CardTexts> = cardTexts
@@ -259,5 +250,13 @@ internal class CardPage : DemoPage() {
         translatables.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page")
+    companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page") {
+        /**
+         * The page's own layout: a single card keeps the width the documentation examples use instead of
+         * filling the box. The multi-card examples use the kit's grid block and need no rule of their own.
+         */
+        private val CARD_SHEET: CSSStyleSheet = cssSheet {
+            CARD_DEMO { maxWidth = 20.rem }
+        }
+    }
 }

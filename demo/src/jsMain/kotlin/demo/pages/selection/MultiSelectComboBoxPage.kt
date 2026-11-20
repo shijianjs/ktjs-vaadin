@@ -111,11 +111,6 @@ private val chinese: MultiSelectComboBoxTexts =
         i18nHint = "i18n 覆盖清除、选中、取消与计数的提示文案；示例沿用官方文档的德语字符串。",
     )
 
-private val multiSelectComboBoxTexts: Translations<MultiSelectComboBoxTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class MultiSelectComboBoxPage : DemoPage() {
     private val texts = Binder(multiSelectComboBoxTexts)
 
@@ -309,9 +304,13 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page")
+    companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page") {
+        private val multiSelectComboBoxTexts: Translations<MultiSelectComboBoxTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** Reads the `name` field of the selected country objects. */
+        private fun itemNames(items: Array<JsAny>): String =
+            items.joinToString(", ") { item -> js("(item) => String(item.name)")(item) as String }
+    }
 }
-
-/** Reads the `name` field of the selected country objects. */
-private fun itemNames(items: Array<JsAny>): String =
-    items.joinToString(", ") { item -> js("(item) => String(item.name)")(item) as String }

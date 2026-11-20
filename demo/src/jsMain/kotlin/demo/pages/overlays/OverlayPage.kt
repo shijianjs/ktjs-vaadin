@@ -86,11 +86,6 @@ private val chinese: OverlayTexts = OverlayTexts(
     openSized = "打开固定尺寸 overlay",
 )
 
-private val overlayTexts: Translations<OverlayTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class OverlayPage : DemoPage() {
     private val texts = Binder(overlayTexts)
 
@@ -190,5 +185,10 @@ internal class OverlayPage : DemoPage() {
         openSized.textContent = copy.openSized
     }
 
-    companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page")
+    companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page") {
+        private val overlayTexts: Translations<OverlayTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

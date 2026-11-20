@@ -115,11 +115,6 @@ private val inputContainerChinese: InputContainerTexts = InputContainerTexts(
     disabled = "禁用",
 )
 
-private val inputContainerTexts: Translations<InputContainerTexts> = texts(
-    Langs.EN to inputContainerEnglish,
-    Langs.ZH_HANS to inputContainerChinese,
-)
-
 /**
  * The page on kit blocks: nodes are built once and a language switch only rewrites their text.
  *
@@ -186,5 +181,10 @@ internal class InputContainerPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page")
+    companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page") {
+        private val inputContainerTexts: Translations<InputContainerTexts> = texts(
+            Langs.EN to inputContainerEnglish,
+            Langs.ZH_HANS to inputContainerChinese,
+        )
+    }
 }

@@ -74,12 +74,6 @@ val contextMenuEntry: CatalogEntry =
         kitPage = { ContextMenuPage.NAME() },
     )
 
-private fun copyMenuItem(text: String, value: String): CopyMenuItem =
-    unsafeJso<CopyMenuItem> {
-        this.text = text
-        this.value = value
-    }
-
 // endregion
 
 // region Context menu
@@ -90,10 +84,6 @@ private fun copyMenuItem(text: String, value: String): CopyMenuItem =
  */
 /** The class this page puts on the "delete" item through the menu data. */
 private val CUSTOM: ClassName = ClassName("custom")
-
-private val MENU_SHEET: CSSStyleSheet = cssSheet {
-    compound(tag(VaadinTagName.contextMenuItem), className(CUSTOM)).invoke { color = Color("var(--lumo-error-text-color)") }
-}
 
 /** One menu entry: a label, optionally disabled, with a submenu, a class or a tooltip. */
 private fun entry(
@@ -116,16 +106,6 @@ private fun entry(
 /** A divider entry. */
 private fun divider(): ContextMenuItemData =
     unsafeJso { component = HTMLElementOrString("hr") }
-
-/** An entry whose content is a node the caller assembled. */
-private fun componentEntry(
-    node: HTMLElement,
-    children: Array<ContextMenuItemData>? = null,
-): ContextMenuItemData =
-    unsafeJso {
-        component = HTMLElementOrString(node)
-        this.children = children
-    }
 
 private val english: ContextMenuTexts =
     ContextMenuTexts(
@@ -254,11 +234,6 @@ private val chinese: ContextMenuTexts =
         emailHeader = "邮箱",
         professionHeader = "职务",
     )
-
-private val contextMenuTexts: Translations<ContextMenuTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class ContextMenuPage : DemoPage() {
     private val texts = Binder(contextMenuTexts)
@@ -580,7 +555,29 @@ internal class ContextMenuPage : DemoPage() {
         log.replay("selected")
     }
 
-    companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page")
+    companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page") {
+        private fun copyMenuItem(text: String, value: String): CopyMenuItem =
+            unsafeJso<CopyMenuItem> {
+                this.text = text
+                this.value = value
+            }
+        private val MENU_SHEET: CSSStyleSheet = cssSheet {
+            compound(tag(VaadinTagName.contextMenuItem), className(CUSTOM)).invoke { color = Color("var(--lumo-error-text-color)") }
+        }
+        /** An entry whose content is a node the caller assembled. */
+        private fun componentEntry(
+            node: HTMLElement,
+            children: Array<ContextMenuItemData>? = null,
+        ): ContextMenuItemData =
+            unsafeJso {
+                component = HTMLElementOrString(node)
+                this.children = children
+            }
+        private val contextMenuTexts: Translations<ContextMenuTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }
 
 // endregion

@@ -123,11 +123,6 @@ private val chinese: CheckboxGroupTexts =
         marketing = "市场",
     )
 
-private val checkboxGroupTexts: Translations<CheckboxGroupTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class CheckboxGroupPage : DemoPage() {
     private val texts = Binder(checkboxGroupTexts)
 
@@ -272,5 +267,10 @@ internal class CheckboxGroupPage : DemoPage() {
         lastResult?.invoke(copy)?.let { (prefix, value) -> result.set(prefix, value) }
     }
 
-    companion object : CustomElementReferenceAdapter<CheckboxGroupPage>(CheckboxGroupPage::class.js, "vaadin-demo-checkbox-group-page")
+    companion object : CustomElementReferenceAdapter<CheckboxGroupPage>(CheckboxGroupPage::class.js, "vaadin-demo-checkbox-group-page") {
+        private val checkboxGroupTexts: Translations<CheckboxGroupTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

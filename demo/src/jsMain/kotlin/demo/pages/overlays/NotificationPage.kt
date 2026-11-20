@@ -189,11 +189,6 @@ private val chinese: NotificationTexts =
         showDiscouraged = "显示不推荐示例",
     )
 
-private val notificationTexts: Translations<NotificationTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class NotificationPage : DemoPage() {
     private val texts = Binder(notificationTexts)
 
@@ -600,19 +595,23 @@ internal class NotificationPage : DemoPage() {
         actionLog.replay("undo")
     }
 
-    companion object : CustomElementReferenceAdapter<NotificationPage>(NotificationPage::class.js, "vaadin-demo-notification-page")
-}
+    companion object : CustomElementReferenceAdapter<NotificationPage>(NotificationPage::class.js, "vaadin-demo-notification-page") {
+        private val notificationTexts: Translations<NotificationTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /**
+         * `<vaadin-demo-close-icon>`: the cross button the notification examples put into their `end` slot.
+         *
+         * The host is what the notification slots, so `slot="end"` stays on it; the button and its icon sit
+         * in the shadow root and the action is handed in as [show]'s callback.
+         */
 
-/**
- * `<vaadin-demo-close-icon>`: the cross button the notification examples put into their `end` slot.
- *
- * The host is what the notification slots, so `slot="end"` stays on it; the button and its icon sit
- * in the shadow root and the action is handed in as [show]'s callback.
- */
-
-/** Creates a defined `<vaadin-demo-close-icon>`. */
-internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    CloseIcon.NAME
-    return CloseIcon.NAME().also { it.show(name, onClick) }
+        /** Creates a defined `<vaadin-demo-close-icon>`. */
+        internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            CloseIcon.NAME
+            return CloseIcon.NAME().also { it.show(name, onClick) }
+        }
+    }
 }

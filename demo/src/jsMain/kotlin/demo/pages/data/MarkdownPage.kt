@@ -153,11 +153,6 @@ private val markdownChinese: MarkdownTexts = MarkdownTexts(
     lineCaption = "左：lineBreaks 打开　右：默认",
 )
 
-private val markdownTexts: Translations<MarkdownTexts> = texts(
-    Langs.EN to markdownEnglish,
-    Langs.ZH_HANS to markdownChinese,
-)
-
 /**
  * The page on kit blocks.
  *
@@ -222,5 +217,10 @@ internal class MarkdownPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page")
+    companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page") {
+        private val markdownTexts: Translations<MarkdownTexts> = texts(
+            Langs.EN to markdownEnglish,
+            Langs.ZH_HANS to markdownChinese,
+        )
+    }
 }

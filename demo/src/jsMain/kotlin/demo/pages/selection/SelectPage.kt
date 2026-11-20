@@ -60,30 +60,6 @@ val selectEntry: CatalogEntry =
         kitPage = { SelectPage.NAME() },
     )
 
-private const val SIZES_JSON =
-    """
-    [
-      {"label": "XS (out of stock)", "value": "xs", "disabled": true},
-      {"label": "S", "value": "s"},
-      {"label": "M", "value": "m"},
-      {"label": "L", "value": "l"},
-      {"label": "XL", "value": "xl"}
-    ]
-    """
-
-private const val DIVIDED_SORT_ITEMS_JSON =
-    """
-    [
-      {"label": "Most recent first", "value": "recent"},
-      {"component": "hr"},
-      {"label": "Rating: high to low", "value": "rating-desc"},
-      {"label": "Rating: low to high", "value": "rating-asc"},
-      {"component": "hr"},
-      {"label": "Price: high to low", "value": "price-desc"},
-      {"label": "Price: low to high", "value": "price-asc"}
-    ]
-    """
-
 private val english: SelectTexts =
     SelectTexts(
         basicHeading = "Basic usage",
@@ -180,11 +156,6 @@ private val chinese: SelectTexts =
         label = "标签",
         helperText = "辅助信息",
     )
-
-private val selectTexts: Translations<SelectTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class SelectPage : DemoPage() {
     private val texts = Binder(selectTexts)
@@ -410,9 +381,35 @@ internal class SelectPage : DemoPage() {
         teamReadout.set(copy.currentPrefix, team.value.ifEmpty { copy.empty })
     }
 
-    companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page")
+    companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page") {
+        private const val SIZES_JSON =
+            """
+            [
+              {"label": "XS (out of stock)", "value": "xs", "disabled": true},
+              {"label": "S", "value": "s"},
+              {"label": "M", "value": "m"},
+              {"label": "L", "value": "l"},
+              {"label": "XL", "value": "xl"}
+            ]
+            """
+        private const val DIVIDED_SORT_ITEMS_JSON =
+            """
+            [
+              {"label": "Most recent first", "value": "recent"},
+              {"component": "hr"},
+              {"label": "Rating: high to low", "value": "rating-desc"},
+              {"label": "Rating: low to high", "value": "rating-asc"},
+              {"component": "hr"},
+              {"label": "Price: high to low", "value": "price-desc"},
+              {"label": "Price: low to high", "value": "price-asc"}
+            ]
+            """
+        private val selectTexts: Translations<SelectTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** Parses a JSON array of `{label, value, ...}` entries into the type `<vaadin-select>` takes. */
+        private fun selectItems(json: String): Array<SelectItemData> =
+            jsArray<JsAny>(json).unsafeCast<Array<SelectItemData>>()
+    }
 }
-
-/** Parses a JSON array of `{label, value, ...}` entries into the type `<vaadin-select>` takes. */
-private fun selectItems(json: String): Array<SelectItemData> =
-    jsArray<JsAny>(json).unsafeCast<Array<SelectItemData>>()

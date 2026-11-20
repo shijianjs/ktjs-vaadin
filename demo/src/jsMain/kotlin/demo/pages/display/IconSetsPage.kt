@@ -116,11 +116,6 @@ private val chinese: IconSetsTexts = IconSetsTexts(
     generatorCaption = "生成的文件等价于下面的结构",
 )
 
-private val iconSetsTexts: Translations<IconSetsTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 // ---------------------------------------------------------------------------------------------
 // Icon sets (registration, sprites, accessibility, padding, generator)
 // ---------------------------------------------------------------------------------------------
@@ -313,16 +308,20 @@ internal class IconSetsPage : DemoPage() {
         favourite.ariaLabel = copy.favorite
     }
 
-    companion object : CustomElementReferenceAdapter<IconSetsPage>(IconSetsPage::class.js, "vaadin-demo-icon-sets-page")
-}
-
-/** Builds one `<g id="name">` entry of an iconset from a single path, filled with `currentColor`. */
-private fun svgIconGroup(id: String, path: String): SVGGElement {
-    val group = document.createElementNS(SVG_NAMESPACE, SvgTagName.g)
-    group.setAttribute("id", id)
-    group.setAttribute("fill", "currentColor")
-    val shape = document.createElementNS(SVG_NAMESPACE, SvgTagName.path)
-    shape.setAttribute("d", path)
-    group.append(shape)
-    return group
+    companion object : CustomElementReferenceAdapter<IconSetsPage>(IconSetsPage::class.js, "vaadin-demo-icon-sets-page") {
+        private val iconSetsTexts: Translations<IconSetsTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** Builds one `<g id="name">` entry of an iconset from a single path, filled with `currentColor`. */
+        private fun svgIconGroup(id: String, path: String): SVGGElement {
+            val group = document.createElementNS(SVG_NAMESPACE, SvgTagName.g)
+            group.setAttribute("id", id)
+            group.setAttribute("fill", "currentColor")
+            val shape = document.createElementNS(SVG_NAMESPACE, SvgTagName.path)
+            shape.setAttribute("d", path)
+            group.append(shape)
+            return group
+        }
+    }
 }

@@ -75,22 +75,6 @@ private val EXTERNAL: ClassName = ClassName("external")
 /** The accent colour of that link. */
 private val ACCENT: Color = Color("deepskyblue")
 
-/**
- * The styling example: the link of an item tagged `external` and its icon are drawn in an accent
- * colour. `::part(link)` is the only entry into the link's own shadow tree.
- */
-private val SIDE_NAV_SHEET: CSSStyleSheet = cssSheet {
-    // `::part(link)` is the only entry into the link's own shadow tree. A part is a pseudo-element
-    // of the host, so it joins the compound instead of following a combinator; the icon is a
-    // light-DOM child, so it is a plain child selector.
-    val externalItem = compound(tag(VaadinTagName.sideNavItem), className(EXTERNAL))
-    val linkPart = pseudo(pseudoElement("part"), ident("link"))
-
-    compound(externalItem, linkPart).invoke { color = ACCENT }
-    compound(externalItem, pseudo(Pseudos.hover), linkPart).invoke { color = ACCENT }
-    (externalItem child tag(VaadinTagName.icon)).invoke { color = ACCENT }
-}
-
 private val english: SideNavTexts =
     SideNavTexts(
         basicHeading = "Basic usage",
@@ -203,11 +187,6 @@ private val chinese: SideNavTexts =
         enterLine = "Enter：触发链接。",
         collapsed = { "collapsed = $it" },
     )
-
-private val sideNavTexts: Translations<SideNavTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class SideNavPage : DemoPage() {
     private val texts = Binder(sideNavTexts)
@@ -441,5 +420,25 @@ internal class SideNavPage : DemoPage() {
         keyboardList.replaceChildren(bulletList(listOf(copy.tabLine, copy.toggleLine, copy.enterLine)))
     }
 
-    companion object : CustomElementReferenceAdapter<SideNavPage>(SideNavPage::class.js, "vaadin-demo-side-nav-page")
+    companion object : CustomElementReferenceAdapter<SideNavPage>(SideNavPage::class.js, "vaadin-demo-side-nav-page") {
+        /**
+         * The styling example: the link of an item tagged `external` and its icon are drawn in an accent
+         * colour. `::part(link)` is the only entry into the link's own shadow tree.
+         */
+        private val SIDE_NAV_SHEET: CSSStyleSheet = cssSheet {
+            // `::part(link)` is the only entry into the link's own shadow tree. A part is a pseudo-element
+            // of the host, so it joins the compound instead of following a combinator; the icon is a
+            // light-DOM child, so it is a plain child selector.
+            val externalItem = compound(tag(VaadinTagName.sideNavItem), className(EXTERNAL))
+            val linkPart = pseudo(pseudoElement("part"), ident("link"))
+
+            compound(externalItem, linkPart).invoke { color = ACCENT }
+            compound(externalItem, pseudo(Pseudos.hover), linkPart).invoke { color = ACCENT }
+            (externalItem child tag(VaadinTagName.icon)).invoke { color = ACCENT }
+        }
+        private val sideNavTexts: Translations<SideNavTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

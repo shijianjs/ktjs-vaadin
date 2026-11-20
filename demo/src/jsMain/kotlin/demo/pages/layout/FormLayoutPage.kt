@@ -108,11 +108,6 @@ private val chinese: FormLayoutTexts =
         asideCaption = "form-item 默认把标签放在左侧",
     )
 
-private val formLayoutTexts: Translations<FormLayoutTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class FormLayoutPage : DemoPage() {
     private val texts = Binder(formLayoutTexts)
 
@@ -269,27 +264,30 @@ internal class FormLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page")
-}
+    companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page") {
+        private val formLayoutTexts: Translations<FormLayoutTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /**
+         * `<vaadin-demo-form-frame>`: puts a form layout next to an empty pane in a split layout, as the docs
+         * examples do — dragging the splitter changes the width of the form and the responsive column count
+         * follows it.
+         */
 
-/**
- * `<vaadin-demo-form-frame>`: puts a form layout next to an empty pane in a split layout, as the docs
- * examples do — dragging the splitter changes the width of the form and the responsive column count
- * follows it.
- */
-
-/** Creates a defined `<vaadin-demo-form-frame>` around [form]. */
-internal fun newFormFrame(form: HTMLElement): FormFrame {
-    // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
-    FormFrame.NAME
-    return FormFrame.NAME().also { it.show(form) }
-}
-
-/** A `<vaadin-form-row>` grouping fields into one row of an auto-responsive form layout. */
-private fun formRow(vararg fields: HTMLElement): HTMLElement {
-    val row = createFormRow()
-    row.append(*fields)
-    return row
+        /** Creates a defined `<vaadin-demo-form-frame>` around [form]. */
+        internal fun newFormFrame(form: HTMLElement): FormFrame {
+            // The companion registers the tag in its `init`; reading `NAME` upgrades the element the page already spells.
+            FormFrame.NAME
+            return FormFrame.NAME().also { it.show(form) }
+        }
+        /** A `<vaadin-form-row>` grouping fields into one row of an auto-responsive form layout. */
+        private fun formRow(vararg fields: HTMLElement): HTMLElement {
+            val row = createFormRow()
+            row.append(*fields)
+            return row
+        }
+    }
 }
 
 internal fun textField(label: String): HTMLElement = createTextField { this.label = label }

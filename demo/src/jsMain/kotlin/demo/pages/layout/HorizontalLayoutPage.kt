@@ -118,11 +118,6 @@ private val chinese: HorizontalLayoutTexts =
         withWrap = "有 wrap",
     )
 
-private val horizontalLayoutTexts: Translations<HorizontalLayoutTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class HorizontalLayoutPage : DemoPage() {
     private val texts = Binder(horizontalLayoutTexts)
 
@@ -396,5 +391,10 @@ internal class HorizontalLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page")
+    companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page") {
+        private val horizontalLayoutTexts: Translations<HorizontalLayoutTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

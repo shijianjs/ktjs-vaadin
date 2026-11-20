@@ -212,11 +212,6 @@ private val buttonChinese: ButtonTexts = ButtonTexts(
     perform = "执行操作",
 )
 
-private val buttonTexts: Translations<ButtonTexts> = texts(
-    Langs.EN to buttonEnglish,
-    Langs.ZH_HANS to buttonChinese,
-)
-
 /**
  * The same page on kit blocks.
  *
@@ -543,5 +538,10 @@ internal class ButtonPage : DemoPage() {
         dialogCreateButton.textContent = copy.createAccount
     }
 
-    companion object : CustomElementReferenceAdapter<ButtonPage>(ButtonPage::class.js, "vaadin-demo-button-page")
+    companion object : CustomElementReferenceAdapter<ButtonPage>(ButtonPage::class.js, "vaadin-demo-button-page") {
+        private val buttonTexts: Translations<ButtonTexts> = texts(
+            Langs.EN to buttonEnglish,
+            Langs.ZH_HANS to buttonChinese,
+        )
+    }
 }

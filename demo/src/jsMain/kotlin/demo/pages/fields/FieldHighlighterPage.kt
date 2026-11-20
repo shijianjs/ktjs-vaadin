@@ -117,11 +117,6 @@ private val fieldHighlighterChinese: FieldHighlighterTexts = FieldHighlighterTex
     restartGeneration = "重新开始生成",
 )
 
-private val fieldHighlighterTexts: Translations<FieldHighlighterTexts> = texts(
-    Langs.EN to fieldHighlighterEnglish,
-    Langs.ZH_HANS to fieldHighlighterChinese,
-)
-
 /**
  * The page on kit blocks.
  *
@@ -258,5 +253,10 @@ internal class FieldHighlighterPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<FieldHighlighterPage>(FieldHighlighterPage::class.js, "vaadin-demo-field-highlighter-page")
+    companion object : CustomElementReferenceAdapter<FieldHighlighterPage>(FieldHighlighterPage::class.js, "vaadin-demo-field-highlighter-page") {
+        private val fieldHighlighterTexts: Translations<FieldHighlighterTexts> = texts(
+            Langs.EN to fieldHighlighterEnglish,
+            Langs.ZH_HANS to fieldHighlighterChinese,
+        )
+    }
 }

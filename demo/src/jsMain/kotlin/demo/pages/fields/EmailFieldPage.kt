@@ -47,9 +47,6 @@ val emailFieldEntry: CatalogEntry =
         kitPage = { EmailFieldPage.NAME() },
     )
 
-/** Pattern of `email-field-validation.ts`: only addresses in the `example.com` domain. */
-private const val EMAIL_EXAMPLE_PATTERN = "^[a-zA-Z0-9_\\-+]+(?:\\.[a-zA-Z0-9_\\-+]+)*@example\\.com$"
-
 private val english: EmailFieldTexts =
     EmailFieldTexts(
         basicHeading = "Basic usage",
@@ -122,11 +119,6 @@ private val chinese: EmailFieldTexts =
         stylesHeading = "样式变体",
         stylesHint = "theme 变体与 Text Field 相同：align-right、small 与 helper-above-field 可以组合使用。",
     )
-
-private val emailFieldTexts: Translations<EmailFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class EmailFieldPage : DemoPage() {
     private val texts = Binder(emailFieldTexts)
@@ -299,5 +291,12 @@ internal class EmailFieldPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<EmailFieldPage>(EmailFieldPage::class.js, "vaadin-demo-email-field-page")
+    companion object : CustomElementReferenceAdapter<EmailFieldPage>(EmailFieldPage::class.js, "vaadin-demo-email-field-page") {
+        /** Pattern of `email-field-validation.ts`: only addresses in the `example.com` domain. */
+        private const val EMAIL_EXAMPLE_PATTERN = "^[a-zA-Z0-9_\\-+]+(?:\\.[a-zA-Z0-9_\\-+]+)*@example\\.com$"
+        private val emailFieldTexts: Translations<EmailFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

@@ -81,11 +81,6 @@ private val chinese: MessageInputTexts = MessageInputTexts(
     noEvents = "尚未触发事件",
 )
 
-private val messageInputTexts: Translations<MessageInputTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 // ---------------------------------------------------------------------------------------------
 // Message Input
 //
@@ -195,5 +190,10 @@ internal class MessageInputPage : DemoPage() {
         if ((liveList.items?.size ?: 0) <= 1) liveList.items = arrayOf(seed(copy))
     }
 
-    companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page")
+    companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page") {
+        private val messageInputTexts: Translations<MessageInputTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

@@ -123,11 +123,6 @@ private val chinese: ListBoxTexts = ListBoxTexts(
     professions = listOf("软件工程师", "产品设计师", "数据分析师", "前端开发", "架构师", "测试工程师"),
 )
 
-private val listBoxTexts: Translations<ListBoxTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class ListBoxPage : DemoPage() {
     private val texts = Binder(listBoxTexts)
 
@@ -277,5 +272,10 @@ internal class ListBoxPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<ListBoxPage>(ListBoxPage::class.js, "vaadin-demo-list-box-page")
+    companion object : CustomElementReferenceAdapter<ListBoxPage>(ListBoxPage::class.js, "vaadin-demo-list-box-page") {
+        private val listBoxTexts: Translations<ListBoxTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

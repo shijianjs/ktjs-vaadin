@@ -50,12 +50,6 @@ val passwordFieldEntry: CatalogEntry =
         kitPage = { PasswordFieldPage.NAME() },
     )
 
-/** Pattern of `password-field-helper.ts`: at least eight characters, one letter and one digit. */
-private const val PASSWORD_HELPER_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8}.*$"
-
-/** Pattern of `password-field-validation.ts`: letters A-Z and digits only. */
-private const val PASSWORD_LETTERS_AND_DIGITS = "^[A-Za-z0-9]+$"
-
 private val english: PasswordFieldTexts =
     PasswordFieldTexts(
         basicHeading = "Basic usage",
@@ -162,11 +156,6 @@ private val chinese: PasswordFieldTexts =
         moderate = "中",
         strong = "强",
     )
-
-private val passwordFieldTexts: Translations<PasswordFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class PasswordFieldPage : DemoPage() {
     private val texts = Binder(passwordFieldTexts)
@@ -403,5 +392,14 @@ internal class PasswordFieldPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<PasswordFieldPage>(PasswordFieldPage::class.js, "vaadin-demo-password-field-page")
+    companion object : CustomElementReferenceAdapter<PasswordFieldPage>(PasswordFieldPage::class.js, "vaadin-demo-password-field-page") {
+        /** Pattern of `password-field-helper.ts`: at least eight characters, one letter and one digit. */
+        private const val PASSWORD_HELPER_PATTERN = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8}.*$"
+        /** Pattern of `password-field-validation.ts`: letters A-Z and digits only. */
+        private const val PASSWORD_LETTERS_AND_DIGITS = "^[A-Za-z0-9]+$"
+        private val passwordFieldTexts: Translations<PasswordFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

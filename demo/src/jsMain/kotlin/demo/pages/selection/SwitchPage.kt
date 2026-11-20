@@ -106,11 +106,6 @@ private val chinese: SwitchTexts = SwitchTexts(
     dailyDigest = "每日摘要",
 )
 
-private val switchTexts: Translations<SwitchTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class SwitchPage : DemoPage() {
     private val texts = Binder(switchTexts)
 
@@ -213,5 +208,10 @@ internal class SwitchPage : DemoPage() {
         renderResult()
     }
 
-    companion object : CustomElementReferenceAdapter<SwitchPage>(SwitchPage::class.js, "vaadin-demo-switch-page")
+    companion object : CustomElementReferenceAdapter<SwitchPage>(SwitchPage::class.js, "vaadin-demo-switch-page") {
+        private val switchTexts: Translations<SwitchTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

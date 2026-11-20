@@ -89,11 +89,6 @@ private val chinese: ProgressBarTexts = ProgressBarTexts(
     slowHint = "处理可能需要十分钟以上",
 )
 
-private val progressBarTexts: Translations<ProgressBarTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 // ---------------------------------------------------------------------------------------------
 // Progress bar
 // ---------------------------------------------------------------------------------------------
@@ -220,5 +215,10 @@ internal class ProgressBarPage : DemoPage() {
         reset.textContent = texts.current.reset
     }
 
-    companion object : CustomElementReferenceAdapter<ProgressBarPage>(ProgressBarPage::class.js, "vaadin-demo-progress-bar-page")
+    companion object : CustomElementReferenceAdapter<ProgressBarPage>(ProgressBarPage::class.js, "vaadin-demo-progress-bar-page") {
+        private val progressBarTexts: Translations<ProgressBarTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

@@ -113,14 +113,6 @@ private val chinese: BreadcrumbsTexts = BreadcrumbsTexts(
     a11yOverflow = "溢出按钮带有可本地化的 aria-label（i18n.moreItems）。",
 )
 
-/** The product every long trail ends on; a name, so it needs no translation. */
-private const val MODEL_X1 = "Model X1"
-
-private val breadcrumbsTexts: Translations<BreadcrumbsTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class BreadcrumbsPage : DemoPage() {
     private val texts = Binder(breadcrumbsTexts)
 
@@ -241,22 +233,28 @@ internal class BreadcrumbsPage : DemoPage() {
         trail.forEachIndexed { index, item -> item.textContent = labels[index] }
     }
 
-    companion object : CustomElementReferenceAdapter<BreadcrumbsPage>(BreadcrumbsPage::class.js, "vaadin-demo-breadcrumbs-page")
-}
-
-/** A breadcrumbs item; the ones with a path navigate nowhere and report their path to [onPath]. */
-private fun crumb(
-    path: String? = null,
-    iconName: String? = null,
-    onPath: ((String) -> Unit)? = null,
-): BreadcrumbsItemElement =
-    createBreadcrumbsItem().apply {
-        if (path != null) {
-            this.path = path
-            clickEvent.addHandler {
-                it.preventDefault()
-                onPath?.invoke(path)
+    companion object : CustomElementReferenceAdapter<BreadcrumbsPage>(BreadcrumbsPage::class.js, "vaadin-demo-breadcrumbs-page") {
+        /** The product every long trail ends on; a name, so it needs no translation. */
+        private const val MODEL_X1 = "Model X1"
+        private val breadcrumbsTexts: Translations<BreadcrumbsTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** A breadcrumbs item; the ones with a path navigate nowhere and report their path to [onPath]. */
+        private fun crumb(
+            path: String? = null,
+            iconName: String? = null,
+            onPath: ((String) -> Unit)? = null,
+        ): BreadcrumbsItemElement =
+            createBreadcrumbsItem().apply {
+                if (path != null) {
+                    this.path = path
+                    clickEvent.addHandler {
+                        it.preventDefault()
+                        onPath?.invoke(path)
+                    }
+                }
+                if (iconName != null) append(createIcon { icon = iconName }.apply { slot = "prefix" })
             }
-        }
-        if (iconName != null) append(createIcon { icon = iconName }.apply { slot = "prefix" })
     }
+}

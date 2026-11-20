@@ -37,8 +37,6 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.cssom.ClassName
 
-private val EXAMPLE: ClassName = ClassName("example")
-
 val tooltipEntry: CatalogEntry =
     CatalogEntry(
         id = "tooltip",
@@ -132,11 +130,6 @@ private val chinese: TooltipTexts =
         positionsHeading = "位置",
         positionsHint = "position 决定浮层相对触发元素的位置，这里演示四个常用值。",
     )
-
-private val tooltipTexts: Translations<TooltipTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class TooltipPage : DemoPage() {
     private val texts = Binder(tooltipTexts)
@@ -293,5 +286,11 @@ internal class TooltipPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page")
+    companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page") {
+        private val EXAMPLE: ClassName = ClassName("example")
+        private val tooltipTexts: Translations<TooltipTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

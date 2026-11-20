@@ -207,11 +207,6 @@ private val chinese: DateTimePickerTexts =
         startReadout = { start, end -> "开始：$start · 结束：$end" },
     )
 
-private val dateTimePickerTexts: Translations<DateTimePickerTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class DateTimePickerPage : DemoPage() {
     private val texts = Binder(dateTimePickerTexts)
 
@@ -564,46 +559,47 @@ internal class DateTimePickerPage : DemoPage() {
         if (customValid == false) customPicker.errorMessage = texts.current.notAvailable
     }
 
-    companion object : CustomElementReferenceAdapter<DateTimePickerPage>(DateTimePickerPage::class.js, "vaadin-demo-date-time-picker-page")
-}
-
-private fun firstDayOfNextMonth(date: Date): Date =
-    createDate(date.getFullYear().toDouble(), date.getMonth().toDouble() + 1, 1.0)
-
-/** Formats date parts as `dd/MM/yyyy`, the custom format of the input-format example. */
-private fun formatDayMonthYear(parts: DatePickerDate): String =
-    "${pad2(parts.day.toInt())}/${pad2(parts.month.toInt() + 1)}/${parts.year.toInt()}"
-
-/** Parses `dd/MM/yyyy`. */
-private fun parseDayMonthYear(text: String): DatePickerDate? {
-    val pieces = text.trim().split("/")
-    if (pieces.size != 3) return null
-    val day = pieces[0].toIntOrNull() ?: return null
-    val month = pieces[1].toIntOrNull() ?: return null
-    val year = pieces[2].toIntOrNull() ?: return null
-    return numericDate(year, month, day)
-}
-
-/**
- * Reads `[dateValue, dateText, timeValue, timeText]` from the inner pickers of a
- * date-time-picker. The wrapper exposes neither the slotted pickers nor their `inputElement`, so the
- * four strings travel back in one joined string.
- */
-private fun innerPickerState(picker: HTMLElement): List<String> {
-    val joined =
-        js(
-            "(picker) => {" +
-                " const date = picker.querySelector('[slot=date-picker]');" +
-                " const time = picker.querySelector('[slot=time-picker]');" +
-                " const dateInput = date && date.inputElement ? date.inputElement : null;" +
-                " const timeInput = time && time.inputElement ? time.inputElement : null;" +
-                " return [" +
-                "   date ? date.value : ''," +
-                "   dateInput ? dateInput.value : ''," +
-                "   time ? time.value : ''," +
-                "   timeInput ? timeInput.value : ''" +
-                " ].join('\\u0001');" +
-                "}",
-        )(picker) as String
-    return joined.split('\u0001')
+    companion object : CustomElementReferenceAdapter<DateTimePickerPage>(DateTimePickerPage::class.js, "vaadin-demo-date-time-picker-page") {
+        private val dateTimePickerTexts: Translations<DateTimePickerTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        private fun firstDayOfNextMonth(date: Date): Date =
+            createDate(date.getFullYear().toDouble(), date.getMonth().toDouble() + 1, 1.0)
+        /** Formats date parts as `dd/MM/yyyy`, the custom format of the input-format example. */
+        private fun formatDayMonthYear(parts: DatePickerDate): String =
+            "${pad2(parts.day.toInt())}/${pad2(parts.month.toInt() + 1)}/${parts.year.toInt()}"
+        /** Parses `dd/MM/yyyy`. */
+        private fun parseDayMonthYear(text: String): DatePickerDate? {
+            val pieces = text.trim().split("/")
+            if (pieces.size != 3) return null
+            val day = pieces[0].toIntOrNull() ?: return null
+            val month = pieces[1].toIntOrNull() ?: return null
+            val year = pieces[2].toIntOrNull() ?: return null
+            return numericDate(year, month, day)
+        }
+        /**
+         * Reads `[dateValue, dateText, timeValue, timeText]` from the inner pickers of a
+         * date-time-picker. The wrapper exposes neither the slotted pickers nor their `inputElement`, so the
+         * four strings travel back in one joined string.
+         */
+        private fun innerPickerState(picker: HTMLElement): List<String> {
+            val joined =
+                js(
+                    "(picker) => {" +
+                        " const date = picker.querySelector('[slot=date-picker]');" +
+                        " const time = picker.querySelector('[slot=time-picker]');" +
+                        " const dateInput = date && date.inputElement ? date.inputElement : null;" +
+                        " const timeInput = time && time.inputElement ? time.inputElement : null;" +
+                        " return [" +
+                        "   date ? date.value : ''," +
+                        "   dateInput ? dateInput.value : ''," +
+                        "   time ? time.value : ''," +
+                        "   timeInput ? timeInput.value : ''" +
+                        " ].join('\\u0001');" +
+                        "}",
+                )(picker) as String
+            return joined.split('\u0001')
+        }
+    }
 }

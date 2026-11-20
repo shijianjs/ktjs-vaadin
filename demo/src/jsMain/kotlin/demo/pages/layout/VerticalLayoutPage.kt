@@ -97,11 +97,6 @@ private val chinese: VerticalLayoutTexts =
         withWrap = "有 wrap",
     )
 
-private val verticalLayoutTexts: Translations<VerticalLayoutTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class VerticalLayoutPage : DemoPage() {
     private val texts = Binder(verticalLayoutTexts)
 
@@ -312,5 +307,10 @@ internal class VerticalLayoutPage : DemoPage() {
         captionKeys.forEach { (node, copy) -> node.textContent = copy(texts.current) }
     }
 
-    companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page")
+    companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page") {
+        private val verticalLayoutTexts: Translations<VerticalLayoutTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

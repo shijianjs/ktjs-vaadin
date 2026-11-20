@@ -182,11 +182,6 @@ private val chinese: DialogTexts =
         professionHeader = "职务",
     )
 
-private val dialogTexts: Translations<DialogTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class DialogPage : DemoPage() {
     private val texts = Binder(dialogTexts)
 
@@ -442,5 +437,10 @@ internal class DialogPage : DemoPage() {
         log.replay("close")
     }
 
-    companion object : CustomElementReferenceAdapter<DialogPage>(DialogPage::class.js, "vaadin-demo-dialog-page")
+    companion object : CustomElementReferenceAdapter<DialogPage>(DialogPage::class.js, "vaadin-demo-dialog-page") {
+        private val dialogTexts: Translations<DialogTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

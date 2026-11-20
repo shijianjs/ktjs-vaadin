@@ -128,11 +128,6 @@ private val chinese: SliderTexts =
         disabled = "禁用",
     )
 
-private val sliderTexts: Translations<SliderTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class SliderPage : DemoPage() {
     private val texts = Binder(sliderTexts)
 
@@ -339,5 +334,10 @@ internal class SliderPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<SliderPage>(SliderPage::class.js, "vaadin-demo-slider-page")
+    companion object : CustomElementReferenceAdapter<SliderPage>(SliderPage::class.js, "vaadin-demo-slider-page") {
+        private val sliderTexts: Translations<SliderTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

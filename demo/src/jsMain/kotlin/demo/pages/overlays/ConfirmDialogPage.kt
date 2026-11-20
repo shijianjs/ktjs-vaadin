@@ -129,11 +129,6 @@ private val chinese: ConfirmDialogTexts =
         acknowledged = "已确认",
     )
 
-private val confirmDialogTexts: Translations<ConfirmDialogTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class ConfirmDialogPage : DemoPage() {
     private val texts = Binder(confirmDialogTexts)
 
@@ -306,5 +301,10 @@ internal class ConfirmDialogPage : DemoPage() {
         exportStatus.set(copy.statusPrefix, lastExportStatus?.invoke(copy) ?: "")
     }
 
-    companion object : CustomElementReferenceAdapter<ConfirmDialogPage>(ConfirmDialogPage::class.js, "vaadin-demo-confirm-dialog-page")
+    companion object : CustomElementReferenceAdapter<ConfirmDialogPage>(ConfirmDialogPage::class.js, "vaadin-demo-confirm-dialog-page") {
+        private val confirmDialogTexts: Translations<ConfirmDialogTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

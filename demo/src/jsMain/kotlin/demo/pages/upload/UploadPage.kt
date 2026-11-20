@@ -260,46 +260,6 @@ private val chinese: UploadTexts =
         queued = "排队中",
     )
 
-private val uploadTexts: Translations<UploadTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
-/** The Finnish copy the internationalization example shows; it never follows the page language. */
-private const val FINNISH_I18N =
-    """
-    {
-      "dropFiles": {"one": "Raahaa tiedosto tähän", "many": "Raahaa tiedostot tähän"},
-      "addFiles": {"one": "Valitse tiedosto...", "many": "Valitse tiedostot..."},
-      "error": {
-        "tooManyFiles": "Liian monta tiedostoa.",
-        "fileIsTooBig": "Tiedosto on liian suuri.",
-        "incorrectFileType": "Väärä tiedostomuoto."
-      },
-      "uploading": {
-        "status": {
-          "connecting": "Yhdistetään...",
-          "stalled": "Pysäytetty",
-          "processing": "Käsitellään tiedostoa...",
-          "held": "Jonossa"
-        },
-        "remainingTime": {
-          "prefix": "aikaa jäljellä: ",
-          "unknown": "jäljellä olevaa aikaa ei saatavilla"
-        },
-        "error": {
-          "serverUnavailable": "Palvelin ei vastaa",
-          "unexpectedServerError": "Palvelinvirhe",
-          "forbidden": "Kielletty"
-        }
-      },
-      "units": {
-        "size": ["t", "kt", "Mt", "Gt", "Tt", "Pt", "Et", "ZB", "YB"],
-        "sizeBase": 1000
-      }
-    }
-    """
-
 internal class UploadPage : DemoPage() {
     private val texts = Binder(uploadTexts)
 
@@ -864,5 +824,44 @@ internal class UploadPage : DemoPage() {
         notUploadingReadout?.set(copy.notUploading)
     }
 
-    companion object : CustomElementReferenceAdapter<UploadPage>(UploadPage::class.js, "vaadin-demo-upload-page")
+    companion object : CustomElementReferenceAdapter<UploadPage>(UploadPage::class.js, "vaadin-demo-upload-page") {
+        private val uploadTexts: Translations<UploadTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** The Finnish copy the internationalization example shows; it never follows the page language. */
+        private const val FINNISH_I18N =
+            """
+            {
+              "dropFiles": {"one": "Raahaa tiedosto tähän", "many": "Raahaa tiedostot tähän"},
+              "addFiles": {"one": "Valitse tiedosto...", "many": "Valitse tiedostot..."},
+              "error": {
+                "tooManyFiles": "Liian monta tiedostoa.",
+                "fileIsTooBig": "Tiedosto on liian suuri.",
+                "incorrectFileType": "Väärä tiedostomuoto."
+              },
+              "uploading": {
+                "status": {
+                  "connecting": "Yhdistetään...",
+                  "stalled": "Pysäytetty",
+                  "processing": "Käsitellään tiedostoa...",
+                  "held": "Jonossa"
+                },
+                "remainingTime": {
+                  "prefix": "aikaa jäljellä: ",
+                  "unknown": "jäljellä olevaa aikaa ei saatavilla"
+                },
+                "error": {
+                  "serverUnavailable": "Palvelin ei vastaa",
+                  "unexpectedServerError": "Palvelinvirhe",
+                  "forbidden": "Kielletty"
+                }
+              },
+              "units": {
+                "size": ["t", "kt", "Mt", "Gt", "Tt", "Pt", "Et", "ZB", "YB"],
+                "sizeBase": 1000
+              }
+            }
+            """
+    }
 }

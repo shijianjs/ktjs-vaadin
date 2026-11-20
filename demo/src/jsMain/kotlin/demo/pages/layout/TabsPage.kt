@@ -33,8 +33,6 @@ import io.github.shijianjs.ktjs.vaadin.tabs.createTab
 import io.github.shijianjs.ktjs.vaadin.tabs.createTabs
 import web.cssom.ClassName
 
-private val TABS_CONTENT_TEXT: ClassName = ClassName("tabs-content__text")
-
 val tabsEntry: CatalogEntry =
     CatalogEntry(
         id = "tabs",
@@ -167,11 +165,6 @@ private val chinese: TabsTexts =
         dashboardContent = "这是仪表盘的内容。",
         contentFor = { "这是「$it」的内容。" },
     )
-
-private val tabsTexts: Translations<TabsTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class TabsPage : DemoPage() {
     private val texts = Binder(tabsTexts)
@@ -394,5 +387,11 @@ internal class TabsPage : DemoPage() {
         content.textContent = if (name == null) copy.dashboardContent else copy.contentFor(name)
     }
 
-    companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page")
+    companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page") {
+        private val TABS_CONTENT_TEXT: ClassName = ClassName("tabs-content__text")
+        private val tabsTexts: Translations<TabsTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

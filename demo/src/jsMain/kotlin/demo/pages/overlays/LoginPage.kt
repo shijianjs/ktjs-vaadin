@@ -138,11 +138,6 @@ private val chinese: LoginTexts =
         richHint = "登录表单可以放在任意背景上；深色背景配合 theme=\"dark\" 保持对比度。",
     )
 
-private val loginTexts: Translations<LoginTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class LoginPage : DemoPage() {
     private val texts = Binder(loginTexts)
 
@@ -365,5 +360,10 @@ internal class LoginPage : DemoPage() {
             clickEvent.addHandler { overlay.opened = true }
         }
 
-    companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page")
+    companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page") {
+        private val loginTexts: Translations<LoginTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

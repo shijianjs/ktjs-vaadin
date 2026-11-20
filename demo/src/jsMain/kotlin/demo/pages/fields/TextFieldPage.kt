@@ -55,9 +55,6 @@ val textFieldEntry: CatalogEntry =
         kitPage = { TextFieldPage.NAME() },
     )
 
-/** Phone pattern of `text-field-validation.ts` (documents grouped digits with optional separators). */
-private const val PHONE_PATTERN = "^[+]?\\(?[0-9]{3}\\)?-?[0-9]{3}-?[0-9]{4,6}$"
-
 private val english: TextFieldTexts =
     TextFieldTexts(
         basicHeading = "Basic usage",
@@ -204,11 +201,6 @@ private val chinese: TextFieldTexts =
         typeHere = "输入内容",
         typeHerePlaceholder = "边输入边观察同步结果",
     )
-
-private val textFieldTexts: Translations<TextFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class TextFieldPage : DemoPage() {
     private val texts = Binder(textFieldTexts)
@@ -479,5 +471,12 @@ internal class TextFieldPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<TextFieldPage>(TextFieldPage::class.js, "vaadin-demo-text-field-page")
+    companion object : CustomElementReferenceAdapter<TextFieldPage>(TextFieldPage::class.js, "vaadin-demo-text-field-page") {
+        /** Phone pattern of `text-field-validation.ts` (documents grouped digits with optional separators). */
+        private const val PHONE_PATTERN = "^[+]?\\(?[0-9]{3}\\)?-?[0-9]{3}-?[0-9]{4,6}$"
+        private val textFieldTexts: Translations<TextFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

@@ -85,11 +85,6 @@ private val chinese: VirtualListTexts = VirtualListTexts(
     row = { index -> "行 $index" },
 )
 
-private val virtualListTexts: Translations<VirtualListTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class VirtualListPage : DemoPage() {
     private val texts = Binder(virtualListTexts)
 
@@ -252,5 +247,10 @@ internal class VirtualListPage : DemoPage() {
         jumpList.requestContentUpdate()
     }
 
-    companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page")
+    companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page") {
+        private val virtualListTexts: Translations<VirtualListTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

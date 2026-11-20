@@ -128,30 +128,6 @@ private val chinese: DetailsTexts = DetailsTexts(
     themesHint = "filled、reverse、small 是 details 上的主题变体，可叠加在展开的区块上。",
 )
 
-private val detailsTexts: Translations<DetailsTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
-/** The eight fixture members shown inside the themed blocks; names, so they need no translation. */
-private val MEMBERS = listOf(
-    "Blake Martin",
-    "Caroline Clark",
-    "Avery Torres",
-    "Khloe Scott",
-    "Camila Fisher",
-    "Gavin Lewis",
-    "Isabella Powell",
-    "Zoe Wilson",
-)
-
-private fun linkGroup(itemCount: Int): LinkGroup {
-    val anchors = List(itemCount) { kitAnchor("", "#/details") }
-    val details = createDetails { opened = true }
-    details.append(kitCol(*anchors.toTypedArray()))
-    return LinkGroup(details, anchors)
-}
-
 internal class DetailsPage : DemoPage() {
     private val texts = Binder(detailsTexts)
 
@@ -302,5 +278,27 @@ internal class DetailsPage : DemoPage() {
         group.anchors.forEachIndexed { index, anchor -> anchor.textContent = links[index] }
     }
 
-    companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page")
+    companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page") {
+        private val detailsTexts: Translations<DetailsTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** The eight fixture members shown inside the themed blocks; names, so they need no translation. */
+        private val MEMBERS = listOf(
+            "Blake Martin",
+            "Caroline Clark",
+            "Avery Torres",
+            "Khloe Scott",
+            "Camila Fisher",
+            "Gavin Lewis",
+            "Isabella Powell",
+            "Zoe Wilson",
+        )
+        private fun linkGroup(itemCount: Int): LinkGroup {
+            val anchors = List(itemCount) { kitAnchor("", "#/details") }
+            val details = createDetails { opened = true }
+            details.append(kitCol(*anchors.toTypedArray()))
+            return LinkGroup(details, anchors)
+        }
+    }
 }

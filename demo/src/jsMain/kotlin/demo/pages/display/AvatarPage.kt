@@ -74,11 +74,6 @@ private val chinese: AvatarTexts = AvatarTexts(
     user = { index -> "用户 $index" },
 )
 
-private val avatarTexts: Translations<AvatarTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class AvatarPage : DemoPage() {
     private val texts = Binder(avatarTexts)
 
@@ -201,5 +196,10 @@ internal class AvatarPage : DemoPage() {
         colourAvatars.forEachIndexed { index, avatar -> avatar.name = copy.user(index) }
     }
 
-    companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page")
+    companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page") {
+        private val avatarTexts: Translations<AvatarTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

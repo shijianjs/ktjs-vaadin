@@ -45,11 +45,6 @@ val iconEntry: CatalogEntry =
         kitPage = { IconPage.NAME() },
     )
 
-/** A single star, passed to [unsafeSvgLiteral] by the SVG literal example. */
-private const val STAR_SVG_FRAGMENT =
-    "<path d='M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z' " +
-        "fill='currentColor'/>"
-
 private val english: IconTexts = IconTexts(
     basicHeading = "Basic usage",
     basicHint = "The icon property takes icon-set:name. registerLumoIcons() and registerVaadinIcons() make sure " +
@@ -92,11 +87,6 @@ private val chinese: IconTexts = IconTexts(
     literalsHeading = "SVG 字面量",
     literalsHint = "Kotlin/JS 写不出 Lit 的 svg 模板字面量：用 unsafeSvgLiteral() 从字符串构造一个，或通过 " +
         "Iconset.getIconSvg() 取出已注册图标集里的图形，两者都赋给 svg 属性，size 决定 viewBox。",
-)
-
-private val iconTexts: Translations<IconTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
 )
 
 // ---------------------------------------------------------------------------------------------
@@ -219,5 +209,14 @@ internal class IconPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page")
+    companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page") {
+        /** A single star, passed to [unsafeSvgLiteral] by the SVG literal example. */
+        private const val STAR_SVG_FRAGMENT =
+            "<path d='M12 2.5l2.9 5.9 6.6.9-4.8 4.7 1.2 6.6-5.9-3.1-5.9 3.1 1.2-6.6L2.5 9.3l6.6-.9z' " +
+                "fill='currentColor'/>"
+        private val iconTexts: Translations<IconTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

@@ -51,26 +51,6 @@ val textAreaEntry: CatalogEntry =
         kitPage = { TextAreaPage.NAME() },
     )
 
-/** Sentence pattern of `text-area-validation.ts`: one sentence, capitalised, ending with a period. */
-private const val SENTENCE_PATTERN = "^[A-Z]([A-Za-z0-9,-\\s])*\\.$"
-
-/** The `templates.json` lorem ipsum used by the text-area height and character-counter examples. */
-private const val LOREM_IPSUM =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel semper libero. Vestibulum ante " +
-        "ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.\n\n" +
-        "Proin volutpat, sapien ut facilisis ultricies, eros purus blandit velit, at ultrices mi libero " +
-        "quis ante. Curabitur scelerisque metus et libero convallis consequat. Pellentesque feugiat " +
-        "pulvinar nisl sed pellentesque."
-
-/**
- * `TextArea` has no native `pattern` support; upstream checks it with a regular expression, and the
- * error mapping of the docs example does the same. Compile errors count as a match like upstream.
- */
-private fun hasPatternMismatch(pattern: String, value: String): Boolean {
-    if (pattern.isEmpty() || value.isEmpty()) return false
-    return runCatching { !Regex(pattern).matches(value) }.getOrDefault(false)
-}
-
 private val english: TextAreaTexts =
     TextAreaTexts(
         basicHeading = "Basic usage",
@@ -192,11 +172,6 @@ private val chinese: TextAreaTexts =
             "容器宽度。",
         typeHere = "输入内容",
     )
-
-private val textAreaTexts: Translations<TextAreaTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
 
 internal class TextAreaPage : DemoPage() {
     private val texts = Binder(textAreaTexts)
@@ -426,5 +401,27 @@ internal class TextAreaPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page")
+    companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page") {
+        /** Sentence pattern of `text-area-validation.ts`: one sentence, capitalised, ending with a period. */
+        private const val SENTENCE_PATTERN = "^[A-Z]([A-Za-z0-9,-\\s])*\\.$"
+        /** The `templates.json` lorem ipsum used by the text-area height and character-counter examples. */
+        private const val LOREM_IPSUM =
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel semper libero. Vestibulum ante " +
+                "ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.\n\n" +
+                "Proin volutpat, sapien ut facilisis ultricies, eros purus blandit velit, at ultrices mi libero " +
+                "quis ante. Curabitur scelerisque metus et libero convallis consequat. Pellentesque feugiat " +
+                "pulvinar nisl sed pellentesque."
+        /**
+         * `TextArea` has no native `pattern` support; upstream checks it with a regular expression, and the
+         * error mapping of the docs example does the same. Compile errors count as a match like upstream.
+         */
+        private fun hasPatternMismatch(pattern: String, value: String): Boolean {
+            if (pattern.isEmpty() || value.isEmpty()) return false
+            return runCatching { !Regex(pattern).matches(value) }.getOrDefault(false)
+        }
+        private val textAreaTexts: Translations<TextAreaTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

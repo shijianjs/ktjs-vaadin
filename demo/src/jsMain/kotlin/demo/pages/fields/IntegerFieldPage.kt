@@ -107,11 +107,6 @@ private val chinese: IntegerFieldTexts = IntegerFieldTexts(
     helper = "说明文字",
 )
 
-private val integerFieldTexts: Translations<IntegerFieldTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
 internal class IntegerFieldPage : DemoPage() {
     private val texts = Binder(integerFieldTexts)
 
@@ -254,5 +249,10 @@ internal class IntegerFieldPage : DemoPage() {
         renderLog()
     }
 
-    companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page")
+    companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page") {
+        private val integerFieldTexts: Translations<IntegerFieldTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+    }
 }

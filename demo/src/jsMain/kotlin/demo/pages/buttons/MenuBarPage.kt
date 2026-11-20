@@ -66,43 +66,6 @@ val menuBarEntry: CatalogEntry =
 /** Parses a declarative menu tree into the typed `items` array. */
 private fun menuItems(json: String): Array<MenuBarItem> = jsObject(json).unsafeCast<Array<MenuBarItem>>()
 
-/** Item that was chosen in an `item-selected` event, read from the event detail. */
-private fun selectedMenuItem(event: web.events.Event): MenuBarItem =
-    js("(event) => event.detail.value")(event).unsafeCast<MenuBarItem>()
-
-/** Builds one `vaadin-menu-bar-item` with an optional icon and text, used for `component` items. */
-private fun menuBarItemElement(
-    label: String? = null,
-    icon: String? = null,
-    text: String? = null,
-    child: Boolean = false,
-): HTMLElement {
-    val item = document.createElement(web.dom.TagName<HTMLElement>("vaadin-menu-bar-item"))
-    if (label != null) item.setAttribute("aria-label", label)
-    if (icon != null) {
-        val iconElement = createIcon { this.icon = "vaadin:$icon" }
-        if (child) {
-            iconElement.style.width = "1.25rem"
-            iconElement.style.height = "1.25rem"
-            iconElement.style.marginRight = "var(--vaadin-gap-s)"
-        }
-        item.append(iconElement)
-    }
-    if (text != null) item.append(document.createTextNode(text))
-    return item
-}
-
-private fun componentItem(
-    element: HTMLElement,
-    tooltip: String? = null,
-    children: Array<SubMenuItem>? = null,
-): MenuBarItem =
-    unsafeJso {
-        component = HTMLElementOrString(element)
-        if (tooltip != null) this.tooltip = tooltip
-        if (children != null) this.children = children
-    }
-
 private val english: MenuBarTexts =
     MenuBarTexts(
         basicHeading = "Basic usage",
@@ -280,34 +243,6 @@ private val chinese: MenuBarTexts =
         copyAsHtml = "复制为 HTML",
         copyAsMarkdown = "复制为 Markdown",
         delete = "删除",
-    )
-
-private val menuBarTexts: Translations<MenuBarTexts> = texts(
-    Langs.EN to english,
-    Langs.ZH_HANS to chinese,
-)
-
-/** The shared "View / Edit / Share / Move / Duplicate" tree of the examples. */
-private fun sharedMenuItems(copy: MenuBarTexts): Array<MenuBarItem> =
-    menuItems(
-        """
-        [
-          {"text": "${copy.view}"},
-          {"text": "${copy.edit}"},
-          {"text": "${copy.share}", "children": [
-            {"text": "${copy.onSocialMedia}", "children": [
-              {"text": "Facebook"}, {"text": "Twitter"}, {"text": "Instagram"}
-            ]},
-            {"text": "${copy.byEmail}"},
-            {"text": "${copy.getLink}"}
-          ]},
-          {"text": "${copy.move}", "children": [
-            {"text": "${copy.toFolder}"},
-            {"text": "${copy.toTrash}"}
-          ]},
-          {"text": "${copy.duplicate}"}
-        ]
-        """.trimIndent(),
     )
 
 internal class MenuBarPage : DemoPage() {
@@ -763,5 +698,66 @@ internal class MenuBarPage : DemoPage() {
         showReadouts()
     }
 
-    companion object : CustomElementReferenceAdapter<MenuBarPage>(MenuBarPage::class.js, "vaadin-demo-menu-bar-page")
+    companion object : CustomElementReferenceAdapter<MenuBarPage>(MenuBarPage::class.js, "vaadin-demo-menu-bar-page") {
+        /** Item that was chosen in an `item-selected` event, read from the event detail. */
+        private fun selectedMenuItem(event: web.events.Event): MenuBarItem =
+            js("(event) => event.detail.value")(event).unsafeCast<MenuBarItem>()
+        /** Builds one `vaadin-menu-bar-item` with an optional icon and text, used for `component` items. */
+        private fun menuBarItemElement(
+            label: String? = null,
+            icon: String? = null,
+            text: String? = null,
+            child: Boolean = false,
+        ): HTMLElement {
+            val item = document.createElement(web.dom.TagName<HTMLElement>("vaadin-menu-bar-item"))
+            if (label != null) item.setAttribute("aria-label", label)
+            if (icon != null) {
+                val iconElement = createIcon { this.icon = "vaadin:$icon" }
+                if (child) {
+                    iconElement.style.width = "1.25rem"
+                    iconElement.style.height = "1.25rem"
+                    iconElement.style.marginRight = "var(--vaadin-gap-s)"
+                }
+                item.append(iconElement)
+            }
+            if (text != null) item.append(document.createTextNode(text))
+            return item
+        }
+        private fun componentItem(
+            element: HTMLElement,
+            tooltip: String? = null,
+            children: Array<SubMenuItem>? = null,
+        ): MenuBarItem =
+            unsafeJso {
+                component = HTMLElementOrString(element)
+                if (tooltip != null) this.tooltip = tooltip
+                if (children != null) this.children = children
+            }
+        private val menuBarTexts: Translations<MenuBarTexts> = texts(
+            Langs.EN to english,
+            Langs.ZH_HANS to chinese,
+        )
+        /** The shared "View / Edit / Share / Move / Duplicate" tree of the examples. */
+        private fun sharedMenuItems(copy: MenuBarTexts): Array<MenuBarItem> =
+            menuItems(
+                """
+                [
+                  {"text": "${copy.view}"},
+                  {"text": "${copy.edit}"},
+                  {"text": "${copy.share}", "children": [
+                    {"text": "${copy.onSocialMedia}", "children": [
+                      {"text": "Facebook"}, {"text": "Twitter"}, {"text": "Instagram"}
+                    ]},
+                    {"text": "${copy.byEmail}"},
+                    {"text": "${copy.getLink}"}
+                  ]},
+                  {"text": "${copy.move}", "children": [
+                    {"text": "${copy.toFolder}"},
+                    {"text": "${copy.toTrash}"}
+                  ]},
+                  {"text": "${copy.duplicate}"}
+                ]
+                """.trimIndent(),
+            )
+    }
 }
