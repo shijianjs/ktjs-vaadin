@@ -447,6 +447,7 @@ internal class ThemingPage : DemoPage() {
     companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page") {
         /** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
         private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
+
         /**
          * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
          * component, and nothing in the kit's blocks can express it. Declared here, next to the example that

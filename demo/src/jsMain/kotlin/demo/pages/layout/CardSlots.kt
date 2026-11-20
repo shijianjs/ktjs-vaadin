@@ -36,10 +36,3 @@ internal fun newCardSlotText(slotName: String, text: String): CardSlotText {
     CardSlotText.NAME
     return CardSlotText.NAME().also { it.show(slotName, text) }
 }
-
-/**
- * `<demo-card-header>`: the custom header of the official header example — a kicker above the title.
- *
- * The kicker is the small uppercase line, and the title is the same `<h2>` the kit's heading block draws,
- * so the header reads like the rest of the demo pages. Both lines come from the shared card text table.
- */

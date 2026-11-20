@@ -6,6 +6,11 @@ import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 
+/**
+ * `<demo-card-media-icon>`: the card's media slot filled with the photo icon, tinted so it reads as an
+ * image rather than as a button.
+ */
+
 internal class CardMediaIcon : CustomElementAdapter() {
     private val icon = createIcon {
         icon = "lumo:photo"

@@ -7,6 +7,11 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLElement
 
+/**
+ * `<vaadin-demo-split-detail>`: the fake detail form of the split layout examples — ten labelled
+ * inputs, grey blocks only, enough shape to read as a form.
+ */
+
 internal class SplitDetail : CustomElementAdapter() {
     init {
         attachShadowRoot().append(fields())

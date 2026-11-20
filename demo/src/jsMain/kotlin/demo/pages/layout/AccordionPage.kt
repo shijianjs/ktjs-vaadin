@@ -344,10 +344,3 @@ internal class AccordionPage : DemoPage() {
         )
     }
 }
-
-/**
- * `<vaadin-demo-completion-icon>`: the check that marks a completed wizard step in its summary.
- *
- * The icon is hidden until the step's button opens the next panel, and the step toggles `hidden` on
- * the host, so the host is the icon's wrapper rather than something the page has to reach into.
- */

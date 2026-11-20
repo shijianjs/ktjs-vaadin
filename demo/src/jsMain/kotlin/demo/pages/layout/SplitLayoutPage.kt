@@ -204,13 +204,3 @@ internal class SplitLayoutPage : DemoPage() {
         )
     }
 }
-
-/**
- * `<vaadin-demo-split-master>`: the fake master list of the split layout examples — sixteen rows of
- * six grey cells, which is the shape the docs example uses.
- */
-
-/**
- * `<vaadin-demo-split-detail>`: the fake detail form of the split layout examples — ten labelled
- * inputs, grey blocks only, enough shape to read as a form.
- */

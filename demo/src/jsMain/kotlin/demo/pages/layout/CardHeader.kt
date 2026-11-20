@@ -9,6 +9,13 @@ import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HtmlTagName
 
+/**
+ * `<demo-card-header>`: the custom header of the official header example — a kicker above the title.
+ *
+ * The kicker is the small uppercase line, and the title is the same `<h2>` the kit's heading block draws,
+ * so the header reads like the rest of the demo pages. Both lines come from the shared card text table.
+ */
+
 internal class CardHeader : CustomElementAdapter(), CardTranslatable {
     private val kicker = HtmlTagName.div().apply {
         style.setProperty("font-size", "0.8125rem")

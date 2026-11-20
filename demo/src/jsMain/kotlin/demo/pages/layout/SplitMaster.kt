@@ -7,6 +7,11 @@ import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLElement
 
+/**
+ * `<vaadin-demo-split-master>`: the fake master list of the split layout examples — sixteen rows of
+ * six grey cells, which is the shape the docs example uses.
+ */
+
 internal class SplitMaster : CustomElementAdapter() {
     init {
         attachShadowRoot().append(cells())

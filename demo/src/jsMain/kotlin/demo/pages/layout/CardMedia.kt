@@ -64,8 +64,3 @@ internal fun newCardMediaImage(width: Int? = null): CardMediaImage {
     CardMediaImage.NAME
     return CardMediaImage.NAME().also { it.show(width) }
 }
-
-/**
- * `<demo-card-media-icon>`: the card's media slot filled with the photo icon, tinted so it reads as an
- * image rather than as a button.
- */
