@@ -163,6 +163,19 @@ class EventLog(maxEntries: Int = 8, placeholder: String = "") {
         log.placeholder(text)
     }
 
+    /** Drops every line; a language switch replays the recorded events with the new copy. */
+    fun clear() {
+        log.clear()
+    }
+
+    /** The clock a line would carry now; a page records it when the event happens. */
+    fun now(): String = timestamp()
+
+    /** Adds a line under the time it originally happened, so a replay keeps the clock, not just the copy. */
+    fun addAt(time: String, message: String) {
+        log.add("$time $message")
+    }
+
     private fun timestamp(): String {
         val now = Date()
         return "${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}"
