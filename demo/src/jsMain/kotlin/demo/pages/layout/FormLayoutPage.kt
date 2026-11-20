@@ -3,6 +3,11 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
@@ -14,10 +19,10 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
 import js.objects.unsafeJso
+import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldElement
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutLabelsPositions
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
@@ -25,10 +30,13 @@ import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormItem
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormLayout
 import io.github.shijianjs.ktjs.vaadin.formlayout.createFormRow
+import io.github.shijianjs.ktjs.vaadin.passwordfield.PasswordFieldElement
 import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
 import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
+import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
+import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 
 val formLayoutEntry: CatalogEntry =
@@ -48,75 +56,159 @@ val formLayoutEntry: CatalogEntry =
                 sourcePath = "pages/layout/FormLayoutPage.kt",
             ),
         kitPage = { newFormLayoutPage() },
-        rebuildsOnLanguage = true,
     )
 
+/** Every string this page shows, in one language. */
+private class FormLayoutTexts(
+    val autoHeading: String,
+    val autoHint: String,
+    val firstName: String,
+    val lastName: String,
+    val emailAddress: String,
+    val password: String,
+    val confirmPassword: String,
+    val labelsHeading: String,
+    val labelsHint: String,
+    val columnsHeading: String,
+    val columnsHint: String,
+    val colspanHeading: String,
+    val colspanHint: String,
+    val street: String,
+    val postal: String,
+    val city: String,
+    val country: String,
+    val stepsHeading: String,
+    val stepsHint: String,
+    val asideCaption: String,
+)
+
+private val english: FormLayoutTexts =
+    FormLayoutTexts(
+        autoHeading = "Auto-responsive mode",
+        autoHint = "autoResponsive creates columns from the available width, each as wide as " +
+            "columnWidth (12em by default). Every field starts a new row unless fields are grouped " +
+            "with form-row.",
+        firstName = "First name",
+        lastName = "Last name",
+        emailAddress = "Email address",
+        password = "Password",
+        confirmPassword = "Confirm password",
+        labelsHeading = "Label position",
+        labelsHint = "labelsAside makes form-item prefer placing its label beside the field and fall " +
+            "back above it when there is not enough room.",
+        columnsHeading = "Column width and count",
+        columnsHint = "columnWidth sets the width of a column, expandColumns lets columns share the " +
+            "remaining width and expandFields stretches the fields, including those inside form-item.",
+        colspanHeading = "Column span",
+        colspanHint = "data-colspan on a field makes it span several columns; it only applies inside " +
+            "form-row with autoResponsive enabled.",
+        street = "Street address",
+        postal = "Postal code",
+        city = "City/Town",
+        country = "Country",
+        stepsHeading = "Responsive steps",
+        stepsHint = "Without autoResponsive, responsiveSteps describes the breakpoints and column " +
+            "counts; the first step usually starts at 0.",
+        asideCaption = "form-item puts the label aside by default",
+    )
+
+private val chinese: FormLayoutTexts =
+    FormLayoutTexts(
+        autoHeading = "自动响应式模式",
+        autoHint = "autoResponsive 按可用宽度自动创建列，列宽由 columnWidth 指定（默认 12em）。每个字段默认独占一行，" +
+            "用 form-row 可以把字段并到同一行。",
+        firstName = "名",
+        lastName = "姓",
+        emailAddress = "邮箱地址",
+        password = "密码",
+        confirmPassword = "确认密码",
+        labelsHeading = "标签位置",
+        labelsHint = "labelsAside 让 form-item 优先把标签放在字段左侧；宽度不够时自动改回字段上方。",
+        columnsHeading = "列宽与列数",
+        columnsHint = "columnWidth 决定一列多宽，expandColumns 让列平分剩余宽度，expandFields 让字段撑满所在列" +
+            "（包括 form-item 里的字段）。",
+        colspanHeading = "跨列",
+        colspanHint = "字段上的 data-colspan 让它占据多列；只能用在 form-row 里，并且需要 autoResponsive。",
+        street = "街道地址",
+        postal = "邮政编码",
+        city = "城市/镇",
+        country = "国家",
+        stepsHeading = "响应式断点",
+        stepsHint = "不用 autoResponsive 时用 responsiveSteps 描述断点与列数；首项通常从 0 开始。",
+        asideCaption = "form-item 默认把标签放在左侧",
+    )
+
+private val formLayoutTexts: Translations<FormLayoutTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class FormLayoutPage : DemoPage() {
+    private val texts = Binder(formLayoutTexts)
+
+    private val frame = PageFrame(formLayoutEntry)
 
     init {
-        configureFrame(formLayoutEntry)
+        frame.mount(this)
 
-        val autoSection =
-            sectionBlock(
-                tr("自动响应式模式", "Auto-responsive mode"),
-                tr(
-                    "autoResponsive 按可用宽度自动创建列，列宽由 columnWidth 指定（默认 12em）。每个字段默认独占" +
-                        "一行，用 form-row 可以把字段并到同一行。",
-                    "autoResponsive creates columns from the available width, each as wide as columnWidth (12em by " +
-                        "default). Every field starts a new row unless fields are grouped with form-row.",
-                ),
-            )
+        fun field(copy: (FormLayoutTexts) -> String): TextFieldElement =
+            createTextField().also { node -> texts.bind(node, copy) { node.label = it } }
+
+        fun mail(copy: (FormLayoutTexts) -> String): EmailFieldElement =
+            createEmailField().also { node -> texts.bind(node, copy) { node.label = it } }
+
+        fun secret(copy: (FormLayoutTexts) -> String): PasswordFieldElement =
+            createPasswordField().also { node -> texts.bind(node, copy) { node.label = it } }
+
+        fun item(copy: (FormLayoutTexts) -> String, field: HTMLElement): HTMLElement {
+            val formItem = createFormItem()
+            val labelNode = HtmlTagName.label().apply { slot = "label" }
+            texts.bind(labelNode, copy) { labelNode.textContent = it }
+            formItem.append(labelNode, field)
+            return formItem
+        }
+
+        val autoSection = sectionBlock()
+        texts.bind(autoSection.heading) { it.autoHeading }
+        texts.bind(autoSection.hint) { it.autoHint }
         val basicForm = createFormLayout { autoResponsive = true }
         basicForm.dataset["test"] = "form-layout"
         basicForm.append(
-            formRow(textField(tr("名", "First name")), textField(tr("姓", "Last name"))),
-            formRow(emailField(tr("邮箱地址", "Email address"))),
-            formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
+            formRow(field { it.firstName }, field { it.lastName }),
+            formRow(mail { it.emailAddress }),
+            formRow(secret { it.password }, secret { it.confirmPassword }),
         )
         autoSection.body.append(exampleBox(null, newFormFrame(basicForm)))
         body.append(autoSection.root)
 
-        val labelsSection =
-            sectionBlock(
-                tr("标签位置", "Label position"),
-                tr(
-                    "labelsAside 让 form-item 优先把标签放在字段左侧；宽度不够时自动改回字段上方。",
-                    "labelsAside makes form-item prefer placing its label beside the field and fall back above it " +
-                        "when there is not enough room.",
-                ),
-            )
+        val labelsSection = sectionBlock()
+        texts.bind(labelsSection.heading) { it.labelsHeading }
+        texts.bind(labelsSection.hint) { it.labelsHint }
         val asideForm = createFormLayout {
             autoResponsive = true
             labelsAside = true
         }
         asideForm.dataset["test"] = "form-labels-aside"
         asideForm.append(
-            formItem(tr("名", "First name"), createTextField()),
-            formItem(tr("姓", "Last name"), createTextField()),
-            formItem(tr("邮箱地址", "Email address"), createEmailField()),
+            item({ it.firstName }, createTextField()),
+            item({ it.lastName }, createTextField()),
+            item({ it.emailAddress }, createEmailField()),
         )
         labelsSection.body.append(exampleBox(null, newFormFrame(asideForm)))
         body.append(labelsSection.root)
 
-        val columnsSection =
-            sectionBlock(
-                tr("列宽与列数", "Column width and count"),
-                tr(
-                    "columnWidth 决定一列多宽，expandColumns 让列平分剩余宽度，expandFields 让字段撑满所在列" +
-                        "（包括 form-item 里的字段）。",
-                    "columnWidth sets the width of a column, expandColumns lets columns share the remaining width " +
-                        "and expandFields stretches the fields, including those inside form-item.",
-                ),
-            )
+        val columnsSection = sectionBlock()
+        texts.bind(columnsSection.heading) { it.columnsHeading }
+        texts.bind(columnsSection.hint) { it.columnsHint }
         val expandColumnsForm = createFormLayout {
             autoResponsive = true
             columnWidth = "8em"
             expandColumns = true
         }
         expandColumnsForm.append(
-            formRow(textField(tr("名", "First name")), textField(tr("姓", "Last name"))),
-            formRow(emailField(tr("邮箱地址", "Email address"))),
-            formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
+            formRow(field { it.firstName }, field { it.lastName }),
+            formRow(mail { it.emailAddress }),
+            formRow(secret { it.password }, secret { it.confirmPassword }),
         )
         val expandFieldsForm = createFormLayout {
             autoResponsive = true
@@ -125,9 +217,9 @@ internal class FormLayoutPage : DemoPage() {
             expandFields = true
         }
         expandFieldsForm.append(
-            formRow(textField(tr("名", "First name")), textField(tr("姓", "Last name"))),
-            formRow(emailField(tr("邮箱地址", "Email address"))),
-            formRow(passwordField(tr("密码", "Password")), passwordField(tr("确认密码", "Confirm password"))),
+            formRow(field { it.firstName }, field { it.lastName }),
+            formRow(mail { it.emailAddress }),
+            formRow(secret { it.password }, secret { it.confirmPassword }),
         )
         columnsSection.body.append(
             exampleBox("expand-columns", newFormFrame(expandColumnsForm)),
@@ -135,15 +227,9 @@ internal class FormLayoutPage : DemoPage() {
         )
         body.append(columnsSection.root)
 
-        val colspan =
-            sectionBlock(
-                tr("跨列", "Column span"),
-                tr(
-                    "字段上的 data-colspan 让它占据多列；只能用在 form-row 里，并且需要 autoResponsive。",
-                    "data-colspan on a field makes it span several columns; it only applies inside form-row with " +
-                        "autoResponsive enabled.",
-                ),
-            )
+        val colspan = sectionBlock()
+        texts.bind(colspan.heading) { it.colspanHeading }
+        texts.bind(colspan.hint) { it.colspanHint }
         val spanForm = createFormLayout {
             autoResponsive = true
             columnWidth = "8em"
@@ -151,25 +237,19 @@ internal class FormLayoutPage : DemoPage() {
         }
         spanForm.dataset["test"] = "form-colspan"
         spanForm.append(
-            formRow(textField(tr("街道地址", "Street address")).apply { setAttribute("data-colspan", "3") }),
+            formRow(field { it.street }.apply { setAttribute("data-colspan", "3") }),
             formRow(
-                textField(tr("邮政编码", "Postal code")),
-                textField(tr("城市", "City/Town")).apply { setAttribute("data-colspan", "2") },
+                field { it.postal },
+                field { it.city }.apply { setAttribute("data-colspan", "2") },
             ),
-            formRow(textField(tr("国家", "Country")).apply { setAttribute("data-colspan", "2") }),
+            formRow(field { it.country }.apply { setAttribute("data-colspan", "2") }),
         )
         colspan.body.append(exampleBox(null, newFormFrame(spanForm)))
         body.append(colspan.root)
 
-        val stepsSection =
-            sectionBlock(
-                tr("响应式断点", "Responsive steps"),
-                tr(
-                    "不用 autoResponsive 时用 responsiveSteps 描述断点与列数；首项通常从 0 开始。",
-                    "Without autoResponsive, responsiveSteps describes the breakpoints and column counts; the " +
-                        "first step usually starts at 0.",
-                ),
-            )
+        val stepsSection = sectionBlock()
+        texts.bind(stepsSection.heading) { it.stepsHeading }
+        texts.bind(stepsSection.hint) { it.stepsHint }
         val stepsForm = createFormLayout()
         stepsForm.responsiveSteps =
             arrayOf(
@@ -188,24 +268,35 @@ internal class FormLayoutPage : DemoPage() {
                 },
             )
         stepsForm.append(
-            textField(tr("名", "First name")),
-            textField(tr("姓", "Last name")),
-            emailField(tr("邮箱地址", "Email address")),
+            field { it.firstName },
+            field { it.lastName },
+            mail { it.emailAddress },
         )
 
         val stepsAsideForm = createFormLayout()
         stepsAsideForm.style.setProperty("--vaadin-form-layout-label-width", "92px")
         stepsAsideForm.append(
-            formItem(tr("名", "First name"), createTextField()),
-            formItem(tr("姓", "Last name"), createTextField()),
-            formItem(tr("邮箱地址", "Email address"), createEmailField()),
+            item({ it.firstName }, createTextField()),
+            item({ it.lastName }, createTextField()),
+            item({ it.emailAddress }, createEmailField()),
         )
+        val asideCard = exampleBox("", newFormFrame(stepsAsideForm))
+        texts.bind(asideCard.firstElementChild as HTMLParagraphElement) { it.asideCaption }
         stepsSection.body.append(
             exampleBox("responsiveSteps", newFormFrame(stepsForm)),
-            exampleBox(tr("form-item 默认把标签放在左侧", "form-item puts the label aside by default"), newFormFrame(stepsAsideForm)),
+            asideCard,
         )
         body.append(stepsSection.root)
 
+        applyTranslation(Langs.EN)
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = formLayoutEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
     }
 
     companion object : CustomElementReference<FormLayoutPage>(FormLayoutPage::class.js) {
@@ -268,15 +359,3 @@ private fun formRow(vararg fields: HTMLElement): HTMLElement {
 internal fun textField(label: String): HTMLElement = createTextField { this.label = label }
 
 internal fun passwordField(label: String): HTMLElement = createPasswordField { this.label = label }
-
-/** A `vaadin-form-item` whose label goes into the `label` slot, as upstream documents it. */
-private fun formItem(label: String, field: HTMLElement): HTMLElement {
-    val item = createFormItem()
-    val labelNode = HtmlTagName.label().apply {
-        slot = "label"
-        textContent = label
-    }
-    item.append(labelNode, field)
-    return item
-}
-
