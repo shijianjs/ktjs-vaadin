@@ -31,6 +31,7 @@ import demo.ui.PageMeta
 import demo.ui.Readout
 import demo.ui.listen
 import kotlin.js.unsafeCast
+import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutElement
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutEvents
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutPrimarySections
 import io.github.shijianjs.ktjs.vaadin.applayout.createAppLayout
@@ -215,9 +216,8 @@ internal class AppLayoutPage : DemoPage() {
         val basic = sectionBlock()
         texts.bind(basic.heading) { it.basicHeading }
         texts.bind(basic.hint) { it.basicHint }
-        val layout = createAppLayout()
+        val layout = boxedAppLayout("22rem")
         layout.dataset["test"] = "app-layout"
-        layout.style.setProperty("height", "22rem")
         val navbar = newAppNavbar()
         texts.bind(navbar.captionNode) { it.myApp }
         layout.append(navbar, drawer(), content { it.contentText })
@@ -231,12 +231,11 @@ internal class AppLayoutPage : DemoPage() {
         val navbarSection = sectionBlock()
         texts.bind(navbarSection.heading) { it.navbarHeading }
         texts.bind(navbarSection.hint) { it.navbarHint }
-        val navbarLayout = createAppLayout()
+        val navbarLayout = boxedAppLayout("12rem")
         navbarLayout.dataset["test"] = "app-layout-navbar"
-        navbarLayout.style.setProperty("height", "12rem")
         val navLinks = createHorizontalLayout().apply {
             slot = "navbar"
-            style.setProperty("width", "100%")
+            style.setProperty("flex", "1")
             style.setProperty("height", "2.25rem")
             style.setProperty("justify-content", "center")
             style.setProperty("gap", "0.5rem")
@@ -254,9 +253,8 @@ internal class AppLayoutPage : DemoPage() {
         val placement = sectionBlock()
         texts.bind(placement.heading) { it.placementHeading }
         texts.bind(placement.hint) { it.placementHint }
-        val sideLayout = createAppLayout { primarySection = AppLayoutPrimarySections.drawer }
+        val sideLayout = boxedAppLayout("20rem") { primarySection = AppLayoutPrimarySections.drawer }
         sideLayout.dataset["test"] = "app-layout-placement"
-        sideLayout.style.setProperty("height", "20rem")
         val sideNavbar = newAppNavbar()
         texts.bind(sideNavbar.captionNode) { it.dashboard }
         sideLayout.append(sideNavbar, drawer(), content { it.dashboardContent })
@@ -285,7 +283,7 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("border-radius", "var(--lumo-border-radius-l)")
             style.setProperty("overflow", "hidden")
         }
-        val autoLayout = createAppLayout()
+        val autoLayout = boxedAppLayout()
         autoLayout.append(
             navTitle { it.autoHeight },
             appPeopleGrid(5, allRowsVisible = true),
@@ -298,7 +296,7 @@ internal class AppLayoutPage : DemoPage() {
             style.setProperty("height", "18rem")
             style.setProperty("overflow", "hidden")
         }
-        val fullLayout = createAppLayout().apply { style.setProperty("height", "100%") }
+        val fullLayout = boxedAppLayout("100%")
         val fullGrid = appPeopleGrid(20, allRowsVisible = false).apply {
             style.setProperty("height", "100%")
             addTheme("no-border")
@@ -318,9 +316,8 @@ internal class AppLayoutPage : DemoPage() {
         val bottomNavbar = sectionBlock()
         texts.bind(bottomNavbar.heading) { it.bottomHeading }
         texts.bind(bottomNavbar.hint) { it.bottomHint }
-        val bottomLayout = createAppLayout()
+        val bottomLayout = boxedAppLayout("18rem")
         bottomLayout.dataset["test"] = "app-layout-bottom"
-        bottomLayout.style.setProperty("height", "18rem")
         bottomLayout.style.setProperty("--vaadin-app-layout-touch-optimized", "true")
         val bottomNav = createHorizontalLayout().apply {
             slot = "navbar touch-optimized"
@@ -344,9 +341,8 @@ internal class AppLayoutPage : DemoPage() {
         val secondary = sectionBlock()
         texts.bind(secondary.heading) { it.secondaryHeading }
         texts.bind(secondary.hint) { it.secondaryHint }
-        val secondaryLayout = createAppLayout { primarySection = AppLayoutPrimarySections.drawer }
+        val secondaryLayout = boxedAppLayout("22rem") { primarySection = AppLayoutPrimarySections.drawer }
         secondaryLayout.dataset["test"] = "app-layout-secondary"
-        secondaryLayout.style.setProperty("height", "22rem")
         val drawerTitle = heading(3, "")
         texts.bind(drawerTitle) { it.myApp }
         drawerTitle.slot = "drawer"
@@ -421,13 +417,22 @@ internal fun newAppLayoutPage(): AppLayoutPage {
 internal class AppNavbar : CustomElementAdapter() {
     private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
 
-    private val caption = heading(3, "").apply { style.setProperty("margin", "0") }
+    private val caption = heading(3, "").apply {
+        style.setProperty("margin", "0")
+        style.setProperty("white-space", "nowrap")
+    }
 
     /** The heading a page binds its title to; the caption lives in the shadow root. */
     val captionNode: HTMLElement get() = caption
 
     init {
-        attachShadowRoot().append(toggle, caption)
+        attachShadowRoot().append(
+            createHorizontalLayout().apply {
+                style.setProperty("align-items", "center")
+                style.setProperty("gap", "var(--lumo-space-s)")
+                append(toggle, caption)
+            },
+        )
     }
 
     /** Sets the application title next to the drawer toggle. */
@@ -561,8 +566,22 @@ internal fun newNavLink(): NavLink {
     return NavLink.NAME()
 }
 
-/** A grid of demo people used by the scrolling examples of the app layout page. */
-private fun appPeopleGrid(rows: Int, allRowsVisible: Boolean): GridElement {
+/**
+ * An app layout example that stays inside its card. The layout fixes its drawer to the viewport,
+ * so paint containment is what keeps the drawer and the navbar inside the example instead of over
+ * the page chrome.
+ */
+private fun boxedAppLayout(
+    height: String? = null,
+    configure: AppLayoutElement.() -> Unit = {},
+): AppLayoutElement {
+    val layout = createAppLayout(configure)
+    if (height != null) layout.style.setProperty("height", height)
+    layout.style.setProperty("contain", "paint")
+    return layout
+}
+
+/** A grid of demo people used by the scrolling examples of the app layout page. */private fun appPeopleGrid(rows: Int, allRowsVisible: Boolean): GridElement {
     val grid = createGrid()
     grid.items = gridItems(people(rows))
     grid.allRowsVisible = allRowsVisible
