@@ -466,7 +466,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildSwitch() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.switchTitle })
+        texts.bind(section.heading, { it.switchTitle })
         texts.bind(section.hint, { it.switchHint })
         texts.bind(lightButton, { it.light })
         texts.bind(darkButton, { it.dark })
@@ -494,7 +494,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildTokens() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.tokensTitle })
+        texts.bind(section.heading, { it.tokensTitle })
         texts.bind(section.hint, { it.tokensHint })
         val swatches =
             listOf(
@@ -515,7 +515,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildEntryPoints() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.entryTitle })
+        texts.bind(section.heading, { it.entryTitle })
         texts.bind(section.hint, { it.entryHint })
         texts.bind(entryNote, { it.entryNote })
         section.body.append(
@@ -535,7 +535,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildVariants() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.variantsTitle })
+        texts.bind(section.heading, { it.variantsTitle })
         texts.bind(section.hint, { it.variantsHint })
         texts.bind(compactField, { it.smallLabel }) { text -> compactField.label = text }
         texts.bind(compactField, { it.smallPlaceholder }) { text -> compactField.placeholder = text }
@@ -556,7 +556,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildProperties() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.propertiesTitle })
+        texts.bind(section.heading, { it.propertiesTitle })
         texts.bind(section.hint, { it.propertiesHint })
         texts.bind(styledButton, { it.styledButton })
         styledButton.style.setProperty("--vaadin-button-background", "var(--lumo-primary-color)")
@@ -578,7 +578,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildParts() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.partsTitle })
+        texts.bind(section.heading, { it.partsTitle })
         texts.bind(section.hint, { it.partsHint })
         texts.bind(partButton, { it.partButton })
         section.body.append(
@@ -592,7 +592,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildUtilities() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.utilitiesTitle })
+        texts.bind(section.heading, { it.utilitiesTitle })
         texts.bind(section.hint, { it.utilitiesHint })
         texts.bind(utilityText, { it.utilitiesText })
         utilityBox.append(createIcon { icon = "lumo:info" }, utilityText)
@@ -607,7 +607,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildBuiltInCopy() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.i18nTitle })
+        texts.bind(section.heading, { it.i18nTitle })
         texts.bind(section.hint, { it.i18nHint })
         val note = HtmlTagName.p { className = MUTED_SMALL }
         texts.bind(note, { it.i18nText })
@@ -617,7 +617,7 @@ internal class ThemingPage : DemoPage() {
 
     private fun buildInternals() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.internalsTitle })
+        texts.bind(section.heading, { it.internalsTitle })
         texts.bind(section.hint, { it.internalsHint })
         val intro = HtmlTagName.p { className = SMALL }
         texts.bind(intro, { it.internalsIntro })

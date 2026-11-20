@@ -155,7 +155,7 @@ internal class ItemPage : DemoPage() {
         addLink(texts.bind(api, { it.apiLink }))
 
         val basic = sectionBlock()
-        texts.bind(basic.title, { it.basicTitle })
+        texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         texts.bind(itemTwo, { it.itemSlot })
         texts.bind(itemThree, { it.itemDisabled })
@@ -163,7 +163,7 @@ internal class ItemPage : DemoPage() {
         body.append(basic.root)
 
         val selection = sectionBlock()
-        texts.bind(selection.title, { it.selectedTitle })
+        texts.bind(selection.heading, { it.selectedTitle })
         texts.bind(selection.hint, { it.selectedHint })
         texts.bind(selectedItem, { it.selectedItem })
         val toggle = createButton()

@@ -386,7 +386,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildBasic() {
         val basic = sectionBlock()
-        texts.bind(basic.title, { it.basicTitle })
+        texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         texts.bind(basicPicker, { it.alarm })
         basic.body.append(exampleBox(null, kitCol(basicPicker, basicReadout.root)))
@@ -398,7 +398,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildMinutes() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.minutesTitle })
+        texts.bind(section.heading, { it.minutesTitle })
         texts.bind(section.hint, { it.minutesHint })
         texts.bind(minutesPicker, { it.meetingTime })
         texts.bind(minutesPicker, { it.halfHour }) { text -> minutesPicker.helperText = text }
@@ -408,7 +408,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildSeconds() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.secondsTitle })
+        texts.bind(section.heading, { it.secondsTitle })
         texts.bind(section.hint, { it.secondsHint })
         texts.bind(secondsPicker, { it.received })
         section.body.append(exampleBox(null, secondsPicker))
@@ -417,7 +417,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildAutoOpen() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.autoTitle })
+        texts.bind(section.heading, { it.autoTitle })
         texts.bind(section.hint, { it.autoHint })
         texts.bind(autoPicker, { it.alarm })
         texts.bind(openButton, { it.open })
@@ -434,7 +434,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildValidation() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.validationTitle })
+        texts.bind(section.heading, { it.validationTitle })
         texts.bind(section.hint, { it.validationHint })
         texts.bind(validatedPicker, { it.appointment })
         texts.bind(validatedPicker, { it.openHours }) { text -> validatedPicker.helperText = text }
@@ -461,7 +461,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildCustomValidation() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.customTitle })
+        texts.bind(section.heading, { it.customTitle })
         texts.bind(section.hint, { it.customHint })
         texts.bind(customPicker, { it.appointment })
         texts.bind(customPicker, { it.customHours }) { text -> customPicker.helperText = text }
@@ -482,7 +482,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildFeatures() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.featuresTitle })
+        texts.bind(section.heading, { it.featuresTitle })
         texts.bind(section.hint, { it.featuresHint })
         texts.bind(featuredPicker, { it.label })
         texts.bind(featuredPicker, { it.helper }) { text -> featuredPicker.helperText = text }
@@ -497,7 +497,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildStates() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.statesTitle })
+        texts.bind(section.heading, { it.statesTitle })
         texts.bind(section.hint, { it.statesHint })
         texts.bind(readonlyPicker, { it.readonly })
         texts.bind(disabledPicker, { it.disabled })
@@ -507,7 +507,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildStyles() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.stylesTitle })
+        texts.bind(section.heading, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
         texts.bind(styledPicker, { it.label })
         texts.bind(styledPicker, { it.helper }) { text -> styledPicker.helperText = text }
@@ -517,7 +517,7 @@ internal class TimePickerPage : DemoPage() {
 
     private fun buildParser() {
         val section = sectionBlock()
-        texts.bind(section.title, { it.parserTitle })
+        texts.bind(section.heading, { it.parserTitle })
         texts.bind(section.hint, { it.parserHint })
         texts.bind(plainPicker, { it.alarm })
         texts.bind(loosePicker, { it.looseAlarm })

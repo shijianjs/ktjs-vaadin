@@ -415,17 +415,17 @@ internal class ButtonPage : DemoPage() {
         applyTranslation(Langs.EN)
     }
 
-    private fun basicSection(): VerticalLayoutElement {
+    private fun basicSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.basicTitle })
+        texts.bind(section.heading, { it.basicTitle })
         texts.bind(section.hint, { it.basicHint })
         section.body.append(exampleBox(null, clickCounter))
         return section.root
     }
 
-    private fun iconsSection(): VerticalLayoutElement {
+    private fun iconsSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.iconsTitle })
+        texts.bind(section.heading, { it.iconsTitle })
         texts.bind(section.hint, { it.iconsHint })
         if (addItemButton.childElementCount == 0) {
             addItemButton.append(createIcon { icon = "vaadin:plus" })
@@ -439,9 +439,9 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun imagesSection(): VerticalLayoutElement {
+    private fun imagesSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.imagesTitle })
+        texts.bind(section.heading, { it.imagesTitle })
         texts.bind(section.hint, { it.imagesHint })
         texts.bind(logo, { it.vaadinLogo }) { text -> logo.alt = text }
         logoButton.append(logo)
@@ -449,9 +449,9 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun disabledSection(): VerticalLayoutElement {
+    private fun disabledSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.disabledTitle })
+        texts.bind(section.heading, { it.disabledTitle })
         texts.bind(section.hint, { it.disabledHint })
         // The three disabled variants carry the variant names themselves — those are the values, not copy.
         val disabledVariants = kitRow(
@@ -463,17 +463,17 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun focusSection(): VerticalLayoutElement {
+    private fun focusSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.focusTitle })
+        texts.bind(section.heading, { it.focusTitle })
         texts.bind(section.hint, { it.focusHint })
         section.body.append(exampleBox(null, kitRow(focusButton, plainFocusButton)))
         return section.root
     }
 
-    private fun formsSection(): VerticalLayoutElement {
+    private fun formsSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.formsTitle })
+        texts.bind(section.heading, { it.formsTitle })
         texts.bind(section.hint, { it.formsHint })
         val form = createFormLayout().apply {
             responsiveSteps =
@@ -499,17 +499,17 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun labelsSection(): VerticalLayoutElement {
+    private fun labelsSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.labelsTitle })
+        texts.bind(section.heading, { it.labelsTitle })
         texts.bind(section.hint, { it.labelsHint })
         section.body.append(exampleBox(null, kitCol(primaryEmailRow, secondaryEmailRow)))
         return section.root
     }
 
-    private fun sizesSection(): VerticalLayoutElement {
+    private fun sizesSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.sizesTitle })
+        texts.bind(section.heading, { it.sizesTitle })
         texts.bind(section.hint, { it.sizesHint })
         section.body.append(
             exampleBox(
@@ -524,9 +524,9 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun stylesSection(): VerticalLayoutElement {
+    private fun stylesSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.stylesTitle })
+        texts.bind(section.heading, { it.stylesTitle })
         texts.bind(section.hint, { it.stylesHint })
         val variants = kitRow(
             createButton { textContent = "Primary" }.addTheme("primary"),
@@ -542,9 +542,9 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun coloursSection(): VerticalLayoutElement {
+    private fun coloursSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.coloursTitle })
+        texts.bind(section.heading, { it.coloursTitle })
         texts.bind(section.hint, { it.coloursHint })
         // The variant names are the captions here; they are the same word in both languages.
         for (variant in listOf("success", "warning", "error")) {
@@ -562,17 +562,17 @@ internal class ButtonPage : DemoPage() {
         return section.root
     }
 
-    private fun toolbarSection(): VerticalLayoutElement {
+    private fun toolbarSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.toolbarTitle })
+        texts.bind(section.heading, { it.toolbarTitle })
         texts.bind(section.hint, { it.toolbarHint })
         section.body.append(exampleBox(null, gridToolbar))
         return section.root
     }
 
-    private fun longSection(): VerticalLayoutElement {
+    private fun longSection(): HTMLElement {
         val section = sectionBlock()
-        texts.bind(section.title, { it.longTitle })
+        texts.bind(section.heading, { it.longTitle })
         texts.bind(section.hint, { it.longHint })
         section.body.append(exampleBox(null, longAction))
         return section.root

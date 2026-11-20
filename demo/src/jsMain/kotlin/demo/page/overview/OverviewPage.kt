@@ -199,11 +199,11 @@ internal class OverviewPage : DemoPage() {
         addLink(texts.bind(kitAnchor("", API_DOCS_URL), { it.apiLink }))
 
         val what = sectionBlock()
-        texts.bind(what.title, { it.whatHeading })
+        texts.bind(what.heading, { it.whatHeading })
         what.body.append(texts.bind(paragraph(), { it.whatBody }))
 
         val index = sectionBlock()
-        texts.bind(index.title, { it.indexHeading })
+        texts.bind(index.heading, { it.indexHeading })
         texts.bind(index.hint, { it.indexHint })
         index.body.append(row(search, counter.root), *buildIndex().toTypedArray())
 

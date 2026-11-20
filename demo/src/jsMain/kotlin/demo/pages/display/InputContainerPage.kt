@@ -201,13 +201,13 @@ internal class InputContainerPage : DemoPage() {
         addLink(texts.bind(api, { it.apiLink }))
 
         val basic = sectionBlock()
-        texts.bind(basic.title, { it.basicTitle })
+        texts.bind(basic.heading, { it.basicTitle })
         texts.bind(basic.hint, { it.basicHint })
         basic.body.append(exampleBox(null, basicContainer))
         body.append(basic.root)
 
         val states = sectionBlock()
-        texts.bind(states.title, { it.statesTitle })
+        texts.bind(states.heading, { it.statesTitle })
         texts.bind(states.hint, { it.statesHint })
         texts.bind(readOnly.caption, { it.readOnly })
         texts.bind(invalid.caption, { it.invalid })
