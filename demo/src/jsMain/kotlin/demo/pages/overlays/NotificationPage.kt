@@ -8,6 +8,11 @@ import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 
+import io.github.shijianjs.ktjs.demo.i18n.Binder
+import io.github.shijianjs.ktjs.demo.i18n.Lang
+import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.demo.i18n.Translations
+import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
 import web.components.CustomElementReference
@@ -21,10 +26,9 @@ import demo.CatalogEntry
 import demo.DOCS_BASE
 import demo.Groups
 import demo.bi
-import demo.tr
-import demo.ui.EventLog
+import demo.ui.PageFrame
 import demo.ui.PageMeta
-import demo.ui.configureFrame
+import demo.ui.RecordedLog
 import demo.ui.listen
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -57,70 +61,329 @@ val notificationEntry: CatalogEntry =
                 sourcePath = "pages/overlays/NotificationPage.kt",
             ),
         kitPage = { newNotificationPage() },
-        rebuildsOnLanguage = true,
     )
 
 // region Notification
 
+/** Every string this page shows, in one language. */
+private class NotificationTexts(
+    val positionsHeading: String,
+    val positionsHint: String,
+    val topEnd: String,
+    val topEndMessage: String,
+    val topCenter: String,
+    val topCenterMessage: String,
+    val bottomCenterDefault: String,
+    val bottomCenterMessage: String,
+    val allPositionsHeading: String,
+    val allPositionsHint: String,
+    val themesHeading: String,
+    val themesHint: String,
+    val saved: String,
+    val saveFailed: String,
+    val contrast: String,
+    val info: String,
+    val warning: String,
+    val persistentHeading: String,
+    val persistentHint: String,
+    val persistentText: String,
+    val close: String,
+    val showPersistent: String,
+    val richHeading: String,
+    val richHint: String,
+    val submitted: String,
+    val view: String,
+    val reportFailed: String,
+    val retry: String,
+    val mentioned: String,
+    val projectQ4: String,
+    val showRich: String,
+    val errorShort: String,
+    val mentionShort: String,
+    val actionsHeading: String,
+    val actionsHint: String,
+    val deletedTasks: String,
+    val undo: String,
+    val undoLine: String,
+    val retryLine: String,
+    val undoNotification: String,
+    val linkNotification: String,
+    val retryNotification: String,
+    val keyboardHeading: String,
+    val keyboardHint: String,
+    val undoCtrlZ: String,
+    val showNotification: String,
+    val lengthsHeading: String,
+    val lengthsHint: String,
+    val ariaName: String,
+    val ariaText: String,
+    val newMessageFrom: String,
+    val longMessage: String,
+    val recommendedCaption: String,
+    val discouragedCaption: String,
+    val showRecommended: String,
+    val showDiscouraged: String,
+)
+
+private val english: NotificationTexts =
+    NotificationTexts(
+        positionsHeading = "Position and duration",
+        positionsHint = "Notification.show shows a one-off message; options can set position, duration " +
+            "and theme.",
+        topEnd = "Top end",
+        topEndMessage = "Message at the top end",
+        topCenter = "Top center",
+        topCenterMessage = "Message at the top center",
+        bottomCenterDefault = "Bottom center (default)",
+        bottomCenterMessage = "Message at the bottom center",
+        allPositionsHeading = "Every position",
+        allPositionsHint = "position takes nine values: top / middle / bottom, each with three horizontal " +
+            "alignments; stretch spans the whole row.",
+        themesHeading = "Theme variants",
+        themesHint = "theme propagates to the inner notification-card.",
+        saved = "Saved successfully",
+        saveFailed = "Save failed",
+        contrast = "Contrast message",
+        info = "New project plan available",
+        warning = "Your session is about to expire",
+        persistentHeading = "Persistent notification",
+        persistentHint = "With duration set to 0 the notification stays open; put a close button in the " +
+            "renderer.",
+        persistentText = "This notification stays visible until it is closed.",
+        close = "Close",
+        showPersistent = "Show persistent notification",
+        richHeading = "Rich notifications",
+        richHint = "The renderer can hold icons, avatars, links and actions; the card is shared between " +
+            "the renderer and the component.",
+        submitted = "Application submitted!",
+        view = "View",
+        reportFailed = "Failed to generate report",
+        retry = "Retry",
+        mentioned = "Jason Bailey mentioned you in",
+        projectQ4 = "Project Q4",
+        showRich = "Show rich notification",
+        errorShort = "error",
+        mentionShort = "mention",
+        actionsHeading = "Notifications with actions",
+        actionsHint = "Undo, retry and link actions all live in the renderer; a close button is an icon " +
+            "button.",
+        deletedTasks = "5 tasks deleted",
+        undo = "Undo",
+        undoLine = "undo",
+        retryLine = "retry",
+        undoNotification = "Undo notification",
+        linkNotification = "Link notification",
+        retryNotification = "Retry notification",
+        keyboardHeading = "Keyboard shortcut",
+        keyboardHint = "Ctrl-Z (⌘-Z on macOS) undoes while the notification is open; the shortcut only works " +
+            "while it is visible.",
+        undoCtrlZ = "Undo Ctrl-Z",
+        showNotification = "Show notification",
+        lengthsHeading = "Content length",
+        lengthsHint = "Keep a notification to the outcome and one primary action; details belong on the " +
+            "page, not in a long paragraph.",
+        ariaName = "Aria Bailey",
+        ariaText = "Yeah, I know. But could you help me with...",
+        newMessageFrom = "New message from Aria Bailey",
+        longMessage = "Yeah, I know. But could you help me with this. I'm not sure where the bug is in my " +
+            "CSS? The checkmark doesn't get the right color. I'm trying to use the CSS custom properties " +
+            "from our design system, but for some reason it's not working.",
+        recommendedCaption = "Do: outcome plus one action",
+        discouragedCaption = "Don't: a whole paragraph in a notification",
+        showRecommended = "Show recommended",
+        showDiscouraged = "Show discouraged",
+    )
+
+private val chinese: NotificationTexts =
+    NotificationTexts(
+        positionsHeading = "位置与时长",
+        positionsHint = "Notification.show 是一次性提示；options 可以指定 position、duration 与 theme。",
+        topEnd = "右上角",
+        topEndMessage = "右上角的提示",
+        topCenter = "顶部居中",
+        topCenterMessage = "顶部居中的提示",
+        bottomCenterDefault = "底部居中（默认）",
+        bottomCenterMessage = "底部居中的提示",
+        allPositionsHeading = "全部位置",
+        allPositionsHint = "position 接受九种取值：顶部 / 中间 / 底部，各三种水平对齐，stretch 占满整行。",
+        themesHeading = "主题变体",
+        themesHint = "theme 会传播到内部的 notification-card。",
+        saved = "保存成功",
+        saveFailed = "保存失败",
+        contrast = "对比色提示",
+        info = "新项目计划已就绪",
+        warning = "会话即将过期",
+        persistentHeading = "常驻通知",
+        persistentHint = "duration 设为 0 时不自动关闭，需要在 renderer 里放一个关闭按钮。",
+        persistentText = "这条通知会一直显示，直到点击关闭。",
+        close = "关闭",
+        showPersistent = "显示常驻通知",
+        richHeading = "富内容通知",
+        richHint = "renderer 里可以放图标、头像、链接与操作按钮；通知卡片在 renderer 与组件之间共享。",
+        submitted = "申请已提交！",
+        view = "查看",
+        reportFailed = "报表生成失败",
+        retry = "重试",
+        mentioned = "Jason Bailey 在",
+        projectQ4 = "项目 Q4",
+        showRich = "成功通知",
+        errorShort = "错误通知",
+        mentionShort = "提及通知",
+        actionsHeading = "带操作的通知",
+        actionsHint = "撤销、重试与链接操作都放在 renderer 里；关闭按钮用图标按钮表达。",
+        deletedTasks = "已删除 5 个任务",
+        undo = "撤销",
+        undoLine = "撤销",
+        retryLine = "重试",
+        undoNotification = "撤销通知",
+        linkNotification = "链接通知",
+        retryNotification = "重试通知",
+        keyboardHeading = "键盘快捷键",
+        keyboardHint = "通知打开时按 Ctrl-Z（macOS 上是 ⌘-Z）也能撤销；快捷键只在通知可见时生效。",
+        undoCtrlZ = "撤销 Ctrl-Z",
+        showNotification = "显示通知",
+        lengthsHeading = "内容长度",
+        lengthsHint = "通知只放结论与一个主要操作；细节留在页面里，避免出现长段落。",
+        ariaName = "Aria Bailey",
+        ariaText = "好的，不过你能帮我……",
+        newMessageFrom = "来自 Aria Bailey 的新消息",
+        longMessage = "我知道，不过你能帮我看看吗？我不确定我的 CSS 里 bug 在哪里：勾选标记没有显示成正确的颜色，" +
+            "我用了设计系统的 CSS 自定义属性，但好像没有生效。",
+        recommendedCaption = "推荐：一行结论 + 一个操作",
+        discouragedCaption = "不推荐：整段对话塞进通知",
+        showRecommended = "显示推荐示例",
+        showDiscouraged = "显示不推荐示例",
+    )
+
+private val notificationTexts: Translations<NotificationTexts> = texts(
+    Langs.EN to english,
+    Langs.ZH_HANS to chinese,
+)
+
 internal class NotificationPage : DemoPage() {
+    private val texts = Binder(notificationTexts)
+
+    private val frame = PageFrame(notificationEntry)
+
+    private val actionLog = RecordedLog<String>(5)
+
+    private val persistentBar = bar()
+
+    private val successBar = bar()
+
+    private val failedBar = bar()
+
+    private val mentionBar = bar()
+
+    private val undoBar = bar()
+
+    private val linkBar = bar()
+
+    private val retryBar = bar()
+
+    private val keyboardBar = bar()
+
+    private val goodBar = bar()
+
+    private val badBar = bar()
+
+    /** Bars whose content is rebuilt on every language switch. */
+    private val bars: MutableList<Pair<HTMLElement, (NotificationTexts) -> Unit>> = mutableListOf()
+
+    private val persistentNote = createNotification()
+
+    private val successNote = createNotification()
+
+    private val failedNote = createNotification()
+
+    private val mentionNote = createNotification()
+
+    private val undoNote = createNotification()
+
+    private val linkNote = createNotification()
+
+    private val retryNote = createNotification()
+
+    private val keyboardNote = createNotification()
+
+    private val goodNote = createNotification()
+
+    private val badNote = createNotification()
+
+    private val undoRow = HtmlTagName.div()
+
+    private val retryRow = HtmlTagName.div()
+
+    private val recommendedCaption = HtmlTagName.p()
+    private val discouragedCaption = HtmlTagName.p()
+
+    /** Adds a filled row to [bar] and registers it for rebuilds. */
+    private fun row(bar: HTMLElement, fill: (NotificationTexts, HTMLElement) -> Unit) {
+        bars += bar to { copy -> bar.replaceChildren(); fill(copy, bar) }
+    }
+
+    private fun closeButton(bar: HTMLElement, copy: NotificationTexts, onClick: () -> Unit) {
+        bar.append(newCloseIcon(copy.close, onClick).also { it.slot = "end" })
+    }
+
+    private fun actionButton(
+        bar: HTMLElement,
+        label: String,
+        slotEnd: Boolean = true,
+        onClick: () -> Unit,
+    ) {
+        val button = createButton { textContent = label }
+        if (slotEnd) button.slot = "end"
+        button.clickEvent.addHandler { onClick() }
+        bar.append(button)
+    }
+
+    private fun mutedSpan(text: String): HTMLElement =
+        HtmlTagName.span().apply {
+            textContent = text
+            style.setProperty("font-size", "0.875rem")
+            style.setProperty("color", "var(--vaadin-text-color-secondary)")
+        }
 
     init {
-        configureFrame(notificationEntry)
+        frame.mount(this)
 
-        val positions =
-            sectionBlock(
-                tr("位置与时长", "Position and duration"),
-                tr(
-                    "Notification.show 是一次性提示；options 可以指定 position、duration 与 theme。",
-                    "Notification.show shows a one-off message; options can set position, duration and theme.",
-                ),
+        val positions = sectionBlock()
+        texts.bind(positions.heading) { it.positionsHeading }
+        texts.bind(positions.hint) { it.positionsHint }
+        val topEndButton = createButton().addTheme("tertiary")
+        texts.bind(topEndButton) { it.topEnd }
+        topEndButton.clickEvent.addHandler {
+            Notification.show(
+                texts.current.topEndMessage,
+                unsafeJso<NotificationShowOptions> {
+                    position = "top-end"
+                    duration = 3000.0
+                },
             )
-        positions.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createButton { textContent = tr("右上角", "Top end") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("右上角的提示", "Message at the top end"),
-                                unsafeJso<NotificationShowOptions> {
-                                    position = "top-end"
-                                    duration = 3000.0
-                                },
-                            )
-                        }
-                    },
-                    createButton { textContent = tr("顶部居中", "Top center") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("顶部居中的提示", "Message at the top center"),
-                                unsafeJso<NotificationShowOptions> {
-                                    position = "top-center"
-                                    duration = 3000.0
-                                },
-                            )
-                        }
-                    },
-                    createButton { textContent = tr("底部居中（默认）", "Bottom center (default)") }
-                        .addTheme("tertiary").apply {
-                            clickEvent.addHandler {
-                                Notification.show(tr("底部居中的提示", "Message at the bottom center"))
-                            }
-                        },
-                ),
-            ),
-        )
+        }
+        val topCenterButton = createButton().addTheme("tertiary")
+        texts.bind(topCenterButton) { it.topCenter }
+        topCenterButton.clickEvent.addHandler {
+            Notification.show(
+                texts.current.topCenterMessage,
+                unsafeJso<NotificationShowOptions> {
+                    position = "top-center"
+                    duration = 3000.0
+                },
+            )
+        }
+        val bottomCenterButton = createButton().addTheme("tertiary")
+        texts.bind(bottomCenterButton) { it.bottomCenterDefault }
+        bottomCenterButton.clickEvent.addHandler {
+            Notification.show(texts.current.bottomCenterMessage)
+        }
+        positions.body.append(exampleBox(null, kitRow(topEndButton, topCenterButton, bottomCenterButton)))
         body.append(positions.root)
 
-        val allPositions =
-            sectionBlock(
-                tr("全部位置", "Every position"),
-                tr(
-                    "position 接受九种取值：顶部 / 中间 / 底部，各三种水平对齐，stretch 占满整行。",
-                    "position takes nine values: top / middle / bottom, each with three horizontal alignments; " +
-                        "stretch spans the whole row.",
-                ),
-            )
+        val allPositions = sectionBlock()
+        texts.bind(allPositions.heading) { it.allPositionsHeading }
+        texts.bind(allPositions.hint) { it.allPositionsHint }
         val positionNames =
             listOf(
                 "top-stretch",
@@ -154,268 +417,155 @@ internal class NotificationPage : DemoPage() {
         )
         body.append(allPositions.root)
 
-        val themes =
-            sectionBlock(
-                tr("主题变体", "Theme variants"),
-                tr("theme 会传播到内部的 notification-card。", "theme propagates to the inner notification-card."),
-            )
-        themes.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createButton { textContent = "success" }.addTheme("success").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("保存成功", "Saved successfully"),
-                                unsafeJso<NotificationShowOptions> {
-                                    theme = "success"
-                                    position = "bottom-end"
-                                },
-                            )
-                        }
+        val themes = sectionBlock()
+        texts.bind(themes.heading) { it.themesHeading }
+        texts.bind(themes.hint) { it.themesHint }
+
+        // The buttons are collected into one row below.
+        val themeRow = kitRow()
+        themes.body.append(themeRow)
+        fun addThemeButton(theme: String, message: (NotificationTexts) -> String) {
+            val button = createButton { textContent = theme }.addTheme(theme)
+            button.clickEvent.addHandler {
+                Notification.show(
+                    message(texts.current),
+                    unsafeJso<NotificationShowOptions> {
+                        this.theme = theme
+                        position = "bottom-end"
                     },
-                    createButton { textContent = "error" }.addTheme("error").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("保存失败", "Save failed"),
-                                unsafeJso<NotificationShowOptions> {
-                                    theme = "error"
-                                    position = "bottom-end"
-                                },
-                            )
-                        }
-                    },
-                    createButton { textContent = "contrast" }.addTheme("contrast").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("对比色提示", "Contrast message"),
-                                unsafeJso<NotificationShowOptions> {
-                                    theme = "contrast"
-                                    position = "bottom-end"
-                                },
-                            )
-                        }
-                    },
-                    createButton { textContent = "info" }.addTheme("tertiary").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("新项目计划已就绪", "New project plan available"),
-                                unsafeJso<NotificationShowOptions> {
-                                    theme = "info"
-                                    position = "bottom-end"
-                                },
-                            )
-                        }
-                    },
-                    createButton { textContent = "warning" }.addTheme("tertiary").apply {
-                        clickEvent.addHandler {
-                            Notification.show(
-                                tr("会话即将过期", "Your session is about to expire"),
-                                unsafeJso<NotificationShowOptions> {
-                                    theme = "warning"
-                                    position = "bottom-end"
-                                },
-                            )
-                        }
-                    },
-                ),
-            ),
-        )
+                )
+            }
+            themeRow.append(button)
+        }
+        addThemeButton("success") { it.saved }
+        addThemeButton("error") { it.saveFailed }
+        addThemeButton("contrast") { it.contrast }
+        addThemeButton("info") { it.info }
+        addThemeButton("warning") { it.warning }
         body.append(themes.root)
 
-        val persistent =
-            sectionBlock(
-                tr("常驻通知", "Persistent notification"),
-                tr(
-                    "duration 设为 0 时不自动关闭，需要在 renderer 里放一个关闭按钮。",
-                    "With duration set to 0 the notification stays open; put a close button in the renderer.",
-                ),
-            )
-        val persistentNote = createNotification()
+        val persistent = sectionBlock()
+        texts.bind(persistent.heading) { it.persistentHeading }
+        texts.bind(persistent.hint) { it.persistentHint }
         persistentNote.duration = 0.0
         persistentNote.position = "middle"
-        val noteContent =
-            kitRow(
-                paragraph(tr("这条通知会一直显示，直到点击关闭。", "This notification stays visible until it is closed.")),
-                createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary small").apply {
-                    clickEvent.addHandler { persistentNote.opened = false }
-                },
-            )
-        persistentNote.renderer = { root, _ -> root.append(noteContent) }
-
-        persistent.body.append(
-            exampleBox(
-                null,
-                kitRow(
-                    createButton { textContent = tr("显示常驻通知", "Show persistent notification") }.apply {
-                        clickEvent.addHandler { persistentNote.opened = true }
-                    },
-                    createButton { textContent = tr("关闭", "Close") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler { persistentNote.opened = false }
-                    },
-                    persistentNote,
-                ),
-            ),
-        )
+        row(persistentBar) { copy, bar ->
+            bar.append(paragraph(copy.persistentText))
+            actionButton(bar, copy.close, slotEnd = false) { persistentNote.opened = false }
+        }
+        persistentNote.renderer = { root, _ -> root.append(persistentBar) }
+        val showPersistent = createButton()
+        texts.bind(showPersistent) { it.showPersistent }
+        showPersistent.clickEvent.addHandler { persistentNote.opened = true }
+        val hidePersistent = createButton().addTheme("tertiary")
+        texts.bind(hidePersistent) { it.close }
+        hidePersistent.clickEvent.addHandler { persistentNote.opened = false }
+        persistent.body.append(exampleBox(null, kitRow(showPersistent, hidePersistent, persistentNote)))
         body.append(persistent.root)
 
-        val rich =
-            sectionBlock(
-                tr("富内容通知", "Rich notifications"),
-                tr(
-                    "renderer 里可以放图标、头像、链接与操作按钮；通知卡片在 renderer 与组件之间共享。",
-                    "The renderer can hold icons, avatars, links and actions; the card is shared between the " +
-                        "renderer and the component.",
-                ),
-            )
-        val richHost = kitCol()
-
-        val successNote = createNotification()
+        val rich = sectionBlock()
+        texts.bind(rich.heading) { it.richHeading }
+        texts.bind(rich.hint) { it.richHint }
         successNote.duration = 0.0
         successNote.position = "middle"
         successNote.addTheme("success")
-        successNote.renderer = { root, _ ->
-            val bar = horizontalBar()
+        row(successBar) { copy, bar ->
             bar.append(createIcon { icon = "vaadin:check-circle" })
-            bar.append(HtmlTagName.span {
-                           textContent = tr("申请已提交！", "Application submitted!")
-                       })
-            bar.append(createButton { textContent = tr("查看", "View") }.apply { slot = "end" })
-            bar.append(newCloseIcon(tr("关闭", "Close")) { successNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            bar.append(HtmlTagName.span { textContent = copy.submitted })
+            actionButton(bar, copy.view, onClick = {})
+            closeButton(bar, copy) { successNote.opened = false }
         }
+        successNote.renderer = { root, _ -> root.append(successBar) }
 
-        val failedNote = createNotification()
         failedNote.duration = 0.0
         failedNote.position = "middle"
         failedNote.addTheme("error")
-        failedNote.renderer = { root, _ ->
-            val bar = horizontalBar()
+        row(failedBar) { copy, bar ->
             bar.append(createIcon { icon = "vaadin:warning" })
-            bar.append(HtmlTagName.span {
-                           textContent = tr("报表生成失败", "Failed to generate report")
-                       })
-            bar.append(createButton { textContent = tr("重试", "Retry") }.apply { slot = "end" })
-            bar.append(newCloseIcon(tr("关闭", "Close")) { failedNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            bar.append(HtmlTagName.span { textContent = copy.reportFailed })
+            actionButton(bar, copy.retry, onClick = {})
+            closeButton(bar, copy) { failedNote.opened = false }
         }
+        failedNote.renderer = { root, _ -> root.append(failedBar) }
 
-        val mentionNote = createNotification()
         mentionNote.duration = 0.0
         mentionNote.position = "middle"
-        mentionNote.renderer = { root, _ ->
-            val bar = horizontalBar()
+        row(mentionBar) { copy, bar ->
             bar.append(createAvatar { name = "Jason Bailey" })
-            bar.append(
-                HtmlTagName.span {
-                    textContent = tr("Jason Bailey 在", "Jason Bailey mentioned you in")
-                }.apply {
-                    append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
-                },
-            )
-            bar.append(newCloseIcon(tr("关闭", "Close")) { mentionNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            bar.append(HtmlTagName.span { textContent = copy.mentioned }.apply { append(kitAnchor(copy.projectQ4, "#")) })
+            closeButton(bar, copy) { mentionNote.opened = false }
         }
-        richHost.append(
-            kitRow(
-                createButton { textContent = tr("成功通知", "Show rich notification") }.addTheme("success").apply {
-                    clickEvent.addHandler { successNote.opened = true }
-                },
-                createButton { textContent = tr("错误通知", "error") }.addTheme("error").apply {
-                    clickEvent.addHandler { failedNote.opened = true }
-                },
-                createButton { textContent = tr("提及通知", "mention") }.addTheme("tertiary").apply {
-                    clickEvent.addHandler { mentionNote.opened = true }
-                },
+        mentionNote.renderer = { root, _ -> root.append(mentionBar) }
+
+        val showRich = createButton().addTheme("success")
+        texts.bind(showRich) { it.showRich }
+        showRich.clickEvent.addHandler { successNote.opened = true }
+        val showFailed = createButton().addTheme("error")
+        texts.bind(showFailed) { it.errorShort }
+        showFailed.clickEvent.addHandler { failedNote.opened = true }
+        val showMention = createButton().addTheme("tertiary")
+        texts.bind(showMention) { it.mentionShort }
+        showMention.clickEvent.addHandler { mentionNote.opened = true }
+        rich.body.append(
+            exampleBox(
+                null,
+                kitCol(kitRow(showRich, showFailed, showMention), successNote, failedNote, mentionNote),
             ),
-            successNote,
-            failedNote,
-            mentionNote,
         )
-        rich.body.append(exampleBox(null, richHost))
         body.append(rich.root)
 
-        val actions =
-            sectionBlock(
-                tr("带操作的通知", "Notifications with actions"),
-                tr(
-                    "撤销、重试与链接操作都放在 renderer 里；关闭按钮用图标按钮表达。",
-                    "Undo, retry and link actions all live in the renderer; a close button is an icon button.",
-                ),
-            )
-        val actionLog = EventLog(5)
-        val undoNote = createNotification()
+        val actions = sectionBlock()
+        texts.bind(actions.heading) { it.actionsHeading }
+        texts.bind(actions.hint) { it.actionsHint }
         undoNote.duration = 10000.0
         undoNote.position = "middle"
-        undoNote.renderer = { root, _ ->
-            val bar = horizontalBar()
-            bar.append(HtmlTagName.span {
-                           textContent = tr("已删除 5 个任务", "5 tasks deleted")
-                       })
-            val undo = createButton { textContent = tr("撤销", "Undo") }.apply {
-                clickEvent.addHandler {
-                    actionLog.add("undo")
-                    undoNote.opened = false
-                }
+        row(undoBar) { copy, bar ->
+            bar.append(HtmlTagName.span { textContent = copy.deletedTasks })
+            actionButton(bar, copy.undo) {
+                actionLog.add("undo") { _ -> texts.current.undoLine }
+                undoNote.opened = false
             }
-            undo.slot = "end"
-            bar.append(undo)
-            bar.append(newCloseIcon(tr("关闭", "Close")) { undoNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            closeButton(bar, copy) { undoNote.opened = false }
         }
+        undoNote.renderer = { root, _ -> root.append(undoBar) }
 
-        val linkNote = createNotification()
         linkNote.duration = 0.0
         linkNote.position = "middle"
-        linkNote.renderer = { root, _ ->
-            val bar = horizontalBar()
+        row(linkBar) { copy, bar ->
             bar.append(
-                HtmlTagName.span {
-                    textContent = tr("Jason Bailey 提到了你的", "Jason Bailey mentioned you in")
-                }.apply {
-                    append(kitAnchor(tr("项目 Q4", "Project Q4"), "#"))
-                },
+                HtmlTagName.span { textContent = copy.mentioned }.apply { append(kitAnchor(copy.projectQ4, "#")) },
             )
-            bar.append(newCloseIcon(tr("关闭", "Close")) { linkNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            closeButton(bar, copy) { linkNote.opened = false }
         }
+        linkNote.renderer = { root, _ -> root.append(linkBar) }
 
-        val retryNote = createNotification()
         retryNote.duration = 0.0
         retryNote.position = "middle"
         retryNote.addTheme("error")
-        retryNote.renderer = { root, _ ->
-            val bar = horizontalBar()
-            bar.append(HtmlTagName.span {
-                           textContent = tr("报表生成失败", "Failed to generate report")
-                       })
-            val retry = createButton { textContent = tr("重试", "Retry") }.apply {
-                clickEvent.addHandler {
-                    actionLog.add("retry")
-                    retryNote.opened = false
-                }
+        row(retryBar) { copy, bar ->
+            bar.append(HtmlTagName.span { textContent = copy.reportFailed })
+            actionButton(bar, copy.retry) {
+                actionLog.add("retry") { _ -> texts.current.retryLine }
+                retryNote.opened = false
             }
-            retry.slot = "end"
-            bar.append(retry)
-            bar.append(newCloseIcon(tr("关闭", "Close")) { retryNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            closeButton(bar, copy) { retryNote.opened = false }
         }
+        retryNote.renderer = { root, _ -> root.append(retryBar) }
 
+        val showUndo = createButton().addTheme("tertiary")
+        texts.bind(showUndo) { it.undoNotification }
+        showUndo.clickEvent.addHandler { undoNote.opened = true }
+        val showLink = createButton().addTheme("tertiary")
+        texts.bind(showLink) { it.linkNotification }
+        showLink.clickEvent.addHandler { linkNote.opened = true }
+        val showRetry = createButton().addTheme("error")
+        texts.bind(showRetry) { it.retryNotification }
+        showRetry.clickEvent.addHandler { retryNote.opened = true }
         actions.body.append(
             exampleBox(
                 null,
                 kitCol(
-                    kitRow(
-                        createButton { textContent = tr("撤销通知", "Undo notification") }.addTheme("tertiary").apply {
-                            clickEvent.addHandler { undoNote.opened = true }
-                        },
-                        createButton { textContent = tr("链接通知", "Link notification") }.addTheme("tertiary").apply {
-                            clickEvent.addHandler { linkNote.opened = true }
-                        },
-                        createButton { textContent = tr("重试通知", "Retry notification") }.addTheme("error").apply {
-                            clickEvent.addHandler { retryNote.opened = true }
-                        },
-                    ),
+                    kitRow(showUndo, showLink, showRetry),
                     undoNote,
                     linkNote,
                     retryNote,
@@ -425,30 +575,16 @@ internal class NotificationPage : DemoPage() {
         )
         body.append(actions.root)
 
-        val keyboard =
-            sectionBlock(
-                tr("键盘快捷键", "Keyboard shortcut"),
-                tr(
-                    "通知打开时按 Ctrl-Z（macOS 上是 ⌘-Z）也能撤销；快捷键只在通知可见时生效。",
-                    "Ctrl-Z (⌘-Z on macOS) undoes while the notification is open; the shortcut only works " +
-                        "while it is visible.",
-                ),
-            )
-        val keyboardNote = createNotification()
+        val keyboard = sectionBlock()
+        texts.bind(keyboard.heading) { it.keyboardHeading }
+        texts.bind(keyboard.hint) { it.keyboardHint }
         keyboardNote.duration = 10000.0
         keyboardNote.position = "middle"
-        keyboardNote.renderer = { root, _ ->
-            val bar = horizontalBar()
-            bar.append(HtmlTagName.span {
-                           textContent = tr("已删除 5 个任务", "5 tasks deleted")
-                       })
-            val undoKey = createButton { textContent = tr("撤销 Ctrl-Z", "Undo Ctrl-Z") }.apply {
-                clickEvent.addHandler { keyboardNote.opened = false }
-            }
-            undoKey.slot = "end"
-            bar.append(undoKey)
-            root.append(bar)
+        row(keyboardBar) { copy, bar ->
+            bar.append(HtmlTagName.span { textContent = copy.deletedTasks })
+            actionButton(bar, copy.undoCtrlZ) { keyboardNote.opened = false }
         }
+        keyboardNote.renderer = { root, _ -> root.append(keyboardBar) }
         // The listener lives on `document`, so it is registered once per page build and stops reacting
         // as soon as the notification is closed.
         document.listen(KEY_DOWN) { event: KeyboardEvent ->
@@ -457,100 +593,52 @@ internal class NotificationPage : DemoPage() {
                 keyboardNote.opened = false
             }
         }
-        keyboard.body.append(
-            exampleBox(
-                null,
-                kitCol(
-                    createButton { textContent = tr("显示通知", "Show notification") }.apply {
-                        clickEvent.addHandler { keyboardNote.opened = true }
-                    },
-                    keyboardNote,
-                ),
-            ),
-        )
+        val showKeyboard = createButton()
+        texts.bind(showKeyboard) { it.showNotification }
+        showKeyboard.clickEvent.addHandler { keyboardNote.opened = true }
+        keyboard.body.append(exampleBox(null, kitCol(showKeyboard, keyboardNote)))
         body.append(keyboard.root)
 
-        val lengths =
-            sectionBlock(
-                tr("内容长度", "Content length"),
-                tr(
-                    "通知只放结论与一个主要操作；细节留在页面里，避免出现长段落。",
-                    "Keep a notification to the outcome and one primary action; details belong on the page, " +
-                        "not in a long paragraph.",
-                ),
-            )
-        val goodNote = createNotification()
+        val lengths = sectionBlock()
+        texts.bind(lengths.heading) { it.lengthsHeading }
+        texts.bind(lengths.hint) { it.lengthsHint }
+        texts.bind(recommendedCaption, { it.recommendedCaption }) { recommendedCaption.textContent = it }
+        texts.bind(discouragedCaption, { it.discouragedCaption }) { discouragedCaption.textContent = it }
         goodNote.duration = 0.0
         goodNote.position = "middle"
-        goodNote.renderer = { root, _ ->
-            val bar = horizontalBar()
+        row(goodBar) { copy, bar ->
             bar.append(
                 kitCol(
-                    HtmlTagName.span {
-                        textContent = tr("Aria Bailey", "Aria Bailey")
-                    },
-                    HtmlTagName.span {
-                        textContent = tr("好的，不过你能帮我……", "Yeah, I know. But could you help me with...")
-                    }.apply {
-                        style.setProperty("font-size", "0.875rem")
-                        style.setProperty("color", "var(--vaadin-text-color-secondary)")
-                    },
+                    HtmlTagName.span { textContent = copy.ariaName },
+                    mutedSpan(copy.ariaText),
                 ),
             )
-            bar.append(createButton { textContent = tr("查看", "View") }.apply { slot = "end" })
-            bar.append(newCloseIcon(tr("关闭", "Close")) { goodNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+            actionButton(bar, copy.view, onClick = {})
+            closeButton(bar, copy) { goodNote.opened = false }
         }
-        val longText =
-            tr(
-                "我知道，不过你能帮我看看吗？我不确定我的 CSS 里 bug 在哪里：勾选标记没有显示成正确的颜色，我用了设计系统的 CSS 自定义属性，但好像没有生效。",
-                "Yeah, I know. But could you help me with this. I'm not sure where the bug is in my CSS? " +
-                    "The checkmark doesn't get the right color. I'm trying to use the CSS custom properties " +
-                    "from our design system, but for some reason it's not working.",
-            )
-        val badNote = createNotification()
+        goodNote.renderer = { root, _ -> root.append(goodBar) }
+
         badNote.duration = 0.0
         badNote.position = "middle"
-        badNote.renderer = { root, _ ->
-            val bar = horizontalBar()
-            bar.append(
-                kitCol(
-                    HtmlTagName.span {
-                        textContent = tr("来自 Aria Bailey 的新消息", "New message from Aria Bailey")
-                    },
-                    HtmlTagName.span {
-                        textContent = longText
-                    }.apply {
-                        style.setProperty("font-size", "0.875rem")
-                        style.setProperty("color", "var(--vaadin-text-color-secondary)")
-                    },
-                ),
-            )
-            bar.append(newCloseIcon(tr("关闭", "Close")) { badNote.opened = false }.also { it.slot = "end" })
-            root.append(bar)
+        row(badBar) { copy, bar ->
+            bar.append(kitCol(HtmlTagName.span { textContent = copy.newMessageFrom }, mutedSpan(copy.longMessage)))
+            closeButton(bar, copy) { badNote.opened = false }
         }
+        badNote.renderer = { root, _ -> root.append(badBar) }
+
+        val showGood = createButton().addTheme("tertiary")
+        texts.bind(showGood) { it.showRecommended }
+        showGood.clickEvent.addHandler { goodNote.opened = true }
+        val showBad = createButton().addTheme("tertiary")
+        texts.bind(showBad) { it.showDiscouraged }
+        showBad.clickEvent.addHandler { badNote.opened = true }
         lengths.body.append(
-            exampleBox(
-                tr("推荐：一行结论 + 一个操作", "Do: outcome plus one action"),
-                kitCol(
-                    createButton { textContent = tr("显示推荐示例", "Show recommended") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler { goodNote.opened = true }
-                    },
-                    goodNote,
-                ),
-            ),
-            exampleBox(
-                tr("不推荐：整段对话塞进通知", "Don't: a whole paragraph in a notification"),
-                kitCol(
-                    createButton { textContent = tr("显示不推荐示例", "Show discouraged") }.addTheme("tertiary").apply {
-                        clickEvent.addHandler { badNote.opened = true }
-                    },
-                    badNote,
-                ),
-            ),
+            exampleBox(null, kitCol(recommendedCaption, showGood, goodNote)),
+            exampleBox(null, kitCol(discouragedCaption, showBad, badNote)),
         )
         body.append(lengths.root)
 
+        applyTranslation(Langs.EN)
     }
 
     /**
@@ -561,11 +649,21 @@ internal class NotificationPage : DemoPage() {
      * examples append to it as its own children; it is a page method so the DOM is never assembled by
      * a function standing outside the page component.
      */
-    private fun horizontalBar(): HTMLElement {
+    private fun bar(): HTMLElement {
         val bar = createHorizontalLayout { addTheme("spacing") }
         bar.style.setProperty("align-items", "center")
         bar.style.setProperty("min-width", "300px")
         return bar
+    }
+
+    override fun applyTranslation(lang: Lang) {
+        val meta = notificationEntry.meta
+        setTitle(meta.titleFor(lang))
+        setSummary(meta.summaryFor(lang))
+        texts.apply(lang)
+        frame.show(lang)
+        bars.forEach { (bar, fill) -> fill(texts.current) }
+        actionLog.replay("undo")
     }
 
     companion object : CustomElementReference<NotificationPage>(NotificationPage::class.js) {
@@ -618,4 +716,3 @@ internal fun newCloseIcon(name: String, onClick: () -> Unit): CloseIcon {
     CloseIcon.define()
     return CloseIcon.NAME().also { it.show(name, onClick) }
 }
-
