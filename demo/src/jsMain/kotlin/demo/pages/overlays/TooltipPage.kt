@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -192,7 +191,7 @@ internal class TooltipPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<TooltipPage>(TooltipPage::class.js, "vaadin-demo-tooltip-page") {
+    companion object : TooltipPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "tooltip",

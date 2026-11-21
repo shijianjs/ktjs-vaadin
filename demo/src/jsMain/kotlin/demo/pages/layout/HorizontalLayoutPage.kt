@@ -12,7 +12,6 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -294,7 +293,7 @@ internal class HorizontalLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<HorizontalLayoutPage>(HorizontalLayoutPage::class.js, "vaadin-demo-horizontal-layout-page") {
+    companion object : HorizontalLayoutPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "horizontal-layout",

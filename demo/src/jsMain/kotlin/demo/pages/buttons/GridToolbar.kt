@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.grid.GridEvents
 import io.github.shijianjs.ktjs.vaadin.grid.createGrid
@@ -139,7 +138,7 @@ class GridToolbar : CustomElementAdapter() {
         readout.set(rowsPrefix + size + rowsSuffix)
     }
 
-    companion object : CustomElementReferenceAdapter<GridToolbar>(GridToolbar::class.js, "vaadin-demo-grid-toolbar") {
+    companion object : GridToolbarDefaultReference() {
 
         private const val GRID_USERS =
             """

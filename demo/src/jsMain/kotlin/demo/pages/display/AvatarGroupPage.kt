@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -129,7 +128,7 @@ internal class AvatarGroupPage : DemoPage() {
             if (hasExtraMember) texts.current.removeMember else texts.current.addMember
     }
 
-    companion object : CustomElementReferenceAdapter<AvatarGroupPage>(AvatarGroupPage::class.js, "vaadin-demo-avatar-group-page") {
+    companion object : AvatarGroupPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "avatar-group",

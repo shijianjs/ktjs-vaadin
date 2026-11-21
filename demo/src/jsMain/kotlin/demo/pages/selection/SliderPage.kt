@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -234,7 +233,7 @@ internal class SliderPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<SliderPage>(SliderPage::class.js, "vaadin-demo-slider-page") {
+    companion object : SliderPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "slider",

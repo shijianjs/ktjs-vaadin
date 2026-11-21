@@ -18,7 +18,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.inputcontainer.createInputContainer
 import web.cssom.Border
@@ -126,7 +125,7 @@ internal class InputContainerPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<InputContainerPage>(InputContainerPage::class.js, "vaadin-demo-input-container-page") {
+    companion object : InputContainerPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "input-container",

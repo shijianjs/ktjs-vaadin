@@ -52,7 +52,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.compound
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 
@@ -398,7 +397,7 @@ internal class ContextMenuPage : DemoPage() {
         log.replay("selected")
     }
 
-    companion object : CustomElementReferenceAdapter<ContextMenuPage>(ContextMenuPage::class.js, "vaadin-demo-context-menu-page") {
+    companion object : ContextMenuPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "context-menu",

@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -136,7 +135,7 @@ internal class MessageInputPage : DemoPage() {
         if ((liveList.items?.size ?: 0) <= 1) liveList.items = arrayOf(seed(copy))
     }
 
-    companion object : CustomElementReferenceAdapter<MessageInputPage>(MessageInputPage::class.js, "vaadin-demo-message-input-page") {
+    companion object : MessageInputPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "message-input",

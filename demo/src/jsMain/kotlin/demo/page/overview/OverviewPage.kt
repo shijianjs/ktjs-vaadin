@@ -39,7 +39,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoClass
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.HtmlAttributes
@@ -196,7 +195,7 @@ internal class OverviewPage : DemoPage() {
         filter()
     }
 
-        companion object : CustomElementReferenceAdapter<OverviewPage>(OverviewPage::class.js, "vaadin-demo-overview-page") {
+        companion object : OverviewPageDefaultReference() {
 
         /**
          * The landing entry of the catalog.

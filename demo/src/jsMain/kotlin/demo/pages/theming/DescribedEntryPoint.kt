@@ -8,7 +8,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import demo.ui.SMALL
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 internal class DescribedEntryPoint : CustomElementAdapter() {
     private val description = HtmlTagName.p { className = SMALL }
@@ -22,5 +21,5 @@ internal class DescribedEntryPoint : CustomElementAdapter() {
         append(kitRow(HtmlTagName.p { className = SMALL; textContent = name }, description))
     }
 
-    companion object : CustomElementReferenceAdapter<DescribedEntryPoint>(DescribedEntryPoint::class.js, "vaadin-demo-described-entry-point")
+    companion object : DescribedEntryPointDefaultReference()
 }

@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HtmlTagName
 
 /**
@@ -44,5 +43,5 @@ internal class CardHeader : CustomElementAdapter(), CardTranslatable {
         slot = "header"
     }
 
-    companion object : CustomElementReferenceAdapter<CardHeader>(CardHeader::class.js, "demo-card-header")
+    companion object : CardHeaderDefaultReference(name = "demo-card-header")
 }

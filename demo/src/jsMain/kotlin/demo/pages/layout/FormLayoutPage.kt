@@ -9,7 +9,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -189,7 +188,7 @@ internal class FormLayoutPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<FormLayoutPage>(FormLayoutPage::class.js, "vaadin-demo-form-layout-page") {
+    companion object : FormLayoutPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "form-layout",

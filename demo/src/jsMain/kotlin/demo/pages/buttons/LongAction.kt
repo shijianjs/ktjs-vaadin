@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -46,7 +45,7 @@ class LongAction : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(row(perform, progress))
     }
 
-    companion object : CustomElementReferenceAdapter<LongAction>(LongAction::class.js, "vaadin-demo-long-action") {
+    companion object : LongActionDefaultReference() {
 
         private var tickHandle: Int? = null
         private fun startTicking(millis: Int, tick: () -> Unit) {

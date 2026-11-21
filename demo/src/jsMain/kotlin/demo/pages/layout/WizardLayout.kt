@@ -2,7 +2,6 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutElement
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
 import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
@@ -46,6 +45,6 @@ internal class WizardLayout : CustomElementAdapter() {
         form.append(*fields)
     }
 
-    companion object : CustomElementReferenceAdapter<WizardLayout>(WizardLayout::class.js, "demo-wizard-layout")
+    companion object : WizardLayoutDefaultReference(name = "demo-wizard-layout")
 }
 

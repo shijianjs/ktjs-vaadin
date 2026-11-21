@@ -1,7 +1,6 @@
 package demo.pages.data
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.Catalog
@@ -88,7 +87,7 @@ internal class MarkdownPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<MarkdownPage>(MarkdownPage::class.js, "vaadin-demo-markdown-page") {
+    companion object : MarkdownPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "markdown",

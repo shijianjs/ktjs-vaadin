@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -180,7 +179,7 @@ internal class ListBoxPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<ListBoxPage>(ListBoxPage::class.js, "vaadin-demo-list-box-page") {
+    companion object : ListBoxPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "list-box",

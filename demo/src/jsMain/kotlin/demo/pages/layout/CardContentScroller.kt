@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerElement
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -37,5 +36,5 @@ internal class CardContentScroller : CustomElementAdapter(), CardTranslatable {
         cardTexts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<CardContentScroller>(CardContentScroller::class.js, "demo-card-content-scroller")
+    companion object : CardContentScrollerDefaultReference(name = "demo-card-content-scroller")
 }

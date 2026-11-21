@@ -32,7 +32,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.child
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.CSSStyleSheet
 import web.cssom.ident
@@ -283,7 +282,7 @@ internal class SideNavPage : DemoPage() {
         keyboardList.replaceChildren(bulletList(listOf(copy.tabLine, copy.toggleLine, copy.enterLine)))
     }
 
-    companion object : CustomElementReferenceAdapter<SideNavPage>(SideNavPage::class.js, "vaadin-demo-side-nav-page") {
+    companion object : SideNavPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "side-nav",

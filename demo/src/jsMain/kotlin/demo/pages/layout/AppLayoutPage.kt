@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -335,7 +334,7 @@ internal class AppLayoutPage : DemoPage() {
         drawers.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReferenceAdapter<AppLayoutPage>(AppLayoutPage::class.js, "vaadin-demo-app-layout-page") {        val ENTRY: CatalogEntry =
+    companion object : AppLayoutPageDefaultReference() {        val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "app-layout",
                 group = Groups.LAYOUT,

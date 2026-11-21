@@ -28,7 +28,6 @@ import demo.ui.RecordedLog
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.cssom.AlignItems
 import web.cssom.Display
 import web.cssom.px
@@ -479,7 +478,7 @@ internal class PopoverPage : DemoPage() {
         log.replay(false)
     }
 
-    companion object : CustomElementReferenceAdapter<PopoverPage>(PopoverPage::class.js, "vaadin-demo-popover-page") {
+    companion object : PopoverPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "popover",

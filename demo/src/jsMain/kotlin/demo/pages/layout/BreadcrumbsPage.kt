@@ -9,7 +9,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import demo.CatalogEntry
@@ -152,7 +151,7 @@ internal class BreadcrumbsPage : DemoPage() {
         trail.forEachIndexed { index, item -> item.textContent = labels[index] }
     }
 
-    companion object : CustomElementReferenceAdapter<BreadcrumbsPage>(BreadcrumbsPage::class.js, "vaadin-demo-breadcrumbs-page") {
+    companion object : BreadcrumbsPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "breadcrumbs",

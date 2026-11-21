@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HtmlTagName
 
 /**
@@ -40,5 +39,5 @@ internal class CardContentImage : CustomElementAdapter(), CardTranslatable {
         cardTexts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<CardContentImage>(CardContentImage::class.js, "demo-card-content-image")
+    companion object : CardContentImageDefaultReference(name = "demo-card-content-image")
 }

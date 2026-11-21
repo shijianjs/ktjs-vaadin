@@ -42,7 +42,6 @@ import demo.ui.SMALL
 import demo.ui.MUTED_SMALL
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /**
  * The same page on kit blocks.
@@ -297,7 +296,7 @@ internal class ThemingPage : DemoPage() {
         readout.set(copy.now + if (Theme.isDark) copy.nowDark else copy.nowLight)
     }
 
-    companion object : CustomElementReferenceAdapter<ThemingPage>(ThemingPage::class.js, "vaadin-demo-theming-page") {
+    companion object : ThemingPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "theming",

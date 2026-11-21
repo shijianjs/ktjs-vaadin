@@ -27,7 +27,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.descendant
 import io.github.shijianjs.ktjs.dom.css.dsl.nextSibling
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.style.Palette
 import web.cssom.CSSStyleSheet
 import web.cssom.ClassName
@@ -283,7 +282,7 @@ internal class RadioGroupPage : DemoPage() {
         showValidation()
     }
 
-    companion object : CustomElementReferenceAdapter<RadioGroupPage>(RadioGroupPage::class.js, "vaadin-demo-radio-group-page") {
+    companion object : RadioGroupPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "radio-group",

@@ -13,7 +13,6 @@ import demo.pages.fixtures.people
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.cssom.Display
 import web.cssom.FlexWrap
 import web.cssom.px
@@ -97,7 +96,7 @@ internal class PersonDetails : CustomElementAdapter(), GridTranslatable {
         gridTexts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<PersonDetails>(PersonDetails::class.js, "vaadin-demo-person-details") {
+    companion object : PersonDetailsDefaultReference() {
         /** A read-only field the details panel fills from the item. */
         private fun readOnlyField(): TextFieldElement = createTextField { readonly = true }
     }

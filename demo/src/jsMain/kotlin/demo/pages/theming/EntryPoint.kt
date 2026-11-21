@@ -8,7 +8,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import demo.ui.SMALL
 import io.github.shijianjs.ktjs.dom.css.dsl.className
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
         /**
          * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
@@ -43,5 +42,5 @@ internal class EntryPoint : CustomElementAdapter() {
         )
     }
 
-    companion object : CustomElementReferenceAdapter<EntryPoint>(EntryPoint::class.js, "vaadin-demo-entry-point")
+    companion object : EntryPointDefaultReference()
 }

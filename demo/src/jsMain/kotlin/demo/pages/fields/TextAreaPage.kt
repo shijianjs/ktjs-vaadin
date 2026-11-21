@@ -13,7 +13,6 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -261,7 +260,7 @@ internal class TextAreaPage : DemoPage() {
         modes?.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<TextAreaPage>(TextAreaPage::class.js, "vaadin-demo-text-area-page") {
+    companion object : TextAreaPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "text-area",

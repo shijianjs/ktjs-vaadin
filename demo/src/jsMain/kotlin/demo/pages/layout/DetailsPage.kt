@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.Blocks.bulletList
@@ -206,7 +205,7 @@ internal class DetailsPage : DemoPage() {
         group.anchors.forEachIndexed { index, anchor -> anchor.textContent = links[index] }
     }
 
-    companion object : CustomElementReferenceAdapter<DetailsPage>(DetailsPage::class.js, "vaadin-demo-details-page") {
+    companion object : DetailsPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "details",

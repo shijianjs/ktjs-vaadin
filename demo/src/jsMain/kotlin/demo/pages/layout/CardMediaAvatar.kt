@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -31,6 +30,6 @@ internal class CardMediaAvatar : CustomElementAdapter() {
         avatar.abbr = abbr
     }
 
-    companion object : CustomElementReferenceAdapter<CardMediaAvatar>(CardMediaAvatar::class.js, "demo-card-media-avatar")
+    companion object : CardMediaAvatarDefaultReference(name = "demo-card-media-avatar")
 }
 

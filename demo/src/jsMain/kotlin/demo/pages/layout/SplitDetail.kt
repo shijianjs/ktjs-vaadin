@@ -4,7 +4,6 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLElement
 
 /**
@@ -49,5 +48,5 @@ internal class SplitDetail : CustomElementAdapter() {
             }
         }
 
-    companion object : CustomElementReferenceAdapter<SplitDetail>(SplitDetail::class.js, "vaadin-demo-split-detail")
+    companion object : SplitDetailDefaultReference()
 }

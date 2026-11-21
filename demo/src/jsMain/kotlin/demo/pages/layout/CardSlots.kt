@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /**
  * `<demo-card-slot-text>`: a text node for one of the card's named slots (title, subtitle, …).
@@ -27,6 +26,6 @@ internal class CardSlotText : CustomElementAdapter() {
         slot = slotName
     }
 
-    companion object : CustomElementReferenceAdapter<CardSlotText>(CardSlotText::class.js, "demo-card-slot-text")
+    companion object : CardSlotTextDefaultReference(name = "demo-card-slot-text")
 }
 

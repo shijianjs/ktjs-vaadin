@@ -2,7 +2,6 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /**
  * `<demo-layout-box>`: the tinted placeholder the layout examples are built out of.
@@ -35,6 +34,6 @@ internal class Box : CustomElementAdapter() {
         height?.let { style.setProperty("height", it) }
     }
 
-    companion object : CustomElementReferenceAdapter<Box>(Box::class.js, "demo-layout-box")
+    companion object : BoxDefaultReference(name = "demo-layout-box")
 }
 

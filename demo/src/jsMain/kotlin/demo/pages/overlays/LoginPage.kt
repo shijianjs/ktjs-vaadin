@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -264,7 +263,7 @@ internal class LoginPage : DemoPage() {
             clickEvent.addHandler { overlay.opened = true }
         }
 
-    companion object : CustomElementReferenceAdapter<LoginPage>(LoginPage::class.js, "vaadin-demo-login-page") {
+    companion object : LoginPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "login",

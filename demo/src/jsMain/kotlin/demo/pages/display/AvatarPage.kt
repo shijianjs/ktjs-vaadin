@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleCaption
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.AvatarElement
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -145,7 +144,7 @@ internal class AvatarPage : DemoPage() {
         colourAvatars.forEachIndexed { index, avatar -> avatar.name = copy.user(index) }
     }
 
-    companion object : CustomElementReferenceAdapter<AvatarPage>(AvatarPage::class.js, "vaadin-demo-avatar-page") {
+    companion object : AvatarPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "avatar",

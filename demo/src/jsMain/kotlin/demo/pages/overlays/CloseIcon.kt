@@ -3,7 +3,6 @@ package demo.pages.overlays
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -32,5 +31,5 @@ internal class CloseIcon : CustomElementAdapter() {
         button.clickEvent.addHandler { onClick() }
     }
 
-    companion object : CustomElementReferenceAdapter<CloseIcon>(CloseIcon::class.js, "vaadin-demo-close-icon")
+    companion object : CloseIconDefaultReference()
 }

@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.dom.TagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
@@ -497,7 +496,7 @@ internal class MenuBarPage : DemoPage() {
         showReadouts()
     }
 
-    companion object : CustomElementReferenceAdapter<MenuBarPage>(MenuBarPage::class.js, "vaadin-demo-menu-bar-page") {
+    companion object : MenuBarPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "menu-bar",

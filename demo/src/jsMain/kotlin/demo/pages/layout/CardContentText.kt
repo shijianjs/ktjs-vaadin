@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HtmlTagName
 
 /** `<demo-card-content-text>`: the short Lapland paragraph the card example puts in its content slot. */
@@ -22,5 +21,5 @@ internal class CardContentText : CustomElementAdapter(), CardTranslatable {
         cardTexts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<CardContentText>(CardContentText::class.js, "demo-card-content-text")
+    companion object : CardContentTextDefaultReference(name = "demo-card-content-text")
 }

@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.badge.createBadge
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -191,5 +190,5 @@ internal class CardPlayground : CustomElementAdapter(), CardTranslatable {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<CardPlayground>(CardPlayground::class.js, "demo-card-playground")
+    companion object : CardPlaygroundDefaultReference(name = "demo-card-playground")
 }

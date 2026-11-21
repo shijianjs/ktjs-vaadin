@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import web.html.HtmlTagName
 
@@ -38,5 +37,5 @@ internal class NavLink : CustomElementAdapter() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<NavLink>(NavLink::class.js, "vaadin-demo-nav-link")
+    companion object : NavLinkDefaultReference()
 }

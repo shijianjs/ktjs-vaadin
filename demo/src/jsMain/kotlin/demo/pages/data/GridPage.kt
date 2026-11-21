@@ -14,7 +14,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -1187,7 +1186,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         body.append(lazy.root)
     }
 
-    companion object : CustomElementReferenceAdapter<GridPage>(GridPage::class.js, "vaadin-demo-grid-page") {        val ENTRY: CatalogEntry =
+    companion object : GridPageDefaultReference() {        val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "grid",
                 group = Groups.DATA,

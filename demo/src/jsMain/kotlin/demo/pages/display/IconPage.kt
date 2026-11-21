@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -151,7 +150,7 @@ internal class IconPage : DemoPage() {
         frame.show(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<IconPage>(IconPage::class.js, "vaadin-demo-icon-page") {
+    companion object : IconPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "icon",

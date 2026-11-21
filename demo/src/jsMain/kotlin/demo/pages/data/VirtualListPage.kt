@@ -12,7 +12,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -196,7 +195,7 @@ internal class VirtualListPage : DemoPage() {
         jumpList.requestContentUpdate()
     }
 
-    companion object : CustomElementReferenceAdapter<VirtualListPage>(VirtualListPage::class.js, "vaadin-demo-virtual-list-page") {
+    companion object : VirtualListPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "virtual-list",

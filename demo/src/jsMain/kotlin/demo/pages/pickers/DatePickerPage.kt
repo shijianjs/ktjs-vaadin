@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -571,7 +570,7 @@ internal class DatePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<DatePickerPage>(DatePickerPage::class.js, "vaadin-demo-date-picker-page") {
+    companion object : DatePickerPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "date-picker",

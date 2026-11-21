@@ -4,7 +4,6 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
 
 /**
@@ -28,5 +27,5 @@ internal class AppDrawer : CustomElementAdapter() {
         sideNav.applyTranslation(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<AppDrawer>(AppDrawer::class.js, "vaadin-demo-app-drawer")
+    companion object : AppDrawerDefaultReference()
 }

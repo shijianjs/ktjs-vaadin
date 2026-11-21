@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -202,7 +201,7 @@ internal class ConfirmDialogPage : DemoPage() {
         exportStatus.set(copy.statusPrefix, lastExportStatus?.invoke(copy) ?: "")
     }
 
-    companion object : CustomElementReferenceAdapter<ConfirmDialogPage>(ConfirmDialogPage::class.js, "vaadin-demo-confirm-dialog-page") {
+    companion object : ConfirmDialogPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "confirm-dialog",

@@ -1,7 +1,6 @@
 package demo.pages.selection
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import demo.CatalogEntry
 import demo.Catalog
@@ -104,7 +103,7 @@ internal class ItemPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<ItemPage>(ItemPage::class.js, "vaadin-demo-item-page") {
+    companion object : ItemPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "item",

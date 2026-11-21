@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -132,7 +131,7 @@ internal class SwitchPage : DemoPage() {
         renderResult()
     }
 
-    companion object : CustomElementReferenceAdapter<SwitchPage>(SwitchPage::class.js, "vaadin-demo-switch-page") {
+    companion object : SwitchPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "switch",

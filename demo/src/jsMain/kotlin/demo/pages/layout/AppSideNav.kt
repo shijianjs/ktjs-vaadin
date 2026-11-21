@@ -8,7 +8,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
@@ -58,7 +57,7 @@ internal class AppSideNav : CustomElementAdapter() {
         texts.apply(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<AppSideNav>(AppSideNav::class.js, "demo-app-side-nav") {
+    companion object : AppSideNavDefaultReference(name = "demo-app-side-nav") {
         private val english: AppSideNavTexts =
             AppSideNavTexts(
                 dashboard = "Dashboard",

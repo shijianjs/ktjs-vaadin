@@ -3,7 +3,6 @@ package demo.pages.theming
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
         /**
          * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
@@ -29,5 +28,5 @@ internal class SwatchChip : CustomElementAdapter() {
         cssVariable?.let { show(it) }
     }
 
-    companion object : CustomElementReferenceAdapter<SwatchChip>(SwatchChip::class.js, "vaadin-demo-swatch-chip")
+    companion object : SwatchChipDefaultReference()
 }

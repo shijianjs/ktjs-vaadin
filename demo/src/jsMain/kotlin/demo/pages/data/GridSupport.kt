@@ -8,7 +8,6 @@ import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.pages.fixtures.Person
 import demo.ui.jsArray
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import kotlin.js.Date
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -145,7 +144,7 @@ internal class GridHeader : CustomElementAdapter() {
             setAttribute("title", value)
         }
 
-    companion object : CustomElementReferenceAdapter<GridHeader>(GridHeader::class.js, "vaadin-demo-grid-header")
+    companion object : GridHeaderDefaultReference()
 }
 
 

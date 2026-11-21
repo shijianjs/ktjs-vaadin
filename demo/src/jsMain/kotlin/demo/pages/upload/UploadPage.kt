@@ -25,7 +25,6 @@ import demo.ui.Readout
 import demo.ui.jsObject
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLElement
 import web.cssom.AlignItems
 import web.cssom.Display
@@ -617,7 +616,7 @@ internal class UploadPage : DemoPage() {
         notUploadingReadout?.set(copy.notUploading)
     }
 
-    companion object : CustomElementReferenceAdapter<UploadPage>(UploadPage::class.js, "vaadin-demo-upload-page") {
+    companion object : UploadPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "upload",

@@ -12,7 +12,6 @@ import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -265,7 +264,7 @@ internal class SelectPage : DemoPage() {
         teamReadout.set(copy.currentPrefix, team.value.ifEmpty { copy.empty })
     }
 
-    companion object : CustomElementReferenceAdapter<SelectPage>(SelectPage::class.js, "vaadin-demo-select-page") {
+    companion object : SelectPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "select",

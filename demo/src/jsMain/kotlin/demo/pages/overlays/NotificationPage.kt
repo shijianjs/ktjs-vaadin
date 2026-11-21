@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
@@ -444,7 +443,7 @@ internal class NotificationPage : DemoPage() {
         actionLog.replay("undo")
     }
 
-    companion object : CustomElementReferenceAdapter<NotificationPage>(NotificationPage::class.js, "vaadin-demo-notification-page") {
+    companion object : NotificationPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "notification",

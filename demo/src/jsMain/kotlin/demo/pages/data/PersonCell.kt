@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.style.Palette
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -58,5 +57,5 @@ internal class PersonCell : CustomElementAdapter() {
         email.textContent = itemText(item, "email")
     }
 
-    companion object : CustomElementReferenceAdapter<PersonCell>(PersonCell::class.js, "vaadin-demo-person-cell")
+    companion object : PersonCellDefaultReference()
 }

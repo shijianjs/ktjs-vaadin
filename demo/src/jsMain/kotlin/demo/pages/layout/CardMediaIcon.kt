@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 
 /**
@@ -27,5 +26,5 @@ internal class CardMediaIcon : CustomElementAdapter() {
         slot = "media"
     }
 
-    companion object : CustomElementReferenceAdapter<CardMediaIcon>(CardMediaIcon::class.js, "demo-card-media-icon")
+    companion object : CardMediaIconDefaultReference(name = "demo-card-media-icon")
 }

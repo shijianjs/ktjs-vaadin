@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -173,7 +172,7 @@ internal class IntegerFieldPage : DemoPage() {
         renderLog()
     }
 
-    companion object : CustomElementReferenceAdapter<IntegerFieldPage>(IntegerFieldPage::class.js, "vaadin-demo-integer-field-page") {
+    companion object : IntegerFieldPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "integer-field",

@@ -8,7 +8,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.dom.clickEvent
@@ -49,5 +48,5 @@ class VariantLog : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(col(buttons, log.root))
     }
 
-    companion object : CustomElementReferenceAdapter<VariantLog>(VariantLog::class.js, "vaadin-demo-variant-log")
+    companion object : VariantLogDefaultReference()
 }

@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.pages.fixtures.Person
 import kotlin.js.js
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
@@ -35,5 +34,5 @@ internal class ComboPersonRow : CustomElementAdapter() {
         )
     }
 
-    companion object : CustomElementReferenceAdapter<ComboPersonRow>(ComboPersonRow::class.js, "vaadin-demo-combo-person")
+    companion object : ComboPersonRowDefaultReference(name = "vaadin-demo-combo-person")
 }

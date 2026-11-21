@@ -25,7 +25,6 @@ import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLHeadingElement
 import web.html.HTMLImageElement
 import web.html.HtmlTagName
@@ -128,7 +127,7 @@ internal class ScrollerPage : DemoPage() {
         actions.forEachIndexed { index, action -> action.updateLabel(copy.actions[index]) }
     }
 
-    companion object : CustomElementReferenceAdapter<ScrollerPage>(ScrollerPage::class.js, "vaadin-demo-scroller-page") {
+    companion object : ScrollerPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "scroller",

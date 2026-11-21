@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -126,7 +125,7 @@ internal class OverlayPage : DemoPage() {
         openSized.textContent = copy.openSized
     }
 
-    companion object : CustomElementReferenceAdapter<OverlayPage>(OverlayPage::class.js, "vaadin-demo-overlay-page") {
+    companion object : OverlayPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "overlay",

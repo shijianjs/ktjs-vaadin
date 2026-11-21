@@ -13,7 +13,6 @@ import web.html.HTMLElement
 import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -232,7 +231,7 @@ internal class VerticalLayoutPage : DemoPage() {
         captionKeys.forEach { (node, copy) -> node.textContent = copy(texts.current) }
     }
 
-    companion object : CustomElementReferenceAdapter<VerticalLayoutPage>(VerticalLayoutPage::class.js, "vaadin-demo-vertical-layout-page") {
+    companion object : VerticalLayoutPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "vertical-layout",

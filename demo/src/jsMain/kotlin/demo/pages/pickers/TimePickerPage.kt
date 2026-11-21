@@ -1,7 +1,6 @@
 package demo.pages.pickers
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -361,7 +360,7 @@ internal class TimePickerPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<TimePickerPage>(TimePickerPage::class.js, "vaadin-demo-time-picker-page") {
+    companion object : TimePickerPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "time-picker",

@@ -36,7 +36,6 @@ import io.github.shijianjs.ktjs.dom.css.dsl.invoke
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudo
 import io.github.shijianjs.ktjs.dom.css.dsl.pseudoElement
 import io.github.shijianjs.ktjs.dom.css.dsl.tag
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.VaadinTagName
 import web.cssom.ClassName
 import web.cssom.ident
@@ -317,7 +316,7 @@ internal class MessageListPage : DemoPage() {
         showChat()
     }
 
-    companion object : CustomElementReferenceAdapter<MessageListPage>(MessageListPage::class.js, "vaadin-demo-message-list-page") {
+    companion object : MessageListPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "message-list",

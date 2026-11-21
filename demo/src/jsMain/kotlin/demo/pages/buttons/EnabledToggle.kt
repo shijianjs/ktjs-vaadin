@@ -7,7 +7,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.dom.clickEvent
@@ -100,5 +99,5 @@ class EnabledToggle : CustomElementAdapter() {
         readout.set(statePrefix + state)
     }
 
-    companion object : CustomElementReferenceAdapter<EnabledToggle>(EnabledToggle::class.js, "vaadin-demo-enabled-toggle")
+    companion object : EnabledToggleDefaultReference()
 }

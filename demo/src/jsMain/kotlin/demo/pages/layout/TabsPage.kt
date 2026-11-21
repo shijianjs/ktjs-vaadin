@@ -12,7 +12,6 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -254,7 +253,7 @@ internal class TabsPage : DemoPage() {
         content.textContent = if (name == null) copy.dashboardContent else copy.contentFor(name)
     }
 
-    companion object : CustomElementReferenceAdapter<TabsPage>(TabsPage::class.js, "vaadin-demo-tabs-page") {
+    companion object : TabsPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "tabs",

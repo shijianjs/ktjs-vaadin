@@ -6,7 +6,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
 import web.dom.clickEvent
@@ -53,5 +52,5 @@ class EmailRow : CustomElementAdapter() {
         remove.ariaLabel = if (subject.isEmpty()) removeLabel else "$removeLabel $subject"
     }
 
-    companion object : CustomElementReferenceAdapter<EmailRow>(EmailRow::class.js, "vaadin-demo-email-row")
+    companion object : EmailRowDefaultReference()
 }

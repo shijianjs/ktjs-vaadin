@@ -4,7 +4,6 @@ import demo.ui.Images
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.html.HTMLImageElement
 import web.html.HtmlTagName
 
@@ -55,6 +54,6 @@ internal class CardMediaImage : CustomElementAdapter() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<CardMediaImage>(CardMediaImage::class.js, "demo-card-media-image")
+    companion object : CardMediaImageDefaultReference(name = "demo-card-media-image")
 }
 

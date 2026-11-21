@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.vaadin.applayout.createDrawerToggle
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
@@ -44,5 +43,5 @@ internal class AppNavbar : CustomElementAdapter() {
         slot = "navbar"
     }
 
-    companion object : CustomElementReferenceAdapter<AppNavbar>(AppNavbar::class.js, "vaadin-demo-app-navbar")
+    companion object : AppNavbarDefaultReference()
 }

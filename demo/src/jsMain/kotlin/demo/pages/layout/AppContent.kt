@@ -2,7 +2,6 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 /** `<vaadin-demo-app-content>`: padding filler for the app layout examples' content area. */
 internal class AppContent : CustomElementAdapter() {
@@ -16,5 +15,5 @@ internal class AppContent : CustomElementAdapter() {
         style.setProperty("padding", "var(--lumo-space-m)")
     }
 
-    companion object : CustomElementReferenceAdapter<AppContent>(AppContent::class.js, "vaadin-demo-app-content")
+    companion object : AppContentDefaultReference()
 }

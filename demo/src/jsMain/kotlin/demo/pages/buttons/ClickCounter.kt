@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row
 import io.github.shijianjs.ktjs.demo.style.RESET
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachStyledShadow
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import web.dom.clickEvent
 import web.events.addHandler
@@ -70,5 +69,5 @@ class ClickCounter : CustomElementAdapter() {
         attachStyledShadow(RESET, PAGE_SHEET).append(col(row(button, readout.root), caption, log.root))
     }
 
-    companion object : CustomElementReferenceAdapter<ClickCounter>(ClickCounter::class.js, "vaadin-demo-click-counter")
+    companion object : ClickCounterDefaultReference()
 }

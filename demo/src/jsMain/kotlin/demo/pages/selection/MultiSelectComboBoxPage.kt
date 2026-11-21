@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -225,7 +224,7 @@ internal class MultiSelectComboBoxPage : DemoPage() {
         }
     }
 
-    companion object : CustomElementReferenceAdapter<MultiSelectComboBoxPage>(MultiSelectComboBoxPage::class.js, "vaadin-demo-multi-select-combo-box-page") {
+    companion object : MultiSelectComboBoxPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "multi-select-combo-box",

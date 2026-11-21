@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
         /**
          * `<vaadin-demo-scroller-action>`: the tall icon-prefixed button of the horizontal mobile scroller
@@ -31,5 +30,5 @@ internal class ScrollerAction : CustomElementAdapter() {
         button.textContent = label
     }
 
-    companion object : CustomElementReferenceAdapter<ScrollerAction>(ScrollerAction::class.js, "vaadin-demo-scroller-action")
+    companion object : ScrollerActionDefaultReference()
 }

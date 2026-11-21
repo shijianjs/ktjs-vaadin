@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import demo.CatalogEntry
 import demo.Catalog
 import demo.Groups
@@ -144,7 +143,7 @@ internal class SplitLayoutPage : DemoPage() {
         collapseButton.setAttribute("aria-label", texts.current.toggleAria)
     }
 
-    companion object : CustomElementReferenceAdapter<SplitLayoutPage>(SplitLayoutPage::class.js, "vaadin-demo-split-layout-page") {
+    companion object : SplitLayoutPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "split-layout",

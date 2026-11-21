@@ -3,7 +3,6 @@ package demo.pages.layout
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import web.html.HTMLElement
 import web.html.HtmlTagName
@@ -29,5 +28,5 @@ internal class FormFrame : CustomElementAdapter() {
         attachShadowRoot().append(split)
     }
 
-    companion object : CustomElementReferenceAdapter<FormFrame>(FormFrame::class.js, "vaadin-demo-form-frame")
+    companion object : FormFrameDefaultReference()
 }

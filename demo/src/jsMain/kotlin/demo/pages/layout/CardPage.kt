@@ -30,7 +30,6 @@ import web.html.HTMLElement
 import web.html.HtmlTagName
 import web.cssom.ClassName
 import io.github.shijianjs.ktjs.dom.css.dsl.className
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 
 internal class CardPage : DemoPage() {
 
@@ -228,7 +227,7 @@ internal class CardPage : DemoPage() {
         translatables.forEach { it.applyTranslation(lang) }
     }
 
-    companion object : CustomElementReferenceAdapter<CardPage>(CardPage::class.js, "vaadin-demo-card-page") {
+    companion object : CardPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "card",

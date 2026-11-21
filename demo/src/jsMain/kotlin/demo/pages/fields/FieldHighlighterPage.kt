@@ -31,7 +31,6 @@ import io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerElement
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import web.cssom.pct
 import web.html.HTMLAnchorElement
 import web.dom.clickEvent
@@ -173,7 +172,7 @@ internal class FieldHighlighterPage : DemoPage() {
         links.first().href = meta.docsUrlFor(lang)
     }
 
-    companion object : CustomElementReferenceAdapter<FieldHighlighterPage>(FieldHighlighterPage::class.js, "vaadin-demo-field-highlighter-page") {
+    companion object : FieldHighlighterPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "field-highlighter",

@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -92,3 +93,16 @@ tasks.register<Test>("e2eTest") {
 }
 
 tasks.named<Test>("jvmTest") { enabled = false }
+
+/**
+ * `ktjs-dom-kit-ksp` writes the `…DefaultReference` each element's companion extends — the tag and the
+ * `observedAttributes` array — from the class's declarations, plus one `<prefix>CustomElements` object
+ * listing all of them. The prefix spells the tags this demo already uses: `vaadin-demo-`.
+ */
+dependencies {
+    add("kspJs", "io.github.shijianjs:ktjs-dom-kit-ksp:${providers.gradleProperty("ktjs-dom-kit.version").get()}")
+}
+
+ksp {
+    arg("ktjs.tagPrefix", "vaadin-demo-")
+}

@@ -1,7 +1,6 @@
 package demo.pages.buttons
 
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.Catalog
 import demo.ui.REPO_SOURCE_ROOT
@@ -365,7 +364,7 @@ internal class ButtonPage : DemoPage() {
         dialogCreateButton.textContent = copy.createAccount
     }
 
-    companion object : CustomElementReferenceAdapter<ButtonPage>(ButtonPage::class.js, "vaadin-demo-button-page") {
+    companion object : ButtonPageDefaultReference() {
         val ENTRY: CatalogEntry =
             CatalogEntry(
                 id = "button",

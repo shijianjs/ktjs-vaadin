@@ -5,7 +5,6 @@ import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 
@@ -28,5 +27,5 @@ internal class IconButton : CustomElementAdapter() {
         button.tokenListAttribute("theme").add(*themes)
     }
 
-    companion object : CustomElementReferenceAdapter<IconButton>(IconButton::class.js, "vaadin-demo-icon-button")
+    companion object : IconButtonDefaultReference()
 }
