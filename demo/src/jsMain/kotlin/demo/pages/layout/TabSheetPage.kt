@@ -37,9 +37,9 @@ internal class TabSheetPage : DemoPage() {
 
     /** The basic, prefixed and bordered examples share the same three tabs and panels. */
     private val basicParts = demoTabSheet("tabsheet-basic")
-    private val lazyParts = demoTabSheet("tabsheet-lazy")
+    private val lazyParts = demoTabSheet("tabsheet-lazy", mountPanels = false)
     private val adornedParts = demoTabSheet("tabsheet-adorned")
-    private val borderedParts = demoTabSheet("tabsheet-bordered", "bordered")
+    private val borderedParts = demoTabSheet("tabsheet-bordered", theme = "bordered")
 
     private val closeAll: ButtonElement = createButton()
 
@@ -182,8 +182,17 @@ internal class TabSheetPage : DemoPage() {
             Langs.EN to english,
             Langs.ZH_HANS to chinese,
         )
-        /** A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example. */
-        private fun demoTabSheet(key: String, theme: String? = null): SheetParts {
+        /**
+         * A three-tab Tab Sheet with one panel per tab; [key] keeps the tab ids unique per example.
+         *
+         * [mountPanels] is off for the lazy example: its panels exist but stay out of the sheet
+         * until the tab is first visited, which is what the example is about.
+         */
+        private fun demoTabSheet(
+            key: String,
+            theme: String? = null,
+            mountPanels: Boolean = true,
+        ): SheetParts {
             val sheet = createTabSheet()
             if (theme != null) sheet.addTheme(theme)
             val ids = listOf("$key-dashboard", "$key-payment", "$key-shipping")
@@ -195,7 +204,7 @@ internal class TabSheetPage : DemoPage() {
                 ids.map { id ->
                     HtmlTagName.div().apply { setAttribute("tab", id) }
                 }
-            panels.forEach { sheet.append(it) }
+            if (mountPanels) panels.forEach { sheet.append(it) }
             return SheetParts(sheet, tabs, panels)
         }
     }
