@@ -444,31 +444,19 @@ internal class ThemingPage : DemoPage() {
         /** The utility classes this page shows off, kept in one `ClassName`: Lumo reads them as a list. */
         private val UTILITY_BOX: ClassName = ClassName("flex gap-m items-center p-m bg-contrast-5 rounded-m shadow-s")
 
+        /** The class the example puts on the button so its label part can be reached. */
+        private val THEMING_PART: ClassName = ClassName("theming-part")
+
         /**
          * The one rule this page owns: a `::part()` selector has to live in the same shadow tree as the
          * component, and nothing in the kit's blocks can express it. Declared here, next to the example that
          * needs it, instead of in a site-wide stylesheet.
          */
-        /** The class the example puts on the button so its label part can be reached. */
-        private val THEMING_PART: ClassName = ClassName("theming-part")
         private val THEMING_SHEET: CSSStyleSheet = cssSheet {
             ".theming-part::part(label)" {
                 color = Color("var(--lumo-primary-color)")
             }
         }
-        /**
-         * `<vaadin-demo-swatch-chip>`: a colour chip bound to one Lumo custom property.
-         *
-         * The element itself is the chip, so the property lands on its own style instead of on a child.
-         */
-
-        /**
-         * `<vaadin-demo-entry-point>`: a stylesheet entry-point constant and the value behind it.
-         *
-         * The element puts its two nodes into itself rather than into a shadow root, because the paragraph
-         * and the code block are kit pieces whose look comes from the page's sheet.
-         */
-
         /**
          * `<vaadin-demo-described-entry-point>`: the same row, one whose description is translated through
          * the page's binder.

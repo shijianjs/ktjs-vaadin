@@ -421,10 +421,11 @@ internal class ContextMenuPage : DemoPage() {
         // region Context menu
 
         /**
+         * The class this page puts on the "delete" item through the menu data.
+         *
          * `className` from the menu items API lands on the light-DOM item element, so the rule is a plain
          * attribute class selector inside the page's shadow tree.
          */
-        /** The class this page puts on the "delete" item through the menu data. */
         private val CUSTOM: ClassName = ClassName("custom")
         private val english: ContextMenuTexts =
             ContextMenuTexts(

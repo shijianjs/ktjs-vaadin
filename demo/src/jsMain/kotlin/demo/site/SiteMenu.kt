@@ -6,18 +6,6 @@ import io.github.shijianjs.ktjs.demo.nav.DemoMenu
 import io.github.shijianjs.ktjs.demo.nav.Entry
 import io.github.shijianjs.ktjs.demo.nav.Group
 
-/** The wrapper's version, shown under the site name: the npm packages it wraps. */
-const val SITE_VERSION: String = "Vaadin 25"
-
-/** The documentation site the demo is published under; the link menu opens it in a new tab. */
-const val DOCS_URL: String = "https://shijianjs.github.io/ktjs-vaadin/"
-
-/** Dokka reference assembled by `pagesSite` next to the demo. */
-const val API_URL: String = "https://shijianjs.github.io/ktjs-vaadin/api/index.html"
-
-/** Source repository of the wrappers and of this demo. */
-const val SOURCE_URL: String = "https://github.com/shijianjs/ktjs-vaadin"
-
 /**
  * The site, derived from [Catalog.ENTRIES]: one drawer group per catalog group and one entry per page.
  *

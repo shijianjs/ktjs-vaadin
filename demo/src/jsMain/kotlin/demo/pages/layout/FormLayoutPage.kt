@@ -266,12 +266,6 @@ internal class FormLayoutPage : DemoPage() {
             Langs.EN to english,
             Langs.ZH_HANS to chinese,
         )
-        /**
-         * `<vaadin-demo-form-frame>`: puts a form layout next to an empty pane in a split layout, as the docs
-         * examples do — dragging the splitter changes the width of the form and the responsive column count
-         * follows it.
-         */
-
         /** A `<vaadin-form-row>` grouping fields into one row of an auto-responsive form layout. */
         private fun formRow(vararg fields: HTMLElement): HTMLElement {
             val row = createFormRow()

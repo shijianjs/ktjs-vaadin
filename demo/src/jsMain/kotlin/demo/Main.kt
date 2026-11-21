@@ -1,9 +1,6 @@
 package demo
 
-import demo.site.SITE_VERSION
-import demo.site.API_URL
-import demo.site.DOCS_URL
-import demo.site.SOURCE_URL
+import demo.site.Site
 import demo.site.siteMenu
 import demo.site.siteTexts
 import io.github.shijianjs.ktjs.demo.i18n.LanguageState as KitLanguageState
@@ -47,10 +44,10 @@ fun main() {
             language = language,
             theme = theme,
             texts = siteTexts,
-            siteVersion = SITE_VERSION,
-            docsUrl = DOCS_URL,
-            apiUrl = API_URL,
-            sourceUrl = SOURCE_URL,
+            siteVersion = Site.VERSION,
+            docsUrl = Site.DOCS_URL,
+            apiUrl = Site.API_URL,
+            sourceUrl = Site.SOURCE_URL,
             logoSrc = "img/ktjs-vaadin-logo.png",
         ),
     )

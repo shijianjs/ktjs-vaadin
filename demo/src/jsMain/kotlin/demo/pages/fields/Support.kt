@@ -103,11 +103,6 @@ private val valueChangeTexts: Translations<ValueChangeTexts> = texts(
 )
 
 /**
- * The shared section plus the one thing a language switch has to do to it: rewrite the two state
- * lines and the mode items from the new copy, keeping the values the reader has typed so far.
- */
-
-/**
  * Simulates Flow's `ValueChangeMode`, which is a server-side API without a web-component
  * counterpart. The select switches when the client value is copied to the "server" read-out.
  */

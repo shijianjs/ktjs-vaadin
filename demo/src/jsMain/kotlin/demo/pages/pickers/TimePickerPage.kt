@@ -41,12 +41,6 @@ import web.html.HTMLAnchorElement
 // ---------------------------------------------------------------------------------------------
 
 /**
- * The legacy builder, kept until the whole catalog has moved to kit blocks.
- *
- * Every migrated page keeps its old builder for one reason: reverting a page that turns out to
- * render wrong is then deleting one line from the catalog instead of rewriting the page again.
- */
-/**
  * The same page on kit blocks: the nodes are built once and a language switch only rewrites their
  * text, so a value someone typed survives the switch.
  */

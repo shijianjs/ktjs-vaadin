@@ -357,21 +357,6 @@ internal class AppLayoutPage : DemoPage() {
 }
 
 /**
- * `<vaadin-demo-app-navbar>`: the navbar of the app layout examples — drawer toggle plus the
- * application title. The host carries the slot, the nodes sit in its shadow root.
- */
-
-/**
- * `<vaadin-demo-app-drawer>`: the drawer of the app layout examples, a scroller holding the main
- * side navigation.
- */
-
-/**
- * `<vaadin-demo-nav-link>`: a demo navigation link that stays on the current hash route. The host is
- * a wrapper around the anchor, because an element cannot take over the `a` tag itself.
- */
-
-/**
  * An app layout example that stays inside its card. The layout fixes its drawer to the viewport,
  * so paint containment is what keeps the drawer and the navbar inside the example instead of over
  * the page chrome.

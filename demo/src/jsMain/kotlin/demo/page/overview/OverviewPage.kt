@@ -53,16 +53,6 @@ import web.dom.Node
 import web.html.HtmlTagName
 
 /**
- * What the index needs from the wrapper: an `<a>` around a card must stop painting text the way a
- * link paints it, and must pass the row's height through to the card inside it.
- */
-
-/**
- * One section of the index: the heading(whose mark and text are separate nodes, so a language switch
- * rewrites the text without touching the icon) and the cards under it.
- */
-
-/**
  * Landing page: what the showcase covers and an index of every component page.
  *
  * The index is filterable so the 60 entries stay reachable without scrolling; filtering only toggles
