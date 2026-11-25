@@ -10,7 +10,7 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.aria.AriaRole
-import web.aria.img as ariaImg
+import web.aria.img
 import web.dom.ElementId
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -126,7 +126,7 @@ internal class IconSetsPage : DemoPage() {
         closeButton.addTheme("icon")
         closeButton.append(createIcon { icon = "vaadin:close" })
         favourite.icon = "vaadin:star"
-        favourite.role = AriaRole.ariaImg
+        favourite.role = AriaRole.img
         favouriteNote.className = MUTED_SMALL
         texts.bind(favouriteNote) { it.favoriteNote }
         // The kit draws the caption as the card's first child; an empty caption is bound afterwards.

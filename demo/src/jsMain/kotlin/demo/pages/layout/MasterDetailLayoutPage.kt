@@ -10,8 +10,8 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.aria.AriaCurrent
-import web.aria.`false` as ariaFalse
-import web.aria.`true` as ariaTrue
+import web.aria.`false`
+import web.aria.`true`
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -102,7 +102,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         }
         fun select(person: Person, row: HTMLElement) {
             rows.forEach { candidate ->
-                candidate.ariaCurrent = if (candidate === row) AriaCurrent.ariaTrue else AriaCurrent.ariaFalse
+                candidate.ariaCurrent = if (candidate === row) AriaCurrent.`true` else AriaCurrent.`false`
             }
             show(person)
         }
@@ -123,7 +123,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
                               textContent = person.profession
                           }),
             )
-            row.ariaCurrent = AriaCurrent.ariaFalse
+            row.ariaCurrent = AriaCurrent.`false`
             row.clickEvent.addHandler { select(person, row) }
             rows.add(row)
             master.append(row)

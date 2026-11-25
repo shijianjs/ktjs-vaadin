@@ -13,8 +13,8 @@ import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import web.aria.AriaExpanded
-import web.aria.`false` as ariaFalse
-import web.aria.`true` as ariaTrue
+import web.aria.`false`
+import web.aria.`true`
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -769,7 +769,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
                 root.append(
                     createButton { textContent = "" }.addTheme("tertiary icon").apply {
                         ariaLabel = copy.toggleDetails
-                        ariaExpanded = if (open) AriaExpanded.ariaTrue else AriaExpanded.ariaFalse
+                        ariaExpanded = if (open) AriaExpanded.`true` else AriaExpanded.`false`
                         append(createIcon { icon = if (open) "vaadin:angle-down" else "vaadin:angle-right" })
                         clickEvent.addHandler {
                             val item = model.item ?: return@addHandler
