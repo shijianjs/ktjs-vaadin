@@ -10,7 +10,6 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
-import web.dom.TagName
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -33,8 +32,10 @@ import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarElement
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarEvents
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarI18n
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItem
+import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItemElement
 import io.github.shijianjs.ktjs.vaadin.menubar.SubMenuItem
 import io.github.shijianjs.ktjs.vaadin.menubar.createMenuBar
+import io.github.shijianjs.ktjs.vaadin.menubar.createMenuBarItem
 import io.github.shijianjs.ktjs.vaadin.splitlayout.createSplitLayout
 import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
@@ -704,8 +705,8 @@ internal class MenuBarPage : DemoPage() {
             icon: String? = null,
             text: String? = null,
             child: Boolean = false,
-        ): HTMLElement {
-            val item = document.createElement(web.dom.TagName<HTMLElement>("vaadin-menu-bar-item"))
+        ): MenuBarItemElement {
+            val item = createMenuBarItem()
             if (label != null) item.ariaLabel = label
             if (icon != null) {
                 val iconElement = createIcon { this.icon = "vaadin:$icon" }

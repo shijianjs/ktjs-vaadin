@@ -200,4 +200,15 @@ class MenuBarTest {
         assertNotNull(theme)
         assertNotNull(themes)
     }
+
+    @Test
+    fun createMenuBarItemRegistersTheTypedWrapper() {
+        // Upstream marks `vaadin-menu-bar-item` `@protected` and leaves it out of the manifest, so the
+        // wrapper is hand-written; the test keeps it from drifting away from the real element.
+        val item = attach(createMenuBarItem { selected = true })
+
+        assertEquals("vaadin-menu-bar-item", item.tagName.lowercase())
+        assertTrue(item.selected)
+        assertEquals("menuitem", item.getAttribute("role"))
+    }
 }

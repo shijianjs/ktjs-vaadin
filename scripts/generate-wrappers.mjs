@@ -116,11 +116,19 @@ const DOM_TYPES = new Map([
 
 // Custom elements whose wrappers are hand-written, so they do not appear in any manifest.
 const MANUAL_TAGS = new Map([
+  ['vaadin-ai-field-marker', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerElement'],
+  // Internal rows and chips of the combo boxes: upstream keeps them out of the manifests, and they
+  // stay untyped on purpose (their API is not public), but the tag itself still beats a literal.
+  ['vaadin-combo-box-item', 'web.html.HTMLElement'],
   ['vaadin-field-highlighter', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighterElement'],
   ['vaadin-field-outline', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldOutlineElement'],
+  // `@vaadin/menu-bar` marks this class `@protected`, so it is absent from its custom-elements.json
+  // even though menu-bar `component` items are built from it.
+  ['vaadin-menu-bar-item', 'io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItemElement'],
+  ['vaadin-multi-select-combo-box-chip', 'web.html.HTMLElement'],
+  ['vaadin-multi-select-combo-box-item', 'web.html.HTMLElement'],
   ['vaadin-user-tag', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.UserTagElement'],
   ['vaadin-user-tags', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.UserTagsElement'],
-  ['vaadin-ai-field-marker', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerElement'],
 ]);
 
 // Type aliases and interfaces that the manifests reference by name but do not declare as classes.
