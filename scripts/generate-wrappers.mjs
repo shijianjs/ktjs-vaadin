@@ -114,19 +114,26 @@ const DOM_TYPES = new Map([
   ['title', 'String'],
 ]);
 
-// Custom elements whose wrappers are hand-written, so they do not appear in any manifest.
+// Custom elements whose wrappers are hand-written because upstream marks them `@protected`: they
+// run inside a component's shadow tree, so the manifest leaves them out, yet the docs promise them
+// a public API ("has the same API as `<vaadin-item>`" and so on). Elements with no documented API
+// (overlays, scrollers, bubbles) stay unwrapped on purpose; only their tag is exposed.
 const MANUAL_TAGS = new Map([
   ['vaadin-ai-field-marker', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.AiFieldMarkerElement'],
-  // Internal rows and chips of the combo boxes: upstream keeps them out of the manifests, and they
-  // stay untyped on purpose (their API is not public), but the tag itself still beats a literal.
-  ['vaadin-combo-box-item', 'web.html.HTMLElement'],
+  ['vaadin-avatar-group-menu', 'io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupMenuElement'],
+  ['vaadin-avatar-group-menu-item', 'io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupMenuItemElement'],
+  ['vaadin-combo-box-item', 'io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxItemElement'],
   ['vaadin-field-highlighter', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldHighlighterElement'],
   ['vaadin-field-outline', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.FieldOutlineElement'],
-  // `@vaadin/menu-bar` marks this class `@protected`, so it is absent from its custom-elements.json
-  // even though menu-bar `component` items are built from it.
+  ['vaadin-menu-bar-button', 'io.github.shijianjs.ktjs.vaadin.menubar.MenuBarButtonElement'],
   ['vaadin-menu-bar-item', 'io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItemElement'],
+  ['vaadin-menu-bar-list-box', 'io.github.shijianjs.ktjs.vaadin.menubar.MenuBarListBoxElement'],
+  ['vaadin-menu-bar-submenu', 'io.github.shijianjs.ktjs.vaadin.menubar.MenuBarSubmenuElement'],
+  ['vaadin-message-input-button', 'io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputButtonElement'],
   ['vaadin-multi-select-combo-box-chip', 'web.html.HTMLElement'],
-  ['vaadin-multi-select-combo-box-item', 'web.html.HTMLElement'],
+  ['vaadin-multi-select-combo-box-item', 'io.github.shijianjs.ktjs.vaadin.multiselectcombobox.MultiSelectComboBoxItemElement'],
+  ['vaadin-select-value-button', 'io.github.shijianjs.ktjs.vaadin.select.SelectValueButtonElement'],
+  ['vaadin-time-picker-item', 'io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerItemElement'],
   ['vaadin-user-tag', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.UserTagElement'],
   ['vaadin-user-tags', 'io.github.shijianjs.ktjs.vaadin.fieldhighlighter.UserTagsElement'],
 ]);

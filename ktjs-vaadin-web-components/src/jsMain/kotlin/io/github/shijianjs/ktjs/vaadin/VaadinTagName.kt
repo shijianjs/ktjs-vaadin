@@ -39,6 +39,14 @@ object VaadinTagName {
     inline val avatarGroup: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupElement>
         get() = web.dom.TagName("vaadin-avatar-group")
 
+    /** `<vaadin-avatar-group-menu>` */
+    inline val avatarGroupMenu: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupMenuElement>
+        get() = web.dom.TagName("vaadin-avatar-group-menu")
+
+    /** `<vaadin-avatar-group-menu-item>` */
+    inline val avatarGroupMenuItem: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.avatargroup.AvatarGroupMenuItemElement>
+        get() = web.dom.TagName("vaadin-avatar-group-menu-item")
+
     /** `<vaadin-badge>` */
     inline val badge: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.badge.BadgeElement>
         get() = web.dom.TagName("vaadin-badge")
@@ -72,7 +80,7 @@ object VaadinTagName {
         get() = web.dom.TagName("vaadin-combo-box")
 
     /** `<vaadin-combo-box-item>` */
-    inline val comboBoxItem: web.dom.TagName<web.html.HTMLElement>
+    inline val comboBoxItem: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxItemElement>
         get() = web.dom.TagName("vaadin-combo-box-item")
 
     /** `<vaadin-confirm-dialog>` */
@@ -231,9 +239,21 @@ object VaadinTagName {
     inline val menuBar: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.menubar.MenuBarElement>
         get() = web.dom.TagName("vaadin-menu-bar")
 
+    /** `<vaadin-menu-bar-button>` */
+    inline val menuBarButton: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.menubar.MenuBarButtonElement>
+        get() = web.dom.TagName("vaadin-menu-bar-button")
+
     /** `<vaadin-menu-bar-item>` */
     inline val menuBarItem: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItemElement>
         get() = web.dom.TagName("vaadin-menu-bar-item")
+
+    /** `<vaadin-menu-bar-list-box>` */
+    inline val menuBarListBox: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.menubar.MenuBarListBoxElement>
+        get() = web.dom.TagName("vaadin-menu-bar-list-box")
+
+    /** `<vaadin-menu-bar-submenu>` */
+    inline val menuBarSubmenu: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.menubar.MenuBarSubmenuElement>
+        get() = web.dom.TagName("vaadin-menu-bar-submenu")
 
     /** `<vaadin-message>` */
     inline val message: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.messagelist.MessageElement>
@@ -242,6 +262,10 @@ object VaadinTagName {
     /** `<vaadin-message-input>` */
     inline val messageInput: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputElement>
         get() = web.dom.TagName("vaadin-message-input")
+
+    /** `<vaadin-message-input-button>` */
+    inline val messageInputButton: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.messageinput.MessageInputButtonElement>
+        get() = web.dom.TagName("vaadin-message-input-button")
 
     /** `<vaadin-message-list>` */
     inline val messageList: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.messagelist.MessageListElement>
@@ -256,7 +280,7 @@ object VaadinTagName {
         get() = web.dom.TagName("vaadin-multi-select-combo-box-chip")
 
     /** `<vaadin-multi-select-combo-box-item>` */
-    inline val multiSelectComboBoxItem: web.dom.TagName<web.html.HTMLElement>
+    inline val multiSelectComboBoxItem: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.multiselectcombobox.MultiSelectComboBoxItemElement>
         get() = web.dom.TagName("vaadin-multi-select-combo-box-item")
 
     /** `<vaadin-notification>` */
@@ -311,6 +335,10 @@ object VaadinTagName {
     inline val selectListBox: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.select.SelectListBoxElement>
         get() = web.dom.TagName("vaadin-select-list-box")
 
+    /** `<vaadin-select-value-button>` */
+    inline val selectValueButton: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.select.SelectValueButtonElement>
+        get() = web.dom.TagName("vaadin-select-value-button")
+
     /** `<vaadin-side-nav>` */
     inline val sideNav: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement>
         get() = web.dom.TagName("vaadin-side-nav")
@@ -354,6 +382,10 @@ object VaadinTagName {
     /** `<vaadin-time-picker>` */
     inline val timePicker: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerElement>
         get() = web.dom.TagName("vaadin-time-picker")
+
+    /** `<vaadin-time-picker-item>` */
+    inline val timePickerItem: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.timepicker.TimePickerItemElement>
+        get() = web.dom.TagName("vaadin-time-picker-item")
 
     /** `<vaadin-tooltip>` */
     inline val tooltip: web.dom.TagName<io.github.shijianjs.ktjs.vaadin.tooltip.TooltipElement>

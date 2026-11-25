@@ -25,6 +25,14 @@ flowchart TB
 - Hand-written packages are listed in the generator's `HAND_WRITTEN` set and are never overwritten.
   They exist where the manifest is wrong or too thin: `LoginI18n`, `UploadI18n`, `MenuBarI18n`,
   `DateTimePickerI18n`, `UploadManager` and friends.
+- Elements upstream marks `@protected` never reach a manifest, so they get no generated file. The
+  ones the docs give a public API ("has the same API as `<vaadin-item>`") are hand-written and their
+  tags are listed in the generator's `MANUAL_TAGS`: `MenuBarButtonElement` (a `ButtonElement`
+  subclass), `MenuBarItemElement`, `MenuBarListBoxElement`, `MenuBarSubmenuElement`,
+  `AvatarGroupMenuElement`, `AvatarGroupMenuItemElement`, `ComboBoxItemElement`,
+  `MultiSelectComboBoxItemElement`, `TimePickerItemElement`, `MessageInputButtonElement`,
+  `SelectValueButtonElement`. Elements upstream neither documents nor exports (overlays, scrollers,
+  bubbles) stay unwrapped.
 - Everything the manifest gets right stays generated. Fix the generator, not the output.
 
 ## Regenerating after an upstream bump
