@@ -598,10 +598,10 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
   （`className = "$CONST"` 交给 Vaadin 的数据结构）。共享的只有真正多处一起变的（`muted` / `small`），
   私有放页面自己的文件顶部；规则早被删掉的「死类」直接删用法，不要为它造常量。
 - **sheet 的键一律走选择器 DSL**，本仓没有 `"…" { }` 形式的字符串键：`tag(TagName)` /
-  `className(ClassName)` / `compound(…)` / `pseudo(Pseudo[, ident|CssSelector])` / 组合子（`child`、
+  `className(ClassName)` / `compound(…)` / `pseudo(Pseudo[, ident|Selector])` / 组合子（`child`、
   `descendant`、`nextSibling`，infix）。`invoke` **不是** infix：链式结果要显式
-  `(compound(...) child x).invoke { … }`。组合子作用在 `CssSelector` 上，所以 `className(X).child(...)`
-  才对，`X.child(...)` 编译不过。
+  `(compound(...) child x).invoke { … }`。组合子作用在 `web.cssom.Selector` 上——那也是规则键本身的类型，
+  DSL 产出与键之间不需要转换——所以 `className(X).child(...)` 才对，`X.child(...)` 编译不过。
 - **`::part()` 是宿主的伪元素，不能跟组合子**：`compound(tag(x), className(y), pseudo(pseudoElement("part"), ident("label")))`
   生成 `x.y::part(label)`；写成 `(compound(...) child part)` 会生成 `x.y > ::part(label)`，语法合法
   但匹配不到任何东西，症状是「规则写了、样式没生效」。`vaadin-*` 的内部结构只能通过 `::part` 进入，

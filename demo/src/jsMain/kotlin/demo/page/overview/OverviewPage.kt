@@ -30,7 +30,6 @@ import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldEvents
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.dom.css.cssSheet
-import io.github.shijianjs.ktjs.dom.css.dsl.CssSelector
 import io.github.shijianjs.ktjs.dom.css.dsl.attributeSelector
 import io.github.shijianjs.ktjs.dom.css.dsl.child
 import io.github.shijianjs.ktjs.dom.css.dsl.className
@@ -48,6 +47,7 @@ import web.cssom.Color
 import web.cssom.CSSStyleSheet
 import web.cssom.TextDecorationLine
 import web.cssom.Display
+import web.cssom.Selector
 import web.cssom.px
 import web.dom.Node
 import web.html.HtmlTagName
@@ -254,7 +254,7 @@ internal class OverviewPage : DemoPage() {
         /** The class the index cards are found by in tests; it carries no style of its own. */
         private val COMPONENT_CARD: ClassName = ClassName("component-card")
         /** The condition the filter toggles, written as a selector instead of as text. */
-        private val NOT_HIDDEN: CssSelector = pseudo(pseudoClass("not"), attributeSelector(HtmlAttributes.hidden))
+        private val NOT_HIDDEN: Selector = pseudo(pseudoClass("not"), attributeSelector(HtmlAttributes.hidden))
         private val INDEX_SHEET: CSSStyleSheet = cssSheet {
             // `:not([hidden])`, because a `display` declared here would otherwise beat the `hidden` attribute
             // the filter sets - the same trap as an inline display. `flex` rather than `block`: the link is
