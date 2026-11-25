@@ -12,6 +12,9 @@ import io.github.shijianjs.ktjs.demo.page.Grid
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
+import web.aria.AriaExpanded
+import web.aria.`false` as ariaFalse
+import web.aria.`true` as ariaTrue
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -605,7 +608,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
                 val personId = itemId(model.item)
                 root.append(
                     createButton { textContent = "" }.addTheme("error tertiary icon").apply {
-                        setAttribute("aria-label", copy.remove)
+                        ariaLabel = copy.remove
                         append(createIcon { icon = "vaadin:trash" })
                         clickEvent.addHandler {
                             invited.removeAll { it.id == personId }
@@ -765,8 +768,8 @@ internal class GridPage : DemoPage(), GridTranslatable {
                 val open = model.detailsOpened == true
                 root.append(
                     createButton { textContent = "" }.addTheme("tertiary icon").apply {
-                        setAttribute("aria-label", copy.toggleDetails)
-                        setAttribute("aria-expanded", open.toString())
+                        ariaLabel = copy.toggleDetails
+                        ariaExpanded = if (open) AriaExpanded.ariaTrue else AriaExpanded.ariaFalse
                         append(createIcon { icon = if (open) "vaadin:angle-down" else "vaadin:angle-right" })
                         clickEvent.addHandler {
                             val item = model.item ?: return@addHandler

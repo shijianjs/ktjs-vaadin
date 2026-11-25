@@ -27,7 +27,7 @@ internal class CloseIcon : CustomElementAdapter() {
 
     /** Sets the accessible name and the action the click runs. */
     fun show(name: String, onClick: () -> Unit) {
-        button.setAttribute("aria-label", name)
+        button.ariaLabel = name
         button.clickEvent.addHandler { onClick() }
     }
 

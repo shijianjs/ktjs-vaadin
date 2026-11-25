@@ -9,6 +9,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.aria.AriaCurrent
+import web.aria.`false` as ariaFalse
+import web.aria.`true` as ariaTrue
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -98,7 +101,9 @@ internal class MasterDetailLayoutPage : DemoPage() {
             phoneField.value = person.phone
         }
         fun select(person: Person, row: HTMLElement) {
-            rows.forEach { candidate -> candidate.setAttribute("aria-current", if (candidate === row) "true" else "false") }
+            rows.forEach { candidate ->
+                candidate.ariaCurrent = if (candidate === row) AriaCurrent.ariaTrue else AriaCurrent.ariaFalse
+            }
             show(person)
         }
 
@@ -118,7 +123,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
                               textContent = person.profession
                           }),
             )
-            row.setAttribute("aria-current", "false")
+            row.ariaCurrent = AriaCurrent.ariaFalse
             row.clickEvent.addHandler { select(person, row) }
             rows.add(row)
             master.append(row)

@@ -9,6 +9,8 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import web.aria.AriaLive
+import web.aria.polite as ariaPolite
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -237,7 +239,7 @@ internal class MessageListPage : DemoPage() {
         val aiSection = SectionBlock.NAME { show() }
         texts.bind(aiSection.heading) { it.aiHeading }
         texts.bind(aiSection.hint) { it.aiHint }
-        announcement.setAttribute("aria-live", "polite")
+        announcement.ariaLive = AriaLive.ariaPolite
         // Announced to assistive technology only: a one-pixel box clipped out of the layout.
         announcement.style.setProperty("position", "absolute")
         announcement.style.setProperty("clip", "rect(0, 0, 0, 0)")

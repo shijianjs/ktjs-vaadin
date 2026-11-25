@@ -117,7 +117,7 @@ internal class TabSheetPage : DemoPage() {
         frame.show(lang)
         val copy = texts.current
         closeAll.textContent = copy.closeAll
-        addTab.setAttribute("aria-label", copy.addTab)
+        addTab.ariaLabel = copy.addTab
     }
 
     companion object : TabSheetPageDefaultReference() {

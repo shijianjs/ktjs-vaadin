@@ -69,7 +69,7 @@ internal val KEY_DOWN: EventType<KeyboardEvent> = EventType("keydown")
 
 
 internal fun HTMLElement.ariaLabel(name: String) {
-    setAttribute("aria-label", name)
+    ariaLabel = name
 }
 
 /**

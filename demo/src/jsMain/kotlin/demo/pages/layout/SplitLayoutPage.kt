@@ -140,7 +140,7 @@ internal class SplitLayoutPage : DemoPage() {
         texts.apply(lang)
         frame.show(lang)
         // The button carries an icon, its copy is the accessible name: an attribute, not text content.
-        collapseButton.setAttribute("aria-label", texts.current.toggleAria)
+        collapseButton.ariaLabel = texts.current.toggleAria
     }
 
     companion object : SplitLayoutPageDefaultReference() {

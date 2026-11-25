@@ -96,7 +96,7 @@ internal class SideNavPage : DemoPage() {
         fun badgeSuffix(copy: (SideNavTexts) -> String): io.github.shijianjs.ktjs.vaadin.badge.BadgeElement {
             val badge = createBadge { number = 12.0 }.addTheme("filled", "number-only")
             badge.slot = "suffix"
-            texts.bind(badge, copy) { badge.setAttribute("aria-label", it) }
+            texts.bind(badge, copy) { badge.ariaLabel = it }
             return badge
         }
 
@@ -143,7 +143,7 @@ internal class SideNavPage : DemoPage() {
                 item({ it.calendar }, "vaadin:calendar", "/calendar") {
                     val badge = createBadge().addTheme("error", "icon-only")
                     badge.slot = "suffix"
-                    texts.bind(badge, { it.upcomingAppointment }) { badge.setAttribute("aria-label", it) }
+                    texts.bind(badge, { it.upcomingAppointment }) { badge.ariaLabel = it }
                     badge.append(createIcon { icon = "vaadin:bell" }.apply { slot = "icon" })
                     append(badge)
                 },

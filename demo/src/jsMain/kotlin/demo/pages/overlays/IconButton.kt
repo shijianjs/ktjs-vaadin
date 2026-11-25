@@ -17,7 +17,7 @@ internal class IconButton : CustomElementAdapter() {
 
     /** Sets the accessible name and the icons the button shows. */
     fun show(name: String, vararg iconNames: String) {
-        button.setAttribute("aria-label", name)
+        button.ariaLabel = name
         button.textContent = ""
         iconNames.forEach { button.append(createIcon { icon = it }) }
     }

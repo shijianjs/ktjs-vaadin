@@ -32,7 +32,7 @@ internal class NavLink : CustomElementAdapter() {
         if (icon == null) {
             anchor.textContent = label
         } else {
-            anchor.setAttribute("aria-label", label)
+            anchor.ariaLabel = label
             anchor.append(createIcon { this.icon = icon })
         }
     }

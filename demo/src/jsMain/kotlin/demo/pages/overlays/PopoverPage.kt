@@ -191,7 +191,7 @@ internal class PopoverPage : DemoPage() {
         texts.bind(arrow.heading) { it.arrowHeading }
         texts.bind(arrow.hint) { it.arrowHint }
         val bell = newIconButton("lumo:bell")
-        texts.bind(bell, { it.notifications }) { bell.setAttribute("aria-label", it) }
+        texts.bind(bell, { it.notifications }) { bell.ariaLabel = it }
         bell.id = ElementId("popover-arrow-trigger")
         arrowPopover.`for` = "popover-arrow-trigger"
         texts.bind(arrowMessage, { it.noNotifications }) { arrowMessage.textContent = it }
@@ -253,7 +253,7 @@ internal class PopoverPage : DemoPage() {
         rangePopover.modal = true
         rangePopover.position = "bottom-start"
         rangePopover.width = "340px"
-        texts.bind(rangePopover, { it.rangeAria }) { rangePopover.setAttribute("aria-label", it) }
+        texts.bind(rangePopover, { it.rangeAria }) { rangePopover.ariaLabel = it }
         rangePopover.append(
             kitCol(
                 presets,
@@ -294,7 +294,7 @@ internal class PopoverPage : DemoPage() {
         texts.bind(panel.heading) { it.panelHeading }
         texts.bind(panel.hint) { it.panelHint }
         val notificationBell = newIconButton("lumo:bell")
-        texts.bind(notificationBell, { it.notifications }) { notificationBell.setAttribute("aria-label", it) }
+        texts.bind(notificationBell, { it.notifications }) { notificationBell.ariaLabel = it }
         notificationBell.id = ElementId("popover-notifications-trigger")
         val notificationsPopover = createPopover { addTheme("arrow", "no-padding") }
         notificationsPopover.`for` = "popover-notifications-trigger"
@@ -337,7 +337,7 @@ internal class PopoverPage : DemoPage() {
         userPopover.modal = true
         userPopover.position = "bottom-end"
         userPopover.setAttribute("role", "menu")
-        texts.bind(userPopover, { it.userMenu }) { userPopover.setAttribute("aria-label", it) }
+        texts.bind(userPopover, { it.userMenu }) { userPopover.ariaLabel = it }
         val nickName = "@${user.firstName}${user.lastName}".lowercase()
         val userCard =
             HtmlTagName.div().apply {
@@ -392,7 +392,7 @@ internal class PopoverPage : DemoPage() {
             columnElements += path to column
             grid.append(column)
         }
-        texts.bind(columnsButton, { it.showHideColumns }) { columnsButton.setAttribute("aria-label", it) }
+        texts.bind(columnsButton, { it.showHideColumns }) { columnsButton.ariaLabel = it }
         columnsButton.append(createIcon { icon = "vaadin:grid-h" })
         columnsButton.id = ElementId("popover-columns-trigger")
         columnsPopover.`for` = "popover-columns-trigger"

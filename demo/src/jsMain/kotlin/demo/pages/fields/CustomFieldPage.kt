@@ -352,5 +352,5 @@ internal class CustomFieldPage : DemoPage() {
 /** A bare input announces itself twice: the placeholder and the label screen readers hear. */
 private fun HTMLInputElement.nativeText(text: String) {
     setAttribute("placeholder", text)
-    setAttribute("aria-label", text)
+    ariaLabel = text
 }

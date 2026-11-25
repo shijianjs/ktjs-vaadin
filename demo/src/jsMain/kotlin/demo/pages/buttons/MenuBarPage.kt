@@ -706,7 +706,7 @@ internal class MenuBarPage : DemoPage() {
             child: Boolean = false,
         ): HTMLElement {
             val item = document.createElement(web.dom.TagName<HTMLElement>("vaadin-menu-bar-item"))
-            if (label != null) item.setAttribute("aria-label", label)
+            if (label != null) item.ariaLabel = label
             if (icon != null) {
                 val iconElement = createIcon { this.icon = "vaadin:$icon" }
                 if (child) {
