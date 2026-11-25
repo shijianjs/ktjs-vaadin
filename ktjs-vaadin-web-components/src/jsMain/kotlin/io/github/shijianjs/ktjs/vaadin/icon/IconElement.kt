@@ -148,6 +148,9 @@ val IconElement.sizeAttr: Attribute<Int>
  *   inside the SVG referenced by the path. Note that the file needs to follow the same-origin policy.
  * - a string in the format `data:image/svg+xml,<svg>...</svg>`. You may need to use the `encodeURIComponent`
  *   function for the SVG content passed
+ *
+ * An SVG loaded without an ID only renders static SVG content, so use presentation attributes such as `fill`
+ * instead of a `<style>` element.
  */
 
 val IconElement.srcAttr: Attribute<String>

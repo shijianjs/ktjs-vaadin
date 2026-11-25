@@ -15,3 +15,11 @@ external fun supportsCQUnitsForPseudoElements()
  */
 
 external fun needsFontIconSizingFallback()
+
+/**
+ * Parse the first `<svg>` element in the source string. Returns its static
+ * content as SVG literal, and the element without children for its attributes.
+ * Returns `null` if there is no `<svg>`.
+ */
+
+external fun parseSvg(source: String)

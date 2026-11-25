@@ -740,7 +740,11 @@ function kotlinPackage(npmName) {
 }
 
 function kotlinDir(pkg) {
-  return path.join(MAIN_OUT, pkg.replace('@vaadin/', '').replace(/^vaadin-/, ''));
+  // The directory has to be the package path, segment by segment: the npm name is kebab-cased
+  // (`@vaadin/menu-bar`), the Kotlin package is not (`…vaadin.menubar`), and a source tree that
+  // disagrees with its `package` line is something every IDE reports.
+  const prefix = 'io.github.shijianjs.ktjs.vaadin'.split('.');
+  return path.join(MAIN_OUT, ...kotlinPackage(pkg).split('.').slice(prefix.length));
 }
 
 function camel(value) {
@@ -1733,7 +1737,7 @@ function emitUnions() {
       }
       lines.push('');
     }
-    writeFile(path.join(directory, `${pascal(path.basename(directory))}Unions.kt`), lines.join('\n'));
+    writeFile(path.join(directory, `${pascal(list[0].pkg.replace('@vaadin/', ''))}Unions.kt`), lines.join('\n'));
   }
 }
 
@@ -1769,7 +1773,7 @@ function emitLiterals() {
         '',
       );
     }
-    writeFile(path.join(directory, `${pascal(path.basename(directory))}Literals.kt`), lines.join('\n'));
+    writeFile(path.join(directory, `${pascal(list[0].pkg.replace('@vaadin/', ''))}Literals.kt`), lines.join('\n'));
   }
 }
 
