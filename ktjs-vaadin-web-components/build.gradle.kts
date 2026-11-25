@@ -31,10 +31,10 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
-            api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.2")
+            api(libs.kotlin.browser)
             // Typed `Attribute` objects (`ButtonElement.disabledAttr`): the generated `XxxAttributes`
             // objects expose `Attribute<T>` in the public surface, so this is `api`, not `implementation`.
-            api("io.github.shijianjs:ktjs-wrapper-kit:${property("ktjs-wrapper-kit.version")}")
+            api(libs.ktjs.wrapper.kit)
             // Every @vaadin/* entry in the root package.json is installed; package.json is the
             // single source of truth for upstream versions, so a Dependabot bump reaches all
             // packages that release together.
