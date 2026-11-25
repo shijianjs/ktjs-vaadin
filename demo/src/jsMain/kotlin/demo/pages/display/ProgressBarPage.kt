@@ -27,6 +27,7 @@ import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import web.dom.clickEvent
 import web.events.addHandler
+import web.dom.ElementId
 import web.html.HtmlTagName
 import demo.ui.MUTED_SMALL
 
@@ -117,7 +118,7 @@ internal class ProgressBarPage : DemoPage() {
         texts.bind(labelSection.hint) { it.labelHint }
         val labelId = "progress-bar-label"
         texts.bind(barLabel) { it.processing }
-        barLabel.setAttribute("id", labelId)
+        barLabel.id = ElementId(labelId)
         val labelled = createProgressBar { value = 0.5 }
         labelled.setAttribute("aria-labelledby", labelId)
         val labelledHeader = kitRow(barLabel, HtmlTagName.span { textContent = "50%" })
@@ -133,14 +134,14 @@ internal class ProgressBarPage : DemoPage() {
         val titleId = "progress-bar-title"
         val hintId = "progress-bar-hint"
         texts.bind(titleLabel) { it.generating }
-        titleLabel.setAttribute("id", titleId)
+        titleLabel.id = ElementId(titleId)
         val waiting = createProgressBar { indeterminate = true }
         waiting.setAttribute("aria-labelledby", titleId)
         waiting.setAttribute("aria-describedby", hintId)
         waiting.style.setProperty("margin", "var(--lumo-space-s) 0")
         slowHint.className = MUTED_SMALL
         texts.bind(slowHint) { it.slowHint }
-        slowHint.setAttribute("id", hintId)
+        slowHint.id = ElementId(hintId)
         completion.body.append(exampleBox(null, kitCol(titleLabel, waiting, slowHint)))
         body.append(completion.root)
 

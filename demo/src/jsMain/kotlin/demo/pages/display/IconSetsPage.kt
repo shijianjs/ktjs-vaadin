@@ -9,6 +9,9 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.row as kitRow
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.aria.AriaRole
+import web.aria.img as ariaImg
+import web.dom.ElementId
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -123,7 +126,7 @@ internal class IconSetsPage : DemoPage() {
         closeButton.addTheme("icon")
         closeButton.append(createIcon { icon = "vaadin:close" })
         favourite.icon = "vaadin:star"
-        favourite.setAttribute("role", "img")
+        favourite.role = AriaRole.ariaImg
         favouriteNote.className = MUTED_SMALL
         texts.bind(favouriteNote) { it.favoriteNote }
         // The kit draws the caption as the card's first child; an empty caption is bound afterwards.
@@ -313,7 +316,7 @@ internal class IconSetsPage : DemoPage() {
         /** Builds one `<g id="name">` entry of an iconset from a single path, filled with `currentColor`. */
         private fun svgIconGroup(id: String, path: String): SVGGElement {
             val group = document.createElementNS(SVG_NAMESPACE, SvgTagName.g)
-            group.setAttribute("id", id)
+            group.id = ElementId(id)
             group.setAttribute("fill", "currentColor")
             val shape = document.createElementNS(SVG_NAMESPACE, SvgTagName.path)
             shape.setAttribute("d", path)

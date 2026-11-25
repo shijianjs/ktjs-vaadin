@@ -142,7 +142,7 @@ internal class RadioGroupPage : DemoPage() {
         val labeled = createRadioGroup().addTheme("vertical")
         texts.bind(labeled, { it.label }) { labeled.label = it }
         texts.bind(labeled, { it.helperText }) { labeled.helperText = it }
-        val tooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        val tooltip = createTooltip().apply { slot = "tooltip" }
         texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
         labeled.append(tooltip)
         option(labeled, "1") { it.item1 }
@@ -197,7 +197,7 @@ internal class RadioGroupPage : DemoPage() {
         val visaExpires = HtmlTagName.span()
         texts.bind(visaExpires, { it.expires }) { visaExpires.textContent = it }
         visaBox.append(visaLine, visaExpires)
-        visaBox.setAttribute("slot", "label")
+        visaBox.slot = "label"
         visa.append(visaBox)
         val other = createRadioButton { value = "-1" }
         val otherBox = kitCol()
@@ -207,7 +207,7 @@ internal class RadioGroupPage : DemoPage() {
         val otherHint = HtmlTagName.span()
         texts.bind(otherHint, { it.enterCardNumber }) { otherHint.textContent = it }
         otherBox.append(otherLine, otherHint)
-        otherBox.setAttribute("slot", "label")
+        otherBox.slot = "label"
         other.append(otherBox)
         cardGroup.append(visa, other)
         val cardNumber = createTextField()
@@ -242,7 +242,7 @@ internal class RadioGroupPage : DemoPage() {
             val node = createRadioButton { value = "${person.id}" }
             val box = kitCol()
             box.className = RADIO_OPTION
-            box.setAttribute("slot", "label")
+            box.slot = "label"
             val accountLine = HtmlTagName.span()
             texts.bind(accountLine, { copy -> copy.account(person.id) }) { accountLine.textContent = it }
             val holderLine = HtmlTagName.span()

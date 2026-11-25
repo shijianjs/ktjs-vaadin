@@ -9,6 +9,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.aria.AriaRole
+import web.aria.menu as ariaMenu
+import web.aria.menuitem as ariaMenuItem
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
@@ -330,13 +333,13 @@ internal class PopoverPage : DemoPage() {
         avatarButton.style.setProperty("border-radius", "50%")
         avatarButton.append(
             createAvatar { img = user.pictureUrl; name = user.displayName }
-                .also { it.setAttribute("tabindex", "-1") },
+                .also { it.tabIndex = -1 },
         )
         avatarButton.id = ElementId("popover-avatar-trigger")
         userPopover.`for` = "popover-avatar-trigger"
         userPopover.modal = true
         userPopover.position = "bottom-end"
-        userPopover.setAttribute("role", "menu")
+        userPopover.role = AriaRole.ariaMenu
         texts.bind(userPopover, { it.userMenu }) { userPopover.ariaLabel = it }
         val nickName = "@${user.firstName}${user.lastName}".lowercase()
         val userCard =
@@ -357,7 +360,7 @@ internal class PopoverPage : DemoPage() {
         // target. The popover itself is a `no-padding` one; the padding lives here.
         fun menuLink(copy: (PopoverTexts) -> String) {
             val anchor = kitAnchor("", "#").apply {
-                setAttribute("role", "menuitem")
+                role = AriaRole.ariaMenuItem
                 style.setProperty("display", "block")
                 style.setProperty("padding", "4px 16px")
                 style.setProperty("text-decoration", "none")

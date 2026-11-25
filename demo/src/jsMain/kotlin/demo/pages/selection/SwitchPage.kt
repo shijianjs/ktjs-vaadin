@@ -70,7 +70,7 @@ internal class SwitchPage : DemoPage() {
         val features = SectionBlock.NAME { show() }
         texts.bind(features.heading) { it.featuresHeading }
         texts.bind(features.hint) { it.featuresHint }
-        autosaveTooltip.setAttribute("slot", "tooltip")
+        autosaveTooltip.slot = "tooltip"
         autosave.append(autosaveTooltip)
         features.body.append(exampleBox(null, autosave))
         body.append(features.root)

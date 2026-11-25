@@ -120,7 +120,7 @@ internal class CheckboxGroupPage : DemoPage() {
         val languages = createCheckboxGroup().addTheme("vertical")
         texts.bind(languages, { it.label }) { languages.label = it }
         texts.bind(languages, { it.helper }) { languages.helperText = it }
-        val tooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        val tooltip = createTooltip().apply { slot = "tooltip" }
         texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
         val item1 = createCheckbox { value = "1" }
         texts.bind(item1) { it.item1 }

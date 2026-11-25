@@ -78,9 +78,9 @@ internal class SelectPage : DemoPage() {
         sortBy.items = selectItems(SORT_ITEMS_JSON)
         texts.bind(sortBy, { it.helper }) { sortBy.helperText = it }
         texts.bind(sortBy, { it.placeholder }) { sortBy.placeholder = it }
-        val tooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        val tooltip = createTooltip().apply { slot = "tooltip" }
         texts.bind(tooltip, { it.tooltipText }) { tooltip.text = it }
-        sortBy.append(tooltip, createIcon { icon = "vaadin:vaadin-h" }.apply { setAttribute("slot", "prefix") })
+        sortBy.append(tooltip, createIcon { icon = "vaadin:vaadin-h" }.apply { slot = "prefix" })
         features.body.append(exampleBox(null, sortBy))
         body.append(features.root)
 
@@ -146,7 +146,7 @@ internal class SelectPage : DemoPage() {
         texts.bind(customLabel.heading) { it.customLabelHeading }
         texts.bind(customLabel.hint) { it.customLabelHint }
         val assignee = field { it.assignee }
-        val assigneeBox = createSelectListBox().apply { setAttribute("slot", "overlay") }
+        val assigneeBox = createSelectListBox().apply { slot = "overlay" }
         employees.forEach { person ->
             assigneeBox.append(
                 createSelectItem {
@@ -172,7 +172,7 @@ internal class SelectPage : DemoPage() {
         texts.bind(presentation.hint) { it.presentationHint }
         val doctors = field { it.chooseDoctor }
         doctors.style.width = "15em"
-        val doctorBox = createSelectListBox().apply { setAttribute("slot", "overlay") }
+        val doctorBox = createSelectListBox().apply { slot = "overlay" }
         employees.forEach { person ->
             doctorBox.append(
                 createSelectItem { value = "${person.id}" }.apply {

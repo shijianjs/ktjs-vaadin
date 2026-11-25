@@ -141,7 +141,7 @@ internal class GridHeader : CustomElementAdapter() {
     var tooltip: String = ""
         set(value) {
             field = value
-            setAttribute("title", value)
+            title = value
         }
 
     companion object : GridHeaderDefaultReference()

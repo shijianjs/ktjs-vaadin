@@ -100,11 +100,11 @@ internal class ComboBoxPage : DemoPage() {
         texts.bind(featured, { it.placeholder }) { featured.placeholder = it }
         featured.clearButtonVisible = true
         featured.items = jsArray("""["Value"]""")
-        val featuredTooltip = createTooltip().apply { setAttribute("slot", "tooltip") }
+        val featuredTooltip = createTooltip().apply { slot = "tooltip" }
         texts.bind(featuredTooltip, { it.tooltip }) { featuredTooltip.text = it }
         featured.append(
             featuredTooltip,
-            createIcon { icon = "vaadin:search" }.apply { setAttribute("slot", "prefix") },
+            createIcon { icon = "vaadin:search" }.apply { slot = "prefix" },
         )
         features.body.append(exampleBox(null, featured))
         body.append(features.root)

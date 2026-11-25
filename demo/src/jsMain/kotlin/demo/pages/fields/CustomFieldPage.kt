@@ -34,6 +34,8 @@ import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLInputElement
+import web.html.InputType
+import web.html.text as inputText
 import web.html.HtmlTagName
 
 internal class CustomFieldPage : DemoPage() {
@@ -341,8 +343,8 @@ internal class CustomFieldPage : DemoPage() {
         /** Creates a bare `<input>` with the pattern the native-input example relies on. */
         private fun nativeInput(pattern: String): HTMLInputElement =
             HtmlTagName.input().apply {
-                setAttribute("type", "text")
-                setAttribute("pattern", pattern)
+                type = InputType.inputText
+                this.pattern = pattern
                 required = true
                 style.setProperty("width", "9rem")
             }
@@ -351,6 +353,6 @@ internal class CustomFieldPage : DemoPage() {
 
 /** A bare input announces itself twice: the placeholder and the label screen readers hear. */
 private fun HTMLInputElement.nativeText(text: String) {
-    setAttribute("placeholder", text)
+    placeholder = text
     ariaLabel = text
 }
