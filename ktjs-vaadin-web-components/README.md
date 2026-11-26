@@ -201,6 +201,24 @@ registerLumoStyles()
 val overlayStyles = LumoStyles.overlay
 ```
 
+Lumo's custom properties are available as typed names in `LumoCustomProperties` (all 165 of them,
+including the `lumo` icon codepoints). Pair them with `var()` and the CSSOM type comes back, so an
+inline style never needs a hand-built `"var(--lumo-…)"` string:
+
+```kotlin
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.Border
+import web.cssom.LineStyle
+import web.cssom.`var`
+
+card.inlineStyle.apply {
+    color = `var`(LumoCustomProperties.PRIMARY_TEXT_COLOR)
+    padding = `var`(LumoCustomProperties.SPACE_L)
+    border = Border(1.px, LineStyle.solid, `var`(LumoCustomProperties.CONTRAST_20PCT))
+}
+```
+
 Custom styles are registered with `registerStyles`; `unsafeCSS` wraps a CSS string in a Lit
 `CSSResult`:
 

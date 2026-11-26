@@ -1,11 +1,14 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.vaadin.applayout.createDrawerToggle
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
 import web.html.HTMLElement
 
 /**
@@ -14,7 +17,7 @@ import web.html.HTMLElement
  */
 
 internal class AppNavbar : CustomElementAdapter() {
-    private val toggle = createDrawerToggle().apply { style.setProperty("color", "var(--lumo-body-text-color)") }
+    private val toggle = createDrawerToggle().apply { inlineStyle.color = `var`(LumoCustomProperties.BODY_TEXT_COLOR) }
 
     private val caption = heading(3, "").apply {
         style.setProperty("margin", "0")
@@ -28,7 +31,7 @@ internal class AppNavbar : CustomElementAdapter() {
         attachShadowRoot().append(
             createHorizontalLayout().apply {
                 style.setProperty("align-items", "center")
-                style.setProperty("gap", "var(--lumo-space-s)")
+                inlineStyle.gap = `var`(LumoCustomProperties.SPACE_S)
                 append(toggle, caption)
             },
         )

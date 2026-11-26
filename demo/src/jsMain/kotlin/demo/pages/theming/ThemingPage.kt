@@ -33,9 +33,10 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoThemes
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import io.github.shijianjs.ktjs.dom.css.cssSheet
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import web.cssom.CSSStyleSheet
 import web.cssom.ClassName
-import web.cssom.Color
+import web.cssom.`var`
 import web.dom.clickEvent
 import web.events.addHandler
 import demo.ui.SMALL
@@ -454,7 +455,7 @@ internal class ThemingPage : DemoPage() {
          */
         private val THEMING_SHEET: CSSStyleSheet = cssSheet {
             ".theming-part::part(label)" {
-                color = Color("var(--lumo-primary-color)")
+                color = `var`(LumoCustomProperties.PRIMARY_COLOR)
             }
         }
         /**

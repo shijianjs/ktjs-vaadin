@@ -26,6 +26,9 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icon.unsafeSvgLiteral
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -129,7 +132,7 @@ internal class IconPage : DemoPage() {
             size = 24.0
         }
         star.style.setProperty("--vaadin-icon-size", "2rem")
-        star.style.color = "var(--lumo-primary-color)"
+        star.inlineStyle.color = `var`(LumoCustomProperties.PRIMARY_COLOR)
         val fromSet = Iconset.getIconSvg("lumo:photo", null)
         val reused = createIcon {
             svg = fromSet.svg

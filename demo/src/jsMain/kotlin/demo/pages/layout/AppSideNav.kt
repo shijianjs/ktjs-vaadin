@@ -5,14 +5,17 @@ import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavElement
 import io.github.shijianjs.ktjs.vaadin.sidenav.SideNavItemElement
 import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNav
 import io.github.shijianjs.ktjs.vaadin.sidenav.createSideNavItem
+import web.cssom.`var`
 import web.html.HtmlTagName
 
 /**
@@ -28,7 +31,7 @@ internal class AppSideNav : CustomElementAdapter() {
 
     private val nav: SideNavElement =
         createSideNav().apply {
-            style.setProperty("margin", "var(--lumo-space-s)")
+            inlineStyle.margin = `var`(LumoCustomProperties.SPACE_S)
             append(
                 item("vaadin:dashboard") { it.dashboard },
                 item("vaadin:cart") { it.orders },

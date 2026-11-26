@@ -9,6 +9,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.anchor as kitAnchor
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
@@ -25,6 +26,9 @@ import demo.ui.Readout
 import demo.ui.jsObject
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import web.cssom.`var`
+import web.cssom.Border
+import web.cssom.LineStyle
 import web.html.HTMLElement
 import web.cssom.AlignItems
 import web.cssom.Display
@@ -522,9 +526,9 @@ internal class UploadPage : DemoPage() {
         dropZone.manager = zoneManager
         dropZone.style.setProperty("box-sizing", "border-box")
         dropZone.style.setProperty("width", "100%")
-        dropZone.style.setProperty("padding", "var(--lumo-space-l)")
-        dropZone.style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
-        dropZone.style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+        dropZone.inlineStyle.padding = `var`(LumoCustomProperties.SPACE_L)
+        dropZone.inlineStyle.border = Border(1.px, LineStyle.dashed, `var`(LumoCustomProperties.CONTRAST_30PCT))
+        dropZone.inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
         val dropHint = HtmlTagName.span()
         texts.bind(dropHint, { it.dropHereOr }) { dropHint.textContent = it }
         dropZone.append(

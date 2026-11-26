@@ -7,7 +7,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -25,6 +27,10 @@ import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 import io.github.shijianjs.ktjs.vaadin.markdown.createMarkdown
 import io.github.shijianjs.ktjs.vaadin.scroller.ScrollerScrollDirections
 import io.github.shijianjs.ktjs.vaadin.scroller.createScroller
+import web.cssom.`var`
+import web.cssom.Border
+import web.cssom.LineStyle
+import web.cssom.px
 import web.html.HTMLHeadingElement
 import web.html.HTMLImageElement
 import web.html.HtmlTagName
@@ -87,8 +93,8 @@ internal class ScrollerPage : DemoPage() {
         texts.bind(mobile.heading) { it.mobileHeading }
         texts.bind(mobile.hint) { it.mobileHint }
         val phone = HtmlTagName.div().apply {
-            style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            inlineStyle.border = Border(1.px, LineStyle.solid, `var`(LumoCustomProperties.CONTRAST_20PCT))
+            inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
             style.setProperty("max-width", "100%")
             style.setProperty("width", "22.5rem")
         }

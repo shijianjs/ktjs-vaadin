@@ -10,7 +10,9 @@ import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
 import io.github.shijianjs.ktjs.demo.page.Blocks.col as kitCol
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -25,6 +27,9 @@ import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.progressbar.createProgressBar
 import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
+import web.cssom.`var`
+import web.cssom.Margin
+import web.cssom.px
 import web.dom.clickEvent
 import web.events.addHandler
 import web.dom.ElementId
@@ -123,7 +128,7 @@ internal class ProgressBarPage : DemoPage() {
         labelled.setAttribute("aria-labelledby", labelId)
         val labelledHeader = kitRow(barLabel, HtmlTagName.span { textContent = "50%" })
         labelledHeader.style.setProperty("justify-content", "space-between")
-        labelledHeader.style.setProperty("margin-bottom", "var(--lumo-space-s)")
+        labelledHeader.inlineStyle.marginBottom = `var`(LumoCustomProperties.SPACE_S)
         labelSection.body.append(exampleBox(null, kitCol(labelledHeader, labelled)))
         body.append(labelSection.root)
 
@@ -138,7 +143,7 @@ internal class ProgressBarPage : DemoPage() {
         val waiting = createProgressBar { indeterminate = true }
         waiting.setAttribute("aria-labelledby", titleId)
         waiting.setAttribute("aria-describedby", hintId)
-        waiting.style.setProperty("margin", "var(--lumo-space-s) 0")
+        waiting.inlineStyle.margin = Margin(`var`(LumoCustomProperties.SPACE_S), 0.px)
         slowHint.className = MUTED_SMALL
         texts.bind(slowHint) { it.slowHint }
         slowHint.id = ElementId(hintId)

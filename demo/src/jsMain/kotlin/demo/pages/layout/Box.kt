@@ -1,7 +1,11 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
+import web.cssom.Padding
 
 /**
  * `<demo-layout-box>`: the tinted placeholder the layout examples are built out of.
@@ -21,9 +25,9 @@ internal class Box : CustomElementAdapter() {
      * connected.
      */
     override fun connectedCallback() {
-        style.setProperty("padding", "var(--lumo-space-s) var(--lumo-space-m)")
-        style.setProperty("border-radius", "var(--lumo-border-radius-m)")
-        style.setProperty("background", "var(--lumo-primary-color-10pct)")
+        inlineStyle.padding = Padding(`var`(LumoCustomProperties.SPACE_S), `var`(LumoCustomProperties.SPACE_M))
+        inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_M)
+        inlineStyle.background = `var`(LumoCustomProperties.PRIMARY_COLOR_10PCT)
         height?.let { style.setProperty("height", it) }
     }
 

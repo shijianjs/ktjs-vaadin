@@ -8,7 +8,13 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
+import web.cssom.`var`
+import web.cssom.Border
+import web.cssom.LineStyle
+import web.cssom.px
 import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -38,7 +44,7 @@ internal class HorizontalLayoutPage : DemoPage() {
             HtmlTagName.p().apply {
                 style.setProperty("margin", "0 0 0.75rem")
                 style.setProperty("font-size", "0.8125rem")
-                style.setProperty("color", "var(--lumo-secondary-text-color)")
+                inlineStyle.color = `var`(LumoCustomProperties.SECONDARY_TEXT_COLOR)
                 texts.bind(this, copy) { textContent = it }
             }
 
@@ -186,7 +192,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 null,
                 label { it.withoutMargin },
                 HtmlTagName.div().apply {
-                    style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
+                    inlineStyle.border = Border(1.px, LineStyle.dashed, `var`(LumoCustomProperties.CONTRAST_30PCT))
                     append(
                         createHorizontalLayout().apply {
                             addTheme("spacing", "padding")
@@ -199,7 +205,7 @@ internal class HorizontalLayoutPage : DemoPage() {
                 null,
                 label { it.withMargin },
                 HtmlTagName.div().apply {
-                    style.setProperty("border", "1px dashed var(--lumo-contrast-30pct)")
+                    inlineStyle.border = Border(1.px, LineStyle.dashed, `var`(LumoCustomProperties.CONTRAST_30PCT))
                     append(
                         createHorizontalLayout().apply {
                             addTheme("margin", "spacing", "padding")

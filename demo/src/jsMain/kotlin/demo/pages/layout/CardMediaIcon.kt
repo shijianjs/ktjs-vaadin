@@ -1,9 +1,12 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
 
 /**
  * `<demo-card-media-icon>`: the card's media slot filled with the photo icon, tinted so it reads as an
@@ -13,8 +16,8 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 internal class CardMediaIcon : CustomElementAdapter() {
     private val icon = createIcon {
         icon = "lumo:photo"
-        style.setProperty("background", "var(--lumo-primary-color-10pct)")
-        style.setProperty("color", "var(--lumo-primary-color)")
+        inlineStyle.background = `var`(LumoCustomProperties.PRIMARY_COLOR_10PCT)
+        inlineStyle.color = `var`(LumoCustomProperties.PRIMARY_COLOR)
     }
 
     init {

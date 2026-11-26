@@ -9,8 +9,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.cssom.`var`
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -78,7 +81,7 @@ internal class TooltipPage : DemoPage() {
         val target = HtmlTagName.div { className = EXAMPLE }
         texts.bind(target) { it.blockText }
         target.id = ElementId("tooltip-target")
-        target.style.setProperty("padding", "var(--lumo-space-m)")
+        target.inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         val tooltip = createTooltip()
         texts.bind(tooltip, { it.linkedHintText }) { tooltip.text = it }
         tooltip.`for` = "tooltip-target"

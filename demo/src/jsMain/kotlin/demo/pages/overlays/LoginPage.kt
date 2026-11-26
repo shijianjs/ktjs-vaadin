@@ -9,8 +9,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.cssom.`var`
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -223,8 +226,8 @@ internal class LoginPage : DemoPage() {
         // A full-bleed gradient behind the form: the login page's own backdrop, nothing else uses it.
         val richHost =
             HtmlTagName.div().apply {
-                style.setProperty("padding", "var(--lumo-space-l)")
-                style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+                inlineStyle.padding = `var`(LumoCustomProperties.SPACE_L)
+                inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
                 style.setProperty("background", "linear-gradient(135deg, #1f4e9c, #7a3f8f)")
                 append(richForm)
             }

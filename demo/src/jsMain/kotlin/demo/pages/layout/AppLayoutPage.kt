@@ -9,7 +9,9 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -36,6 +38,11 @@ import io.github.shijianjs.ktjs.vaadin.grid.createGridColumn
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.verticallayout.createVerticalLayout
+import web.cssom.`var`
+import web.cssom.Border
+import web.cssom.LineStyle
+import web.cssom.Padding
+import web.cssom.px
 import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
@@ -218,8 +225,8 @@ internal class AppLayoutPage : DemoPage() {
         texts.bind(scrolling.heading) { it.scrollingHeading }
         texts.bind(scrolling.hint) { it.scrollingHint }
         val autoFrame = HtmlTagName.div().apply {
-            style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            inlineStyle.border = Border(1.px, LineStyle.solid, `var`(LumoCustomProperties.CONTRAST_20PCT))
+            inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
             style.setProperty("overflow", "hidden")
         }
         val autoLayout = boxedAppLayout()
@@ -230,8 +237,8 @@ internal class AppLayoutPage : DemoPage() {
         autoFrame.append(autoLayout)
 
         val fullFrame = HtmlTagName.div().apply {
-            style.setProperty("border", "1px solid var(--lumo-contrast-20pct)")
-            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            inlineStyle.border = Border(1.px, LineStyle.solid, `var`(LumoCustomProperties.CONTRAST_20PCT))
+            inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
             style.setProperty("height", "18rem")
             style.setProperty("overflow", "hidden")
         }
@@ -285,10 +292,10 @@ internal class AppLayoutPage : DemoPage() {
         val drawerTitle = heading(3, "")
         texts.bind(drawerTitle) { it.myApp }
         drawerTitle.slot = "drawer"
-        drawerTitle.style.setProperty("margin", "var(--lumo-space-m)")
+        drawerTitle.inlineStyle.margin = `var`(LumoCustomProperties.SPACE_M)
         val secondaryNavbar = createVerticalLayout().apply {
             slot = "navbar"
-            style.setProperty("padding", "var(--lumo-space-s) var(--lumo-space-m)")
+            inlineStyle.padding = Padding(`var`(LumoCustomProperties.SPACE_S), `var`(LumoCustomProperties.SPACE_M))
         }
         val orderHeading = heading(4, "")
         texts.bind(orderHeading) { it.orders }
@@ -297,7 +304,7 @@ internal class AppLayoutPage : DemoPage() {
             createHorizontalLayout().apply {
                 style.setProperty("align-items", "center")
                 append(
-                    createDrawerToggle().apply { style.setProperty("margin-inline-end", "var(--lumo-space-s)") },
+                    createDrawerToggle().apply { inlineStyle.marginInlineEnd = `var`(LumoCustomProperties.SPACE_S) },
                     orderHeading,
                 )
             },

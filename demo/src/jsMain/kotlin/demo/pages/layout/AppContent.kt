@@ -1,7 +1,10 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
 
 /** `<vaadin-demo-app-content>`: padding filler for the app layout examples' content area. */
 internal class AppContent : CustomElementAdapter() {
@@ -12,7 +15,7 @@ internal class AppContent : CustomElementAdapter() {
 
     override fun connectedCallback() {
         style.setProperty("display", "block")
-        style.setProperty("padding", "var(--lumo-space-m)")
+        inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
     }
 
     companion object : AppContentDefaultReference()

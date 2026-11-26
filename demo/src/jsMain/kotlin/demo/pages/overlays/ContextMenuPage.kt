@@ -9,9 +9,15 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
+import web.cssom.`var`
+import web.cssom.Border
+import web.cssom.LineStyle
+import web.cssom.px
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
@@ -29,7 +35,6 @@ import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.css.cssSheet
 import web.cssom.CSSStyleSheet
-import web.cssom.Color
 import js.objects.unsafeJso
 import kotlin.js.JsAny
 import kotlin.js.js
@@ -136,9 +141,9 @@ internal class ContextMenuPage : DemoPage() {
         // The right-click target: a dashed box that reads as "click me", inline because nothing else on
         // the page shares it.
         val surface = HtmlTagName.div().apply {
-            style.setProperty("padding", "var(--lumo-space-l)")
-            style.setProperty("border", "1px dashed var(--lumo-contrast-20pct)")
-            style.setProperty("border-radius", "var(--lumo-border-radius-l)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_L)
+            inlineStyle.border = Border(1.px, LineStyle.dashed, `var`(LumoCustomProperties.CONTRAST_20PCT))
+            inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_L)
             style.setProperty("text-align", "center")
         }
         texts.bind(surface, { it.surface }) { surface.textContent = it }
@@ -559,7 +564,7 @@ internal class ContextMenuPage : DemoPage() {
                 this.value = value
             }
         private val MENU_SHEET: CSSStyleSheet = cssSheet {
-            compound(tag(VaadinTagName.contextMenuItem), className(CUSTOM)).invoke { color = Color("var(--lumo-error-text-color)") }
+            compound(tag(VaadinTagName.contextMenuItem), className(CUSTOM)).invoke { color = `var`(LumoCustomProperties.ERROR_TEXT_COLOR) }
         }
         /** An entry whose content is a node the caller assembled. */
         private fun componentEntry(

@@ -1,9 +1,12 @@
 package demo.pages.layout
 
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import web.cssom.`var`
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import web.html.HTMLElement
 
 /**
@@ -18,7 +21,7 @@ internal class SplitMaster : CustomElementAdapter() {
 
     override fun connectedCallback() {
         style.setProperty("display", "block")
-        style.setProperty("padding", "var(--lumo-space-s)")
+        inlineStyle.padding = `var`(LumoCustomProperties.SPACE_S)
     }
 
     /** Six grey cells per row, sixteen rows. */
@@ -37,7 +40,7 @@ internal class SplitMaster : CustomElementAdapter() {
                         HtmlTagName.div {
                             style.setProperty("height", "12px")
                             style.setProperty("border-radius", "2px")
-                            style.setProperty("background", "var(--lumo-contrast-10pct)")
+                            inlineStyle.background = `var`(LumoCustomProperties.CONTRAST_10PCT)
                         },
                     )
                 }

@@ -12,8 +12,11 @@ import io.github.shijianjs.ktjs.demo.page.DemoPage
 import web.aria.AriaCurrent
 import web.aria.`false`
 import web.aria.`true`
+import web.cssom.`var`
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.heading
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
@@ -88,7 +91,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         detailForm.append(firstName, lastName, emailField, phoneField)
         val detail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
             append(detailName, detailForm)
         }
 
@@ -146,7 +149,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         texts.bind(sizedMaster) { it.master12 }
         val sizedDetail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         }
         texts.bind(sizedDetail) { it.detail16 }
         sized.append(sizedMaster, sizedDetail)
@@ -179,7 +182,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         texts.bind(orientedMaster) { it.master }
         val orientedDetail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         }
         texts.bind(orientedDetail) { it.detail }
         oriented.append(orientedMaster, orientedDetail)
@@ -213,7 +216,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         texts.bind(overlayMaster) { it.master }
         val overlayDetail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         }
         texts.bind(overlayDetail) { it.detail }
         overlayLayout.append(overlayMaster, overlayDetail)
@@ -270,7 +273,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         placeholderLayout.dataset["test"] = "master-detail-placeholder"
         val placeholderDetail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         }
         texts.bind(placeholderDetail) { it.adaDetails }
         detailToggle.addTheme("tertiary")
@@ -290,7 +293,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         }
         val placeholder = HtmlTagName.div().apply {
             slot = "detail-placeholder"
-            style.setProperty("padding", "var(--lumo-space-m)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_M)
         }
         texts.bind(placeholder) { it.selectMember }
         placeholderLayout.append(members, placeholder)
@@ -308,7 +311,7 @@ internal class MasterDetailLayoutPage : DemoPage() {
         texts.bind(innerMaster) { it.innerMaster }
         val innerDetail = HtmlTagName.div().apply {
             slot = "detail"
-            style.setProperty("padding", "var(--lumo-space-s)")
+            inlineStyle.padding = `var`(LumoCustomProperties.SPACE_S)
         }
         texts.bind(innerDetail) { it.innerDetail }
         inner.append(innerMaster, innerDetail)

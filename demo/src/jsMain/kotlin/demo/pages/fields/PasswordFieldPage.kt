@@ -10,9 +10,12 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import web.cssom.`var`
 import web.html.HTMLElement
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -207,7 +210,7 @@ internal class PasswordFieldPage : DemoPage() {
         HtmlTagName.p().apply {
             style.setProperty("margin", "0 0 0.75rem")
             style.setProperty("font-size", "0.8125rem")
-            style.setProperty("color", "var(--lumo-secondary-text-color)")
+            inlineStyle.color = `var`(LumoCustomProperties.SECONDARY_TEXT_COLOR)
             texts.bind(this, copy) { textContent = it }
         }
 
@@ -243,14 +246,12 @@ internal class PasswordFieldPage : DemoPage() {
                 moderate -> copy.moderate
                 else -> copy.weak
             }
-        strengthText.style.setProperty(
-            "color",
+        strengthText.inlineStyle.color =
             when {
-                strong -> "var(--lumo-success-text-color)"
-                moderate -> "var(--lumo-warning-text-color)"
-                else -> "var(--lumo-error-text-color)"
-            },
-        )
+                strong -> `var`(LumoCustomProperties.SUCCESS_TEXT_COLOR)
+                moderate -> `var`(LumoCustomProperties.WARNING_TEXT_COLOR)
+                else -> `var`(LumoCustomProperties.ERROR_TEXT_COLOR)
+            }
         strengthCheck.toggleAttribute("hidden", !strong)
     }
 

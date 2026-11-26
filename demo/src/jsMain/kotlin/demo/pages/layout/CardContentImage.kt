@@ -3,9 +3,12 @@ package demo.pages.layout
 import demo.ui.Images
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
 import web.html.HtmlTagName
 
 /**
@@ -26,7 +29,7 @@ internal class CardContentImage : CustomElementAdapter(), CardTranslatable {
                         src = Images.lapland
                         alt = ""
                         style.setProperty("max-width", "100%")
-                        style.setProperty("border-radius", "var(--lumo-border-radius-m)")
+                        inlineStyle.borderRadius = `var`(LumoCustomProperties.BORDER_RADIUS_M)
                     },
                     caption,
                 )

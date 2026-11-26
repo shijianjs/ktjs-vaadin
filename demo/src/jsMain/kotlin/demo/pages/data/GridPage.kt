@@ -15,8 +15,11 @@ import io.github.shijianjs.ktjs.demo.i18n.Langs
 import web.aria.AriaExpanded
 import web.aria.`false`
 import web.aria.`true`
+import web.cssom.`var`
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
 import demo.Catalog
@@ -594,7 +597,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
             }
         invitedCombo.style.setProperty("flex", "1")
         val inviteGrid = grid().apply { allRowsVisible = true }
-        inviteGrid.style.setProperty("margin-top", "var(--lumo-space-s)")
+        inviteGrid.inlineStyle.marginTop = `var`(LumoCustomProperties.SPACE_S)
         val emptyInvite =
             HtmlTagName.p().also { node ->
                 node.className = MUTED
@@ -894,7 +897,7 @@ internal class GridPage : DemoPage(), GridTranslatable {
         )
         texts.bind(focusInfo, { it.focusInfoLabel }) { focusInfo.label = it }
         focusInfo.style.setProperty("width", "100%")
-        focusInfo.style.setProperty("margin-top", "var(--lumo-space-l)")
+        focusInfo.inlineStyle.marginTop = `var`(LumoCustomProperties.SPACE_L)
         focusGrid.listen(GridEvents.cellFocus) { event ->
             val copy = texts.current
             val context = focusGrid.getEventContext(event)
