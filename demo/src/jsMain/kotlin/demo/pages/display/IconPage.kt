@@ -21,6 +21,8 @@ import demo.ui.PageFrame
 import demo.ui.PageMeta
 import demo.ui.Readout
 import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.icon.IconCustomProperties
 import io.github.shijianjs.ktjs.vaadin.icon.Iconset
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.icon.unsafeSvgLiteral
@@ -28,6 +30,9 @@ import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.Color
+import web.cssom.Length
+import web.cssom.rem
 import web.cssom.`var`
 import web.dom.clickEvent
 import web.events.addHandler
@@ -69,7 +74,7 @@ internal class IconPage : DemoPage() {
                 createIcon { icon = "lumo:calendar" },
                 createIcon { icon = "vaadin:phone" },
             )
-        picker.style.setProperty("--vaadin-icon-size", "2rem")
+        picker.inlineStyle[IconCustomProperties.SIZE] = 2.rem
         texts.bind(nextIcon) { it.nextIcon }
         nextIcon.clickEvent.addHandler {
             iconIndex = (iconIndex + 1) % iconNames.size
@@ -83,12 +88,12 @@ internal class IconPage : DemoPage() {
         val sizing = SectionBlock.NAME { show() }
         texts.bind(sizing.heading) { it.sizingHeading }
         texts.bind(sizing.hint) { it.sizingHint }
-        fun sizedIcon(size: String): HTMLElement =
+        fun sizedIcon(size: Length): HTMLElement =
             createIcon { src = Images.codeBranchIcon }.apply {
-                style.setProperty("--vaadin-icon-size", size)
+                inlineStyle[IconCustomProperties.SIZE] = size
             }
         sizing.body.append(
-            exampleBox(null, kitRow(sizedIcon("1rem"), sizedIcon("2rem"), sizedIcon("3rem"), sizedIcon("4rem"))),
+            exampleBox(null, kitRow(sizedIcon(1.rem), sizedIcon(2.rem), sizedIcon(3.rem), sizedIcon(4.rem))),
         )
         body.append(sizing.root)
 
@@ -102,10 +107,13 @@ internal class IconPage : DemoPage() {
                 fontFamily = "lumo-icons"
                 char = "ea26"
             }.apply { style.color = "red" }
-        fun tintedIcon(fill: String): HTMLElement =
-            createIcon { icon = "lumo:bell" }.apply { style.setProperty("--vaadin-icon-color", fill) }
+        fun tintedIcon(fill: Color): HTMLElement =
+            createIcon { icon = "lumo:bell" }.apply { inlineStyle[IconCustomProperties.COLOR] = fill }
         colours.body.append(
-            exampleBox(null, kitRow(redSvg, redFont, tintedIcon("green"), tintedIcon("rgb(0 102 240)"))),
+            exampleBox(
+                null,
+                kitRow(redSvg, redFont, tintedIcon(Color("green")), tintedIcon(Color("rgb(0 102 240)"))),
+            ),
         )
         body.append(colours.root)
 
@@ -113,13 +121,13 @@ internal class IconPage : DemoPage() {
         val fonts = SectionBlock.NAME { show() }
         texts.bind(fonts.heading) { it.fontsHeading }
         texts.bind(fonts.hint) { it.fontsHint }
-        fun fontIcon(char: String, size: String = "1.5rem"): HTMLElement =
+        fun fontIcon(char: String, size: Length = 1.5.rem): HTMLElement =
             createIcon {
                 fontFamily = "lumo-icons"
                 this.char = char
-            }.apply { style.setProperty("--vaadin-icon-size", size) }
+            }.apply { inlineStyle[IconCustomProperties.SIZE] = size }
         fonts.body.append(
-            exampleBox(null, kitRow(fontIcon("ea0f"), fontIcon("ea04"), fontIcon("ea26"), fontIcon("ea0f", "3rem"))),
+            exampleBox(null, kitRow(fontIcon("ea0f"), fontIcon("ea04"), fontIcon("ea26"), fontIcon("ea0f", 3.rem))),
         )
         body.append(fonts.root)
 
@@ -131,14 +139,14 @@ internal class IconPage : DemoPage() {
             svg = unsafeSvgLiteral(STAR_SVG_FRAGMENT)
             size = 24.0
         }
-        star.style.setProperty("--vaadin-icon-size", "2rem")
+        star.inlineStyle[IconCustomProperties.SIZE] = 2.rem
         star.inlineStyle.color = `var`(LumoCustomProperties.PRIMARY_COLOR)
         val fromSet = Iconset.getIconSvg("lumo:photo", null)
         val reused = createIcon {
             svg = fromSet.svg
             size = fromSet.size ?: 24.0
         }
-        reused.style.setProperty("--vaadin-icon-size", "2rem")
+        reused.inlineStyle[IconCustomProperties.SIZE] = 2.rem
         literals.body.append(exampleBox(null, kitRow(star, reused)))
         body.append(literals.root)
 

@@ -11,6 +11,7 @@ import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import demo.CatalogEntry
@@ -30,6 +31,7 @@ import kotlin.js.unsafeCast
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.vaadin.select.SelectCustomProperties
 import io.github.shijianjs.ktjs.vaadin.select.SelectElement
 import io.github.shijianjs.ktjs.vaadin.select.SelectEvents
 import io.github.shijianjs.ktjs.vaadin.select.SelectItemData
@@ -38,6 +40,7 @@ import io.github.shijianjs.ktjs.vaadin.select.createSelectItem
 import io.github.shijianjs.ktjs.vaadin.select.createSelectListBox
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
+import web.cssom.px
 import web.events.addHandler
 
 internal class SelectPage : DemoPage() {
@@ -113,7 +116,7 @@ internal class SelectPage : DemoPage() {
                     }
                     .joinToString(",", "[", "]"),
             )
-        wide.style.setProperty("--vaadin-select-overlay-width", "350px")
+        wide.inlineStyle[SelectCustomProperties.OVERLAY_WIDTH] = 350.px
         overlay.body.append(exampleBox(null, kitRow(noOverlap, wide)))
         body.append(overlay.root)
 

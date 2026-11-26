@@ -219,6 +219,29 @@ card.inlineStyle.apply {
 }
 ```
 
+Each component's own `--vaadin-*` custom properties are typed the same way, in the object of the
+package that declares them (`ButtonCustomProperties`, `CardCustomProperties`,
+`FieldBaseCustomProperties` for the `--vaadin-input-field-*` family shared by every field, …). The
+design tokens every component reads — `--vaadin-gap-s`, `--vaadin-padding-l`, `--vaadin-text-color`,
+`--vaadin-focus-ring-color`, … — are in `VaadinSharedCustomProperties`. That is 627 names in 47
+objects. A custom property is written through the CSSOM custom-property API, so the value type is
+checked against the property the component reads it into:
+
+```kotlin
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.button.ButtonCustomProperties
+import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
+import web.cssom.`var`
+
+button.inlineStyle[ButtonCustomProperties.BACKGROUND] = `var`(LumoCustomProperties.PRIMARY_COLOR)
+button.inlineStyle[ButtonCustomProperties.BORDER_RADIUS] = `var`(LumoCustomProperties.BORDER_RADIUS_L)
+```
+
+The declarations are generated from the installed `@vaadin/*` packages — `node
+scripts/generate-custom-properties.mjs` (add `--check` to verify no drift) collects what each
+component documents and what its CSS/JS reads, resolves the owning package and infers the CSSOM type
+from the CSS property the name feeds.
+
 Custom styles are registered with `registerStyles`; `unsafeCSS` wraps a CSS string in a Lit
 `CSSResult`:
 

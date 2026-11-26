@@ -17,6 +17,7 @@ import web.html.HTMLElement
 import web.html.HtmlTagName
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.VaadinSharedCustomProperties
 import io.github.shijianjs.ktjs.vaadin.lumostyles.LumoCustomProperties
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
@@ -280,8 +281,8 @@ internal class ContextMenuPage : DemoPage() {
             val row = createContextMenuItem()
             row.append(
                 createIcon { icon = iconName }.also { iconElement ->
-                    iconElement.style.setProperty("color", "var(--vaadin-text-color-secondary)")
-                    iconElement.style.setProperty("margin-inline-end", "var(--vaadin-gap-s)")
+                    iconElement.inlineStyle.color = `var`(VaadinSharedCustomProperties.TEXT_COLOR_SECONDARY)
+                    iconElement.inlineStyle.marginInlineEnd = `var`(VaadinSharedCustomProperties.GAP_S)
                 },
             )
             val labelNode = HtmlTagName.span()

@@ -28,7 +28,9 @@ import demo.ui.listen
 import kotlin.js.JsAny
 import kotlin.js.js
 import kotlin.js.unsafeCast
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.vaadin.button.createButton
+import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxCustomProperties
 import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxElement
 import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxEvents
 import io.github.shijianjs.ktjs.vaadin.combobox.ComboBoxPartialMatchModes
@@ -36,6 +38,8 @@ import io.github.shijianjs.ktjs.vaadin.combobox.createComboBox
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.clickEvent
+import web.cssom.em
+import web.cssom.px
 import web.events.addHandler
 
 internal class ComboBoxPage : DemoPage() {
@@ -157,7 +161,7 @@ internal class ComboBoxPage : DemoPage() {
         employee.itemLabelPath = "displayName"
         employee.itemValuePath = "id"
         employee.items = employeeItems
-        employee.style.setProperty("--vaadin-combo-box-overlay-width", "350px")
+        employee.inlineStyle[ComboBoxCustomProperties.OVERLAY_WIDTH] = 350.px
         popupWidth.body.append(exampleBox(null, employee))
         body.append(popupWidth.root)
 
@@ -252,7 +256,7 @@ internal class ComboBoxPage : DemoPage() {
                 container.replaceChildren(ComboPersonRow.NAME { show(person) })
             }
         }
-        doctorCombo.style.setProperty("--vaadin-combo-box-overlay-width", "16em")
+        doctorCombo.inlineStyle[ComboBoxCustomProperties.OVERLAY_WIDTH] = 16.em
         doctorCombo.listen(ComboBoxEvents.filterChanged) {
             val filter = detailText(it).lowercase()
             visibleDoctors =

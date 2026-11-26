@@ -26,6 +26,7 @@ import demo.ui.PageMeta
 import demo.ui.Readout
 import demo.ui.listen
 import kotlin.js.unsafeCast
+import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutCustomProperties
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutElement
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutEvents
 import io.github.shijianjs.ktjs.vaadin.applayout.AppLayoutPrimarySections
@@ -264,7 +265,7 @@ internal class AppLayoutPage : DemoPage() {
         texts.bind(bottomNavbar.hint) { it.bottomHint }
         val bottomLayout = boxedAppLayout("18rem")
         bottomLayout.dataset["test"] = "app-layout-bottom"
-        bottomLayout.style.setProperty("--vaadin-app-layout-touch-optimized", "true")
+        bottomLayout.inlineStyle[AppLayoutCustomProperties.TOUCH_OPTIMIZED] = "true"
         val bottomNav = createHorizontalLayout().apply {
             slot = "navbar touch-optimized"
             style.setProperty("width", "100%")

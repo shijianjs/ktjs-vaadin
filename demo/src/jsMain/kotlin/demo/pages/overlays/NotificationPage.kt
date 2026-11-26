@@ -24,6 +24,8 @@ import demo.ui.PageMeta
 import demo.ui.RecordedLog
 import demo.ui.listen
 import js.objects.unsafeJso
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.VaadinSharedCustomProperties
 import io.github.shijianjs.ktjs.vaadin.avatar.createAvatar
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.horizontallayout.createHorizontalLayout
@@ -32,6 +34,7 @@ import io.github.shijianjs.ktjs.vaadin.notification.Notification
 import io.github.shijianjs.ktjs.vaadin.notification.NotificationShowOptions
 import io.github.shijianjs.ktjs.vaadin.notification.createNotification
 import web.dom.clickEvent
+import web.cssom.`var`
 import web.dom.document
 import web.events.addHandler
 import web.html.HTMLElement
@@ -119,7 +122,7 @@ internal class NotificationPage : DemoPage() {
         HtmlTagName.span().apply {
             textContent = text
             style.setProperty("font-size", "0.875rem")
-            style.setProperty("color", "var(--vaadin-text-color-secondary)")
+            inlineStyle.color = `var`(VaadinSharedCustomProperties.TEXT_COLOR_SECONDARY)
         }
 
     init {

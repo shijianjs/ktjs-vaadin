@@ -31,9 +31,12 @@ import demo.ui.RecordedLog
 import demo.ui.jsArray
 import demo.ui.listen
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.VaadinSharedCustomProperties
 import web.cssom.AlignItems
 import web.cssom.Display
+import web.cssom.Padding
 import web.cssom.px
+import web.cssom.`var`
 import js.objects.unsafeJso
 import kotlin.js.Date
 import kotlin.js.JsAny
@@ -310,7 +313,12 @@ internal class PopoverPage : DemoPage() {
         val panelHeader =
             createHorizontalLayout().apply {
                 style.setProperty("align-items", "center")
-                style.setProperty("padding", "var(--vaadin-padding-l) var(--vaadin-padding-l) var(--vaadin-padding-s)")
+                inlineStyle.padding =
+                    Padding(
+                        `var`(VaadinSharedCustomProperties.PADDING_L),
+                        `var`(VaadinSharedCustomProperties.PADDING_L),
+                        `var`(VaadinSharedCustomProperties.PADDING_S),
+                    )
                 append(panelHeadingNode, markAllRead.also { it.slot = "end" })
             }
         texts.bind(unreadTab, { it.unread }) { unreadTab.textContent = it }
@@ -424,7 +432,7 @@ internal class PopoverPage : DemoPage() {
         val columnsActions =
             createHorizontalLayout().apply {
                 style.setProperty("justify-content", "space-between")
-                style.setProperty("gap", "var(--vaadin-gap-s)")
+                inlineStyle.gap = `var`(VaadinSharedCustomProperties.GAP_S)
                 append(showAllButton, resetButton)
             }
         columnsPopover.append(kitCol(configureColumns, columnGroup, columnsActions))

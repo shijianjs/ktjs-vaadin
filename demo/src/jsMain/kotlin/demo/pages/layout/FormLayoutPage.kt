@@ -8,6 +8,7 @@ import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
 import io.github.shijianjs.ktjs.demo.page.DemoPage
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import demo.CatalogEntry
 import demo.Catalog
@@ -18,6 +19,7 @@ import demo.ui.PageMeta
 import js.objects.unsafeJso
 import io.github.shijianjs.ktjs.vaadin.emailfield.EmailFieldElement
 import io.github.shijianjs.ktjs.vaadin.emailfield.createEmailField
+import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutCustomProperties
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutLabelsPositions
 import io.github.shijianjs.ktjs.vaadin.formlayout.FormLayoutResponsiveStep
 import io.github.shijianjs.ktjs.vaadin.formlayout.StringOrDouble
@@ -29,6 +31,7 @@ import io.github.shijianjs.ktjs.vaadin.passwordfield.createPasswordField
 import io.github.shijianjs.ktjs.vaadin.textfield.TextFieldElement
 import io.github.shijianjs.ktjs.vaadin.textfield.createTextField
 import web.html.HTMLElement
+import web.cssom.px
 import web.html.HTMLParagraphElement
 import web.html.HtmlTagName
 
@@ -163,7 +166,7 @@ internal class FormLayoutPage : DemoPage() {
         )
 
         val stepsAsideForm = createFormLayout()
-        stepsAsideForm.style.setProperty("--vaadin-form-layout-label-width", "92px")
+        stepsAsideForm.inlineStyle[FormLayoutCustomProperties.LABEL_WIDTH] = 92.px
         stepsAsideForm.append(
             item({ it.firstName }, createTextField()),
             item({ it.lastName }, createTextField()),

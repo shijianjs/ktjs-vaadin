@@ -28,10 +28,14 @@ import io.github.shijianjs.ktjs.vaadin.button.ButtonElement
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.icon.IconElement
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.icon.IconCustomProperties
 import io.github.shijianjs.ktjs.vaadin.icon.createIconset
 import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.lumostyles.registerLumoIcons
 import web.dom.document
+import web.cssom.Length
+import web.cssom.rem
 import web.html.HTMLParagraphElement
 import web.html.HTMLElement
 import web.svg.SVGGElement
@@ -168,12 +172,12 @@ internal class IconSetsPage : DemoPage() {
         val padding = SectionBlock.NAME { show() }
         texts.bind(padding.heading) { it.paddingHeading }
         texts.bind(padding.hint) { it.paddingHint }
-        fun paddedIcon(visualSize: String?): HTMLElement =
+        fun paddedIcon(visualSize: Length?): HTMLElement =
             createIcon { src = Images.codeBranchIcon }.apply {
-                style.setProperty("--vaadin-icon-size", "3rem")
-                if (visualSize != null) style.setProperty("--vaadin-icon-visual-size", visualSize)
+                inlineStyle[IconCustomProperties.SIZE] = 3.rem
+                if (visualSize != null) inlineStyle[IconCustomProperties.VISUAL_SIZE] = visualSize
             }
-        val paddedRow = kitRow(paddedIcon(null), paddedIcon("2rem"), paddedIcon("1rem"))
+        val paddedRow = kitRow(paddedIcon(null), paddedIcon(2.rem), paddedIcon(1.rem))
         paddedRow.style.setProperty("align-items", "flex-end")
         padding.body.append(exampleBox(null, paddedRow))
         body.append(padding.root)

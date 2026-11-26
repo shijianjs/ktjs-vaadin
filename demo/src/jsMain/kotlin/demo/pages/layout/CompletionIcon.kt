@@ -2,8 +2,11 @@ package demo.pages.layout
 
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.vaadin.icon.IconCustomProperties
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
+import web.cssom.rem
 
 /**
  * `<vaadin-demo-completion-icon>`: the check that marks a completed wizard step in its summary.
@@ -15,7 +18,7 @@ import io.github.shijianjs.ktjs.vaadin.icon.createIcon
 internal class CompletionIcon : CustomElementAdapter() {
     private val icon = createIcon {
         icon = "vaadin:check"
-        style.setProperty("--vaadin-icon-size", "1rem")
+        inlineStyle[IconCustomProperties.SIZE] = 1.rem
     }
 
     private var startedHidden = false

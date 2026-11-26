@@ -30,6 +30,8 @@ import io.github.shijianjs.ktjs.vaadin.icons.registerVaadinIcons
 import io.github.shijianjs.ktjs.vaadin.menubar.HTMLElementOrString
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarElement
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarEvents
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
+import io.github.shijianjs.ktjs.vaadin.VaadinSharedCustomProperties
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarI18n
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItem
 import io.github.shijianjs.ktjs.vaadin.menubar.MenuBarItemElement
@@ -41,6 +43,8 @@ import io.github.shijianjs.ktjs.vaadin.switch.SwitchEvents
 import io.github.shijianjs.ktjs.vaadin.switch.createSwitch
 import io.github.shijianjs.ktjs.vaadin.tooltip.createTooltip
 import web.dom.document
+import web.cssom.`var`
+import web.cssom.rem
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
@@ -711,9 +715,9 @@ internal class MenuBarPage : DemoPage() {
             if (icon != null) {
                 val iconElement = createIcon { this.icon = "vaadin:$icon" }
                 if (child) {
-                    iconElement.style.width = "1.25rem"
-                    iconElement.style.height = "1.25rem"
-                    iconElement.style.marginRight = "var(--vaadin-gap-s)"
+                    iconElement.inlineStyle.width = 1.25.rem
+                    iconElement.inlineStyle.height = 1.25.rem
+                    iconElement.inlineStyle.marginRight = `var`(VaadinSharedCustomProperties.GAP_S)
                 }
                 item.append(iconElement)
             }

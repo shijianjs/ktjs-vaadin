@@ -2,6 +2,7 @@ package demo.pages.theming
 
 import web.html.HTMLAnchorElement
 import web.html.HtmlTagName
+import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
 import io.github.shijianjs.ktjs.demo.page.Blocks.paragraph
@@ -27,6 +28,7 @@ import demo.ui.EventLog
 import demo.ui.PageMeta
 import demo.ui.Readout
 import io.github.shijianjs.ktjs.vaadin.aura.Aura
+import io.github.shijianjs.ktjs.vaadin.button.ButtonCustomProperties
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import io.github.shijianjs.ktjs.vaadin.card.createCard
 import io.github.shijianjs.ktjs.vaadin.icon.createIcon
@@ -207,9 +209,9 @@ internal class ThemingPage : DemoPage() {
         texts.bind(section.heading, { it.propertiesTitle })
         texts.bind(section.hint, { it.propertiesHint })
         texts.bind(styledButton, { it.styledButton })
-        styledButton.style.setProperty("--vaadin-button-background", "var(--lumo-primary-color)")
-        styledButton.style.setProperty("--vaadin-button-text-color", "var(--lumo-base-color)")
-        styledButton.style.setProperty("--vaadin-button-border-radius", "var(--lumo-border-radius-l)")
+        styledButton.inlineStyle[ButtonCustomProperties.BACKGROUND] = `var`(LumoCustomProperties.PRIMARY_COLOR)
+        styledButton.inlineStyle[ButtonCustomProperties.TEXT_COLOR] = `var`(LumoCustomProperties.BASE_COLOR)
+        styledButton.inlineStyle[ButtonCustomProperties.BORDER_RADIUS] = `var`(LumoCustomProperties.BORDER_RADIUS_L)
         section.body.append(
             exampleBox(
                 null,
