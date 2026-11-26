@@ -41,10 +41,13 @@ import io.github.shijianjs.ktjs.vaadin.upload.UploadFileListVariants
 import io.github.shijianjs.ktjs.vaadin.upload.UploadVariants
 import io.github.shijianjs.ktjs.vaadin.verticallayout.VerticalLayoutVariants
 import io.github.shijianjs.ktjs.vaadin.virtuallist.VirtualListVariants
+import io.github.shijianjs.ktjs.vaadin.theme.ThemeVariant
 import io.github.shijianjs.ktjs.vaadin.theme.name
 import io.github.shijianjs.ktjs.vaadin.button.createButton
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 /**
  * The tokens are generated from Vaadin Flow's Java enums; these assertions are the transcription
@@ -434,5 +437,70 @@ class ThemeVariantsTest {
     fun `a typed variant can be applied and read back`() {
         assertEquals("primary", ButtonVariants.primary.name)
         assertEquals("tertiary-inline", ButtonVariants.tertiaryInline.name)
+    }
+
+    // One `theme` attribute, two vocabularies: typed variants and raw tokens are the same list, so
+    // `themes`, `themeAttr.values` and the DOM text can never disagree.
+
+    @Test
+    fun `typed and raw tokens share one attribute`() {
+        val button = createButton()
+        button.addTheme(ButtonVariants.primary)
+        button.addTheme("acme-brand")
+
+        assertEquals("primary acme-brand", button.getAttribute("theme"))
+        assertEquals(listOf("primary", "acme-brand"), button.themes)
+        assertEquals(listOf(ButtonVariants.primary, ThemeVariant("acme-brand")), button.themeAttr.values)
+        assertTrue(button.hasTheme(ButtonVariants.primary))
+        assertTrue(button.hasTheme("acme-brand"))
+    }
+
+    @Test
+    fun `a typed write keeps custom tokens`() {
+        val button = createButton().apply { addTheme("acme-brand") }
+        button.addTheme(ButtonVariants.primary, ButtonVariants.small)
+
+        assertEquals("acme-brand primary small", button.getAttribute("theme"))
+        assertEquals(3, button.themes.size)
+    }
+
+    @Test
+    fun `setting typed variants replaces the whole theme`() {
+        val button = createButton().apply { addTheme("acme-brand") }
+        button.setTheme(ButtonVariants.primary, ButtonVariants.small)
+
+        assertEquals("primary small", button.getAttribute("theme"))
+        assertEquals(listOf(ButtonVariants.primary, ButtonVariants.small), button.themeAttr.values)
+    }
+
+    @Test
+    fun `setting raw tokens normalises the text`() {
+        val button = createButton().apply { addTheme("acme-brand") }
+        button.setTheme("primary  small", "primary")
+
+        assertEquals("primary small", button.getAttribute("theme"))
+        assertEquals(listOf("primary", "small"), button.themes)
+    }
+
+    @Test
+    fun `removing a typed variant leaves the other tokens`() {
+        val button = createButton().apply {
+            addTheme(ButtonVariants.primary)
+            addTheme("acme-brand")
+        }
+        button.removeTheme(ButtonVariants.primary)
+
+        assertEquals("acme-brand", button.getAttribute("theme"))
+        assertFalse(button.hasTheme(ButtonVariants.primary))
+        assertTrue(button.hasTheme("acme-brand"))
+    }
+
+    @Test
+    fun `setting no tokens removes the attribute`() {
+        val button = createButton().apply { addTheme(ButtonVariants.primary) }
+        button.setTheme()
+
+        assertEquals(null, button.getAttribute("theme"))
+        assertTrue(button.themes.isEmpty())
     }
 }

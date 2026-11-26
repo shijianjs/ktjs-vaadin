@@ -278,8 +278,8 @@ class HorizontalLayoutTest {
     @Test
     fun themeAttributeIsATokenListOfTheMixin() {
         val layout = attach(createHorizontalLayout())
-        layout.themeAttr.add("spacing")
+        layout.themeAttr.add(HorizontalLayoutVariants.spacing)
         assertEquals("spacing", layout.getAttribute("theme"))
-        assertTrue(layout.themeAttr.contains("spacing"))
+        assertTrue(layout.themeAttr.contains(HorizontalLayoutVariants.spacing))
     }
 }

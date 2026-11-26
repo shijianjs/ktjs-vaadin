@@ -2,7 +2,7 @@ package demo.pages.overlays
 
 import io.github.shijianjs.ktjs.dom.element.invoke
 import io.github.shijianjs.ktjs.vaadin.themablemixin.addTheme
-import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
+import io.github.shijianjs.ktjs.vaadin.themablemixin.themeAttr
 import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementAdapter
 import io.github.shijianjs.ktjs.dom.webcomponent.attachShadowRoot
 import io.github.shijianjs.ktjs.vaadin.button.createButton
@@ -24,7 +24,7 @@ internal class IconButton : CustomElementAdapter() {
 
     /** Adds [themes] to the wrapped button, not to the host. */
     fun addTheme(vararg themes: String) {
-        button.tokenListAttribute("theme").add(*themes)
+        button.themeAttr.addTokens(*themes)
     }
 
     companion object : IconButtonDefaultReference()

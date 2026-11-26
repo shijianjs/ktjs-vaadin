@@ -80,9 +80,15 @@ GitHub Pages 一棵树三块：根是 `docs`，`/demo/` 是 demo，`/api/` 是 D
 `theme` 属性只有实现了 `ThemePropertyMixin` 的组件才渲染（button、layout、card、field、overlay…），
 所以读写不挂在 `HTMLElement` 上，而是挂在标记接口本身：`themable-mixin/ThemeVariants.kt` 提供
 `themes`（读 / 整体替换）、`hasTheme`、`setTheme(vararg)`、`addTheme(vararg)`、`removeTheme(vararg)`，
-外加 `themeAttr`（`TokenListAttribute`，需要直接操作属性对象时用）。
+外加 `themeAttr`（`TokenListAttribute<ThemeVariant>`，需要直接操作属性对象时用）。
 上游 `ThemePropertyMixin` 只**观察** `theme` 属性、把它传进 shadow DOM 的私有 `_theme`，没有公开属性
 可赋值 —— 所以这里操作的是属性：空格分隔、去重、空值即 `removeAttribute`。
+
+只有一份实现：`themeAttr` 是 `ktjs-wrapper-kit` 的 `TokenListAttribute` 加一个
+`TokenCodec<ThemeVariant>`（`encode` = `variant.name`，`decode` 接受任何 token），上面那些函数全是它的
+简写。`themeAttr.tokens` 是原始字符串、`themeAttr.values` 是类型化变体，同一段文本两个视图；类型化的
+`add` / `remove` / `toggle` 保留原始 token，只有 `setTheme(ThemeVariant…)` 整体替换。
+不要再手写 split / join 的存取器。
 
 后续加同类"外挂"API 时按同一判据：能力属于哪个上游接口，就挂在那条接口上，不要挂在 `HTMLElement`
 上——那样每个元素都凭空多出它并不渲染的能力。
@@ -126,7 +132,7 @@ val CardElement.titleHeadingLevelAttr: Attribute<Int>
 ```
 
 - 用法：`card.cardTitleAttr.value = "x"`、`card.titleHeadingLevelAttr.valueOrNull`、
-  `button.disabledAttr.setOrClear(true)`、`layout.themeAttr.add("spacing")`。类型、断言、默认值都在
+  `button.disabledAttr.setOrClear(true)`、`layout.themeAttr.add(VerticalLayoutVariants.spacing)`。类型、断言、默认值都在
   `ktjs-wrapper-kit` 的 `Attribute` 家族里，这里只声明「哪个元素、哪个名字、哪种类型」。
 - **不要包成 `object XxxAttributes`**：object 里的扩展属性只能在该 object 作用域内调用，
   `ButtonAttributes.disabledAttr` 这种形式对外根本调不到。顶层属性可以直接 `import` 后用、

@@ -2,6 +2,7 @@ package io.github.shijianjs.ktjs.vaadin.themablemixin
 
 import io.github.shijianjs.ktjs.dom.attribute.TokenListAttribute
 import io.github.shijianjs.ktjs.dom.attribute.tokenListAttribute
+import io.github.shijianjs.ktjs.dom.attribute.types.TokenCodec
 import io.github.shijianjs.ktjs.vaadin.theme.ThemeVariant
 import io.github.shijianjs.ktjs.vaadin.theme.name
 import js.reflect.unsafeCast
@@ -17,84 +18,92 @@ import web.html.HTMLElement
  * in do (buttons, layouts, cards, fields, overlays…). The attribute is a space-separated list of
  * variants (`theme="primary small"`), and every function below keeps it normalised to single spaces.
  *
- * Two ways in: a plain `String` for anything (custom tokens, third-party themes) and a typed
- * [ThemeVariant] from `io.github.shijianjs.ktjs.vaadin.theme` for the tokens Vaadin documents. Both
- * end up as the same attribute text, so the store never needs to keep them apart.
+ * There is one storage, [themeAttr], built on the kit's [TokenListAttribute] with a
+ * [ThemeVariantTokenCodec]; everything below is shorthand over it. Two vocabularies share the
+ * attribute: a plain `String` for anything (custom tokens, third-party themes) and a typed
+ * [ThemeVariant] from `io.github.shijianjs.ktjs.vaadin.theme` for the tokens Vaadin documents.
+ * Tokens the codec cannot read do not exist here — `ThemeVariant` wraps *any* string — so typed and
+ * raw access can never disagree about what the attribute holds.
  */
 private const val THEME = "theme"
 
 /** Every implementor is a Vaadin element: upstream applies the mixin to element classes only. */
 private val ThemePropertyMixin.host: HTMLElement get() = this.unsafeCast<HTMLElement>()
 
+/**
+ * A variant *is* its token (`ThemeVariant` is an opaque string at runtime), so decoding accepts every
+ * token and encoding just spells the variant: the typed view covers the whole attribute, custom and
+ * third-party tokens included.
+ */
+private object ThemeVariantTokenCodec : TokenCodec<ThemeVariant> {
+
+    override fun encode(value: ThemeVariant): String = value.name
+
+    override fun decode(token: String): ThemeVariant = ThemeVariant(token)
+}
+
+/**
+ * The `theme` attribute as a typed [TokenListAttribute]: the same space-separated list [themes]
+ * reads, with `add` / `remove` / `toggle` / `contains` on the attribute itself.
+ *
+ * `values` hands back [ThemeVariant]s, `tokens` the raw strings — one attribute, two views, so a
+ * generic shell writing theme tokens passes the same object to a helper that takes an
+ * `Attribute`. It is declared on the mixin, not on `HTMLElement`, because only implementations
+ * render the attribute.
+ */
+val ThemePropertyMixin.themeAttr: TokenListAttribute<ThemeVariant>
+    get() = host.tokenListAttribute(THEME, ThemeVariantTokenCodec)
+
 /** The variants currently set, in attribute order; empty when the attribute is absent. */
 var ThemePropertyMixin.themes: List<String>
-    get() = host.getAttribute(THEME).orEmpty().split(' ').filter { it.isNotEmpty() }
+    get() = themeAttr.tokens
     set(value) {
-        val tokens = value.flatMap { it.split(' ') }.filter { it.isNotEmpty() }.distinct()
-        if (tokens.isEmpty()) {
-            host.removeAttribute(THEME)
-        } else {
-            host.setAttribute(THEME, tokens.joinToString(" "))
-        }
+        themeAttr.tokens = value
     }
 
 /** Whether [variant] is part of the current theme. */
-fun ThemePropertyMixin.hasTheme(variant: String): Boolean = variant in themes
-
-/**
- * The `theme` attribute as a [TokenListAttribute]: the same space-separated list [themes] reads, with
- * `add` / `remove` / `toggle` / `contains` on the attribute itself.
- *
- * The functions below are the shorthand for the common cases; this is the raw accessor for code that
- * wants the attribute object — one `observe` subscription, a generic shell writing theme tokens, or
- * passing it to a helper that takes an `Attribute`. It is declared on the mixin, not on `HTMLElement`,
- * because only implementations render the attribute.
- */
-val ThemePropertyMixin.themeAttr: TokenListAttribute
-    get() = host.tokenListAttribute(THEME)
+fun ThemePropertyMixin.hasTheme(variant: String): Boolean = themeAttr.containsToken(variant)
 
 /** Whether a typed [variant] is part of the current theme. */
-fun ThemePropertyMixin.hasTheme(variant: ThemeVariant): Boolean = variant.name in themes
+fun ThemePropertyMixin.hasTheme(variant: ThemeVariant): Boolean = themeAttr.contains(variant)
 
 /** Replaces the whole theme with [variants]; calling it without variants removes the attribute. */
 fun <T : ThemePropertyMixin> T.setTheme(vararg variants: String): T {
-    themes = variants.toList()
+    themeAttr.tokens = variants.toList()
     return this
 }
 
-/** Replaces the whole theme with the typed [variant] and [variants]. */
+/**
+ * Replaces the whole theme with the typed [variant] and [variants].
+ *
+ * Typed assignment replaces *the whole* list, so custom tokens that are not among the values are
+ * dropped — use [addTheme] to keep them, or `themeAttr.tokens` to write raw tokens.
+ */
 fun <T : ThemePropertyMixin> T.setTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
-    themes = arrayOf(variant, *variants).map { it.name }
+    themeAttr.value = listOf(variant, *variants)
     return this
 }
 
 /** Adds the missing of [variants] and keeps the existing ones; applying it twice changes nothing. */
 fun <T : ThemePropertyMixin> T.addTheme(vararg variants: String): T {
-    val current = themes
-    val missing = variants.flatMap { it.split(' ') }.filter { it.isNotEmpty() && it !in current }
-    if (missing.isNotEmpty()) themes = current + missing
+    themeAttr.addTokens(*variants)
     return this
 }
 
 /** Adds the missing of the typed [variant] and [variants], keeping the existing tokens. */
 fun <T : ThemePropertyMixin> T.addTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
-    val current = themes
-    val missing = arrayOf(variant, *variants).map { it.name }.filter { it !in current }
-    if (missing.isNotEmpty()) themes = current + missing
+    themeAttr.add(variant, *variants)
     return this
 }
 
 /** Removes [variants]; variants that are not set are ignored. */
 fun <T : ThemePropertyMixin> T.removeTheme(vararg variants: String): T {
-    val current = themes
-    val removed = variants.flatMap { it.split(' ') }.filter { it.isNotEmpty() }
-    val kept = current.filterNot { it in removed }
-    if (kept.size != current.size) themes = kept
+    themeAttr.removeTokens(*variants)
     return this
 }
 
 /** Removes the typed [variant] and [variants]; tokens that are not set are ignored. */
 fun <T : ThemePropertyMixin> T.removeTheme(variant: ThemeVariant, vararg variants: ThemeVariant): T {
-    val removed = arrayOf(variant, *variants).map { it.name }
-    return removeTheme(*removed.toTypedArray())
+    themeAttr.remove(variant, *variants)
+    return this
 }

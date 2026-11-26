@@ -44,7 +44,7 @@ fun labelOf(field: FieldMixin): String = field.label
 | `cardTitleAttr` | `Attribute<String>` |
 | `titleHeadingLevelAttr` | `Attribute<Int>` |
 | `disabledAttr` | `Attribute<Boolean>` |
-| `themeAttr` | `TokenListAttribute` |
+| `themeAttr` | `TokenListAttribute<ThemeVariant>` |
 
 属性就是状态时用它——`Property` setter 和属性 setter 不等价：只有属性在 devtools 与服务端渲染的 HTML 里
 看得见。
@@ -68,6 +68,12 @@ check(button.hasTheme(ButtonVariants.small))
 
 `addTheme` / `removeTheme` / `hasTheme` / `themes` 挂在 `ThemePropertyMixin` 上，而不是 `HTMLElement`：
 只有真的会渲染 `theme` 属性的组件才实现它。
+
+这些都只是同一个访问器 `themeAttr` 的简写：它是 `ktjs-wrapper-kit` 的
+`TokenListAttribute<ThemeVariant>`，codec 把一个变体写成它的 `name`。所以属性对象本身也能用——
+`themeAttr.add(ButtonVariants.primary)`、`themeAttr.tokens = listOf("acme-brand")`；`values`（类型化）和
+`tokens`（原始字符串）是同一段文本的两个视图。类型化的 `add` / `remove` / `toggle` 不会丢掉原始 token，
+只有 `setTheme(ThemeVariant…)` 会整体替换列表。
 
 ## 主题：Lumo 工具类
 

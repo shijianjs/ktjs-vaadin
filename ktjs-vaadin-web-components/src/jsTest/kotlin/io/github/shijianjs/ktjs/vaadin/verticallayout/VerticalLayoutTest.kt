@@ -79,8 +79,8 @@ class VerticalLayoutTest {
     @Test
     fun themeAttributeIsATokenListOfTheMixin() {
         val layout = attach(createVerticalLayout())
-        layout.themeAttr.add("spacing")
+        layout.themeAttr.add(VerticalLayoutVariants.spacing)
         assertEquals("spacing", layout.getAttribute("theme"))
-        assertTrue(layout.themeAttr.contains("spacing"))
+        assertTrue(layout.themeAttr.contains(VerticalLayoutVariants.spacing))
     }
 }

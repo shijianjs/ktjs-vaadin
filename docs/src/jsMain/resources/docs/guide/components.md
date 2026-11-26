@@ -45,7 +45,7 @@ attribute and decodes it through a codec, so the type is the one upstream docume
 | `cardTitleAttr` | `Attribute<String>` |
 | `titleHeadingLevelAttr` | `Attribute<Int>` |
 | `disabledAttr` | `Attribute<Boolean>` |
-| `themeAttr` | `TokenListAttribute` |
+| `themeAttr` | `TokenListAttribute<ThemeVariant>` |
 
 Use them when the attribute is the state — a `Property` setter and an attribute setter are not
 interchangeable: only the attribute is visible in devtools and in server-rendered HTML.
@@ -70,6 +70,12 @@ check(button.hasTheme(ButtonVariants.small))
 
 `addTheme` / `removeTheme` / `hasTheme` / `themes` hang off `ThemePropertyMixin`, not off
 `HTMLElement`: only components that actually render the `theme` attribute implement it.
+
+They are shorthand over one accessor, `themeAttr`, a `TokenListAttribute<ThemeVariant>` from
+`ktjs-wrapper-kit` with a codec that spells a variant as its `name`. So the attribute object is
+usable too — `themeAttr.add(ButtonVariants.primary)`, `themeAttr.tokens = listOf("acme-brand")` — and
+`values` (typed) and `tokens` (raw strings) are two views of the same text. Raw tokens survive a typed
+`add` / `remove` / `toggle`; only `setTheme(ThemeVariant…)` replaces the whole list.
 
 ## Theming: Lumo utility classes
 
