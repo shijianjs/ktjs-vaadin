@@ -33,7 +33,7 @@ hutool = "5.8.48"
 # Maven Central.
 ktjs-docusaurus = "3.10.2-kt.2-SNAPSHOT"
 ktjs-docusaurus-gradle-plugin = "3.10.2-kt.1-SNAPSHOT"
-ktjs-docusaurus-kit = "0.1.0-SNAPSHOT"
+ktjs-docusaurus-kit = "0.1.0"
 
 # Siblings from this account, all consumed as SNAPSHOTs from `mavenLocal` while the demo/docs
 # refactor is in flight: the typed attribute layer (`ktjs-wrapper-kit`), the demo shell
